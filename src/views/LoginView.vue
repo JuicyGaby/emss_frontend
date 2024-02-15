@@ -1,6 +1,6 @@
 <template lang="">
-    <div class="red sign-in-container d-flex align-center justify-start">
-        <div class="blue login-box d-flex flex-column justify-center align-center">
+    <div class="rb sign-in-container d-flex align-center justify-start">
+        <div class="bb login-box d-flex flex-column justify-center align-center">
           <div class="w-100 alert" :class="{'visible': toggleAlert }">
               <v-alert
               variant="tonal"
@@ -9,29 +9,29 @@
             ></v-alert>
           </div>
           <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
-              <h2>Lorem, ipsum dolor. {{ name }}</h2>
+              <h2 class="my-2">Malasakit System Name</h2>
               <div class="input-field w-100">
                   <v-form ref="formLogin" class="d-flex flex-column ga-3">
                       <v-text-field
-                        v-model="username"
+                        v-model="userInput.username.value"
                         name="username"
                         label="Username"
                         variant="outlined"
-                        :rules="usernameRule"
+                        :rules="inputRules.username"
                         clearable
                       ></v-text-field>
                       <v-text-field
-                      v-model="password"
-                        :rules="passwordRule"
+                      v-model="userInput.password.value"
+                        :rules="inputRules.password"
                         name="password"
                         label="Password"
                         :type="showPassword ? 'text' : 'password'"
                         variant="outlined"
                         hint="Please remember your password"
                         :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'"
-                        @click:append-inner="togglePasswordVisibilty()"
+                        @click:append-inner="showPassword = !showPassword"
                       ></v-text-field>
-                      <v-btn @keyup.enter="signIn()" @click="signIn()" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
+                      <v-btn append-icon="mdi-login" @keyup.enter="signIn()" @click="signIn()" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
                   </v-form>
               </div>
           </div>
@@ -41,70 +41,64 @@
 <script setup>
 import router from "@/router/index.js";
 import { ref, computed, onMounted } from "vue";
-import { userAuthentication } from '../stores/session'
+import { userAuthentication } from "../stores/session";
 
+const authentication = userAuthentication();
+// user input
+const userInput = {
+  username: ref(""),
+  password: ref(""),
+};
 
-const authentication = userAuthentication()
-const value = true
-const name = ref("gaby");
-const username = ref("");
-const password = ref("");
 const formLogin = ref(null);
 const showPassword = ref(false);
-const toggleAlert = ref(false)
-const isError = ref(false)
+const toggleAlert = ref(false);
+const isError = ref(false);
 
-// input rules 
+// input rules
 
-const usernameRule = [
-  (v) => !!v || "Username is required",
-  (v) =>
-    (v && v.length >= 3 && v.length <= 20) ||
-    "Username must be between 3 and 20 characters",
-];
-const passwordRule = [
-   (v) => !!v || "Password is required"
-];
-
-
-
-const togglePasswordVisibilty = () => {
-  showPassword.value = !showPassword.value;
+const inputRules = {
+  username: [
+    (v) => !!v || "Username is required",
+    (v) =>
+      (v && v.length >= 3 && v.length <= 20) ||
+      "Username must be between 3 and 20 characters",
+  ],
+  password: [(v) => !!v || "Password is required"],
 };
 
 // methods
-
 const signIn = async () => {
-
-  const form = await formLogin.value.validate()
-  if (!form.valid) return
+  const form = await formLogin.value.validate();
+  if (!form.valid) return;
 
   const body = {
-    username : username.value,
-    password : password.value
-  }
+    username: userInput.username.value,
+    password: userInput.password.value,
+  };
 
-const res = await fetch('http://172.16.2.30:3014/api/login', {
-      method: 'POST',
-      headers: { 
-        "content-type": 'application/json'
-      },
-      body: JSON.stringify(body)
+  const response = await fetch("http://172.16.2.30:3014/api/login", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(body),
   });
-  const data = await res.json();
-  
-  if (data.error) {
-    toggleAlert.value = true
-    isError.value = true
-    password.value = ''
-    return
-  }
-  console.log(data);
-  toggleAlert.value = true
-  isError.value = false
-  authentication.setUserToken(data.user.login_token)
-  console.log(authentication.token);
+  const data = await response.json();
 
+  if (data.error) {
+    // displays the alert component
+    toggleAlert.value = true;
+    isError.value = true;
+    password.value = "";
+    return;
+  }
+
+  console.log(data);
+  toggleAlert.value = true;
+  isError.value = false;
+  authentication.setUserToken(data.user.login_token);
+  console.log(authentication.token);
 };
 </script>
 
@@ -113,7 +107,6 @@ const res = await fetch('http://172.16.2.30:3014/api/login', {
 
 
 <style lang="css">
-
 .alert {
   visibility: hidden;
 }
