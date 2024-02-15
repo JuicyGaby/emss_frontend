@@ -1,13 +1,14 @@
 import { useRouter } from 'vue-router';
+import { userAuthentication } from "../stores/session";
 
-const checkUserSession = () => {
+const authentication = userAuthentication()
+
+export const checkUserSession = () => {
   const isLoggedIn = authentication.isLoggedIn;
   const router = useRouter();
 
-  if (!isLoggedIn) {
+  if (isLoggedIn) {
     router.push('/');
     console.log('asdasd');
   }
-};
-
-export default checkUserSession;
+}

@@ -1,7 +1,21 @@
 <template lang="">
     <div class="red sign-in-container d-flex align-center justify-start">
         <div class="blue login-box d-flex flex-column justify-center align-center">
-            <div class="red w-100 d-flex flex-column align-center pa-5 ga-2">
+          <div class="w-100 alert" :class="{'visible': hasError }">
+              <v-alert
+              variant="tonal"
+              type="error"
+              text="Wrong credentials. Please try again"
+            ></v-alert>
+          </div>
+          <div class="w-100 alert" :class="{'visible': true }">
+              <v-alert
+              variant="tonal"
+              type="Sucess"
+              text="Wrong credentials. Please try again"
+            ></v-alert>
+          </div>
+            <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
                 <h2>Lorem, ipsum dolor. {{ name }}</h2>
                 <div class="input-field w-100">
                     <v-form ref="formLogin" class="d-flex flex-column ga-3">
@@ -24,7 +38,7 @@
                           :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'"
                           @click:append-inner="togglePasswordVisibilty()"
                         ></v-text-field>
-                        <v-btn @click="signIn()" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
+                        <v-btn @keyup.enter="signIn()" @click="signIn()" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
                     </v-form>
                 </div>
             </div>
@@ -37,12 +51,13 @@ import { ref, computed, onMounted } from "vue";
 import { userAuthentication } from "../stores/session.js";
 
 const authentication = userAuthentication();
-
+const value = true
 const name = ref("gaby");
 const username = ref("");
 const password = ref("");
 const formLogin = ref(null);
 const showPassword = ref(false);
+const hasError = ref(false)
 
 // input rules 
 
@@ -52,12 +67,9 @@ const usernameRule = [
     (v && v.length >= 3 && v.length <= 20) ||
     "Username must be between 3 and 20 characters",
 ];
-
 const passwordRule = [
    (v) => !!v || "Password is required"
 ];
-
-
 
 onMounted(() => {
   checkUserSession();
@@ -70,9 +82,34 @@ const togglePasswordVisibilty = () => {
 // methods
 
 const signIn = async () => {
+
   const form = await formLogin.value.validate()
   if (!form.valid) return
+
+  const body = {
+    username : username.value,
+    password : password.value
+  }
+
+const res = await fetch('http://172.16.2.30:3014/api/login', {
+      method: 'POST',
+      headers: { 
+        "content-type": 'application/json'
+      },
+      body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  
+  if (data.error) {
+    hasError.value = true
+    return
+  }
+
+  console.log(data);
 };
+
+
+
 
 const checkUserSession = () => {
   const isLoggedIn = authentication.isLoggedIn;
@@ -87,6 +124,13 @@ const checkUserSession = () => {
 
 
 <style lang="css">
+
+.alert {
+  visibility: hidden;
+}
+.visible {
+  visibility: visible;
+}
 .sign-in-container {
   height: 100vh;
   width: 100%;
