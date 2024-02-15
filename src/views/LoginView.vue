@@ -1,63 +1,58 @@
 <template lang="">
     <div class="red sign-in-container d-flex align-center justify-start">
         <div class="blue login-box d-flex flex-column justify-center align-center">
-          <div class="w-100 alert" :class="{'visible': hasError }">
+          <div class="w-100 alert" :class="{'visible': toggleAlert }">
               <v-alert
               variant="tonal"
-              type="error"
-              text="Wrong credentials. Please try again"
+              :type="isError ? 'error' : 'success'"
+              :text="isError ? 'Wrong credentials. Please try again' : 'Welcome back! Your account was accessed successfully.'"
             ></v-alert>
           </div>
-          <div class="w-100 alert" :class="{'visible': true }">
-              <v-alert
-              variant="tonal"
-              type="Sucess"
-              text="Wrong credentials. Please try again"
-            ></v-alert>
+          <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
+              <h2>Lorem, ipsum dolor. {{ name }}</h2>
+              <div class="input-field w-100">
+                  <v-form ref="formLogin" class="d-flex flex-column ga-3">
+                      <v-text-field
+                        v-model="username"
+                        name="username"
+                        label="Username"
+                        variant="outlined"
+                        :rules="usernameRule"
+                        clearable
+                      ></v-text-field>
+                      <v-text-field
+                      v-model="password"
+                        :rules="passwordRule"
+                        name="password"
+                        label="Password"
+                        :type="showPassword ? 'text' : 'password'"
+                        variant="outlined"
+                        hint="Please remember your password"
+                        :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'"
+                        @click:append-inner="togglePasswordVisibilty()"
+                      ></v-text-field>
+                      <v-btn @keyup.enter="signIn()" @click="signIn()" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
+                  </v-form>
+              </div>
           </div>
-            <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
-                <h2>Lorem, ipsum dolor. {{ name }}</h2>
-                <div class="input-field w-100">
-                    <v-form ref="formLogin" class="d-flex flex-column ga-3">
-                        <v-text-field
-                          v-model="username"
-                          name="username"
-                          label="Username"
-                          variant="outlined"
-                          :rules="usernameRule"
-                          clearable
-                        ></v-text-field>
-                        <v-text-field
-                        v-model="password"
-                          :rules="passwordRule"
-                          name="password"
-                          label="Password"
-                          :type="showPassword ? 'text' : 'password'"
-                          variant="outlined"
-                          hint="Please remember your password"
-                          :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'"
-                          @click:append-inner="togglePasswordVisibilty()"
-                        ></v-text-field>
-                        <v-btn @keyup.enter="signIn()" @click="signIn()" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
-                    </v-form>
-                </div>
-            </div>
         </div>
     </div>
 </template>
 <script setup>
 import router from "@/router/index.js";
 import { ref, computed, onMounted } from "vue";
-import { userAuthentication } from "../stores/session.js";
+import { userAuthentication } from '../stores/session'
 
-const authentication = userAuthentication();
+
+const authentication = userAuthentication()
 const value = true
 const name = ref("gaby");
 const username = ref("");
 const password = ref("");
 const formLogin = ref(null);
 const showPassword = ref(false);
-const hasError = ref(false)
+const toggleAlert = ref(false)
+const isError = ref(false)
 
 // input rules 
 
@@ -71,9 +66,7 @@ const passwordRule = [
    (v) => !!v || "Password is required"
 ];
 
-onMounted(() => {
-  checkUserSession();
-});
+
 
 const togglePasswordVisibilty = () => {
   showPassword.value = !showPassword.value;
@@ -101,21 +94,17 @@ const res = await fetch('http://172.16.2.30:3014/api/login', {
   const data = await res.json();
   
   if (data.error) {
-    hasError.value = true
+    toggleAlert.value = true
+    isError.value = true
+    password.value = ''
     return
   }
-
   console.log(data);
-};
+  toggleAlert.value = true
+  isError.value = false
+  authentication.setUserToken(data.user.login_token)
+  console.log(authentication.token);
 
-
-
-
-const checkUserSession = () => {
-  const isLoggedIn = authentication.isLoggedIn;
-  if (isLoggedIn) {
-    router.push("/");
-  }
 };
 </script>
 

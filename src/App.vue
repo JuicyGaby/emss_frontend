@@ -6,15 +6,29 @@
   </v-app>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import { useRouter } from 'vue-router';
+import { userAuthentication } from "./stores/session";
 
-export default {
-  name: 'App',
+onMounted(() => {
+  checkUserSession();
+});
 
-  data: () => ({
-    //
-  }),
+const authentication = userAuthentication()
+const checkUserSession = () => {
+  const isLoggedIn = authentication.isLoggedIn;
+  const router = useRouter();
+
+  console.log('token' + authentication.token);
+  if (!isLoggedIn) {
+    router.push('/login');
+
+  }
+
 }
+
+
 </script>
 
 <style>
