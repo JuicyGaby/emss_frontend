@@ -5,8 +5,9 @@ import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 import { createPinia } from 'pinia'
 
-const pinia = createPinia()
 
+
+const pinia = createPinia()
 loadFonts()
 
 createApp(App)
