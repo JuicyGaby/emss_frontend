@@ -18,13 +18,13 @@
                            name="password"
                            label="Password"
                            id="id"
-                           :type="passInputType"
+                           :type="showPassword ? 'text' : 'password'"
                            variant="outlined"
                            hint="Please remember your password"
                            :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'"
                            @click:append-inner="togglePasswordVisibilty()"
                         ></v-text-field>
-                        <v-btn @click="printUser()" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
+                        <v-btn @click="" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
                     </v-form>
                 </div>
             </div>
@@ -32,26 +32,25 @@
     </div>
 </template>
 <script setup>
+
 import { ref, computed } from "vue";
+
+import { useCounterStore } from "@/stores/counter";
+
+
+
 
 const name = ref("gaby");
 const username = ref("");
 
-
 const password = ref("");
-const showPassword = ref(false)
-
-const passInputType = computed(() => (showPassword.value ? 'text' : 'password'))
-
-const printUser = () => {
-  console.log(username.value);
-  console.log(password.value);
-};
+const showPassword = ref(false);
 
 const togglePasswordVisibilty = () => {
-   showPassword.value = !showPassword.value
-}
+  showPassword.value = !showPassword.value;
 
+
+};
 </script>
 <style lang="css">
 .sign-in-container {
