@@ -1,30 +1,30 @@
 <template lang="">
     <div class="red sign-in-container d-flex align-center justify-start">
         <div class="blue login-box d-flex flex-column justify-center align-center">
-            <div class="red w-100 d-flex flex-column align-center pa-5">
+            <div class="red w-100 d-flex flex-column align-center pa-5 ga-2">
                 <h2>Lorem, ipsum dolor. {{ name }}</h2>
                 <div class="input-field w-100">
-                    <v-form>
+                    <v-form ref="formLogin" class="d-flex flex-column ga-3">
                         <v-text-field
-                           v-model="username"
-                           name="username"
-                           label="Username"
-                           id="id"
-                           variant="outlined"
-                           clearable
+                          v-model="username"
+                          name="username"
+                          label="Username"
+                          variant="outlined"
+                          :rules="usernameRule"
+                          clearable
                         ></v-text-field>
                         <v-text-field
                         v-model="password"
-                           name="password"
-                           label="Password"
-                           id="id"
-                           :type="showPassword ? 'text' : 'password'"
-                           variant="outlined"
-                           hint="Please remember your password"
-                           :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'"
-                           @click:append-inner="togglePasswordVisibilty()"
+                          :rules="passwordRule"
+                          name="password"
+                          label="Password"
+                          :type="showPassword ? 'text' : 'password'"
+                          variant="outlined"
+                          hint="Please remember your password"
+                          :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'"
+                          @click:append-inner="togglePasswordVisibilty()"
                         ></v-text-field>
-                        <v-btn @click="" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
+                        <v-btn @click="signIn()" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
                     </v-form>
                 </div>
             </div>
@@ -32,26 +32,60 @@
     </div>
 </template>
 <script setup>
+import router from "@/router/index.js";
+import { ref, computed, onMounted } from "vue";
+import { userAuthentication } from "../stores/session.js";
 
-import { ref, computed } from "vue";
-
-import { useCounterStore } from "@/stores/counter";
-
-
-
+const authentication = userAuthentication();
 
 const name = ref("gaby");
 const username = ref("");
-
 const password = ref("");
+const formLogin = ref(null);
 const showPassword = ref(false);
+
+// input rules 
+
+const usernameRule = [
+  (v) => !!v || "Username is required",
+  (v) =>
+    (v && v.length >= 3 && v.length <= 20) ||
+    "Username must be between 3 and 20 characters",
+];
+
+const passwordRule = [
+   (v) => !!v || "Password is required"
+];
+
+
+
+onMounted(() => {
+  checkUserSession();
+});
 
 const togglePasswordVisibilty = () => {
   showPassword.value = !showPassword.value;
+};
 
+// methods
 
+const signIn = async () => {
+  const form = await formLogin.value.validate()
+  if (!form.valid) return
+};
+
+const checkUserSession = () => {
+  const isLoggedIn = authentication.isLoggedIn;
+  if (isLoggedIn) {
+    router.push("/");
+  }
 };
 </script>
+
+
+
+
+
 <style lang="css">
 .sign-in-container {
   height: 100vh;
