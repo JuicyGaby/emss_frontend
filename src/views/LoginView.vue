@@ -1,13 +1,20 @@
 <template lang="">
     <div class="rb sign-in-container d-flex align-center justify-end">
-        <div class="login-box d-flex flex-column justify-center align-center">
-          <div class="w-100 alert" :class="{'visible': toggleAlert }">
+        <div class="login-box d-flex flex-column justify-center align-center elevation-3">
+          <div v-if="toggleAlert" class="w-100" >
               <v-alert
               variant="tonal"
               :type="isError ? 'error' : 'success'"
               :text="isError ? 'Wrong credentials. Please try again' : 'Welcome back! Your account was accessed successfully.'"
             ></v-alert>
           </div>
+          <!-- <div class="w-100 alert" :class="{'visible': toggleAlert }">
+              <v-alert
+              variant="tonal"
+              :type="isError ? 'error' : 'success'"
+              :text="isError ? 'Wrong credentials. Please try again' : 'Welcome back! Your account was accessed successfully.'"
+            ></v-alert>
+          </div> -->
           <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
               <h2 class="mb-10">Malasakit System Name</h2>
               <div class="input-field w-100">
@@ -33,7 +40,7 @@
                       ></v-text-field>
                       <v-hover>
                         <template v-slot:default="{ isHovering, props }">
-                          <v-btn append-icon="mdi-login" @keyup.enter="signIn()" @click="signIn()" v-bind="props" size="x-large" :color="isHovering ?  'primary' : 'secondary'" color="w-100 mt-2">Sign in</v-btn>
+                          <v-btn class="elevation-3" append-icon="mdi-login" @keyup.enter="signIn()" @click="signIn()" v-bind="props" size="x-large" :color="isHovering ?  'primary' : 'secondary'" color="w-100 mt-2">Sign in</v-btn>
                         </template>
                       </v-hover>
                   </v-form>
@@ -43,17 +50,17 @@
     </div>
 </template>
 <script setup>
-import router from "@/router/index.js";
-import { ref, computed, onMounted } from "vue";
-import { userAuthentication } from "../stores/session";
+import { ref, computed, onMounted, defineProps } from "vue";
+import { useRouter } from "vue-router";
 
-const authentication = userAuthentication();
+
+const { authentication } = defineProps(['authentication'])
 // user input
 const userInput = {
   username: ref(""),
   password: ref(""),
 };
-
+const router = useRouter();
 const formLogin = ref(null);
 const showPassword = ref(false);
 const toggleAlert = ref(false);
@@ -81,29 +88,33 @@ const signIn = async () => {
     username: userInput.username.value,
     password: userInput.password.value,
   };
+  console.log(body);
 
-  const response = await fetch("http://172.16.2.30:3014/api/login", {
+  const response = await fetch("http://172.16.1.39:3014/api/login", {
     method: "POST",
     headers: {
       "content-type": "application/json",
     },
     body: JSON.stringify(body),
   });
+  // retrieves the user data
   const data = await response.json();
 
+  // ! displays the alert component
+  
   if (data.error) {
-    // displays the alert component
     toggleAlert.value = true;
     isError.value = true;
-    password.value = "";
+    userInput.password.value = "";
     return;
   }
 
-  console.log(data);
   toggleAlert.value = true;
   isError.value = false;
   authentication.setUserToken(data.user.login_token);
-  console.log(authentication.token);
+  router.push("/");
+  // console.log(authentication.token);
+
 };
 </script>
 
@@ -132,7 +143,7 @@ const signIn = async () => {
 }
 .login-box {
   margin-right: 2em;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
   background-color: white;
   padding: 1em;
   height: 95%;

@@ -1,6 +1,7 @@
 // import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
+
 export const userAuthentication = defineStore('aunthentication', {
     state: () => ({
       isLoggedIn : false,
@@ -10,6 +11,6 @@ export const userAuthentication = defineStore('aunthentication', {
       setUserToken(token) {
         this.token = token
       }
-    }
-
+    },
+    persist: true,
   })

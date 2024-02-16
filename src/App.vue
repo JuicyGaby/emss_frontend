@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <router-view />
+      <router-view :authentication = "authentication"/>
     </v-main>
   </v-app>
 </template>

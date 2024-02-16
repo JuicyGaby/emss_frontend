@@ -1,9 +1,13 @@
 <template lang="">
     <div>
-        <h1>this is index page</h1>
+        <p>is logged in {{ authentication.token}}</p>
     </div>
 </template>
 <script setup>
+
+import { defineProps } from 'vue'
+
+const { authentication } = defineProps(['authentication'])
 
 </script>
 <style lang="css"> 
