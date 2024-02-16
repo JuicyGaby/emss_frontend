@@ -1,14 +1,21 @@
 <template lang="">
     <div>
-        <p>is logged in {{ authentication.token}}</p>
-    </div>
+        <p>token: {{ authentication.token}}</p>
+        <p>logged in : {{ authentication.isLoggedIn }}</p>
+        <!-- <p>user: {{ user }}</p> -->
+    </div>  
 </template>
+
+
 <script setup>
+import { defineProps, toRefs, onMounted } from 'vue'
 
-import { defineProps } from 'vue'
+const { authentication, user} = defineProps(['authentication', 'user'])
 
-const { authentication } = defineProps(['authentication'])
 
+onMounted(() => {
+    console.log(user);
+})
 </script>
 <style lang="css"> 
 </style>

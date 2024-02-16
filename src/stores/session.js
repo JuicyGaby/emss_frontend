@@ -10,6 +10,9 @@ export const userAuthentication = defineStore('aunthentication', {
     actions: {
       setUserToken(token) {
         this.token = token
+      },
+      toggleLogIn(status) {
+        this.isLoggedIn = status
       }
     },
     persist: true,

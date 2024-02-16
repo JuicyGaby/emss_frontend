@@ -1,47 +1,64 @@
 <template>
   <v-app>
     <v-main>
-      <router-view :authentication = "authentication"/>
+      <logout-btn :user="user" :authentication = "authentication" v-if="authentication.isLoggedIn"></logout-btn>
+      <router-view :user="user" :authentication = "authentication"/>
     </v-main>
   </v-app>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onBeforeMount} from "vue";
 import { useRouter } from "vue-router";
 import { userAuthentication } from "./stores/session";
 
+// * components 
+import logoutBtn from './components/Logout.vue'
+
+
 onMounted(() => {
-  // checkUserSession();
+  checkUserSession();
+  getUserByToken();
 });
 
+let user = ref({});
 const authentication = userAuthentication();
 // methods
 
+
+
 const getUserByToken = async () => {
-  const body = {
-    token: authentication.token,
-  }
-  const response = await fetch("http://172.16.2.30:3014/api/login", {
-    method: "POST",
+  const token = authentication.token
+  if (!token) return
+  const response = await fetch("http://172.16.1.39:3014/api/get_user", {
+    method: "GET",
     headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(body),
+      "authorization": token
+    }
   });
   const data = await response.json()
   
+  if (data.error) {
+    console.error(error);
+    return
+  } 
+  user.value = data.user
+  console.log(user);
 };
 const checkUserSession = () => {
   const isLoggedIn = authentication.isLoggedIn;
   const router = useRouter();
-
-  console.log("token" + authentication.token);
+  // console.log("token" + authentication.token);
   if (!isLoggedIn) {
     router.push("/login");
+    return
   }
+  router.push("/");
 };
 </script>
+
+
+
 
 <style>
 .rb {

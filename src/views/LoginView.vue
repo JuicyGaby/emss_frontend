@@ -66,7 +66,8 @@ const showPassword = ref(false);
 const toggleAlert = ref(false);
 const isError = ref(false);
 
-// input rules
+
+// * input rules
 
 const inputRules = {
   username: [
@@ -79,8 +80,9 @@ const inputRules = {
 };
 
 // methods
+const API_URL = "http://172.16.1.39:3014/api/login";
+
 const signIn = async () => {
-  console.log('asda');
   const form = await formLogin.value.validate();
   if (!form.valid) return;
 
@@ -88,33 +90,39 @@ const signIn = async () => {
     username: userInput.username.value,
     password: userInput.password.value,
   };
-  console.log(body);
 
-  const response = await fetch("http://172.16.1.39:3014/api/login", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-  // retrieves the user data
-  const data = await response.json();
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
 
-  // ! displays the alert component
-  
-  if (data.error) {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // retrieves the user data
+    const data = await response.json();
+
+    // ! displays the alert component
+    if (data.error) {
+      toggleAlert.value = true;
+      isError.value = true;
+      userInput.password.value = "";
+      return;
+    }
+
     toggleAlert.value = true;
-    isError.value = true;
-    userInput.password.value = "";
-    return;
+    isError.value = false;
+    authentication.setUserToken(data.user.login_token);
+    authentication.toggleLogIn(true);
+    router.push("/");
+  } catch (error) {
+    console.error('Fetch error: ', error);
   }
-
-  toggleAlert.value = true;
-  isError.value = false;
-  authentication.setUserToken(data.user.login_token);
-  router.push("/");
-  // console.log(authentication.token);
-
 };
 </script>
 
