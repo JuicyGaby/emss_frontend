@@ -1,6 +1,6 @@
 <template lang="">
-    <div class="rb sign-in-container d-flex align-center justify-start">
-        <div class="bb login-box d-flex flex-column justify-center align-center">
+    <div class="rb sign-in-container d-flex align-center justify-end">
+        <div class="login-box d-flex flex-column justify-center align-center">
           <div class="w-100 alert" :class="{'visible': toggleAlert }">
               <v-alert
               variant="tonal"
@@ -9,7 +9,7 @@
             ></v-alert>
           </div>
           <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
-              <h2 class="my-2">Malasakit System Name</h2>
+              <h2 class="mb-10">Malasakit System Name</h2>
               <div class="input-field w-100">
                   <v-form ref="formLogin" class="d-flex flex-column ga-3">
                       <v-text-field
@@ -31,7 +31,11 @@
                         :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'"
                         @click:append-inner="showPassword = !showPassword"
                       ></v-text-field>
-                      <v-btn append-icon="mdi-login" @keyup.enter="signIn()" @click="signIn()" size="large" color="secondary w-100 mt-2">Sign in</v-btn>
+                      <v-hover>
+                        <template v-slot:default="{ isHovering, props }">
+                          <v-btn append-icon="mdi-login" @keyup.enter="signIn()" @click="signIn()" v-bind="props" size="x-large" :color="isHovering ?  'primary' : 'secondary'" color="w-100 mt-2">Sign in</v-btn>
+                        </template>
+                      </v-hover>
                   </v-form>
               </div>
           </div>
@@ -69,6 +73,7 @@ const inputRules = {
 
 // methods
 const signIn = async () => {
+  console.log('asda');
   const form = await formLogin.value.validate();
   if (!form.valid) return;
 
@@ -107,6 +112,13 @@ const signIn = async () => {
 
 
 <style lang="css">
+.sign-in-container {
+  background-image: url('/src/assets/signinBG.jpg');
+  background-size: cover;
+  
+  background-position: center bottom 5%;
+  
+}
 .alert {
   visibility: hidden;
 }
@@ -119,10 +131,14 @@ const signIn = async () => {
   padding: 1.5em;
 }
 .login-box {
+  margin-right: 2em;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-color: white;
   padding: 1em;
   height: 95%;
   width: 30%;
   border-radius: 15px;
   /* border: 1px solid blue; */
 }
+
 </style>

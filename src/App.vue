@@ -12,7 +12,7 @@ import { useRouter } from "vue-router";
 import { userAuthentication } from "./stores/session";
 
 onMounted(() => {
-  checkUserSession();
+  // checkUserSession();
 });
 
 const authentication = userAuthentication();
