@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="rb d-flex justify-center">
     <h1>{{ counter.name }}</h1>
   </div>
 </template>

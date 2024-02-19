@@ -54,9 +54,11 @@ import { ref, computed, onMounted, defineProps } from "vue";
 import { useRouter } from "vue-router";
 
 
+
 const { authentication } = defineProps(['authentication'])
-// user input
+
 const userInput = {
+
   username: ref(""),
   password: ref(""),
 };
@@ -66,7 +68,9 @@ const showPassword = ref(false);
 const toggleAlert = ref(false);
 const isError = ref(false);
 
-
+onMounted(() => {
+  checkUserSession();
+});
 // * input rules
 
 const inputRules = {
@@ -80,8 +84,8 @@ const inputRules = {
 };
 
 // methods
-const API_URL = "http://172.16.1.39:3014/api/login";
 
+const API_URL = "http://localhost:3000/login"
 const signIn = async () => {
   const form = await formLogin.value.validate();
   if (!form.valid) return;
@@ -90,7 +94,6 @@ const signIn = async () => {
     username: userInput.username.value,
     password: userInput.password.value,
   };
-
   try {
     const response = await fetch(API_URL, {
       method: "POST",
@@ -106,24 +109,35 @@ const signIn = async () => {
 
     // retrieves the user data
     const data = await response.json();
-
     // ! displays the alert component
     if (data.error) {
       toggleAlert.value = true;
       isError.value = true;
-      userInput.password.value = "";
-      return;
+      // userInput.password.value = "";
+      return
     }
 
+    console.log(data.login_token);
     toggleAlert.value = true;
     isError.value = false;
-    authentication.setUserToken(data.user.login_token);
+    authentication.setUserToken(data.login_token);
     authentication.toggleLogIn(true);
     router.push("/");
+
+    
   } catch (error) {
     console.error('Fetch error: ', error);
   }
 };
+
+
+const checkUserSession = () => {
+  const isLoggedIn = authentication.isLoggedIn;
+  if (isLoggedIn) {
+    router.push("/");
+  }
+};
+
 </script>
 
 
