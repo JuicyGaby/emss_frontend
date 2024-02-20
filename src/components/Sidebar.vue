@@ -1,7 +1,7 @@
 <template>
     <v-card class="">
       <v-layout>
-        <v-navigation-drawer width="400"
+        <v-navigation-drawer width="350"
         >
           <v-list>
             <v-list-item
@@ -15,7 +15,7 @@
           <v-list density="default" nav>
             <v-list-item prepend-icon="mdi-home" to="/" title="Home" value="myfiles"></v-list-item>
             <v-list-item prepend-icon="mdi-account-multiple" to="/about" title="Shared with me" value="shared"></v-list-item>
-            <!-- <v-list-item prepend-icon="mdi-star" to="" title="Starred" value="starred"></v-list-item> -->
+            <v-list-item prepend-icon="mdi-star" to="/form" title="Starred" value="starred"></v-list-item>
             <v-list-item prepend-icon="mdi-logout" to="" title="Log-out" value="log-out" @click="signOut()"></v-list-item>
           </v-list>
         </v-navigation-drawer>
@@ -26,11 +26,11 @@
 <script setup>
 import { defineProps, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
-
 const props = defineProps({
     user: Object,
     authentication: Object
 })
+
 
 const userFullName = computed(() => {
     return `${props.user.fname} ${props.user.lname}`
@@ -40,7 +40,6 @@ onMounted(() => {
     
 })
 const router = useRouter();
-// methods
 
 const signOut = () => {
     const isLoggedIn = false

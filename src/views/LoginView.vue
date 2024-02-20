@@ -8,13 +8,6 @@
               :text="isError ? 'Wrong credentials. Please try again' : 'Welcome back! Your account was accessed successfully.'"
             ></v-alert>
           </div>
-          <!-- <div class="w-100 alert" :class="{'visible': toggleAlert }">
-              <v-alert
-              variant="tonal"
-              :type="isError ? 'error' : 'success'"
-              :text="isError ? 'Wrong credentials. Please try again' : 'Welcome back! Your account was accessed successfully.'"
-            ></v-alert>
-          </div> -->
           <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
               <h2 class="mb-10">Malasakit System Name</h2>
               <div class="input-field w-100">
@@ -58,10 +51,10 @@ import { useRouter } from "vue-router";
 const { authentication } = defineProps(['authentication'])
 
 const userInput = {
-
   username: ref(""),
   password: ref(""),
 };
+
 const router = useRouter();
 const formLogin = ref(null);
 const showPassword = ref(false);

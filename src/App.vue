@@ -2,13 +2,14 @@
   <v-app>
     <v-main class="d-flex app-main">
       <sidebar :user="user" :authentication = "authentication" v-if="authentication.isLoggedIn" class="theSideBar"></sidebar>
-      <router-view :user="user" :authentication = "authentication" class="display"/>
+      <router-view :user="user" :authentication = "authentication" class="display rb"/>
     </v-main>
   </v-app>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeMount} from "vue";
+
+import { ref, computed, onMounted, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import { userAuthentication } from "./stores/session";
 
@@ -22,6 +23,7 @@ onMounted(() => {
 });
 
 let user = ref({});
+const router = useRouter();
 const authentication = userAuthentication();
 // methods
 
@@ -45,15 +47,12 @@ const getUserByToken = async () => {
     return
   }
   user.value = data
-  console.log(user);
 };
 
 const checkUserSession = () => {
   const isLoggedIn = authentication.isLoggedIn;
-  const router = useRouter();
   if (!isLoggedIn) {
     router.push("/login");
-    return
   }
 };
 </script>
@@ -75,9 +74,8 @@ const checkUserSession = () => {
   height: 100vh;
   width: 100%;
 }
-.theSideBar {
-}
 .display {
   width: 100%;
+  padding: 1em;
 }
 </style>

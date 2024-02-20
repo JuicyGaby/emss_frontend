@@ -10,10 +10,6 @@
 <script setup>
 import { defineProps, toRefs, onMounted } from 'vue'
 const { authentication, user} = defineProps(['authentication', 'user'])
-// const props = defineProps({
-//     user: Object,
-//     authentication: Object
-// })
 
 
 onMounted(() => {
