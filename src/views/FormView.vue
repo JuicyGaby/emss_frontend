@@ -1,34 +1,87 @@
 <template lang="">
     <div>
-        <!-- <v-form>
-            <v-autocomplete
-            label="Department"
-            item-title="dept_name"
-            item-value="id"
-            :items="departments"
-            v-model="selectedDepartment"
-            variant="outlined"
+        <div class="d-flex ga-2">
+            <v-btn color="primary" @click="dialogs.createPatient = !dialogs.createPatient">Create Patient</v-btn>
+        </div>
+        <v-table density="compact">
+            <thead>
+            <tr>
+                <th v-for="col in tableHeaders">{{col}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                v-for="patient in patients"
+                :key="patient.id"
             >
-            </v-autocomplete>
-            <v-btn color="success" @click="displayInput()">text</v-btn>
-        </v-form> -->
-        <CreatePatient />
+                <td>{{ patient.fname }}</td>
+                <td>{{ patient.mname }}</td>
+                <td>{{ patient.lname }}</td>
+                <td>{{ patient.age }}</td>
+                <td>
+                <v-btn color="primary" @click="openUpdateModal(patient.id)">Update</v-btn>
+                <v-btn color="primary">Delete</v-btn>
+                </td>
+            </tr>
+            </tbody>
+        </v-table>
+        <!-- create patient dialog -->
+        <v-dialog v-model="dialogs.createPatient" max-width="500">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Create Patient</span>
+                </v-card-title>
+                <v-card-text>
+                    <CreatePatient />
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green darken-1" text @click="dialogs.createPatient = false">Disagree</v-btn>
+                    <v-btn color="green darken-1" text @click="dialog = false">Agree</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <!-- update patient dialog -->
+        <v-dialog v-model="dialogs.updatePatient" max-width="700">
+            <UpdatePatient :patientID = "patientId" />
+        </v-dialog>
     </div>
 </template>
 <script setup>
+
+
 import { ref, onMounted } from "vue";
 import { getDepartment, sayHello } from "../api/api";
+import { getPatients } from "@/api/patients";
 import CreatePatient from "@/components/CreatePatient.vue";
+import UpdatePatient from "@/components/patients/UpdatePatient.vue";
 
-let departments = ref([]);
-onMounted(async () => {
-    departments.value = await getDepartment();
+
+const tableHeaders = [
+  'First Name',
+  'Middle Name',
+  'Last Name',
+  'Age',
+  'Operation'
+]
+
+const dialogs = ref({
+  createPatient: false,
+  updatePatient: false,
 });
+const patients = ref([]);
+const patientId = ref(null);
 
+onMounted(async () => {
+  patients.value = await getPatients();
+});
 const selectedDepartment = ref(null);
-const displayInput = () => {
-    console.log(selectedDepartment.value);
+
+const openUpdateModal = (id) => {
+    dialogs.value.updatePatient = true;
+    patientId.value = id;
 };
+
 </script>
 <style lang="">
 </style>
