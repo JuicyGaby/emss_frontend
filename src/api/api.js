@@ -14,6 +14,7 @@ const getDepartment = async () => {
     return data;
 }
 
+
 const sayHello = () => {
     console.log('Hello');
 }
