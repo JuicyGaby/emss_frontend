@@ -45,8 +45,7 @@
 <script setup>
 import { ref, computed, onMounted, defineProps } from "vue";
 import { useRouter } from "vue-router";
-
-
+import { userLogin } from "@/api/authentication"
 
 const { authentication } = defineProps(['authentication'])
 

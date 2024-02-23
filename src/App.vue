@@ -12,42 +12,20 @@
 import { ref, computed, onMounted, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import { userAuthentication } from "./stores/session";
+import { getUserByToken } from "@/api/authentication";
 
 // * components 
 import Sidebar from './components/Sidebar.vue'
 
 
-onMounted(() => {
-  checkUserSession();
-  getUserByToken();
-});
-
 let user = ref({});
 const router = useRouter();
 const authentication = userAuthentication();
-// methods
+onMounted(async () => {
+  checkUserSession();
+  user.value = await getUserByToken(authentication.token);
+});
 
-
-const getUserByToken = async () => {
-  // returns if does not have token
-  const token = authentication.token
-  if (!token) return
-
-
-  const API_URL = "http://localhost:3000/userByToken"
-  const response = await fetch(API_URL, {
-    method: "GET",
-    headers: {
-      "authorization": token
-    }
-  });
-  const data = await response.json()
-  if (data.error) {
-    console.error(error);
-    return
-  }
-  user.value = data
-};
 
 const checkUserSession = () => {
   const isLoggedIn = authentication.isLoggedIn;

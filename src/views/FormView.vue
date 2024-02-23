@@ -32,7 +32,7 @@
                     <span class="headline">Create Patient</span>
                 </v-card-title>
                 <v-card-text>
-                    <CreatePatient />
+                    <CreatePatient @createPatient="handleCreatedPatient"/>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -43,7 +43,7 @@
         </v-dialog>
         <!-- update patient dialog -->
         <v-dialog v-model="dialogs.updatePatient" max-width="700">
-            <UpdatePatient :patientID = "patientId" />
+            <UpdatePatient @updatePatient="handleUpdatedPatient" :patientID = "patientId" />
         </v-dialog>
     </div>
 </template>
@@ -80,6 +80,20 @@ const selectedDepartment = ref(null);
 const openUpdateModal = (id) => {
     dialogs.value.updatePatient = true;
     patientId.value = id;
+};
+
+
+// * emmit handling 
+
+const handleCreatedPatient = (response) => {
+    // push response variable to the 'patients' array
+    patients.value.push(response);
+};
+
+const handleUpdatedPatient = (response) => {
+    // update the 'patients' array
+    const index = patients.value.findIndex((patient) => patient.id === response.id);
+    patients.value[index] = response;
 };
 
 </script>

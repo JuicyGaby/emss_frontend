@@ -30,16 +30,12 @@ const props = defineProps({
     user: Object,
     authentication: Object
 })
+const router = useRouter();
 
 
 const userFullName = computed(() => {
     return `${props.user.fname} ${props.user.lname}`
 })
-
-onMounted(() => {
-    
-})
-const router = useRouter();
 
 const signOut = () => {
     const isLoggedIn = false

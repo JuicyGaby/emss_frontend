@@ -30,8 +30,7 @@
                     v-model="userInputs.sex.value"
                     :rules="inputRules.sex"
                     >
-                    <v-radio label="Male" value="Male"></v-radio>
-                    <v-radio label="Female" value="Female"></v-radio>
+                    <v-radio v-for="sex in radioInputs.sex.value" :label="sex" :value="sex"></v-radio>
                 </v-radio-group>
                 <v-text-field
                     label="Contact Number"
@@ -55,23 +54,24 @@
                 inline
                 :rules="inputRules.civilStatus"
                 >
-                    <v-radio v-for="status in selectItems.civilStatus.value" :label="status" :value="status"></v-radio>
+                    <v-radio v-for="status in radioInputs.civilStatus.value" :label="status" :value="status"></v-radio>
                 </v-radio-group>
             </div>
-            <v-btn color="primary" @click="displayInput()">Create</v-btn>
+            <v-btn color="primary" @click="createPatient()">Create</v-btn>
         </v-form>
     </div>
-
 </template> 
 <script setup>
 // import moment library
+
 import moment from "moment";
 import { ref } from "vue";
+import { createPatientData } from "@/api/patients";
 
 const createPatientForm = ref(null);
-
-const isCalendarActive = ref(false);
-
+const emit = defineEmits([
+  "createPatient"
+])
 
 const inputRules = {
   fname: [(v) => !!v || "This field is required"],
@@ -83,8 +83,7 @@ const inputRules = {
   birthDate: [(v) => !!v || "This field is required"],
 };
 
-
-const selectItems = {
+const radioInputs = {
   sex: ref(["Male", "Female"]),
   civilStatus: ref(["Single", "Married", "Widowed", "Separated"]),
 };
@@ -100,10 +99,7 @@ const userInputs = {
   birthDate: ref(moment().format("YYYY-MM-DD")),
 };
 const createPatient = async () => {
-  // validate form
-  const form = await createPatientForm.value.validate();
-  if (!form.valid) return;
-
+  validateForm();
   const body = {
     firstName: userInputs.firstName.value,
     middleName: userInputs.middleName.value,
@@ -114,20 +110,13 @@ const createPatient = async () => {
     civilStatus: userInputs.civilStatus.value,
     birthDate: userInputs.birthDate.value,
   };
-  const API_URL = "http://localhost:3000/patients";
-  const response = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-  const data = await response.json();
-  if (data.error) {
-    console.error(data.error);
-    return;
-  }
-  console.log(data);
+  const response = await createPatientData(body);
+  emit("createPatient", response);
+};
+
+const validateForm = async () => {
+  const form = await createPatientForm.value.validate();
+  if (!form.valid) return;
 };
 
 const displayInput = async () => {
