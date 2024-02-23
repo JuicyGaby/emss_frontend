@@ -8,8 +8,7 @@
 </template>
 
 <script setup>
-
-import { ref, computed, onMounted, onBeforeMount } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { userAuthentication } from "./stores/session";
 import { getUserByToken } from "@/api/authentication";
@@ -17,24 +16,29 @@ import { getUserByToken } from "@/api/authentication";
 // * components 
 import Sidebar from './components/Sidebar.vue'
 
-
 let user = ref({});
 const router = useRouter();
 const authentication = userAuthentication();
-onMounted(async () => {
-  checkUserSession();
-  user.value = await getUserByToken(authentication.token);
-});
 
+watch(() => authentication.token, async (newToken) => {
+  if (newToken) {
+    try {
+      user.value = await getUserByToken(newToken);
+    } catch (error) {
+      console.error("Failed to get user by token:", error);
+    }
+  }
+}, { immediate: true });
 
-const checkUserSession = () => {
+onMounted(checkUserSession);
+
+function checkUserSession() {
   const isLoggedIn = authentication.isLoggedIn;
   if (!isLoggedIn) {
     router.push("/login");
   }
 };
 </script>
-
 
 <style scoped>
 /* debug style classes */

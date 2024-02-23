@@ -43,11 +43,12 @@
     </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, defineProps } from "vue";
+import { ref, onMounted, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import { userLogin } from "@/api/authentication"
 
 const { authentication } = defineProps(['authentication'])
+
 
 const userInput = {
   username: ref(""),
@@ -75,53 +76,37 @@ const inputRules = {
   password: [(v) => !!v || "Password is required"],
 };
 
-// methods
 
-const API_URL = "http://localhost:3000/login"
 const signIn = async () => {
-  const form = await formLogin.value.validate();
-  if (!form.valid) return;
-
+  await validateForm();
   const body = {
     username: userInput.username.value,
     password: userInput.password.value,
   };
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  const response = await userLogin(body);
+  validateUserData(response);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
 
-    // retrieves the user data
-    const data = await response.json();
-    // ! displays the alert component
-    if (data.error) {
-      toggleAlert.value = true;
-      isError.value = true;
-      // userInput.password.value = "";
-      return
-    }
-
-    console.log(data.login_token);
-    toggleAlert.value = true;
-    isError.value = false;
-    authentication.setUserToken(data.login_token);
-    authentication.toggleLogIn(true);
-    router.push("/");
-
-    
-  } catch (error) {
-    console.error('Fetch error: ', error);
-  }
 };
 
+
+const validateUserData = data => {
+  if (data.error) {
+    toggleAlert.value = true;
+    isError.value = true;
+    return
+  }
+  toggleAlert.value = true;
+  isError.value = false;
+  authentication.setUserToken(data.login_token);
+  authentication.toggleLogIn(true);
+  router.push("/");
+};
+
+const validateForm = async () => {
+  const form = await formLogin.value.validate();
+  if (!form.valid) return;
+};
 
 const checkUserSession = () => {
   const isLoggedIn = authentication.isLoggedIn;

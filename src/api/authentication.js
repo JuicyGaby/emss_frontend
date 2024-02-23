@@ -7,10 +7,6 @@ const getUserByToken = async (token) => {
         }
     })
     const data = await response.json();
-    if (data.error) {
-        throw new Error(data.error);
-    }
-    // console.log(data);
     return data;
 }
 
@@ -24,9 +20,6 @@ const userLogin = async (reqBody) => {
         body: JSON.stringify(reqBody)
     })
     const data = await response.json();
-    if (data.error) {
-        throw new Error(data.error);
-    }
     return data;
 }
 
