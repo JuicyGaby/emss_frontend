@@ -5,7 +5,8 @@ import { defineStore } from 'pinia'
 export const userAuthentication = defineStore('aunthentication', {
     state: () => ({
       isLoggedIn : false,
-      token : ''
+      token : '',
+      access_rights : {}
     }),
     actions: {
       setUserToken(token) {
@@ -13,6 +14,9 @@ export const userAuthentication = defineStore('aunthentication', {
       },
       toggleLogIn(status) {
         this.isLoggedIn = status
+      },
+      setAccessRights(rights) {
+        this.access_rights = rights
       }
     },
     persist: true,

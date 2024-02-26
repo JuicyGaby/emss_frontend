@@ -30,7 +30,9 @@ watch(() => authentication.token, async (newToken) => {
   }
 }, { immediate: true });
 
+
 onMounted(checkUserSession);
+
 
 function checkUserSession() {
   const isLoggedIn = authentication.isLoggedIn;

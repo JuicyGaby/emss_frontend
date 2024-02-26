@@ -48,7 +48,7 @@
 
 import { ref, onMounted, defineProps } from "vue";
 import { useRouter } from "vue-router";
-import { userLogin } from "@/api/authentication";
+import { userLogin, employeeRights } from "@/api/authentication";
 
 const { authentication } = defineProps(["authentication"]);
 
@@ -88,10 +88,10 @@ const signIn = async () => {
   const response = await userLogin(body);
   validateUserData(response);
 };
-
-const validateUserData = (data) => {
+const validateUserData = async (data) => {
   handleAlert(data);
-  handleAuthentication(data);
+  const rights = await checkUserAccessRights(data.user.id)
+  handleAuthentication(data, rights);
 };
 
 const handleAlert = data => {
@@ -104,9 +104,11 @@ const handleAlert = data => {
   isError.value = false;
 }
 
-const handleAuthentication = data => {
+const handleAuthentication = (data, rights) => {
   authentication.setUserToken(data.user.login_token);
   authentication.toggleLogIn(true);
+  console.log(rights);
+  authentication.setAccessRights(rights)
   router.push("/");
 };
 
@@ -122,8 +124,9 @@ const checkUserSession = () => {
   }
 };
 
-const checkUserAccessRights = async (id) => {
-  console.log(id);
+const checkUserAccessRights = async id => {
+  const employeeAccessRights = await employeeRights(id);
+  return employeeAccessRights.access_rights
 };
 </script>
 
