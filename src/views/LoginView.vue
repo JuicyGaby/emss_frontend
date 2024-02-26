@@ -86,19 +86,25 @@ const signIn = async () => {
     password: userInput.password.value,
   };
   const response = await userLogin(body);
-  console.log(response.user.login_token);
-
   validateUserData(response);
 };
 
 const validateUserData = (data) => {
+  handleAlert(data);
+  handleAuthentication(data);
+};
+
+const handleAlert = data => {
   if (data.error) {
     toggleAlert.value = true;
     isError.value = true;
-    return;
+    return
   }
   toggleAlert.value = true;
   isError.value = false;
+}
+
+const handleAuthentication = data => {
   authentication.setUserToken(data.user.login_token);
   authentication.toggleLogIn(true);
   router.push("/");
@@ -114,6 +120,10 @@ const checkUserSession = () => {
   if (isLoggedIn) {
     router.push("/");
   }
+};
+
+const checkUserAccessRights = async (id) => {
+  console.log(id);
 };
 </script>
 

@@ -7,7 +7,6 @@ const getUserByToken = async (token) => {
         }
     })
     const data = await response.json();
-    console.log(data.user);
     return data.user;
 }
 

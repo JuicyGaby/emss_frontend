@@ -7,7 +7,7 @@
             <v-list-item
               prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"
               :title="userFullName"
-              :subtitle="props.user.email"
+              :subtitle="props.user.department ? props.user.department.dept_code : 'No Department'"
             ></v-list-item>
           </v-list>
   
@@ -24,7 +24,7 @@
     </v-card>
   </template>
 <script setup>
-import { defineProps, computed } from "vue";
+import { defineProps, computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 const props = defineProps({
     user: Object,
@@ -33,9 +33,13 @@ const props = defineProps({
 const router = useRouter();
 
 
+
+console.log(props.user.lname);
+
 const userFullName = computed(() => {
     return `${props.user.fname} ${props.user.lname}`
 })
+
 
 const signOut = () => {
     const isLoggedIn = false

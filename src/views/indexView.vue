@@ -3,6 +3,7 @@
         <!-- <v-data-table :items="items"></v-data-table> -->
         sdfsd
         <p>{{ authentication.token }}</p>
+        <p v-if="user.department">{{user.department.dept_code}}</p>
     </div>  
 </template>
 
@@ -13,6 +14,7 @@
 import { defineProps, toRefs, onMounted } from 'vue'
 
 const { authentication, user} = defineProps(['authentication', 'user'])
+
 
 onMounted(() => {
     // console.log(user);
