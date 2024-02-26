@@ -1,5 +1,5 @@
 const getUserByToken = async (token) => {
-    const API_URL = "http://localhost:3000/userByToken";
+    const API_URL = "http://172.16.1.39:3014/api/get_user";
     const response = await fetch(API_URL, {
         method: "GET",
         headers: {
@@ -7,7 +7,8 @@ const getUserByToken = async (token) => {
         }
     })
     const data = await response.json();
-    return data;
+    console.log(data.user);
+    return data.user;
 }
 
 const userLogin = async (reqBody) => {
@@ -22,5 +23,4 @@ const userLogin = async (reqBody) => {
     const data = await response.json();
     return data;
 }
-
 export { getUserByToken, userLogin };

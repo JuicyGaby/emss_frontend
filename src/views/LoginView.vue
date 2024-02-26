@@ -86,7 +86,8 @@ const signIn = async () => {
     password: userInput.password.value,
   };
   const response = await userLogin(body);
-  console.log(response);
+  console.log(response.user.login_token);
+
   validateUserData(response);
 };
 
@@ -98,7 +99,7 @@ const validateUserData = (data) => {
   }
   toggleAlert.value = true;
   isError.value = false;
-  authentication.setUserToken(data.login_token);
+  authentication.setUserToken(data.user.login_token);
   authentication.toggleLogIn(true);
   router.push("/");
 };
