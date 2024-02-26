@@ -1,16 +1,16 @@
 <template lang="">
     <div>
-        <!-- <p>{{ user }}</p> -->
-        <p>token: {{ authentication.token}}</p>
-        <p>logged in : {{ authentication.isLoggedIn }}</p>
+        <!-- <v-data-table :items="items"></v-data-table> -->
     </div>  
 </template>
 
 
 <script setup>
-import { defineProps, toRefs, onMounted } from 'vue'
-const { authentication, user} = defineProps(['authentication', 'user'])
 
+
+import { defineProps, toRefs, onMounted } from 'vue'
+
+const { authentication, user} = defineProps(['authentication', 'user'])
 
 onMounted(() => {
     console.log(user);

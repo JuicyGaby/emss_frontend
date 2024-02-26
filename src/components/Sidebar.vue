@@ -24,7 +24,7 @@
     </v-card>
   </template>
 <script setup>
-import { defineProps, onMounted, computed } from "vue";
+import { defineProps, computed } from "vue";
 import { useRouter } from "vue-router";
 const props = defineProps({
     user: Object,

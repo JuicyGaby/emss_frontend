@@ -1,13 +1,13 @@
 <template lang="">
     <div class="rb sign-in-container d-flex align-center justify-end">
         <div class="login-box d-flex flex-column justify-center align-center elevation-3">
-          <div v-if="toggleAlert" class="w-100" >
-              <v-alert
-              variant="tonal"
-              :type="isError ? 'error' : 'success'"
-              :text="isError ? 'Wrong credentials. Please try again' : 'Welcome back! Your account was accessed successfully.'"
-            ></v-alert>
-          </div>
+            <div v-if="toggleAlert" class="w-100" >
+                <v-alert
+                variant="tonal"
+                :type="isError ? 'error' : 'success'"
+                :text="isError ? 'Wrong credentials. Please try again' : 'Welcome back! Your account was accessed successfully.'"
+              ></v-alert>
+            </div>
           <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
               <h2 class="mb-10">Malasakit System Name</h2>
               <div class="input-field w-100">
@@ -19,6 +19,7 @@
                         variant="outlined"
                         :rules="inputRules.username"
                         clearable
+                        @keyup.enter="signIn"
                       ></v-text-field>
                       <v-text-field
                       v-model="userInput.password.value"
@@ -30,10 +31,11 @@
                         hint="Please remember your password"
                         :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'"
                         @click:append-inner="showPassword = !showPassword"
+                        @keyup.enter="signIn"
                       ></v-text-field>
                       <v-hover>
                         <template v-slot:default="{ isHovering, props }">
-                          <v-btn class="elevation-3" append-icon="mdi-login" @keyup.enter="signIn()" @click="signIn()" v-bind="props" size="x-large" :color="isHovering ?  'primary' : 'secondary'" color="w-100 mt-2">Sign in</v-btn>
+                          <v-btn class="elevation-3" append-icon="mdi-login" @keyup.enter="signIn" @click="signIn()" v-bind="props" size="x-large" :color="isHovering ?  'primary' : 'secondary'" color="w-100 mt-2">Sign in</v-btn>
                         </template>
                       </v-hover>
                   </v-form>
@@ -43,11 +45,12 @@
     </div>
 </template>
 <script setup>
+
 import { ref, onMounted, defineProps } from "vue";
 import { useRouter } from "vue-router";
-import { userLogin } from "@/api/authentication"
+import { userLogin } from "@/api/authentication";
 
-const { authentication } = defineProps(['authentication'])
+const { authentication } = defineProps(["authentication"]);
 
 
 const userInput = {
@@ -76,7 +79,6 @@ const inputRules = {
   password: [(v) => !!v || "Password is required"],
 };
 
-
 const signIn = async () => {
   await validateForm();
   const body = {
@@ -84,17 +86,15 @@ const signIn = async () => {
     password: userInput.password.value,
   };
   const response = await userLogin(body);
+  console.log(response);
   validateUserData(response);
-
-
 };
 
-
-const validateUserData = data => {
+const validateUserData = (data) => {
   if (data.error) {
     toggleAlert.value = true;
     isError.value = true;
-    return
+    return;
   }
   toggleAlert.value = true;
   isError.value = false;
@@ -114,20 +114,22 @@ const checkUserSession = () => {
     router.push("/");
   }
 };
-
 </script>
 
 
 
 
 
-<style lang="css">
+
+<style lang="css" scoped>
+
+
+
 .sign-in-container {
-  background-image: url('/src/assets/signinBG.jpg');
+  background-image: url("/src/assets/signinBG.jpg");
   background-size: cover;
-  
+
   background-position: center bottom 5%;
-  
 }
 .alert {
   visibility: hidden;
@@ -150,5 +152,4 @@ const checkUserSession = () => {
   border-radius: 15px;
   /* border: 1px solid blue; */
 }
-
 </style>

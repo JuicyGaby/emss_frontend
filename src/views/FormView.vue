@@ -3,7 +3,7 @@
         <div class="d-flex ga-2">
             <v-btn color="primary" @click="dialogs.createPatient = !dialogs.createPatient">Create Patient</v-btn>
         </div>
-        <v-table density="compact">
+        <!-- <v-table density="compact">
             <thead>
             <tr>
                 <th v-for="col in tableHeaders">{{col}}</th>
@@ -24,8 +24,17 @@
                 </td>
             </tr>
             </tbody>
-        </v-table>
+        </v-table> -->
+        <div>
+        <v-data-table 
+        :items="patients"
+        :search = "search"
+        ></v-data-table>
+    </div>  
         <!-- create patient dialog -->
+        <v-text-field
+            v-model="search"
+        ></v-text-field>
         <v-dialog v-model="dialogs.createPatient" max-width="500">
             <v-card>
                 <v-card-title>
@@ -64,6 +73,8 @@ const tableHeaders = [
   'Age',
   'Operation'
 ]
+
+const search = ref("");
 
 const dialogs = ref({
   createPatient: false,
