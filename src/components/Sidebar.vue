@@ -15,24 +15,14 @@
         </v-list>
         <!-- {{ props.authentication.access_rights }} -->
         <v-divider></v-divider>
-        <v-list density="default" nav>
+        <v-list density="compact" nav>
           <v-list-item
-            prepend-icon="mdi-view-dashboard"
-            to="/"
-            title="Dashboard"
-            value="Dashboard"
-          ></v-list-item>
-          <v-list-item
-            prepend-icon="mdi-account-multiple"
-            to="/about"
-            title="Shared with me"
-            value="shared"
-          ></v-list-item>
-          <v-list-item
-            prepend-icon="mdi-star"
-            to="/form"
-            title="Starred"
-            value="starred"
+            v-for="(item, key) in navItems"
+            :prepend-icon="item.icon"
+            :key="key"
+            :to="item.to"
+            :title="item.title"
+            :value="item.title"
           ></v-list-item>
           <v-list-item
             prepend-icon="mdi-logout"
@@ -41,7 +31,6 @@
             value="log-out"
             @click="signOut()"
           ></v-list-item>
-          <!-- <v-list-item v-if="props.authentication.access_rights.can_view" prepend-icon="mdi-door" to="" title="Log-out" value="log-out" @click="signOut()"></v-list-item> -->
         </v-list>
       </v-navigation-drawer>
       <v-main class="sidebar"></v-main>
@@ -58,6 +47,20 @@ const props = defineProps({
   authentication: Object,
 });
 const router = useRouter();
+
+const navItems = {
+  dashboard: {
+    icon: "mdi-view-dashboard",
+    title: "Dashboard",
+    to: "/",
+  },
+  shared: {
+    icon: "mdi-account-multiple",
+    title: "Shared",
+    to: "/about",
+  },
+};
+
 
 onMounted(async () => {});
 
@@ -77,5 +80,9 @@ const signOut = () => {
 .sidebar {
   width: 200px;
   height: 100vh;
+}
+.sticky {
+  position: sticky;
+  top: 0;
 }
 </style>
