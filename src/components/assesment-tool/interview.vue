@@ -13,7 +13,9 @@
     </div>
 </template>
 <script setup>
+import moment from "moment";
 import { ref } from "vue";
+import { interview } from "../../api/assesment-tool";
 
 const inputFields = {
   interview_date: {
@@ -26,10 +28,10 @@ const inputFields = {
     type: "time",
     data: ref(""),
   },
-  interview_datetime: {
+  admission_date_and_time: {
     label: "Date and Time of the interview",
     type: "datetime-local",
-    data: ref(""),
+    data: ref(moment().format("YYYY-MM-DDTHH:mm")),
   },
   basic_ward: {
     label: "Basic Ward",
@@ -41,17 +43,17 @@ const inputFields = {
     type: "text",
     data: ref(""),
   },
-  health_record: {
+  health_record_number: {
     label: "Health Record Number",
     type: "text",
     data: ref(""),
   },
-  mswd: {
+  mswd_number: {
     label: "MSWD number",
     type: "text",
     data: ref(""),
   },
-  referral: {
+  referring_party: {
     label: "Referring Party",
     type: "text",
     data: ref(""),
@@ -71,7 +73,7 @@ const inputFields = {
     type: "text",
     data: ref(""),
   },
-  patient_relationship: {
+  relationship_to_patient: {
     label: "Patient Relationship",
     type: "text",
     data: ref(""),
@@ -88,14 +90,13 @@ const inputFields = {
   },
 };
 
-const createInterview = () => {
-    // loop and display the data variable of the input fields
-    for (const key in inputFields) {
-        console.log(inputFields[key].data.value);
-    }
-
+const createInterview = async () => {
+  const body = Object.fromEntries(
+    Object.entries(inputFields).map(([key, value]) => [key, value.data.value])
+  );
+  const response = await interview(body);
+  console.log(response);
 };
-
 </script>
 <style lang="">
 </style>
