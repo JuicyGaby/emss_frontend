@@ -3,30 +3,8 @@
         <div class="d-flex ga-2">
             <v-btn color="primary" @click="dialogs.createPatient = !dialogs.createPatient">Create Patient</v-btn>
         </div>
-        <!-- <v-table density="compact">
-            <thead>
-            <tr>
-                <th v-for="col in tableHeaders">{{col}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-                v-for="patient in patients"
-                :key="patient.id"
-            >
-                <td>{{ patient.fname }}</td>
-                <td>{{ patient.mname }}</td>
-                <td>{{ patient.lname }}</td>
-                <td>{{ patient.age }}</td>
-                <td>
-                <v-btn color="primary" @click="openUpdateModal(patient.id)">Update</v-btn>
-                <v-btn color="primary">Delete</v-btn>
-                </td>
-            </tr>
-            </tbody>
-        </v-table> -->
         <div>
-        <v-data-table 
+        <v-data-table v-auto-animate
         :items="patients"
         :search = "search"
         ></v-data-table>

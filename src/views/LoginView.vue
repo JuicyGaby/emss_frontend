@@ -51,23 +51,13 @@ import { useRouter } from "vue-router";
 import { userLogin, employeeRights } from "@/api/authentication";
 
 const { authentication } = defineProps(["authentication"]);
+const router = useRouter();
 
 
 const userInput = {
   username: ref(""),
   password: ref(""),
 };
-
-const router = useRouter();
-const formLogin = ref(null);
-const showPassword = ref(false);
-const toggleAlert = ref(false);
-const isError = ref(false);
-
-onMounted(() => {
-  checkUserSession();
-});
-// * input rules
 
 const inputRules = {
   username: [
@@ -78,6 +68,18 @@ const inputRules = {
   ],
   password: [(v) => !!v || "Password is required"],
 };
+
+const formLogin = ref(null);
+
+const showPassword = ref(false);
+const toggleAlert = ref(false);
+const isError = ref(false);
+
+onMounted(() => {
+  checkUserSession();
+});
+// * input rules
+
 
 const signIn = async () => {
   await validateForm();

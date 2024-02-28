@@ -30,6 +30,7 @@ const employeeRights = async (id) => {
         },
     })
     const data = await response.json();
+    console.log(data.access_rights);
     return data;
 }
 export { getUserByToken, userLogin, employeeRights };

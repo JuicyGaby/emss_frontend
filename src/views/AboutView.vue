@@ -1,13 +1,19 @@
 <template>
-  <div class="d-flex justify-center">
-    <h1>{{ counter.name }}</h1>
-  </div>
+  <ul v-auto-animate>
+    <li
+      v-for="item in items"
+      :key="item"
+      @click="removeItem(item)"
+    >
+      {{ item }}
+    </li>
+  </ul>
 </template>
 
 <script setup>
-
-import { useCounterStore } from '@/stores/counter';
-const counter = useCounterStore()
-
-
+import { ref } from 'vue'
+const items = ref(["😏","😐","😑","😒","😕"])
+function removeItem(toRemove) {
+  items.value = items.value.filter((item) => item !== toRemove)
+}
 </script>
