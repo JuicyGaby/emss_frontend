@@ -70,7 +70,6 @@ const inputRules = {
 };
 
 const formLogin = ref(null);
-
 const showPassword = ref(false);
 const toggleAlert = ref(false);
 const isError = ref(false);

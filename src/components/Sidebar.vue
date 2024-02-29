@@ -13,7 +13,6 @@
             "
           ></v-list-item>
         </v-list>
-        <!-- {{ props.authentication.access_rights }} -->
         <v-divider></v-divider>
         <v-list density="compact" nav>
           <v-list-item
@@ -38,7 +37,7 @@
   </v-card>
 </template>
 <script setup>
-import { defineProps, computed, onMounted, ref } from "vue";
+import { defineProps, computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { employeeRights } from "@/api/authentication";
 
@@ -60,9 +59,6 @@ const navItems = {
     to: "/about",
   },
 };
-
-
-onMounted(async () => {});
 
 const userFullName = computed(() => {
   return `${props.user.fname} ${props.user.lname}`;

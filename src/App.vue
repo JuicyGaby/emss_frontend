@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main class="d-flex app-main">
-      <sidebar :user="user" :authentication = "authentication" v-if="authentication.isLoggedIn" class="sticky"></sidebar>
+      <sidebar :user="user" :authentication = "authentication" v-if="authentication.isLoggedIn" class=""></sidebar>
       <router-view :user="user" :authentication = "authentication" class="display rb"/>
     </v-main>
   </v-app>
@@ -45,9 +45,6 @@ function checkUserSession() {
 <style scoped>
 /* debug style classes */
 
-.sticky {
-  border: 1px dashed red;
-}
 .rb {
   border: 1px dashed red;
 }
@@ -62,13 +59,6 @@ function checkUserSession() {
   width: 100%;
 }
 /* create a class for sticky */
-.sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-
-}
 .display {
   width: 100%;
   padding: 1em;

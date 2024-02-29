@@ -7,6 +7,7 @@
                 v-model="inputField.data.value"
                 :label="inputField.label"
                 :type="inputField.type"
+                density="compact"
             ></v-text-field>
             <v-btn @click="createInterview" color="success">Create Interview</v-btn>
         </v-form>
