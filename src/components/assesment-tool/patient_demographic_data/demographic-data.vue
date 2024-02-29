@@ -1,125 +1,59 @@
 <template lang="">
-    <v-form>
-        <v-container>
-            <v-container>
-                <v-row>
-                    <v-col cols="12" md="4">
-                        <v-text-field
-                            v-for="(inputField, key) in demographice_data_fields.first"
-                            :key="key"
-                            v-model="inputField.data.value"
-                            :label="inputField.label"
-                            :type="inputField.type"
-                            :rules="inputField.rules"
-                            density="compact"
-                        ></v-text-field>
-                        <v-radio-group inline v-model="radioInputs.sex.data.value" label="Sex">
-                            <v-radio
-                            v-for="(option, index) in radioInputs.sex.options"
-                            :key="index"
-                            :label="option.text"
-                            :value="option.value"
-                            ></v-radio>
-                        </v-radio-group>
-                    </v-col>
-
-                    <v-col cols="12" md="4">
-                        <v-text-field
-                            v-for="(inputField, key) in demographice_data_fields.second"
-                            :key="key"
-                            v-model="inputField.data.value"
-                            :label="inputField.label"
-                            :type="inputField.type"
-                            density="compact"
-                        ></v-text-field>
-                        <!-- create autocomplete with the label of gender -->
-                        <v-autocomplete
-                        label="Gender Identity"
-                        :items="genderOptions"
-                        ></v-autocomplete>
-                        <v-text-field
-                            v-for="(inputField, key) in demographice_data_fields.third"
-                            :key="key"
-                            v-model="inputField.data.value"
-                            :label="inputField.label"
-                            :type="inputField.type"
-                            density="compact"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="4">
-                    <v-autocomplete
-                        label="Civil Status"
-                        :items="civilStatusOptions"
-                    ></v-autocomplete>
-                    <v-autocomplete
-                        label="Living Arrangement"
-                        :items="livingArrangementOptions"
-                    ></v-autocomplete>
-                    <div class="">
-                        <v-autocomplete
-                        label="Educational Attainment"
-                        :items="educationOptions"
-                        ></v-autocomplete>
-                        <v-radio-group 
-                        label="Educational Status"
-                        inline v-model="radioInputs.educationStatus.data.value">
-                            <v-radio
-                            v-for="(option, index) in radioInputs.educationStatus.options"
-                            :key="index"
-                            :label="option.text"
-                            :value="option.value"
-
-                            ></v-radio>
-                        </v-radio-group>
-                    </div>
-
-                    </v-col>
-                    <v-col cols="12" md="4">
-                        <v-text-field
-                            v-for="(inputField, key) in demographice_data_fields.fourth"
-                            :key="key"
-                            v-model="inputField.data.value"
-                            :label="inputField.label"
-                            :type="inputField.type"
-                            density="compact"
-                        ></v-text-field>
-                        <v-radio-group inline v-model="radioInputs.phMembership.data.value">
-                            <v-radio 
-                            v-for="(option, index) in radioInputs.phMembership.options"
-                            :key="index"
-                            :label="option.text"
-                            :value="option.value"
-                            ></v-radio>
-                        </v-radio-group>
-                    </v-col>
-                    <v-col cols="12" md="4">
-                        <div v-for="(addressType, key) in address" :key="key">
-                            <h3>{{ addressType.label }}</h3>
-                            <v-text-field
-                            v-for="(input, index) in addressInputs"
-                            :key="index"
-                            v-model="addressType.data.value[input]"
-                            :label="input"
-                            density="compact"
-                            ></v-text-field>
-                        </div>
-                </v-col>                
-                </v-row>
-                <v-row>
-                    <v-col cols="12" md="4">
-                        <v-btn @click="createInterview" color="success">Create Interview</v-btn>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-container>
-    </v-form>
+    <v-container class="d-flex flex-column justify-center align-center">
+        <!-- 1st page -->
+        <div class="input-field" v-show="page == 1">
+        <v-row>
+            <v-col class="d-flex ga-2">
+                <v-text-field
+                v-for="(value, key) in step1.firstRow"
+                :key="key"
+                :label="value.label"
+                :type="value.type"
+                v-model="value.data.value"
+                variant="outlined"
+                style="min-width: 300px;"
+                ></v-text-field>
+            </v-col>
+        </v-row>
+        <v-row>
+        <v-col class="d-flex ga-2">
+            <v-text-field
+            v-for="(value, key) in step1.secondRow"
+            :key="key"
+            :label="value.label"
+            :type="value.type"
+            v-model="value.data.value"
+            variant="outlined"
+            style="min-width: 300px;"
+            ></v-text-field>
+        </v-col>
+        </v-row>
+        <v-row>
+        <v-col class="d-flex ga-2">
+            <v-text-field
+            v-for="(value, key) in step1.thirdRow"
+            :key="key"
+            :label="value.label"
+            :type="value.type"
+            v-model="value.data.value"
+            variant="outlined"
+            style="min-width: 300px;"
+            ></v-text-field>
+        </v-col>
+        </v-row>
+        </div>
+    </v-container>
+    <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
 <script setup>
 import { ref, computed } from "vue";
 
 
+const totalPages = ref(3);
+const page = ref(1);
+
 const inputRules = {
-    firstName : [(v) => !!v || "Username is required"],
+    firstName: [(v) => !!v || "Username is required"],
 }
 
 const demographice_data_fields = {
@@ -291,20 +225,90 @@ const dropDownInputs = {
     }
 }
 
+const step1 = {
+    firstRow: {
+        last_name: {
+            label: "Last Name",
+            type: "text",
+            data: ref(""),
+            rules: inputRules.firstName
+        },
+        first_name: {
+            label: "First Name",
+            type: "text",
+            data: ref(""),
+        },
+        middle_name: {
+            label: "Middle Name",
+            type: "text",
+            data: ref(""),
+        }
+    },
+    secondRow: {
+        age: {
+            label: "Age",
+            type: "number",
+            data: ref(""),
+        },
+        contact_number: {
+            label: "Contact Number",
+            type: "number",
+            data: ref(""),
+        }
+    },
+    thirdRow: {
+        birth_date: {
+            label: "Date of Birth",
+            type: "date",
+            data: ref(""),
+        },
+        place_of_birth: {
+            label: "Place of Birth",
+            type: "text",
+            data: ref(""),
+        }
+    },
+    fifthRow: {
+        religion: {
+            label: "Religion",
+            type: "text",
+            data: ref(""),
+        },
+        nationality: {
+            label: "Nationality",
+            type: "text",
+            data: ref(""),
+        }
+    },
+}
+const step2 = {
+    firstRow: {},
+    secondRow: {},
+    thirdRow: {},
+}
+const step3 = {
+    firstRow: {},
+    secondRow: {},
+    thirdRow: {},
+    fourthRow: {},
+}
+
+
+
 const createInterview = () => {
     const body = {};
     for (const section in demographice_data_fields) {
         for (const field in demographice_data_fields[section]) {
-        body[field] = demographice_data_fields[section][field].data.value;
+            body[field] = demographice_data_fields[section][field].data.value;
         }
     }
     const addressData = {};
     for (const section in address) {
         for (const field in address[section].data.value) {
-        if (!addressData[section]) {
-            addressData[section] = {};
-        }
-        addressData[section][field] = address[section].data.value[field];
+            if (!addressData[section]) {
+                addressData[section] = {};
+            }
+            addressData[section][field] = address[section].data.value[field];
         }
     }
     console.log(body);

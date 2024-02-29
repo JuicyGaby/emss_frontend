@@ -2,35 +2,32 @@
   <v-container class="reb d-flex flex-column justify-center align-center">
     <!-- 1st page -->
     <div class="input-field" v-show="page == 1">
-      <v-row no-gutters>
-      <v-col class="d-flex ga-2">
-        <v-text-field
-          v-for="(value, key) in step1.firstRow"
-          :key="key"
-          :label="value.label"
-          :type="value.type"
-          v-model="value.data"
-          variant="outlined"
-          style="min-width: 300px;"
-        ></v-text-field>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col class="d-flex ga-2">
-        <v-text-field
-          v-for="(value, key) in step1.secondRow"
-          :key="key"
-          :label="value.label"
-          :type="value.type"
-          v-model="value.data.value"
-          variant="outlined"
-          style="min-width: 300px;"
-        ></v-text-field>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col class="d-flex ga-2">
-        <v-text-field
+      <v-row>
+      <v-col class="d-flex flex-column">
+          <div class="d-flex ga-2">
+              <v-text-field
+              v-for="(value, key) in step1.firstRow"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              v-model="value.data"
+              variant="outlined"
+              style="min-width: 300px;"
+            ></v-text-field>
+          </div>
+          <div class="d-flex ga-2">
+            <v-text-field
+            v-for="(value, key) in step1.secondRow"
+            :key="key"
+            :label="value.label"
+            :type="value.type"
+            v-model="value.data.value"
+            variant="outlined"
+            style="min-width: 300px;"
+          ></v-text-field>
+        </div>
+        <div class="d-flex ga-2">
+          <v-text-field
           v-for="(value, key) in step1.thirdRow"
           :key="key"
           :label="value.label"
@@ -39,14 +36,16 @@
           variant="outlined"
           style="min-width: 300px;"
         ></v-text-field>
+      </div>
       </v-col>
     </v-row>
     </div>
     <!-- 2nd page -->
     <div class="input-field" v-show="page == 2">
       <v-row>
-        <v-col class="d-flex ga-2">
-          <v-text-field
+        <v-col class="d-flex flex-column">
+          <div class="d-flex ga-2">
+            <v-text-field
             v-for="(value, key) in step2.firstRow"
             :key="key"
             :label="value.label"
@@ -55,11 +54,9 @@
             variant="outlined"
             style="min-width: 300px;"
           ></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="d-flex ga-2">
-          <v-text-field
+          </div>
+          <div class="d-flex ga-2">
+            <v-text-field
             v-for="(value, key) in step2.secondRow"
             :key="key"
             :label="value.label"
@@ -68,35 +65,36 @@
             variant="outlined"
             style="min-width: 300px;"
           ></v-text-field>
+        </div>
         </v-col>
       </v-row>
     </div>
     <!-- 3rd page -->
     <div class="input-field" v-show="page == 3">
       <v-row>
-        <v-col class="d-flex ga-2">
-          <v-text-field
-            v-for="(value, key) in step3.firstRow"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="value.data.value"
-            variant="outlined"
-            style="min-width: 300px;"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="d-flex ga-2">
-          <v-text-field
-            v-for="(value, key) in step3.secondRow"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="value.data.value"
-            variant="outlined"
-            style="min-width: 300px;"
-          ></v-text-field>
+        <v-col class="d-flex flex-column">
+          <div class="d-flex ga-2">
+            <v-text-field
+              v-for="(value, key) in step3.firstRow"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              v-model="value.data.value"
+              variant="outlined"
+              style="min-width: 300px;"
+            ></v-text-field>
+          </div>
+          <div class="d-flex ga-2">
+            <v-text-field
+              v-for="(value, key) in step3.secondRow"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              v-model="value.data.value"
+              variant="outlined"
+              style="min-width: 300px;"
+            ></v-text-field>
+          </div>
         </v-col>
       </v-row>
     </div>
@@ -117,7 +115,7 @@ const step1 = {
   firstRow: {
     interview_date_time: {
       label: "Interview Date and Time",
-      type: "date",
+      type: "datetime-local",
       data: ref(""),
     },
     admission_date_time: {
@@ -219,9 +217,9 @@ const createInterview = async () => {
 .reb {
   border: 1px solid red;
 }
+
 .input-field {
   min-width: 300px;
   min-height: 350px;
 }
-
 </style>

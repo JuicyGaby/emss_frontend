@@ -11,7 +11,11 @@
             </v-card>
           </template>
           <template v-slot:item.2>
-            <v-card title="Step Two" flat>...</v-card>
+            <v-card class="text-center" title="Patient's Data" flat>
+              <v-card-text class="">
+                <demographic_data></demographic_data>
+              </v-card-text>
+            </v-card>
           </template>
           <template v-slot:item.3>
             <v-card title="Step Three" flat>...</v-card>
@@ -25,12 +29,13 @@
 <script setup>
 import { toRefs, onMounted } from 'vue'
 import interview from '@/components/assesment-tool/interview.vue'
-import demographic_data from '@/components/assesment-tool/patient_demographic_data/personal-data.vue'
+import demographic_data from '@/components/assesment-tool/patient_demographic_data/demographic-data.vue'
 const { authentication, user } = defineProps(['authentication', 'user'])
 
 const stepperItems = [
   'Interview',
   'Demographic Data',
+  'Submit'
 ]
 
 </script>
