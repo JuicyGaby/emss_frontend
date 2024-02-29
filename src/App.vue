@@ -63,7 +63,8 @@ function checkUserSession() {
 }
 /* create a class for sticky */
 .display {
-  margin-left: 22em;
+  /* position: absolute; */
+  /* padding-left: 21.5em; */
   width: 100%;
   padding: 1em;
 }

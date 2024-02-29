@@ -1,5 +1,5 @@
 <template>
-  <v-card class="sticky">
+  <v-card class="">
     <v-layout>
       <v-navigation-drawer width="350">
         <v-list>

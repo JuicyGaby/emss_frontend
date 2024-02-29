@@ -1,125 +1,38 @@
-<template lang="">
-    <v-form>
-        <v-container>
-            <v-container>
-                <v-row>
-                    <v-col cols="12" md="4">
-                        <v-text-field
-                            v-for="(inputField, key) in demographice_data_fields.first"
-                            :key="key"
-                            v-model="inputField.data.value"
-                            :label="inputField.label"
-                            :type="inputField.type"
-                            :rules="inputField.rules"
-                            density="compact"
-                        ></v-text-field>
-                        <v-radio-group inline v-model="radioInputs.sex.data.value" label="Sex">
-                            <v-radio
-                            v-for="(option, index) in radioInputs.sex.options"
-                            :key="index"
-                            :label="option.text"
-                            :value="option.value"
-                            ></v-radio>
-                        </v-radio-group>
-                    </v-col>
-
-                    <v-col cols="12" md="4">
-                        <v-text-field
-                            v-for="(inputField, key) in demographice_data_fields.second"
-                            :key="key"
-                            v-model="inputField.data.value"
-                            :label="inputField.label"
-                            :type="inputField.type"
-                            density="compact"
-                        ></v-text-field>
-                        <!-- create autocomplete with the label of gender -->
-                        <v-autocomplete
-                        label="Gender Identity"
-                        :items="genderOptions"
-                        ></v-autocomplete>
-                        <v-text-field
-                            v-for="(inputField, key) in demographice_data_fields.third"
-                            :key="key"
-                            v-model="inputField.data.value"
-                            :label="inputField.label"
-                            :type="inputField.type"
-                            density="compact"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="4">
-                    <v-autocomplete
-                        label="Civil Status"
-                        :items="civilStatusOptions"
-                    ></v-autocomplete>
-                    <v-autocomplete
-                        label="Living Arrangement"
-                        :items="livingArrangementOptions"
-                    ></v-autocomplete>
-                    <div class="">
-                        <v-autocomplete
-                        label="Educational Attainment"
-                        :items="educationOptions"
-                        ></v-autocomplete>
-                        <v-radio-group 
-                        label="Educational Status"
-                        inline v-model="radioInputs.educationStatus.data.value">
-                            <v-radio
-                            v-for="(option, index) in radioInputs.educationStatus.options"
-                            :key="index"
-                            :label="option.text"
-                            :value="option.value"
-
-                            ></v-radio>
-                        </v-radio-group>
-                    </div>
-
-                    </v-col>
-                    <v-col cols="12" md="4">
-                        <v-text-field
-                            v-for="(inputField, key) in demographice_data_fields.fourth"
-                            :key="key"
-                            v-model="inputField.data.value"
-                            :label="inputField.label"
-                            :type="inputField.type"
-                            density="compact"
-                        ></v-text-field>
-                        <v-radio-group inline v-model="radioInputs.phMembership.data.value">
-                            <v-radio 
-                            v-for="(option, index) in radioInputs.phMembership.options"
-                            :key="index"
-                            :label="option.text"
-                            :value="option.value"
-                            ></v-radio>
-                        </v-radio-group>
-                    </v-col>
-                    <v-col cols="12" md="4">
-                        <div v-for="(addressType, key) in address" :key="key">
-                            <h3>{{ addressType.label }}</h3>
-                            <v-text-field
-                            v-for="(input, index) in addressInputs"
-                            :key="index"
-                            v-model="addressType.data.value[input]"
-                            :label="input"
-                            density="compact"
-                            ></v-text-field>
-                        </div>
-                </v-col>                
-                </v-row>
-                <v-row>
-                    <v-col cols="12" md="4">
-                        <v-btn @click="createInterview" color="success">Create Interview</v-btn>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-container>
-    </v-form>
+<template>
+    <v-card>
+        <v-tabs v-model="tab" bg-color="secondary" dark slider-color="primary">
+            <v-tab value="one">Interview</v-tab>
+            <v-tab value="two">Patient Data</v-tab>
+            <v-tab value="three">Item Three</v-tab>
+        </v-tabs>
+        <v-card-text>
+            <v-window v-model="tab">
+                <v-window-item value="one">
+                    <interview></interview>
+                </v-window-item>
+                <v-window-item value="two">
+                    Two
+                </v-window-item>
+                <v-window-item value="three">
+                    Three
+                </v-window-item>
+            </v-window>
+        </v-card-text>
+    </v-card>
 </template>
 <script setup>
+
+
+
+
 import { ref, computed } from "vue";
+import interview from '@/components/assesment-tool/interview.vue'
 const inputRules = {
     firstName: [(v) => !!v || "First Name is required"],
     lastName: [(v) => !!v || "Last Name is required"],
 }
+const tab = ref(null);
+
 const demographice_data_fields = {
     first: {
         last_name: {

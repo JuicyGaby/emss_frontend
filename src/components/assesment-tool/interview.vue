@@ -1,94 +1,209 @@
 <template lang="">
-    <div>
-        <v-form>
-            <v-text-field
-                v-for="(inputField, key) in inputFields"
-                :key="key"
-                v-model="inputField.data.value"
-                :label="inputField.label"
-                :type="inputField.type"
-                density="compact"
-            ></v-text-field>
-            <v-btn @click="createInterview" color="success">Create Interview</v-btn>
-        </v-form>
+  <v-container class="reb d-flex flex-column justify-center align-center">
+    <!-- 1st page -->
+    <div class="input-field" v-show="page == 1">
+      <v-row no-gutters>
+      <v-col class="d-flex ga-2">
+        <v-text-field
+          v-for="(value, key) in step1.firstRow"
+          :key="key"
+          :label="value.label"
+          :type="value.type"
+          v-model="value.data"
+          variant="outlined"
+          style="min-width: 300px;"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col class="d-flex ga-2">
+        <v-text-field
+          v-for="(value, key) in step1.secondRow"
+          :key="key"
+          :label="value.label"
+          :type="value.type"
+          v-model="value.data.value"
+          variant="outlined"
+          style="min-width: 300px;"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col class="d-flex ga-2">
+        <v-text-field
+          v-for="(value, key) in step1.thirdRow"
+          :key="key"
+          :label="value.label"
+          :type="value.type"
+          v-model="value.data.value"
+          variant="outlined"
+          style="min-width: 300px;"
+        ></v-text-field>
+      </v-col>
+    </v-row>
     </div>
+    <!-- 2nd page -->
+    <div class="input-field" v-show="page == 2">
+      <v-row>
+        <v-col class="d-flex ga-2">
+          <v-text-field
+            v-for="(value, key) in step2.firstRow"
+            :key="key"
+            :label="value.label"
+            :type="value.type"
+            v-model="value.data.value"
+            variant="outlined"
+            style="min-width: 300px;"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="d-flex ga-2">
+          <v-text-field
+            v-for="(value, key) in step2.secondRow"
+            :key="key"
+            :label="value.label"
+            :type="value.type"
+            v-model="value.data.value"
+            variant="outlined"
+            style="min-width: 300px;"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </div>
+    <!-- 3rd page -->
+    <div class="input-field" v-show="page == 3">
+      <v-row>
+        <v-col class="d-flex ga-2">
+          <v-text-field
+            v-for="(value, key) in step3.firstRow"
+            :key="key"
+            :label="value.label"
+            :type="value.type"
+            v-model="value.data.value"
+            variant="outlined"
+            style="min-width: 300px;"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="d-flex ga-2">
+          <v-text-field
+            v-for="(value, key) in step3.secondRow"
+            :key="key"
+            :label="value.label"
+            :type="value.type"
+            v-model="value.data.value"
+            variant="outlined"
+            style="min-width: 300px;"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </div>
+  </v-container>
+  <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
 <script setup>
 import moment from "moment";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { interview } from "../../api/assesment-tool";
 
-const inputFields = {
-  interview_date: {
-    label: "Date of the interview",
-    type: "date",
-    data: ref(""),
+
+const totalPages = ref(3);
+const page = ref(1);
+
+
+const step1 = {
+  firstRow: {
+    interview_date_time: {
+      label: "Interview Date and Time",
+      type: "date",
+      data: ref(""),
+    },
+    admission_date_time: {
+      label: "admission Date and Time",
+      type: "datetime-local",
+      data: ref(moment().format("YYYY-MM-DDTHH:mm")),
+    },
   },
-  interview_time: {
-    label: "Time of the interview",
-    type: "time",
-    data: ref(""),
+  secondRow: {
+    basic_ward: {
+      label: "Basic Ward",
+      type: "text",
+      data: ref(""),
+    },
+    nonbasic_ward: {
+      label: "Nonbasic Ward",
+      type: "text",
+      data: ref(""),
+    },
   },
-  admission_date_and_time: {
-    label: "Date and Time of the interview",
-    type: "datetime-local",
-    data: ref(moment().format("YYYY-MM-DDTHH:mm")),
+  thirdRow: {
+    health_record_number: {
+      label: "Health Record Number",
+      type: "text",
+      data: ref(""),
+    },
+    mswd_number: {
+      label: "MSWD number",
+      type: "text",
+      data: ref(""),
+    },
+  }
+}
+
+const step2 = {
+  firstRow: {
+    source_of_referral: {
+      label: "Source of Referral",
+      type: "text",
+      data: ref(""),
+    },
+    referring_party: {
+      label: "Referring Party",
+      type: "text",
+      data: ref(""),
+    },
   },
-  basic_ward: {
-    label: "Basic Ward",
-    type: "text",
-    data: ref(""),
+  secondRow: {
+    address: {
+      label: "Address",
+      type: "text",
+      data: ref(""),
+    },
+    contact_number: {
+      label: "Contact Number",
+      type: "number",
+      data: ref(""),
+    },
+  }
+}
+
+const step3 = {
+  firstRow: {
+    informant: {
+      label: "Informant",
+      type: "text",
+      data: ref(""),
+    },
+    relationship_to_patient: {
+      label: "Patient Relationship",
+      type: "text",
+      data: ref(""),
+    },
   },
-  nonbasic_ward: {
-    label: "Nonbasic Ward",
-    type: "text",
-    data: ref(""),
-  },
-  health_record_number: {
-    label: "Health Record Number",
-    type: "text",
-    data: ref(""),
-  },
-  mswd_number: {
-    label: "MSWD number",
-    type: "text",
-    data: ref(""),
-  },
-  referring_party: {
-    label: "Referring Party",
-    type: "text",
-    data: ref(""),
-  },
-  address: {
-    label: "Address",
-    type: "text",
-    data: ref(""),
-  },
-  contact_number: {
-    label: "Contact Number",
-    type: "number",
-    data: ref(""),
-  },
-  informant: {
-    label: "Informant",
-    type: "text",
-    data: ref(""),
-  },
-  relationship_to_patient: {
-    label: "Patient Relationship",
-    type: "text",
-    data: ref(""),
-  },
-  informant_contact_number: {
-    label: "Informant Contact Number",
-    type: "number",
-    data: ref(""),
-  },
-  informant_address: {
-    label: "Informant Address",
-    type: "text",
-    data: ref(""),
-  },
+  secondRow: {
+    informant_contact_number: {
+      label: "Informant Contact Number",
+      type: "number",
+      data: ref(""),
+    },
+    informant_address: {
+      label: "Informant Address",
+      type: "text",
+      data: ref(""),
+    },
+  }
 };
 
 
@@ -100,5 +215,13 @@ const createInterview = async () => {
   console.log(response);
 };
 </script>
-<style lang="">
+<style lang="css">
+.reb {
+  border: 1px solid red;
+}
+.input-field {
+  min-width: 300px;
+  min-height: 350px;
+}
+
 </style>
