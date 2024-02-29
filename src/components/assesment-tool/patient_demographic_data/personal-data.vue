@@ -8,7 +8,7 @@
         <v-card-text>
             <v-window v-model="tab">
                 <v-window-item value="one">
-                    <interview></interview>
+                    <!-- <interview></interview> -->
                 </v-window-item>
                 <v-window-item value="two">
                     Two

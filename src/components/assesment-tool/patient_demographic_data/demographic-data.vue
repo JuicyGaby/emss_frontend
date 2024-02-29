@@ -2,45 +2,83 @@
     <v-container class="d-flex flex-column justify-center align-center">
         <!-- 1st page -->
         <div class="input-field" v-show="page == 1">
-        <v-row>
-            <v-col class="d-flex ga-2">
-                <v-text-field
-                v-for="(value, key) in step1.firstRow"
-                :key="key"
-                :label="value.label"
-                :type="value.type"
-                v-model="value.data.value"
-                variant="outlined"
-                style="min-width: 300px;"
-                ></v-text-field>
-            </v-col>
-        </v-row>
-        <v-row>
-        <v-col class="d-flex ga-2">
-            <v-text-field
-            v-for="(value, key) in step1.secondRow"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="value.data.value"
-            variant="outlined"
-            style="min-width: 300px;"
-            ></v-text-field>
-        </v-col>
-        </v-row>
-        <v-row>
-        <v-col class="d-flex ga-2">
-            <v-text-field
-            v-for="(value, key) in step1.thirdRow"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="value.data.value"
-            variant="outlined"
-            style="min-width: 300px;"
-            ></v-text-field>
-        </v-col>
-        </v-row>
+            <v-row>
+                <v-col class="d-flex flex-column">
+                    <div class="d-flex ga-2">
+                        <v-text-field
+                        v-for="(value, key) in step1.firstRow"
+                        :key="key"
+                        :label="value.label"
+                        :type="value.type"
+                        v-model="value.data.value"
+                        variant="outlined"
+                        style="min-width: 300px;"
+                        density="compact"
+                        ></v-text-field>
+                    </div>
+                    <div class="d-flex ga-2">
+                        <v-text-field
+                        v-for="(value, key) in step1.secondRow"
+                        :key="key"
+                        :label="value.label"
+                        :type="value.type"
+                        v-model="value.data.value"
+                        variant="outlined"
+                        style="min-width: 300px;"
+                        density="compact"
+                        ></v-text-field>
+                    </div>
+                    <div class="d-flex ga-2">
+                        <v-text-field
+                        v-for="(value, key) in step1.thirdRow"
+                        :key="key"
+                        :label="value.label"
+                        :type="value.type"
+                        v-model="value.data.value.value"
+                        variant="outlined"
+                        style="min-width: 300px;"
+                        ></v-text-field>
+                    </div>
+                    <div class="d-flex justify-space-between align-center ga-2">
+                        <v-autocomplete
+                        label="Sex"
+                        :items="genderOptions"
+                        variant="outlined"
+                        ></v-autocomplete>
+                        <v-autocomplete
+                        label="Gender Identity"
+                        :items="genderOptions"
+                        variant="outlined"
+                        ></v-autocomplete>
+                    </div>
+                    <div class="d-flex ga-2">
+                        <v-text-field
+                        v-for="(value, key) in step1.fifthRow"
+                        :key="key"
+                        :label="value.label"
+                        :type="value.type"
+                        v-model="value.data.value"
+                        variant="outlined"
+                        style="min-width: 300px;"
+                        ></v-text-field>
+                    </div>
+                </v-col>
+            </v-row>
+        </div>
+        <!-- 2nd page -->
+        <div class="input-field" v-show="page == 2">
+            <v-row>
+                <v-col class="d-flex flex-column">
+                    <v-text-field
+                        v-for="input in addressInputs" :key="input"
+                        :label="input"
+                        type="text"
+                        v-model="address.permanent.data[input]"
+                        variant="outlined"
+                        density="compact"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
         </div>
     </v-container>
     <v-pagination :length="totalPages" v-model="page"></v-pagination>
