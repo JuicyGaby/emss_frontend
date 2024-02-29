@@ -97,7 +97,7 @@
                             <v-text-field
                             v-for="(input, index) in addressInputs"
                             :key="index"
-                            v-model="addressType.data[input]"
+                            v-model="addressType.data.value[input]"
                             :label="input"
                             density="compact"
                             ></v-text-field>
@@ -212,8 +212,8 @@ const address = {
         label: "Temporary Address",
         type: "text",
         data: ref({
-            region: "",
-            Province: "",
+            region: "dsfds",
+            Province: "sdfsdfsdf",
             District: "",
             Municipality: "",
             Baranggay: "",
@@ -286,7 +286,22 @@ const dropDownInputs = {
 }
 
 const createInterview = () => {
-    console.log("Create Interview");
+    const body = {};
+    for (const section in demographice_data_fields) {
+        for (const field in demographice_data_fields[section]) {
+        body[field] = demographice_data_fields[section][field].data.value;
+        }
+    }
+    const addressData = {};
+    for (const section in address) {
+        for (const field in address[section].data.value) {
+        if (!addressData[section]) {
+            addressData[section] = {};
+        }
+        addressData[section][field] = address[section].data.value[field];
+        }
+    }
+    console.log(addressData);
 };
 
 </script>
