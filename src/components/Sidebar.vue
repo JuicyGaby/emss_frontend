@@ -1,5 +1,5 @@
 <template>
-  <v-card class="">
+  <v-card class="sticky">
     <v-layout>
       <v-navigation-drawer width="350">
         <v-list>
@@ -76,9 +76,10 @@ const signOut = () => {
 .sidebar {
   width: 200px;
   height: 100vh;
+  /* position: fixed */
 }
 .sticky {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  z-index: 100;
 }
 </style>

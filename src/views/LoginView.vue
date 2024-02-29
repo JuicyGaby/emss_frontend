@@ -1,5 +1,5 @@
-<template lang="">
-    <div class="rb sign-in-container d-flex align-center justify-end">
+<template lang="" class="">
+    <div class="display rb sign-in-container d-flex align-center justify-end">
         <div class="login-box d-flex flex-column justify-center align-center elevation-3">
             <div v-if="toggleAlert" class="w-100" >
                 <v-alert
@@ -166,5 +166,10 @@ const checkUserAccessRights = async id => {
   width: 30%;
   border-radius: 15px;
   /* border: 1px solid blue; */
+}
+.display {
+  margin-left: 0em;
+  width: 100%;
+  padding: 1em;
 }
 </style>

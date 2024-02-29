@@ -7,7 +7,7 @@
 
 import { defineProps, toRefs, onMounted } from 'vue'
 import interview from '@/components/assesment-tool/interview.vue'
-import demographic_data from '@/components/assesment-tool/demographic-data.vue'
+import demographic_data from '@/components/assesment-tool/patient_demographic_data/personal-data.vue'
 const { authentication, user} = defineProps(['authentication', 'user'])
 
 onMounted(() => {

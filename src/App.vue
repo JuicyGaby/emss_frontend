@@ -16,6 +16,8 @@ import { getUserByToken } from "@/api/authentication";
 // * components 
 import Sidebar from './components/Sidebar.vue'
 
+
+
 let user = ref({});
 const router = useRouter();
 const authentication = userAuthentication();
@@ -47,6 +49,7 @@ function checkUserSession() {
 
 .rb {
   border: 1px dashed red;
+
 }
 .bb {
   border: 1px dashed blue;
@@ -60,6 +63,7 @@ function checkUserSession() {
 }
 /* create a class for sticky */
 .display {
+  margin-left: 22em;
   width: 100%;
   padding: 1em;
 }

@@ -10,6 +10,7 @@
                             v-model="inputField.data.value"
                             :label="inputField.label"
                             :type="inputField.type"
+                            :rules="inputField.rules"
                             density="compact"
                         ></v-text-field>
                         <v-radio-group inline v-model="radioInputs.sex.data.value" label="Sex">
@@ -117,7 +118,9 @@
 import { ref, computed } from "vue";
 
 
-
+const inputRules = {
+    firstName : [(v) => !!v || "Username is required"],
+}
 
 const demographice_data_fields = {
     first: {
@@ -125,6 +128,7 @@ const demographice_data_fields = {
             label: "Last Name",
             type: "text",
             data: ref(""),
+            rules: inputRules.firstName
         },
         first_name: {
             label: "First Name",
@@ -164,6 +168,7 @@ const demographice_data_fields = {
             label: "Religion",
             type: "text",
             data: ref(""),
+
         },
         nationality: {
             label: "Nationality",
@@ -187,6 +192,7 @@ const demographice_data_fields = {
             type: "text",
             data: ref(""),
         },
+
     }
 
 }
@@ -301,6 +307,7 @@ const createInterview = () => {
         addressData[section][field] = address[section].data.value[field];
         }
     }
+    console.log(body);
     console.log(addressData);
 };
 

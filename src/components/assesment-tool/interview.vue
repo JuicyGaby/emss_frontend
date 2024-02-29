@@ -91,6 +91,7 @@ const inputFields = {
   },
 };
 
+
 const createInterview = async () => {
   const body = Object.fromEntries(
     Object.entries(inputFields).map(([key, value]) => [key, value.data.value])
