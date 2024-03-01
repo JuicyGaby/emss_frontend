@@ -1,5 +1,5 @@
 <template lang="">
-  <v-container class="reb d-flex flex-column justify-center align-center">
+  <v-container class="d-flex flex-column justify-center align-center">
     <!-- 1st page -->
     <div class="input-field" v-show="page == 1">
       <v-row>
@@ -10,7 +10,7 @@
               :key="key"
               :label="value.label"
               :type="value.type"
-              v-model="value.data"
+              v-model="value.data.value"
               variant="outlined"
               style="min-width: 300px;"
             ></v-text-field>
@@ -99,16 +99,49 @@
       </v-row>
     </div>
   </v-container>
+
+  <v-btn @click="createInterview" color="success">text</v-btn>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
 <script setup>
 import moment from "moment";
-import { ref, watch } from "vue";
+import { reactive, ref, watchEffect} from "vue";
 import { interview } from "../../api/assesment-tool";
+
+const props = defineProps({
+  interviewBody: Object,
+});
+
+const emit = defineEmits([
+  "interviewData"
+])
 
 
 const totalPages = ref(3);
 const page = ref(1);
+let body = {
+  interview_date_time: ref(moment().format("YYYY-MM-DDTHH:mm")),
+  admission_date_time: ref(""),
+  basic_ward: ref(""),
+  nonbasic_ward: ref(""),
+  health_record_number: ref(""),
+  mswd_number: ref(""),
+  source_of_referral: ref(""),
+  referring_party: ref(""),
+  address: ref(""),
+  contact_number: ref(""),
+  informant: ref(""),
+  relationship_to_patient: ref(""),
+  informant_contact_number: ref(""),
+  informant_address: ref(""),
+};
+watchEffect(() => {
+  const bodyCopy = Object.keys(body).reduce((acc, key) => {
+    acc[key] = body[key].value;
+    return acc;
+  }, {});
+  emit('interviewData', bodyCopy);
+});
 
 
 const step1 = {
@@ -116,36 +149,36 @@ const step1 = {
     interview_date_time: {
       label: "Interview Date and Time",
       type: "datetime-local",
-      data: ref(""),
+      data: body.interview_date_time,
     },
     admission_date_time: {
       label: "admission Date and Time",
       type: "datetime-local",
-      data: ref(moment().format("YYYY-MM-DDTHH:mm")),
+      data: body.admission_date_time
     },
   },
   secondRow: {
     basic_ward: {
       label: "Basic Ward",
       type: "text",
-      data: ref(""),
+      data: body.basic_ward,
     },
     nonbasic_ward: {
       label: "Nonbasic Ward",
       type: "text",
-      data: ref(""),
+      data: body.nonbasic_ward,
     },
   },
   thirdRow: {
     health_record_number: {
       label: "Health Record Number",
       type: "text",
-      data: ref(""),
+      data: body.health_record_number,
     },
     mswd_number: {
       label: "MSWD number",
       type: "text",
-      data: ref(""),
+      data: body.mswd_number,
     },
   }
 }
@@ -206,11 +239,6 @@ const step3 = {
 
 
 const createInterview = async () => {
-  const body = Object.fromEntries(
-    Object.entries(inputFields).map(([key, value]) => [key, value.data.value])
-  );
-  const response = await interview(body);
-  console.log(response);
 };
 </script>
 <style lang="css">

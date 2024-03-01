@@ -289,8 +289,8 @@ const step2 = {
             label: "Temporary Address",
             type: "text",
             data: ref({
-                region: "dsfds",
-                Province: "sdfsdfsdf",
+                region: "",
+                Province: "",
                 District: "",
                 Municipality: "",
                 Baranggay: "",
