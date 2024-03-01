@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-stepper editable="true" alt-labels :items="stepperItems">
+        <v-stepper alt-labels :items="stepperItems">
           <template v-slot:item.1>
             <v-card class="text-center" title="Interview" flat>
               <v-card-text class="">
@@ -11,7 +11,7 @@
             </v-card>
           </template>
           <template v-slot:item.2>
-            <v-card class="text-center" title="Patient's Data" flat>
+            <v-card class="text-center" flat>
               <v-card-text class="">
                 <demographic_data></demographic_data>
               </v-card-text>
