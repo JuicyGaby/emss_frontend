@@ -29,9 +29,11 @@
   <!-- <demographic_data ></demographic_data> -->
 </template>
 <script setup>
-import { ref, toRefs, onMounted } from 'vue'
+import { ref, reactive, toRefs, onMounted } from 'vue'
 import interview from '@/components/assesment-tool/interview.vue'
 import demographic_data from '@/components/assesment-tool/patient_demographic_data/demographic-data.vue'
+import moment from 'moment'
+
 const { authentication, user } = defineProps(['authentication', 'user'])
 
 
@@ -40,7 +42,22 @@ const dataReceived = {
   demographicData: ref({})
 };
 
-const interviewBody = ref({})
+const interviewBody = reactive({
+  interview_date_time: moment().format("YYYY-MM-DDTHH:mm"),
+    admission_date_time: "",
+    basic_ward: "",
+    nonbasic_ward: "sdfsd",
+    health_record_number: "",
+    mswd_number: "",
+    source_of_referral: "",
+    referring_party: "",
+    address: "",
+    contact_number: "",
+    informant: "",
+    relationship_to_patient: "",
+    informant_contact_number: "",
+    informant_address: "",
+})
 const demographicDataBody = ref({})
 
 

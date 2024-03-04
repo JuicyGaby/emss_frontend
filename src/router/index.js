@@ -23,15 +23,20 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue')
     },
-    // {
-    //   path: '/:pathMatch(.*)*',
-    //   name: 'not-found',
-    //   component: () => import('../views/FormView.vue')
-    // }
     {
       path: '/form',
       name: 'form',
       component: () => import('../views/FormView.vue'),
+    },
+    {
+      path: '/patients',
+      name: 'patients',
+      component: () => import('../views/PatientsView.vue'),
+    },
+    {
+      path: '/EditPatient/:id',
+      name: 'editPatient',
+      component: () => import('../components/patient/EditPatient.vue'),
     }
   ]
 })

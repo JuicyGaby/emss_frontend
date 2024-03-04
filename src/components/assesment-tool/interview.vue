@@ -21,7 +21,7 @@
             :key="key"
             :label="value.label"
             :type="value.type"
-            v-model="value.data.value"
+            v-model="props.interviewBody.basic_ward.value"
             variant="outlined"
             style="min-width: 300px;"
           ></v-text-field>
@@ -99,7 +99,6 @@
       </v-row>
     </div>
   </v-container>
-
   <v-btn @click="createInterview" color="success">text</v-btn>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
@@ -115,6 +114,8 @@ const props = defineProps({
 const emit = defineEmits([
   "interviewData"
 ])
+
+
 
 
 const totalPages = ref(3);
@@ -135,13 +136,13 @@ let body = {
   informant_contact_number: ref(""),
   informant_address: ref(""),
 };
-watchEffect(() => {
-  const bodyCopy = Object.keys(body).reduce((acc, key) => {
-    acc[key] = body[key].value;
-    return acc;
-  }, {});
-  emit('interviewData', bodyCopy);
-});
+// watchEffect(() => {
+//   const bodyCopy = Object.keys(body).reduce((acc, key) => {
+//     acc[key] = body[key].value;
+//     return acc;
+//   }, {});
+//   emit('interviewData', bodyCopy);
+// });
 
 
 const step1 = {
@@ -236,6 +237,8 @@ const step3 = {
     },
   }
 };
+
+
 
 
 const createInterview = async () => {

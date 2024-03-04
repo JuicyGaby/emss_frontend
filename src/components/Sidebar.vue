@@ -58,6 +58,11 @@ const navItems = {
     title: "Shared",
     to: "/about",
   },
+  patients: {
+    icon: "mdi-account-group",
+    title: "Patients",
+    to: "/patients",
+  },
 };
 
 const userFullName = computed(() => {
@@ -74,7 +79,7 @@ const signOut = () => {
 </script>
 <style lang="css" scoped>
 .sidebar {
-  width: 200px;
+  min-width: 200px;
   height: 100vh;
   /* position: fixed */
 }
