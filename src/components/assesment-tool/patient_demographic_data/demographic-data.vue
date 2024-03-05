@@ -111,6 +111,7 @@
             >
             </v-autocomplete>
         </div>
+        <!-- 3rd page -->
         <div class="pages" v-show="page == 3">
             <v-card-title sub-title>
                 Temporary Address
@@ -151,7 +152,7 @@
             >
             </v-autocomplete>
         </div>
-        <!-- 3rd page -->
+        <!-- 4th page -->
         <div class="pages" v-show="page == 4">
             <v-row>
                 <v-col class="d-flex flex-column">
@@ -159,14 +160,14 @@
                     <div class="d-flex ga-2">
                         <v-autocomplete
                             :items="step3.firstRow.civil_status.options"
-                            v-model="step3.firstRow.civil_status.data.value"
+                            v-model="personalDataInputs.civil_status"
                             :label="step3.firstRow.civil_status.label"
                             variant="outlined"
                             style="min-width: 300px;"
                         ></v-autocomplete>
                         <v-autocomplete
                             :items="step3.firstRow.living_arrangement.options"
-                            v-model="step3.firstRow.living_arrangement.data.value"
+                            v-model="personalDataInputs.living_arrangement"
                             :label="step3.firstRow.living_arrangement.label"
                             variant="outlined"
                             style="min-width: 300px;"
@@ -176,13 +177,13 @@
                     <div class="d-flex align-center">
                         <v-autocomplete
                             :items="step3.secondRow.education.options"
-                            v-model="step3.secondRow.education.data.value"
+                            v-model="personalDataInputs.education"
                             :label="step3.secondRow.education.label"
                             variant="underlined"
                             style="min-width: 300px;"
                             class=""
                         ></v-autocomplete>
-                        <v-radio-group inline v-model="step3.secondRow.educationStatus.data.value">
+                        <v-radio-group inline v-model="personalDataInputs.educationStatus">
                             <v-radio
                                 v-for="option in step3.secondRow.educationStatus.options"
                                 :key="option.value"
@@ -198,7 +199,7 @@
                             :key="key"
                             :label="value.label"
                             :type="value.type"
-                            v-model="value.data.value"
+                            v-model="personalDataInputs[key]"
                             variant="outlined"
                             style="min-width: 300px;"
                         ></v-text-field>
@@ -206,13 +207,13 @@
                     <!-- row 4 -->
                     <div class="d-flex align-center">
                         <v-text-field
-                        v-model="step3.fourthRow.phMembershipNumber.data.value"
+                        v-model="personalDataInputs.phMembershipNumber"
                         :label="step3.fourthRow.phMembershipNumber.label"
                         :type="step3.fourthRow.phMembershipNumber.type"
                         variant="outlined"
                         style="min-width: 300px;"
                         ></v-text-field>
-                        <v-radio-group inline v-model="step3.fourthRow.phMembership.data.value">
+                        <v-radio-group inline v-model="personalDataInputs.phMembership">
                             <v-radio
                                 v-for="option in step3.fourthRow.phMembership.options"
                                 :key="option.value"
@@ -260,6 +261,14 @@ const personalDataInputs = ref({
     gender: null,
     religion: "",
     nationality: "",
+    civil_status: null,
+    living_arrangement: null,
+    education: null,
+    educationStatus: null,
+    occupation: "",
+    monthly_income: "",
+    phMembershipNumber: "",
+    phMembership: null,
     address: {
         permanent: {
             region: "",
