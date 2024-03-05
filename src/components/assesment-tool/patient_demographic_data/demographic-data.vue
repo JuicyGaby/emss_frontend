@@ -66,35 +66,42 @@
             </v-row>
         </div>
         <!-- 2nd page -->
-        <div class="" v-show="page == 2">
-            <v-row>
-                <v-col class="d-flex flex-column">
-                    <v-card-title secondary-title>
-                        Permanent address
-                    </v-card-title>
-                    <v-text-field
-                        v-for="input in addressInputs" :key="input"
-                        :label="input"
-                        type="text"
-                        v-model="step2.address.permanent.data.value[input]"
-                        variant="outlined"
-                        style="min-width: 300px;"
-                    ></v-text-field>
-                </v-col>
-                <v-col class="d-flex flex-column">
-                    <v-card-title secondary-title>
-                        Temporary address
-                    </v-card-title>
-                    <v-text-field
-                        v-for="input in addressInputs" :key="input"
-                        :label="input"
-                        type="text"
-                        v-model="step2.address.temporary.data.value[input]"
-                        variant="outlined"
-                        style="min-width: 300px;"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
+        <div class="" style="min-width: 500px" v-show="page == 2">
+            <v-autocomplete
+                label="Region"
+                variant="outlined"
+                :items="options.regions"
+                item-title="regDesc"
+                item-value="regCode"
+                v-model="personalDataInputs.address.permanent.region"
+            ></v-autocomplete>
+            <v-autocomplete
+                label="Province"
+                variant="outlined"
+                :items="options.provinces"
+                item-title="provDesc"
+                item-value="provCode"
+                v-model="personalDataInputs.address.permanent.province"
+            >
+            </v-autocomplete>
+            <v-autocomplete
+                label="Municipality"
+                variant="outlined"
+                :items="options.municipality"
+                item-title="citymunDesc"
+                item-value="citymunCode"
+                v-model="personalDataInputs.address.permanent.municipality"
+            >
+            </v-autocomplete>
+            <v-autocomplete
+                label="Baranggay"
+                variant="outlined"
+                :items="options.barangay"
+                item-title="brgyDesc"
+                item-value="brgyCode"
+                v-model="personalDataInputs.address.permanent.baranggay"
+            >
+            </v-autocomplete>
         </div>
         <!-- 3rd page -->
         <div class="" v-show="page == 3">
@@ -169,23 +176,63 @@
                 </v-col>
             </v-row>
         </div>
+        <v-btn color="success" @click="dataDebugger">text</v-btn>
     </v-container>
     <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
 <script setup>
-import { ref, computed } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { getRegions, getProvince, getMunicipality, getBarangay } from "@/api/assesment-tool"
 
 
 const totalPages = ref(3);
 const page = ref(1);
+const regions = ref({});
+
+onMounted(async () => {
+    options.value.regions = await getRegions(); 
+});
+
+// create a watch for personalDataInputs.address.permanent.region if theres a change
+
+
+const personalDataInputs = ref({
+    last_name: "",
+    first_name: "",
+    middle_name: "",
+    age: "",
+    contact_number: "",
+    birth_date: "",
+    place_of_birth: "",
+    sex: "",
+    gender: "",
+    religion: "",
+    Nationality: "",
+    address: {
+        permanent: {
+            region: "",
+            province: "",
+            district: "",
+            municipality: "",
+            baranggay: "",
+            purok: "",
+        },
+        temporary: {
+            region: "",
+            Province: "",
+            district: "",
+            municipality: "",
+            baranggay: "",
+            purok: "",
+        }
+    }
+})
+
 
 const inputRules = {
     firstName: [(v) => !!v || "Username is required"],
 }
 
-const addressInputs = [
-    'region', 'Province', 'District', 'Municipality', 'Baranggay', 'Purok'
-];
 const educationOptions = [
     'Early Childhood Education', 'Primary', 'Secondary', 'Tertiary', 'Vocational', 'Post Graduate', 'No Educational Attainment'
 ];
@@ -202,6 +249,7 @@ const livingArrangementOptions = [
 const genderOptions = [
     'Masculine', 'Feminine', 'LGBTQIA+', 'Other'
 ];
+
 
 const step1 = {
     firstRow: {
@@ -299,7 +347,6 @@ const step2 = {
         }
     }
 }
-
 const step3 = {
     firstRow: {
         civil_status: {
@@ -357,26 +404,34 @@ const step3 = {
         }
     }
 }
-const createInterview = () => {
-    const body = {};
-    for (const section in demographice_data_fields) {
-        for (const field in demographice_data_fields[section]) {
-            body[field] = demographice_data_fields[section][field].data.value;
-        }
-    }
-    const addressData = {};
-    for (const section in address) {
-        for (const field in address[section].data.value) {
-            if (!addressData[section]) {
-                addressData[section] = {};
-            }
-            addressData[section][field] = address[section].data.value[field];
-        }
-    }
-    console.log(body);
-    console.log(addressData);
-};
 
+
+watch(() => personalDataInputs.value.address.permanent.region, async (newVal) => {
+  // This function will be called when 'personalDataInputs.address.permanent.region' changes
+  options.value.provinces = await getProvince(newVal);
+});
+watch(() => personalDataInputs.value.address.permanent.province, async (newVal) => {
+  // This function will be called when 'personalDataInputs.address.permanent.region' changes
+  options.value.municipality = await getMunicipality(newVal);
+});
+watch(() => personalDataInputs.value.address.permanent.municipality, async (newVal) => {
+  // This function will be called when 'personalDataInputs.address.permanent.region' changes
+  console.log(newVal);
+  options.value.barangay = await getBarangay(newVal);
+});
+const options = ref({
+    regions: [],
+    provinces: [],
+    municipality: [],
+    barangay: [],
+    purok: [],
+
+})
+
+
+const dataDebugger = () => {
+    console.log(personalDataInputs.value.address);
+}
 
 </script>
 <style lang="">

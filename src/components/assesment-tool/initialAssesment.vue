@@ -40,5 +40,5 @@ const printData = () => {
   console.log(dataReceived.interview);
 };
 
-const stepperItems = ["Interview", "Demographic Data", "Submit"];
+const stepperItems = ["Interview", "Personal Data", "Create Patient"];
 </script>
