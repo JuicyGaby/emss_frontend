@@ -14,7 +14,6 @@ const getPatients = async (req, res) => {
 }
 
 const getPatientByID = async (req, res) => {
-    console.log(req);
     const API_URL = `http://localhost:3000/patients/${req}`;
     const response = await fetch(API_URL, {
         method: 'GET',

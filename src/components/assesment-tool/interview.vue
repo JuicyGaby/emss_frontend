@@ -5,15 +5,15 @@
       <v-row>
       <v-col class="d-flex flex-column">
           <div class="d-flex ga-2">
-              <v-text-field
-              v-for="(value, key) in step1.firstRow"
-              :key="key"
-              :label="value.label"
-              :type="value.type"
-              v-model="value.data.value"
-              variant="outlined"
-              style="min-width: 300px;"
-            ></v-text-field>
+            <v-text-field
+            v-for="(field, key) in step1.firstRow"
+            :key="key"
+            :label="field.label"
+            :type="field.type"
+            variant="outlined"
+            v-model="interviewInputs[key]"
+            style="min-width: 300px;"
+          ></v-text-field>
           </div>
           <div class="d-flex ga-2">
             <v-text-field
@@ -21,7 +21,7 @@
             :key="key"
             :label="value.label"
             :type="value.type"
-            v-model="props.interviewBody.basic_ward.value"
+            v-model="interviewInputs[key]"
             variant="outlined"
             style="min-width: 300px;"
           ></v-text-field>
@@ -32,7 +32,7 @@
           :key="key"
           :label="value.label"
           :type="value.type"
-          v-model="value.data.value"
+          v-model="interviewInputs[key]"
           variant="outlined"
           style="min-width: 300px;"
         ></v-text-field>
@@ -50,7 +50,7 @@
             :key="key"
             :label="value.label"
             :type="value.type"
-            v-model="value.data.value"
+            v-model="interviewInputs[key]"
             variant="outlined"
             style="min-width: 300px;"
           ></v-text-field>
@@ -61,7 +61,7 @@
             :key="key"
             :label="value.label"
             :type="value.type"
-            v-model="value.data.value"
+            v-model="interviewInputs[key]"
             variant="outlined"
             style="min-width: 300px;"
           ></v-text-field>
@@ -79,7 +79,7 @@
               :key="key"
               :label="value.label"
               :type="value.type"
-              v-model="value.data.value"
+              v-model="interviewInputs[key]"
               variant="outlined"
               style="min-width: 300px;"
             ></v-text-field>
@@ -90,7 +90,7 @@
               :key="key"
               :label="value.label"
               :type="value.type"
-              v-model="value.data.value"
+              v-model="interviewInputs[key]"
               variant="outlined"
               style="min-width: 300px;"
             ></v-text-field>
@@ -99,8 +99,8 @@
       </v-row>
     </div>
   </v-container>
-  <v-btn @click="createInterview" color="success">text</v-btn>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
+
 </template>
 <script setup>
 import moment from "moment";
@@ -115,34 +115,36 @@ const emit = defineEmits([
   "interviewData"
 ])
 
-
-
-
 const totalPages = ref(3);
 const page = ref(1);
-let body = {
-  interview_date_time: ref(moment().format("YYYY-MM-DDTHH:mm")),
-  admission_date_time: ref(""),
-  basic_ward: ref(""),
-  nonbasic_ward: ref(""),
-  health_record_number: ref(""),
-  mswd_number: ref(""),
-  source_of_referral: ref(""),
-  referring_party: ref(""),
-  address: ref(""),
-  contact_number: ref(""),
-  informant: ref(""),
-  relationship_to_patient: ref(""),
-  informant_contact_number: ref(""),
-  informant_address: ref(""),
-};
-// watchEffect(() => {
-//   const bodyCopy = Object.keys(body).reduce((acc, key) => {
-//     acc[key] = body[key].value;
-//     return acc;
-//   }, {});
-//   emit('interviewData', bodyCopy);
-// });
+
+
+let interviewInputs = ref({
+  interview_date_time: moment().format("YYYY-MM-DDTHH:mm"),
+  admission_date_time: moment().format("YYYY-MM-DDTHH:mm"),
+  basic_ward: "",
+  nonbasic_ward: "",
+  health_record_number: "",
+  mswd_number: "",
+  source_of_referral: "",
+  referring_party: "",
+  address: "",
+  contact_number: "",
+  informant: "",
+  relationship_to_patient: "",
+  informant_contact_number: "",
+  informant_address: "",
+});
+
+watchEffect(() => {
+  const interviewInputsCopy = Object.keys(interviewInputs.value).reduce((acc, key) => {
+    acc[key] = interviewInputs.value[key];
+    return acc;
+  }, {});
+  emit('interviewData', interviewInputsCopy);
+});
+
+
 
 
 const step1 = {
@@ -150,36 +152,30 @@ const step1 = {
     interview_date_time: {
       label: "Interview Date and Time",
       type: "datetime-local",
-      data: body.interview_date_time,
     },
     admission_date_time: {
       label: "admission Date and Time",
       type: "datetime-local",
-      data: body.admission_date_time
     },
   },
   secondRow: {
     basic_ward: {
       label: "Basic Ward",
       type: "text",
-      data: body.basic_ward,
     },
     nonbasic_ward: {
       label: "Nonbasic Ward",
       type: "text",
-      data: body.nonbasic_ward,
     },
   },
   thirdRow: {
     health_record_number: {
       label: "Health Record Number",
       type: "text",
-      data: body.health_record_number,
     },
     mswd_number: {
       label: "MSWD number",
       type: "text",
-      data: body.mswd_number,
     },
   }
 }
@@ -189,24 +185,22 @@ const step2 = {
     source_of_referral: {
       label: "Source of Referral",
       type: "text",
-      data: ref(""),
     },
     referring_party: {
       label: "Referring Party",
       type: "text",
-      data: ref(""),
     },
   },
   secondRow: {
     address: {
       label: "Address",
       type: "text",
-      data: ref(""),
+      
     },
     contact_number: {
       label: "Contact Number",
       type: "number",
-      data: ref(""),
+      
     },
   }
 }
@@ -216,33 +210,24 @@ const step3 = {
     informant: {
       label: "Informant",
       type: "text",
-      data: ref(""),
     },
     relationship_to_patient: {
       label: "Patient Relationship",
       type: "text",
-      data: ref(""),
     },
   },
   secondRow: {
     informant_contact_number: {
       label: "Informant Contact Number",
       type: "number",
-      data: ref(""),
     },
     informant_address: {
       label: "Informant Address",
       type: "text",
-      data: ref(""),
     },
   }
 };
 
-
-
-
-const createInterview = async () => {
-};
 </script>
 <style lang="css">
 .reb {
