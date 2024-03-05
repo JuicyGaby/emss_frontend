@@ -99,6 +99,11 @@
         v-model="personalDataInputs.address.permanent.municipality"
       >
       </v-autocomplete>
+      <v-text-field
+        label="District"
+        variant="outlined"
+        v-model="personalDataInputs.address.permanent.district"
+      ></v-text-field>
       <v-autocomplete
         label="Baranggay"
         variant="outlined"
@@ -108,6 +113,12 @@
         v-model="personalDataInputs.address.permanent.baranggay"
       >
       </v-autocomplete>
+        <v-text-field
+            label="Purok"
+            variant="outlined"
+            v-model="personalDataInputs.address.permanent.purok"
+        ></v-text-field>
+
     </div>
     <!-- 3rd page -->
     <div class="pages" v-show="page == 3">
@@ -138,6 +149,11 @@
         v-model="personalDataInputs.address.temporary.municipality"
       >
       </v-autocomplete>
+        <v-text-field
+            label="District"
+            variant="outlined"
+            v-model="personalDataInputs.address.temporary.district"
+        ></v-text-field>
       <v-autocomplete
         label="Baranggay"
         variant="outlined"
@@ -147,6 +163,11 @@
         v-model="personalDataInputs.address.temporary.baranggay"
       >
       </v-autocomplete>
+        <v-text-field
+            label="Purok"
+            variant="outlined"
+            v-model="personalDataInputs.address.temporary.purok"
+        ></v-text-field>
     </div>
     <!-- 4th page -->
     <div class="pages" v-show="page == 4">
@@ -221,7 +242,6 @@
         </v-col>
       </v-row>
     </div>
-    <v-btn color="success" @click="dataDebugger">text</v-btn>
   </v-container>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
@@ -498,6 +518,5 @@ const dataDebugger = () => {
 <style lang="css">
 .pages {
   min-width: 700px;
-  min-height: 400px;
 }
 </style>
