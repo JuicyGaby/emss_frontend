@@ -10,7 +10,7 @@
     <template v-slot:[`item.2`]>
       <v-card class="text-center" flat>
         <v-card-text class="">
-          <demographic_data></demographic_data>
+          <demographic_data @personalData="handlePersonalData"></demographic_data>
         </v-card-text>
       </v-card>
     </template>
@@ -22,10 +22,9 @@
   </v-stepper>
 </template>
 <script setup>
-import { ref, reactive, toRefs, onMounted } from "vue";
+import { ref } from "vue";
 import interview from "@/components/assesment-tool/interview.vue";
 import demographic_data from "@/components/assesment-tool/patient_demographic_data/demographic-data.vue";
-import moment from "moment";
 
 const dataReceived = {
   interview: ref({}),
@@ -34,6 +33,9 @@ const dataReceived = {
 
 const handleInterviewData = (data) => {
   dataReceived.interview = data;
+};
+const handlePersonalData = (data) => {
+  dataReceived.demographicData = data;
 };
 
 const printData = () => {

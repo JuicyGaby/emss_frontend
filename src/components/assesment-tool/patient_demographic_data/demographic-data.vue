@@ -4,60 +4,65 @@
         <div class="pages" v-show="page == 1">
             <v-row>
                 <v-col class="d-flex flex-column">
+                    <!-- 1st row -->
                     <div class="d-flex ga-2">
                         <v-text-field
                         v-for="(value, key) in step1.firstRow"
                         :key="key"
                         :label="value.label"
                         :type="value.type"
-                        v-model="value.data.value"
+                        v-model="personalDataInputs[key]"
                         variant="outlined"
                         style="min-width: 300px;"
                         ></v-text-field>
                     </div>
+                    <!-- 2nd row -->
                     <div class="d-flex ga-2">
                         <v-text-field
                         v-for="(value, key) in step1.secondRow"
                         :key="key"
                         :label="value.label"
                         :type="value.type"
-                        v-model="value.data.value"
+                        v-model="personalDataInputs[key]"
                         variant="outlined"
                         style="min-width: 300px;"
                         ></v-text-field>
                     </div>
+                    <!-- 3rd row -->
                     <div class="d-flex ga-2">
                         <v-text-field
                         v-for="(value, key) in step1.thirdRow"
                         :key="key"
                         :label="value.label"
                         :type="value.type"
-                        v-model="value.data.value.value"
+                        v-model="personalDataInputs[key]"
                         variant="outlined"
                         style="min-width: 300px;"
                         ></v-text-field>
                     </div>
+                    <!-- 4th row -->
                     <div class="d-flex justify-space-between align-center ga-2">
                         <v-autocomplete
                         label="Sex"
                         :items="step1.fourthRow.sex.options"
-                        v-model="step1.fourthRow.sex.data.value"
+                        v-model="personalDataInputs.sex"
                         variant="outlined"
                         ></v-autocomplete>
                         <v-autocomplete
                         label="Gender Identity"
                         :items="step1.fourthRow.gender.options"
-                        v-model="step1.fourthRow.gender.data.value"
+                        v-model="personalDataInputs.gender"
                         variant="outlined"
                         ></v-autocomplete>
                     </div>
+                    <!-- 5th row -->
                     <div class="d-flex ga-2">
                         <v-text-field
                         v-for="(value, key) in step1.fifthRow"
                         :key="key"
                         :label="value.label"
                         :type="value.type"
-                        v-model="value.data.value"
+                        v-model="personalDataInputs[key]"
                         variant="outlined"
                         style="min-width: 300px;"
                         ></v-text-field>
@@ -251,10 +256,10 @@ const personalDataInputs = ref({
     contact_number: "",
     birth_date: "",
     place_of_birth: "",
-    sex: "",
-    gender: "",
+    sex: null,
+    gender: null,
     religion: "",
-    Nationality: "",
+    nationality: "",
     address: {
         permanent: {
             region: "",
@@ -477,7 +482,7 @@ const options = ref({
 
 
 const dataDebugger = () => {
-    console.log(personalDataInputs.value.address);
+    console.log(personalDataInputs.value);
 }
 
 </script>
