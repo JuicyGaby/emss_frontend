@@ -40,6 +40,7 @@ const handlePersonalData = (data) => {
 
 const printData = () => {
   console.log(dataReceived.interview);
+  console.log(dataReceived.demographicData);
 };
 
 const stepperItems = ["Interview", "Personal Data", "Create Patient"];
