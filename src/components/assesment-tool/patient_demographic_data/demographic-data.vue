@@ -1,7 +1,7 @@
 <template lang="">
     <v-container class="d-flex flex-column justify-center align-center">
         <!-- 1st page -->
-        <div class="" v-show="page == 1">
+        <div class="pages" v-show="page == 1">
             <v-row>
                 <v-col class="d-flex flex-column">
                     <div class="d-flex ga-2">
@@ -66,7 +66,10 @@
             </v-row>
         </div>
         <!-- 2nd page -->
-        <div class="" style="min-width: 500px" v-show="page == 2">
+        <div class="pages" v-show="page == 2">
+            <v-card-title sub-title>
+                Permanent Address
+            </v-card-title>
             <v-autocomplete
                 label="Region"
                 variant="outlined"
@@ -103,8 +106,48 @@
             >
             </v-autocomplete>
         </div>
+        <div class="pages" v-show="page == 3">
+            <v-card-title sub-title>
+                Temporary Address
+            </v-card-title>
+            <v-autocomplete
+                label="Region"
+                variant="outlined"
+                :items="options.regions"
+                item-title="regDesc"
+                item-value="regCode"
+                v-model="personalDataInputs.address.temporary.region"
+            ></v-autocomplete>
+            <v-autocomplete
+                label="Province"
+                variant="outlined"
+                :items="options.provinces"
+                item-title="provDesc"
+                item-value="provCode"
+                v-model="personalDataInputs.address.temporary.province"
+            >
+            </v-autocomplete>
+            <v-autocomplete
+                label="Municipality"
+                variant="outlined"
+                :items="options.municipality"
+                item-title="citymunDesc"
+                item-value="citymunCode"
+                v-model="personalDataInputs.address.temporary.municipality"
+            >
+            </v-autocomplete>
+            <v-autocomplete
+                label="Baranggay"
+                variant="outlined"
+                :items="options.barangay"
+                item-title="brgyDesc"
+                item-value="brgyCode"
+                v-model="personalDataInputs.address.temporary.baranggay"
+            >
+            </v-autocomplete>
+        </div>
         <!-- 3rd page -->
-        <div class="" v-show="page == 3">
+        <div class="pages" v-show="page == 4">
             <v-row>
                 <v-col class="d-flex flex-column">
                     <!-- row 1 -->
@@ -184,8 +227,12 @@
 import { ref, onMounted, watch } from "vue";
 import { getRegions, getProvince, getMunicipality, getBarangay } from "@/api/assesment-tool"
 
+const emit = defineEmits([
+  "personalData",
+])
 
-const totalPages = ref(3);
+
+const totalPages = ref(4);
 const page = ref(1);
 const regions = ref({});
 
@@ -406,19 +453,19 @@ const step3 = {
 }
 
 
-watch(() => personalDataInputs.value.address.permanent.region, async (newVal) => {
-  // This function will be called when 'personalDataInputs.address.permanent.region' changes
-  options.value.provinces = await getProvince(newVal);
-});
-watch(() => personalDataInputs.value.address.permanent.province, async (newVal) => {
-  // This function will be called when 'personalDataInputs.address.permanent.region' changes
-  options.value.municipality = await getMunicipality(newVal);
-});
-watch(() => personalDataInputs.value.address.permanent.municipality, async (newVal) => {
-  // This function will be called when 'personalDataInputs.address.permanent.region' changes
-  console.log(newVal);
-  options.value.barangay = await getBarangay(newVal);
-});
+const watchAddressChange = (addressType, key, apiCall, optionKey) => {
+    watch(() => personalDataInputs.value.address[addressType][key], async (newVal) => {
+        options.value[optionKey] = await apiCall(newVal);
+    });
+};
+watchAddressChange('permanent', 'region', getProvince, 'provinces');
+watchAddressChange('permanent', 'province', getMunicipality, 'municipality');
+watchAddressChange('permanent', 'municipality', getBarangay, 'barangay');
+watchAddressChange('temporary', 'region', getProvince, 'provinces');
+watchAddressChange('temporary', 'province', getMunicipality, 'municipality');
+watchAddressChange('temporary', 'municipality', getBarangay, 'barangay');
+
+
 const options = ref({
     regions: [],
     provinces: [],
@@ -434,5 +481,9 @@ const dataDebugger = () => {
 }
 
 </script>
-<style lang="">
+<style lang="css">
+.pages {
+    min-width: 700px;
+    min-height: 400px;
+}
 </style>
