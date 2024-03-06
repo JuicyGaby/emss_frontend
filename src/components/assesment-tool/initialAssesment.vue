@@ -1,5 +1,6 @@
 <template>
   <v-stepper alt-labels :items="stepperItems">
+    <!-- stepper 1 -->
     <template v-slot:[`item.1`]>
       <v-card class="text-center" title="Interview" flat>
         <v-card-text class="">
@@ -7,6 +8,7 @@
         </v-card-text>
       </v-card>
     </template>
+    <!-- stepper 2 -->
     <template v-slot:[`item.2`]>
       <v-card title="I. Demographic Data" class="text-center" flat>
         <v-card-text class="">
@@ -16,11 +18,12 @@
         </v-card-text>
       </v-card>
     </template>
+    <!-- stepper 3 -->
     <template v-slot:[`item.3`]>
       <v-card title="Review Details" flat>
         <div style="width: 1000px" class="pa-5">
           <div class="Interview Data">
-            <v-table density="dense" hover>
+            <!-- <v-table density="dense" hover>
               <thead>
                 <tr>
                   <th>Interview Data</th>
@@ -35,8 +38,9 @@
                   </td>
                 </tr>
               </tbody>
-            </v-table>
+            </v-table> -->
           </div>
+          <v-btn color="secondary" @click="createPatientData">Create Patient</v-btn>
         </div>
       </v-card>
     </template>
@@ -47,6 +51,7 @@ import { ref } from "vue";
 import interview from "@/components/assesment-tool/interview.vue";
 import demographic_data from "@/components/assesment-tool/patient_demographic_data/demographic-data.vue";
 import reviewPatientData from "@/components/assesment-tool/reviewPatientData.vue";
+import { createPatient } from "@/api/patients";
 
 const dataReceived = {
   interview: ref({}),
@@ -98,9 +103,11 @@ const personalDataDisplay = {
   phMembership: "PH Membership: ",
 };
 
-const printData = () => {
-  console.log(dataReceived.interview);
-  console.log(dataReceived.demographicData);
+
+
+const createPatientData = async () => {
+  const response = await createPatient(dataReceived);
+  // console.log(response);
 };
 
 const stepperItems = ["Interview", "Personal Data", "Review & Create Patient"];

@@ -224,15 +224,15 @@
           <!-- row 4 -->
           <div class="d-flex align-center">
             <v-text-field
-              v-model="personalDataInputs.phMembershipNumber"
-              :label="step3.fourthRow.phMembershipNumber.label"
-              :type="step3.fourthRow.phMembershipNumber.type"
+              v-model="personalDataInputs.ph_membership_number"
+              :label="step3.fourthRow.ph_membership_number.label"
+              :type="step3.fourthRow.ph_membership_number.type"
               variant="outlined"
               style="min-width: 300px"
             ></v-text-field>
-            <v-radio-group inline v-model="personalDataInputs.phMembership">
+            <v-radio-group inline v-model="personalDataInputs.ph_membership_type">
               <v-radio
-                v-for="option in step3.fourthRow.phMembership.options"
+                v-for="option in step3.fourthRow.ph_membership_type.options"
                 :key="option.value"
                 :label="option.text"
                 :value="option.value"
@@ -284,8 +284,8 @@ const personalDataInputs = ref({
   educationStatus: null,
   occupation: "",
   monthly_income: "",
-  phMembershipNumber: "",
-  phMembership: null,
+  ph_membership_number: "",
+  ph_membership_type: null,
   address: {
     permanent: {
       region: "",
@@ -297,7 +297,7 @@ const personalDataInputs = ref({
     },
     temporary: {
       region: "",
-      Province: "",
+      province: "",
       district: "",
       municipality: "",
       baranggay: "",
@@ -474,11 +474,11 @@ const step3 = {
     },
   },
   fourthRow: {
-    phMembershipNumber: {
+    ph_membership_number: {
       label: "PhilHealth Membership Number",
       type: "text",
     },
-    phMembership: {
+    ph_membership_type: {
       label: "PhilHealth Membership",
       options: [
         { text: "Direct Contributor", value: "Direct Contributor" },
