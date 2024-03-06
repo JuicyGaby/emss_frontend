@@ -41,7 +41,8 @@ const createPatient = async (req, res) => {
     if (data.error) {
         console.log(data.error);
     }
-    // return data;
+    console.log(data);
+    return data;
 }
 
 export { getPatients, getPatientByID, createPatient }

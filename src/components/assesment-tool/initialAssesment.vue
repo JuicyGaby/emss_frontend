@@ -107,7 +107,7 @@ const personalDataDisplay = {
 
 const createPatientData = async () => {
   const response = await createPatient(dataReceived);
-  // console.log(response);
+  console.log(response);
 };
 
 const stepperItems = ["Interview", "Personal Data", "Review & Create Patient"];
