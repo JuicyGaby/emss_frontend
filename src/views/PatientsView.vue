@@ -7,6 +7,7 @@
       @click="createDialog = !createDialog"
       >Assess Patient</v-btn
     >
+    <!-- patient list -->
     <v-card elevation-10>
       <div class="d-flex justify-space-between pa-5">
         <v-card-title class="d-flex align-center ga-5" primary-title>
@@ -38,7 +39,7 @@
         >
           <template v-slot:[`item.operation`]="{ item }">
             <div class="d-flex ga-5">
-              <v-icon color="primary" @click="editPatient(item)"
+              <v-icon color="primary" @click="toggleEditBtn(item.id)"
                 >mdi-pencil</v-icon
               >
               <v-icon color="secondary" @click="deletePatient(item)"
@@ -65,13 +66,13 @@
     <v-dialog v-model="editDialog" fullscreen transition="dialog-transition">
       <v-card class="pa-5">
         <div class="d-flex justify-end">
-          <v-btn color="error" @click="editDialog = !editDialog">Close</v-btn>
+          <v-btn
+            icon="mdi-close"
+            color="red-lighten-1"
+            @click="editDialog = !editDialog"
+          ></v-btn>
         </div>
-        <v-tabs 
-        v-model="tab"
-        align-tabs="center"
-        center-active
-        >
+        <v-tabs v-model="tab" align-tabs="center" center-active stacked>
           <v-tab
             v-for="(header, index) in tabHeaders"
             :value="header.value"
@@ -80,6 +81,23 @@
             {{ header.title }}
           </v-tab>
         </v-tabs>
+        <v-card-text>
+          <v-window v-model="tab">
+            <v-window-item :value="1">
+              <mswdClassification :patientId="patientId"></mswdClassification>
+            </v-window-item>
+            <v-window-item :value="2"> Two </v-window-item>
+            <v-window-item :value="3"> Three </v-window-item>
+            <v-window-item :value="4"> Four </v-window-item>
+            <v-window-item :value="5"> Five </v-window-item>
+            <v-window-item :value="6"> Six </v-window-item>
+            <v-window-item :value="7"> Seven </v-window-item>
+            <v-window-item :value="8"> Eight </v-window-item>
+            <v-window-item :value="9"> Nine </v-window-item>
+            <v-window-item :value="10"> Ten </v-window-item>
+
+          </v-window>
+        </v-card-text>
       </v-card>
     </v-dialog>
   </div>
@@ -90,17 +108,15 @@ import { ref, onMounted, computed, reactive } from "vue";
 import { getPatients } from "@/api/patients";
 import { useRouter } from "vue-router";
 import initialAssesment from "@/components/assesment-tool/initialAssesment.vue";
+import mswdClassification from "@/components/assesment-tool/mswdClassification.vue";
+
+
 
 const props = defineProps({
   user: Object,
   authentication: Object,
 });
 
-const initialAssesmentItems = [
-  "Interview",
-  "Demographic Data",
-  "Create Patient",
-];
 
 const router = useRouter();
 const searchInput = ref("");
@@ -108,6 +124,13 @@ let patientData = ref([]);
 const isLoading = ref(false);
 const createDialog = ref(false);
 const editDialog = ref(false);
+const tab = ref(0);
+const patientId = ref(0);
+const initialAssesmentItems = [
+  "Interview",
+  "Demographic Data",
+  "Create Patient",
+];
 const tableHeaders = [
   { title: "First Name", value: "first_name" },
   { title: "Middle Name", value: "middle_name" },
@@ -117,31 +140,25 @@ const tableHeaders = [
   { title: "Civil Status", value: "civil_status" },
   { title: "Operation", value: "operation" },
 ];
-
-const tab = ref(0);
-
 const tabHeaders = [
   { title: "Interview", value: 1 },
   { title: "I - Demographic Data", value: 2 },
   { title: "II - MSWD Classification", value: 3 },
-  { title: "III - Monthly Expenses", value:  4},
-  { title: "IV - Medical Data", value:  5},
-  { title: "V - Health and Mental Health", value:  6},
-  { title: "VI - Discrimination", value:  7},
-  { title: "VII - Safety", value:  8},
-  { title: "VIII - Assesment of Social Functioning", value:  9},
-  { title: "IV - Problems in the Environment", value:  10}
+  { title: "III - Monthly Expenses", value: 4 },
+  { title: "IV - Medical Data", value: 5 },
+  { title: "V - Health and Mental Health", value: 6 },
+  { title: "VI - Discrimination", value: 7 },
+  { title: "VII - Safety", value: 8 },
+  { title: "VIII - Assesment of Social Functioning", value: 9 },
+  { title: "IV - Problems in the Environment", value: 10 },
 ];
 
 onMounted(() => {
   fetchPatients();
 });
 
-const editPatient = (patient) => {
-  // Add your edit logic here
-  // router.push(`/EditPatient/${patient.id}`);
-  // console.log(patient.id);
-
+const toggleEditBtn = (id) => {
+  patientId.value = id;
   editDialog.value = !editDialog.value;
   tab.value = 1;
 };
@@ -160,9 +177,6 @@ async function fetchPatients() {
   }
 }
 </script>
-
-
-
 
 <style lang="css">
 .patientsTable {
