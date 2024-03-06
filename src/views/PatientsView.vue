@@ -86,7 +86,9 @@
             <v-window-item :value="1">
               <mswdClassification :patientId="patientId"></mswdClassification>
             </v-window-item>
-            <v-window-item :value="2"> Two </v-window-item>
+            <v-window-item :value="2">
+              <personalData :patientId="patientId"></personalData>
+            </v-window-item>
             <v-window-item :value="3"> Three </v-window-item>
             <v-window-item :value="4"> Four </v-window-item>
             <v-window-item :value="5"> Five </v-window-item>
@@ -95,7 +97,6 @@
             <v-window-item :value="8"> Eight </v-window-item>
             <v-window-item :value="9"> Nine </v-window-item>
             <v-window-item :value="10"> Ten </v-window-item>
-
           </v-window>
         </v-card-text>
       </v-card>
@@ -109,14 +110,12 @@ import { getPatients } from "@/api/patients";
 import { useRouter } from "vue-router";
 import initialAssesment from "@/components/assesment-tool/initialAssesment.vue";
 import mswdClassification from "@/components/assesment-tool/mswdClassification.vue";
-
-
+import personalData from "@/components/assesment-tool/personalData.vue";
 
 const props = defineProps({
   user: Object,
   authentication: Object,
 });
-
 
 const router = useRouter();
 const searchInput = ref("");
