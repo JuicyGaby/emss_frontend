@@ -53,16 +53,23 @@ import demographic_data from "@/components/assesment-tool/patient_demographic_da
 import reviewPatientData from "@/components/assesment-tool/reviewPatientData.vue";
 import { createPatient } from "@/api/patients";
 
+
+const props = defineProps({
+  user: Object,
+});
+
 const dataReceived = {
   interview: ref({}),
-  demographicData: ref({}),
+  demographicData: ref({
+    created_by: props.user.id,
+  }),
 };
 
 const handleInterviewData = (data) => {
   dataReceived.interview = data;
 };
 const handlePersonalData = (data) => {
-  dataReceived.demographicData = data;
+  dataReceived.demographicData.value = { ...dataReceived.demographicData.value, ...data };
 };
 
 const interviewDisplay = {

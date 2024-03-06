@@ -1,15 +1,17 @@
 <template lang="">
   <div class="d-flex flex-column">
-    <v-btn 
-    size="x-large" 
-    color="secondary"
-    prepend-icon="mdi-account-plus"
-    @click="createDialog = !createDialog"
-    >Assess Patient</v-btn>
+    <v-btn
+      size="x-large"
+      color="secondary"
+      prepend-icon="mdi-account-plus"
+      @click="createDialog = !createDialog"
+      >Assess Patient</v-btn
+    >
     <v-card elevation-10>
       <div class="d-flex justify-space-between pa-5">
-        <v-card-title class="d-flex align-center ga-5" primary-title >
-          <v-icon size="x-large" icon="mdi-account-group"></v-icon><h1 class=""> Patient List</h1>
+        <v-card-title class="d-flex align-center ga-5" primary-title>
+          <v-icon size="x-large" icon="mdi-account-group"></v-icon>
+          <h1 class="">Patient List</h1>
         </v-card-title>
         <v-text-field
           style="max-width: 400px"
@@ -47,18 +49,37 @@
         </v-data-table>
       </v-card-text>
     </v-card>
-    <v-dialog
-    v-model="createDialog"
-    width="auto"
-    >
+    <!-- update dialog -->
+    <v-dialog v-model="createDialog" width="auto">
       <v-card>
         <v-card-title>
           <h3>Initial Assesment</h3>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-          <initialAssesment></initialAssesment>
+          <initialAssesment :user="props.user"></initialAssesment>
         </v-card-text>
+      </v-card>
+    </v-dialog>
+    <!-- edit dialog -->
+    <v-dialog v-model="editDialog" fullscreen transition="dialog-transition">
+      <v-card class="pa-5">
+        <div class="d-flex justify-end">
+          <v-btn color="error" @click="editDialog = !editDialog">Close</v-btn>
+        </div>
+        <v-tabs 
+        v-model="tab"
+        align-tabs="center"
+        center-active
+        >
+          <v-tab
+            v-for="(header, index) in tabHeaders"
+            :value="header.value"
+            :key="index"
+          >
+            {{ header.title }}
+          </v-tab>
+        </v-tabs>
       </v-card>
     </v-dialog>
   </div>
@@ -75,7 +96,6 @@ const props = defineProps({
   authentication: Object,
 });
 
-
 const initialAssesmentItems = [
   "Interview",
   "Demographic Data",
@@ -87,7 +107,7 @@ const searchInput = ref("");
 let patientData = ref([]);
 const isLoading = ref(false);
 const createDialog = ref(false);
-
+const editDialog = ref(false);
 const tableHeaders = [
   { title: "First Name", value: "first_name" },
   { title: "Middle Name", value: "middle_name" },
@@ -98,18 +118,35 @@ const tableHeaders = [
   { title: "Operation", value: "operation" },
 ];
 
+const tab = ref(0);
+
+const tabHeaders = [
+  { title: "Interview", value: 1 },
+  { title: "I - Demographic Data", value: 2 },
+  { title: "II - MSWD Classification", value: 3 },
+  { title: "III - Monthly Expenses", value:  4},
+  { title: "IV - Medical Data", value:  5},
+  { title: "V - Health and Mental Health", value:  6},
+  { title: "VI - Discrimination", value:  7},
+  { title: "VII - Safety", value:  8},
+  { title: "VIII - Assesment of Social Functioning", value:  9},
+  { title: "IV - Problems in the Environment", value:  10}
+];
+
 onMounted(() => {
   fetchPatients();
 });
 
 const editPatient = (patient) => {
   // Add your edit logic here
-  router.push(`/EditPatient/${patient.id}`);
-  console.log(patient.id);
+  // router.push(`/EditPatient/${patient.id}`);
+  // console.log(patient.id);
+
+  editDialog.value = !editDialog.value;
+  tab.value = 1;
 };
 
 const deletePatient = (patient) => {
-  // Add your delete logic here
   console.log("Delete:", patient);
 };
 
@@ -123,6 +160,9 @@ async function fetchPatients() {
   }
 }
 </script>
+
+
+
 
 <style lang="css">
 .patientsTable {
