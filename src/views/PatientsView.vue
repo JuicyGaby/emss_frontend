@@ -50,7 +50,7 @@
         </v-data-table>
       </v-card-text>
     </v-card>
-    <!-- update dialog -->
+    <!-- create dialog -->
     <v-dialog v-model="createDialog" width="auto">
       <v-card>
         <v-card-title>
@@ -58,12 +58,12 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-          <initialAssesment :user="props.user"></initialAssesment>
+          <initialAssesment @closeCreateDialog = "toggleCreateDialog" :user="props.user"></initialAssesment>
         </v-card-text>
       </v-card>
     </v-dialog>
     <!-- edit dialog -->
-    <v-dialog v-model="editDialog" fullscreen transition="dialog-transition">
+    <v-dialog class="" v-model="editDialog" fullscreen scrollable transition="dialog-transition">
       <v-card class="pa-5">
         <div class="d-flex justify-end">
           <v-btn
@@ -72,7 +72,7 @@
             @click="editDialog = !editDialog"
           ></v-btn>
         </div>
-        <v-tabs v-model="tab" align-tabs="center" center-active stacked>
+        <v-tabs class="" v-model="tab" align-tabs="center" center-active stacked>
           <v-tab
             v-for="(header, index) in tabHeaders"
             :value="header.value"
@@ -81,15 +81,17 @@
             {{ header.title }}
           </v-tab>
         </v-tabs>
-        <v-card-text>
-          <v-window v-model="tab">
-            <v-window-item :value="1">
-              <mswdClassification :patientId="patientId"></mswdClassification>
+        <v-card-text class="">
+          <v-window class="" v-model="tab">
+            <v-window-item class="" :value="1">
+              <interviewView :patientId="patientId"></interviewView>
             </v-window-item>
             <v-window-item :value="2">
               <personalData :patientId="patientId"></personalData>
             </v-window-item>
-            <v-window-item :value="3"> Three </v-window-item>
+            <v-window-item :value="3">
+              <mswdClassification :patientId="patientId"></mswdClassification>
+            </v-window-item>
             <v-window-item :value="4"> Four </v-window-item>
             <v-window-item :value="5"> Five </v-window-item>
             <v-window-item :value="6"> Six </v-window-item>
@@ -109,6 +111,7 @@ import { ref, onMounted, computed, reactive } from "vue";
 import { getPatients } from "@/api/patients";
 import { useRouter } from "vue-router";
 import initialAssesment from "@/components/assesment-tool/initialAssesment.vue";
+import interviewView from "@/components/assesment-tool/InterviewView.vue";
 import mswdClassification from "@/components/assesment-tool/mswdClassification.vue";
 import personalData from "@/components/assesment-tool/personalData.vue";
 
@@ -175,6 +178,9 @@ async function fetchPatients() {
     isLoading.value = false;
   }
 }
+const toggleCreateDialog = () => {
+  createDialog.value = !createDialog.value;
+};
 </script>
 
 <style lang="css">
@@ -182,7 +188,10 @@ async function fetchPatients() {
   /* border: 1px solid red; */
   width: 40%;
 }
+.rb {
+  border: 1px solid red;
 
+}
 th {
   font-weight: 1000;
   font-size: 20px;

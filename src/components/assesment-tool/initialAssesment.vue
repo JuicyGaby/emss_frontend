@@ -40,11 +40,29 @@
               </tbody>
             </v-table> -->
           </div>
-          <v-btn color="secondary" @click="createPatientData">Create Patient</v-btn>
+          <v-btn color="secondary" @click="createPatientData"
+            >Create Patient</v-btn
+          >
         </div>
       </v-card>
     </template>
   </v-stepper>
+  <v-dialog
+    v-model="dialog"
+    max-width="500"
+    hide-overlay
+    persistent
+    transition="dialog-transition"
+  >
+    <v-card>
+      <v-card-title class="headline">Assesed Patient Successfuly</v-card-title>
+      <v-card-text> Review Patient Data </v-card-text>
+      <v-card-actions>
+        <v-btn color="secondary" @click="toggleCloseBtn">Close</v-btn>
+        <v-btn color="primary" @click="toggleCloseBtn">View Patient</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 <script setup>
 import { ref } from "vue";
@@ -53,10 +71,13 @@ import demographic_data from "@/components/assesment-tool/patient_demographic_da
 import reviewPatientData from "@/components/assesment-tool/reviewPatientData.vue";
 import { createPatient } from "@/api/patients";
 
-
 const props = defineProps({
   user: Object,
 });
+
+const emit = defineEmits(["closeCreateDialog"]);
+
+const dialog = ref(false);
 
 const dataReceived = {
   interview: ref({}),
@@ -69,7 +90,10 @@ const handleInterviewData = (data) => {
   dataReceived.interview = data;
 };
 const handlePersonalData = (data) => {
-  dataReceived.demographicData.value = { ...dataReceived.demographicData.value, ...data };
+  dataReceived.demographicData.value = {
+    ...dataReceived.demographicData.value,
+    ...data,
+  };
 };
 
 const interviewDisplay = {
@@ -110,11 +134,17 @@ const personalDataDisplay = {
   phMembership: "PH Membership: ",
 };
 
-
+const toggleCloseBtn = () => {
+  dialog.value = false;
+  emit("closeCreateDialog");
+};
 
 const createPatientData = async () => {
-  const response = await createPatient(dataReceived);
-  console.log(response);
+  console.log(dataReceived);
+  dialog.value = true;
+
+  // const response = await createPatient(dataReceived);
+  // console.log(response);
 };
 
 const stepperItems = ["Interview", "Personal Data", "Review & Create Patient"];
