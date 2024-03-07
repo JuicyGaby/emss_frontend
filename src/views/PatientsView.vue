@@ -33,7 +33,7 @@
           :loading="isLoading"
           :headers="tableHeaders"
           :items="patientData"
-          items-per-page="10"
+          items-per-page="5"
           density="comfortable"
           :items-per-page-options="[5, 10, 15]"
         >
@@ -58,12 +58,23 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-          <initialAssesment @viewPatient="viewPatient" @closeCreateDialog = "toggleCreateDialog" :user="props.user"></initialAssesment>
+          <initialAssesment
+            @viewPatient="viewPatient"
+            @closeCreateDialog="toggleCreateDialog"
+            @addPatient="appendCreatedPatient"
+            :user="props.user"
+          ></initialAssesment>
         </v-card-text>
       </v-card>
     </v-dialog>
     <!-- edit dialog -->
-    <v-dialog class="" v-model="editDialog" fullscreen scrollable transition="dialog-transition">
+    <v-dialog
+      class=""
+      v-model="editDialog"
+      fullscreen
+      scrollable
+      transition="dialog-transition"
+    >
       <v-card class="pa-5">
         <div class="d-flex justify-end">
           <v-btn
@@ -72,7 +83,13 @@
             @click="editDialog = !editDialog"
           ></v-btn>
         </div>
-        <v-tabs class="" v-model="tab" align-tabs="center" center-active stacked>
+        <v-tabs
+          class=""
+          v-model="tab"
+          align-tabs="center"
+          center-active
+          stacked
+        >
           <v-tab
             v-for="(header, index) in tabHeaders"
             :value="header.value"
@@ -179,7 +196,6 @@ async function fetchPatients() {
   }
 }
 
-
 const toggleCreateDialog = () => {
   createDialog.value = !createDialog.value;
 };
@@ -187,6 +203,11 @@ const toggleCreateDialog = () => {
 const viewPatient = (patientId) => {
   toggleEditBtn(patientId);
 };
+const appendCreatedPatient = (patient) => {
+  patientData.value.push(patient.value);
+  console.log('successfuly added', patientData.value);
+};
+
 </script>
 
 <style lang="css">
@@ -196,7 +217,6 @@ const viewPatient = (patientId) => {
 }
 .rb {
   border: 1px solid red;
-
 }
 th {
   font-weight: 1000;

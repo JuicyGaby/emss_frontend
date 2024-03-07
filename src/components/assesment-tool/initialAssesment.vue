@@ -59,7 +59,7 @@
       <v-card-text> Review Patient Data </v-card-text>
       <v-card-actions>
         <v-btn color="secondary" @click="toggleCloseBtn">Close</v-btn>
-        <v-btn color="primary" @click="viewPatient">View Patient</v-btn>
+        <v-btn color="primary" @click="viewPatient(patient.id)">View Patient</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -75,25 +75,21 @@ const props = defineProps({
   user: Object,
 });
 
-const emit = defineEmits(["closeCreateDialog", "viewPatient"]);
+const emit = defineEmits(["closeCreateDialog", "viewPatient", "addPatient"]);
 
 const dialog = ref(false);
+const patient = ref({});
 
 const dataReceived = {
   interview: ref({}),
-  demographicData: ref({
-    created_by: props.user.id,
-  }),
+  demographicData: ref({}),
 };
 
 const handleInterviewData = (data) => {
   dataReceived.interview = data;
 };
 const handlePersonalData = (data) => {
-  dataReceived.demographicData.value = {
-    ...dataReceived.demographicData.value,
-    ...data,
-  };
+  dataReceived.demographicData = data;
 };
 
 const interviewDisplay = {
@@ -139,18 +135,24 @@ const toggleCloseBtn = () => {
   emit("closeCreateDialog");
 };
 
-const viewPatient = () => {
-  const patientId = 12;
+const viewPatient = (patientId) => {
   toggleCloseBtn();
   emit("viewPatient", patientId);
 };
 
-const createPatientData = async () => {
-  console.log(dataReceived);
-  dialog.value = true;
+const addPatient = () => {
+  emit("addPatient", patient);
+};
 
-  // const response = await createPatient(dataReceived);
-  // console.log(response);
+const createPatientData = async () => {
+  const user_id = props.user.id;
+  dataReceived.demographicData.created_by = user_id;
+  const response = await createPatient(dataReceived);
+  if (response) {
+    dialog.value = true;
+    patient.value = response;
+    addPatient();
+  }
 };
 
 const stepperItems = ["Interview", "Personal Data", "Review & Create Patient"];
