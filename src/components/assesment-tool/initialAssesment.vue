@@ -59,7 +59,7 @@
       <v-card-text> Review Patient Data </v-card-text>
       <v-card-actions>
         <v-btn color="secondary" @click="toggleCloseBtn">Close</v-btn>
-        <v-btn color="primary" @click="toggleCloseBtn">View Patient</v-btn>
+        <v-btn color="primary" @click="viewPatient">View Patient</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -75,7 +75,7 @@ const props = defineProps({
   user: Object,
 });
 
-const emit = defineEmits(["closeCreateDialog"]);
+const emit = defineEmits(["closeCreateDialog", "viewPatient"]);
 
 const dialog = ref(false);
 
@@ -137,6 +137,12 @@ const personalDataDisplay = {
 const toggleCloseBtn = () => {
   dialog.value = false;
   emit("closeCreateDialog");
+};
+
+const viewPatient = () => {
+  const patientId = 12;
+  toggleCloseBtn();
+  emit("viewPatient", patientId);
 };
 
 const createPatientData = async () => {

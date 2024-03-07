@@ -58,7 +58,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-          <initialAssesment @closeCreateDialog = "toggleCreateDialog" :user="props.user"></initialAssesment>
+          <initialAssesment @viewPatient="viewPatient" @closeCreateDialog = "toggleCreateDialog" :user="props.user"></initialAssesment>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -178,8 +178,14 @@ async function fetchPatients() {
     isLoading.value = false;
   }
 }
+
+
 const toggleCreateDialog = () => {
   createDialog.value = !createDialog.value;
+};
+
+const viewPatient = (patientId) => {
+  toggleEditBtn(patientId);
 };
 </script>
 
