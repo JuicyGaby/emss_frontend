@@ -1,7 +1,8 @@
 <template lang="">
     <div>
-        this is mswdClassification
-        {{ props.patientId }}
+        <v-container>
+            
+        </v-container>
     </div>
 </template>
 <script setup>

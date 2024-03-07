@@ -75,10 +75,6 @@
       <v-divider class="mb-5"></v-divider>
       <h2>Remarks</h2>
       <v-divider class="mb-5"></v-divider>
-      <h2>Family Composition</h2>
-      <v-divider class="mb-5"></v-divider>
-      <h2>Remarks</h2>
-      <v-divider class="mb-5"></v-divider>
     </v-container>
   </div>
 </template>
