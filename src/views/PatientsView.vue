@@ -75,30 +75,35 @@
       scrollable
       transition="dialog-transition"
     >
-      <v-card class="pa-5">
-        <div class="d-flex justify-end">
-          <v-btn
-            icon="mdi-close"
-            color="red-lighten-1"
-            @click="editDialog = !editDialog"
-          ></v-btn>
-        </div>
-        <v-tabs
-          class=""
-          v-model="tab"
-          align-tabs="center"
-          center-active
-          stacked
-        >
-          <v-tab
-            v-for="(header, index) in tabHeaders"
-            :value="header.value"
-            :key="index"
-          >
-            {{ header.title }}
-          </v-tab>
-        </v-tabs>
+      <v-card class="">
         <v-card-text class="">
+          <v-card-title class="pa-0 my-2 d-flex justify-end">
+            <v-btn
+              icon="mdi-close"
+              color="red-lighten-1"
+              size="x-small"
+              @click="editDialog = !editDialog"
+            ></v-btn>
+          </v-card-title>
+          <v-tabs
+            class="tabs"
+            v-model="tab"
+            align-tabs="center"
+            center-active
+            bg-color="secondary"
+            color="black"
+            stacked
+            fixed-tabs
+            density="compact"
+          >
+            <v-tab
+              v-for="(header, index) in tabHeaders"
+              :value="header.value"
+              :key="index"
+            >
+              {{ header.title }}
+            </v-tab>
+          </v-tabs>
           <v-window class="" v-model="tab">
             <v-window-item class="" :value="1">
               <interviewView :patientId="patientId"></interviewView>
@@ -205,9 +210,8 @@ const viewPatient = (patientId) => {
 };
 const appendCreatedPatient = (patient) => {
   patientData.value.push(patient.value);
-  console.log('successfuly added', patientData.value);
+  console.log("successfuly added", patientData.value);
 };
-
 </script>
 
 <style lang="css">
@@ -217,6 +221,9 @@ const appendCreatedPatient = (patient) => {
 }
 .rb {
   border: 1px solid red;
+}
+.tabs {
+  z-index: 1000;
 }
 th {
   font-weight: 1000;
