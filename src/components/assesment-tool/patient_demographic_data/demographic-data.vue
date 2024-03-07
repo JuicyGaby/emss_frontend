@@ -1,5 +1,5 @@
 <template lang="">
-  <v-container class="d-flex flex-column justify-center align-center">
+  <v-container class="d-flex flex-column">
     <!-- 1st page -->
     <div class="pages" v-show="page == 1">
       <v-row>
@@ -13,6 +13,7 @@
               :type="value.type"
               v-model="personalDataInputs[key]"
               variant="outlined"
+              :rules="value.rules"
               style="min-width: 300px"
             ></v-text-field>
           </div>
@@ -267,8 +268,8 @@ onMounted(async () => {
 // create a watch for personalDataInputs.address.permanent.region if theres a change
 
 const personalDataInputs = ref({
-  last_name: "",
-  first_name: "",
+  last_name: null,
+  first_name: null,
   middle_name: "",
   age: "",
   contact_number: "",
@@ -317,7 +318,7 @@ watchEffect(() => {
 
 
 const inputRules = {
-  firstName: [(v) => !!v || "Username is required"],
+  required: [(v) => !!v || "required"],
 };
 
 const educationOptions = [
@@ -358,11 +359,12 @@ const step1 = {
     last_name: {
       label: "Last Name",
       type: "text",
-      rules: inputRules.firstName,
+      rules: inputRules.required,
     },
     first_name: {
       label: "First Name",
       type: "text",
+      rules: inputRules.required,
     },
     middle_name: {
       label: "Middle Name",

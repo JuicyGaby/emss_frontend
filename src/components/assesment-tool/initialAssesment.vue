@@ -47,28 +47,45 @@
       </v-card>
     </template>
   </v-stepper>
+  <!-- created Dialog -->
   <v-dialog
-    v-model="dialog"
+    v-model="dialogs.created"
     max-width="500"
     hide-overlay
     persistent
     transition="dialog-transition"
   >
-    <v-card>
+    <v-alert type="success" title="Successfully Accessed Patient">
+      <div class="my-5 d-flex justify-end ga-2">
+        <v-btn color="primary" @click="viewPatient(patient.id)">Edit Patient</v-btn>
+        <v-btn color="error" @click="toggleCloseBtn">Close</v-btn>
+      </div>
+    </v-alert>
+
+    <!-- <v-card>
       <v-card-title class="headline">Assesed Patient Successfuly</v-card-title>
       <v-card-text> Review Patient Data </v-card-text>
       <v-card-actions>
         <v-btn color="secondary" @click="toggleCloseBtn">Close</v-btn>
-        <v-btn color="primary" @click="viewPatient(patient.id)">View Patient</v-btn>
+        <v-btn color="primary" @click="viewPatient(patient.id)"
+          >View Patient</v-btn
+        >
       </v-card-actions>
-    </v-card>
+    </v-card> -->
+    <!-- error dialog -->
+  </v-dialog>
+  <v-dialog v-model="dialogs.error" max-width="500">
+    <v-alert
+      title="Please input neccesary fields"
+      text="Fields : First Name, Last Name"
+      color="error"
+    ></v-alert>
   </v-dialog>
 </template>
 <script setup>
 import { ref } from "vue";
 import interview from "@/components/assesment-tool/interview.vue";
 import demographic_data from "@/components/assesment-tool/patient_demographic_data/demographic-data.vue";
-import reviewPatientData from "@/components/assesment-tool/reviewPatientData.vue";
 import { createPatient } from "@/api/patients";
 
 const props = defineProps({
@@ -77,7 +94,10 @@ const props = defineProps({
 
 const emit = defineEmits(["closeCreateDialog", "viewPatient", "addPatient"]);
 
-const dialog = ref(false);
+const dialogs = ref({
+  created: false,
+  error: false,
+});
 const patient = ref({});
 
 const dataReceived = {
@@ -131,7 +151,7 @@ const personalDataDisplay = {
 };
 
 const toggleCloseBtn = () => {
-  dialog.value = false;
+  dialogs.value.created = false;
   emit("closeCreateDialog");
 };
 
@@ -145,14 +165,28 @@ const addPatient = () => {
 };
 
 const createPatientData = async () => {
+  if (!validateInput()) return;
   const user_id = props.user.id;
   dataReceived.demographicData.created_by = user_id;
   const response = await createPatient(dataReceived);
   if (response) {
-    dialog.value = true;
+    dialogs.value.created = true;
     patient.value = response;
     addPatient();
   }
+};
+
+const handleError = () => {
+  dialogs.value.error = true;
+};
+
+const validateInput = () => {
+  const { first_name, last_name } = dataReceived.demographicData;
+  if (!first_name || !last_name) {
+    handleError();
+    return false;
+  }
+  return true;
 };
 
 const stepperItems = ["Interview", "Personal Data", "Review & Create Patient"];
