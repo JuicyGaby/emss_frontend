@@ -1,11 +1,11 @@
 <template lang="">
   <div>
-    <v-container>
-      <!-- persnal data -->
-      <h2>Personal Data: </h2>
+    <v-container class="" style="width: 1000px">
+      <h2>Personal Data:</h2>
       <v-divider class="mb-5"></v-divider>
+      <!-- persnal data -->
       <v-row>
-        <v-col cols="3">
+        <v-col cols="4">
           <v-text-field
             v-for="(value, key) in inputFields.col1"
             :key="key"
@@ -17,7 +17,7 @@
             style="min-width: 300px"
           ></v-text-field>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="4">
           <v-text-field
             v-for="(value, key) in inputFields.col2"
             :key="key"
@@ -29,7 +29,7 @@
             style="min-width: 300px"
           ></v-text-field>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="4">
           <v-text-field
             v-for="(value, key) in inputFields.col3"
             :key="key"
@@ -42,12 +42,28 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <!-- address -->
-      <h2>Address: </h2>
+      <!-- remarks -->
+      <h2>Remarks:</h2>
       <v-divider class="mb-5"></v-divider>
-
+      <v-row>
+        <v-col cols="12">
+          <v-textarea
+            v-model="patientData.remarks"
+            label="Remarks"
+            rows="5"
+            auto-grow
+            style="min-width: 300px"
+            variant="outlined"
+            counter="255"
+          ></v-textarea>
+        </v-col>
+      </v-row>
+      <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5">Update Personal Data</v-btn>
+      <!-- address -->
+      <h2>Address:</h2>
+      <v-divider class="mb-5"></v-divider>
       <v-row v-if="patientData.address">
-        <v-col cols="3">
+        <v-col cols="6">
           <h4 class="mb-5">Permanent Address</h4>
           <v-text-field
             v-for="(value, key) in address.permanent"
@@ -60,7 +76,7 @@
             style="min-width: 300px"
           ></v-text-field>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="6">
           <h4 class="mb-5">Temporary Address</h4>
           <v-text-field
             v-for="(value, key) in address.permanent"
@@ -74,16 +90,21 @@
           ></v-text-field>
         </v-col>
       </v-row>
+      <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5">Update Address</v-btn>
       <!-- family composition -->
-      <h2>Family Composition: </h2>
+      <h2>Family Composition:</h2>
       <v-divider class="mb-5"></v-divider>
       <div v-if="showFamilyComposition">
-        <v-row v-if="familyComposition" v-for="(item, index) in familyComposition" :key="index">
+        <v-row
+          v-if="familyComposition"
+          v-for="(item, index) in familyComposition"
+          :key="index"
+        >
           <!-- display the current number -->
           <v-col cols="12">
             <h4>Family Member : {{ index + 1 }}</h4>
           </v-col>
-          <v-col cols="3">
+          <v-col cols="6">
             <v-text-field
               v-for="(value, key) in familyCompositionFields.col1"
               :key="key"
@@ -95,7 +116,7 @@
               style="min-width: 300px"
             ></v-text-field>
           </v-col>
-          <v-col cols="3">
+          <v-col cols="6">
             <v-text-field
               v-for="(value, key) in familyCompositionFields.col2"
               :key="key"
@@ -109,9 +130,10 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
-              v-for="(item, key) in familyCompositionFields.col3" :key="key"
+              v-for="(item, key) in familyCompositionFields.col3"
+              :key="key"
               :label="item.label"
               :type="item.type"
               v-model="familyComposition[key]"
@@ -120,25 +142,16 @@
             ></v-text-field>
           </v-col>
         </v-row>
+        <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5">Update family composition</v-btn>
+
       </div>
-      <v-btn color="secondary" class="mb-5" @click="showFamilyComposition = !showFamilyComposition">Toggle Family Composition</v-btn>
-      <!-- remarks -->
-      <h2>Remarks: </h2>
-      <v-divider class="mb-5"></v-divider>
-      <v-row>
-        <v-col cols="6">
-          <v-textarea
-            v-model="patientData.remarks"
-            label="Remarks"
-            rows="5"
-            auto-grow
-            style="min-width: 300px"
-            variant="outlined"
-            counter="255"
-          ></v-textarea>
-        </v-col>
-      </v-row>
-      <v-btn color="primary">Update Personal Data</v-btn>
+      <v-btn
+        color="grey"
+        class="mb-5"
+        @click="showFamilyComposition = !showFamilyComposition"
+        :append-icon="showFamilyComposition ? 'mdi-menu-up' : 'mdi-menu-down'"
+        >Toggle Family Composition</v-btn
+      >
     </v-container>
   </div>
 </template>
@@ -364,4 +377,4 @@ const getFamilyCompositionData = async () => {
   console.log(response);
 };
 </script>
-<style lang=""></style>
+<style lang="css" scoped></style>

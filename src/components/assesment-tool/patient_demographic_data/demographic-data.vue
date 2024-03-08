@@ -119,7 +119,6 @@
             variant="outlined"
             v-model="personalDataInputs.address.permanent.purok"
         ></v-text-field>
-
     </div>
     <!-- 3rd page -->
     <div class="pages" v-show="page == 3">
