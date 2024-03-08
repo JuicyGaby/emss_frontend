@@ -4,7 +4,7 @@
       <v-container>
         <h2>Initial Interview</h2>
         <v-divider class="mb-5"></v-divider>
-        <v-row>
+        <v-row v-if="interviewData">
           <v-col cols="3">
             <v-text-field
               v-for="(field, key) in inputField1"

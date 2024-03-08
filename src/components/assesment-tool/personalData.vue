@@ -2,7 +2,7 @@
   <div>
     <v-container>
       <!-- persnal data -->
-      <h2>Personal Data</h2>
+      <h2>Personal Data: </h2>
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-col cols="3">
@@ -43,8 +43,9 @@
         </v-col>
       </v-row>
       <!-- address -->
-      <h2>Address</h2>
+      <h2>Address: </h2>
       <v-divider class="mb-5"></v-divider>
+
       <v-row v-if="patientData.address">
         <v-col cols="3">
           <h4 class="mb-5">Permanent Address</h4>
@@ -74,37 +75,55 @@
         </v-col>
       </v-row>
       <!-- family composition -->
-      <h2>Family Composition</h2>
-
+      <h2>Family Composition: </h2>
       <v-divider class="mb-5"></v-divider>
-      <v-row v-for="(item, index) in familyComposition" :key="index">
-        <v-col cols="3">
-          <v-text-field
-            v-for="(value, key) in familyCompositionFields.col1"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="item[key]"
-            density="compact"
-            variant="outlined"
-            style="min-width: 300px"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="3">
-          <v-text-field
-            v-for="(value, key) in familyCompositionFields.col2"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="item[value.label]"
-            density="compact"
-            variant="outlined"
-            style="min-width: 300px"
-          ></v-text-field>
-        </v-col>
-      </v-row>
+      <div v-if="showFamilyComposition">
+        <v-row v-if="familyComposition" v-for="(item, index) in familyComposition" :key="index">
+          <!-- display the current number -->
+          <v-col cols="12">
+            <h4>Family Member : {{ index + 1 }}</h4>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field
+              v-for="(value, key) in familyCompositionFields.col1"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              v-model="item[key]"
+              density="compact"
+              variant="outlined"
+              style="min-width: 300px"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field
+              v-for="(value, key) in familyCompositionFields.col2"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              v-model="item[key]"
+              density="compact"
+              variant="outlined"
+              style="min-width: 300px"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="6">
+            <v-text-field
+              v-for="(item, key) in familyCompositionFields.col3" :key="key"
+              :label="item.label"
+              :type="item.type"
+              v-model="familyComposition[key]"
+              variant="outlined"
+              density="compact"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </div>
+      <v-btn color="secondary" class="mb-5" @click="showFamilyComposition = !showFamilyComposition">Toggle Family Composition</v-btn>
       <!-- remarks -->
-      <h2>Remarks</h2>
+      <h2>Remarks: </h2>
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-col cols="6">
@@ -130,6 +149,7 @@ import { getFamilyComposition } from "@/api/assesment-tool";
 
 let patientData = ref({});
 let familyComposition = ref({});
+const showFamilyComposition = ref(false);
 
 const inputFields = {
   col1: {
