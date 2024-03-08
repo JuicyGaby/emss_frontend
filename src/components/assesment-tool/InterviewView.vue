@@ -49,6 +49,17 @@
         <v-btn color="primary" @click="updatePatientInterview"
           >Update Interview</v-btn
         >
+        <v-snackbar
+          color="green"
+          location="top"
+          v-model="snackBars.update.isActive"
+          :timeout="snackBars.update.timeout"
+        >
+          <div class="d-flex justify-center align-center ga-2">
+            <v-icon icon="mdi-check-bold"></v-icon>
+            <p>{{ snackBars.update.text }}</p>
+          </div>
+        </v-snackbar>
       </v-container>
     </v-form>
   </div>
@@ -61,6 +72,16 @@ const props = defineProps({
 });
 
 const formValidation = ref(null);
+let interviewData = ref({});
+
+const snackBars = ref({
+  update: {
+    isActive: false,
+    text: "Successfully updated patient's interview data",
+    timeout: 2500,
+  },
+});
+
 const inputRules = {
   remarks: [
     (v) =>
@@ -69,8 +90,6 @@ const inputRules = {
       "Remarks must be less than 255 characters",
   ],
 };
-let interviewData = ref({});
-
 const inputField1 = ref({
   interview_date: {
     label: "Interview Date",
@@ -166,7 +185,13 @@ const updatePatientInterview = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
   const response = await updateInterview(props.patientId, interviewData.value);
-  console.log(response);
+  if (response) {
+    toggleSnackBar();
+  }
+};
+
+const toggleSnackBar = () => {
+  snackBars.value.update.isActive = true;
 };
 </script>
 <style lang="css" scoped>
