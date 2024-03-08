@@ -23,7 +23,7 @@ const getFamilyComposition = async (patient_id) => {
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
-}
+};
 
 // * ph address
 
@@ -53,7 +53,6 @@ const getBarangay = async (municipalityCode) => {
   return data;
 };
 
-
 export {
   interview,
   getRegions,
@@ -62,5 +61,4 @@ export {
   getBarangay,
   getInterview,
   getFamilyComposition,
-  
 };

@@ -214,7 +214,10 @@ const appendCreatedPatient = (patient) => {
 };
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
+.card-bg {
+  background-color: #3d0f0f;
+}
 .patientsTable {
   /* border: 1px solid red; */
   width: 40%;

@@ -1,53 +1,54 @@
 <template lang="">
-  <div class="">
-    <v-form>
-      <v-container>
-        <h2>Initial Interview</h2>
-        <v-divider class="mb-5"></v-divider>
-        <v-row v-if="interviewData">
-          <v-col cols="3">
-            <v-text-field
-              v-for="(field, key) in inputField1"
-              :key="key"
-              :label="field.label"
-              :type="field.type"
-              v-model="interviewData[key]"
-              variant="outlined"
-              style="min-width: 300px"
-              density="compact"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-for="(field, key) in inputField2"
-              :key="key"
-              :label="field.label"
-              :type="field.type"
-              v-model="interviewData[key]"
-              variant="outlined"
-              style="min-width: 300px"
-              density="compact"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <h2>Remarks:</h2>
-        <v-divider class="mb-5"></v-divider>
-        <v-row>
-          <v-col cols="6">
-            <v-textarea
-              v-model="interviewData.remarks"
-              label="Remarks"
-              rows="5"
-              auto-grow
-              style="min-width: 300px"
-              variant="outlined"
-              counter="255"
-            ></v-textarea>
-          </v-col>
-        </v-row>
-        <v-btn color="primary">Update Interview</v-btn>
-      </v-container>
-    </v-form>
+  <div class="d-flex justify-center align-center">
+    <v-form ref="formValidation">
+    <v-container class="interview">
+      <h2>Initial Interview</h2>
+      <v-divider class="mb-5"></v-divider>
+      <v-row v-if="interviewData">
+        <v-col cols="6">
+          <v-text-field
+            v-for="(field, key) in inputField1"
+            :key="key"
+            :label="field.label"
+            :type="field.type"
+            v-model="interviewData[key]"
+            variant="outlined"
+            style="min-width: 300px"
+            density="compact"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="6">
+          <v-text-field
+            v-for="(field, key) in inputField2"
+            :key="key"
+            :label="field.label"
+            :type="field.type"
+            v-model="interviewData[key]"
+            variant="outlined"
+            style="min-width: 300px"
+            density="compact"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <h2>Remarks:</h2>
+      <v-divider class="mb-5"></v-divider>
+      <v-row>
+        <v-col cols="12" class="mb-2">
+          <v-textarea
+            v-model="interviewData.remarks"
+            label="Remarks"
+            rows="5"
+            auto-grow
+            style="min-width: 300px"
+            :rules="inputRules.remarks"
+            variant="outlined"
+            counter="255"
+          ></v-textarea>
+        </v-col>
+      </v-row>
+      <v-btn color="primary" @click="updatePatientInterview">Update Interview</v-btn>
+    </v-container>
+  </v-form>
   </div>
 </template>
 <script setup>
@@ -56,9 +57,13 @@ import { getInterview } from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
 });
-onMounted(async () => {
-  await getInterviewData();
-});
+
+const formValidation = ref(null);
+const inputRules = {
+  remarks: [
+    (v) => (v == null || v.length <= 255) || "Remarks must be less than 255 characters"
+  ],
+}
 let interviewData = ref({});
 
 const inputField1 = ref({
@@ -136,14 +141,38 @@ const inputField2 = {
   },
 };
 
+
+onMounted(async () => {
+  await getInterviewData();
+});
+
+
 const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
   interviewData.value = response;
   console.log(response);
 };
+
+const validateForm = async () => {
+  const form = await formValidation.value.validate();
+  if (!form.valid) return false;
+  return true;
+};
+
+
+const updatePatientInterview = async () => {
+  const isValid = await validateForm();
+  if (!isValid) return;
+  console.log('Form is valid');
+};
+
 </script>
 <style lang="css" scoped>
+.interview {
+  /* border: 1px dashed red; */
+  width: 1000px;
+}
 .rb {
-  border: 1px solid red;
+  border: 1px dashed red;
 }
 </style>
