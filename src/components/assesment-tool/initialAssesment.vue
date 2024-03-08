@@ -2,7 +2,7 @@
   <v-stepper alt-labels :items="stepperItems">
     <!-- stepper 1 -->
     <template v-slot:[`item.1`]>
-      <v-card class="text-center" title="Interview" flat>
+      <v-card class="text-center" title="" flat>
         <v-card-text class="">
           <interview @interviewData="handleInterviewData"></interview>
         </v-card-text>
@@ -10,7 +10,7 @@
     </template>
     <!-- stepper 2 -->
     <template v-slot:[`item.2`]>
-      <v-card title="I. Demographic Data" class="text-center" flat>
+      <v-card  class="text-center" flat>
         <v-card-text class="">
           <demographic_data
             @personalData="handlePersonalData"

@@ -1,9 +1,53 @@
 <template lang="">
   <div class="">
-    <v-container>
+    <v-form>
+      <v-container>
         <h2>Initial Interview</h2>
         <v-divider class="mb-5"></v-divider>
-    </v-container>
+        <v-row>
+          <v-col cols="3">
+            <v-text-field
+              v-for="(field, key) in inputField1"
+              :key="key"
+              :label="field.label"
+              :type="field.type"
+              v-model="interviewData[key]"
+              variant="outlined"
+              style="min-width: 300px"
+              density="compact"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field
+              v-for="(field, key) in inputField2"
+              :key="key"
+              :label="field.label"
+              :type="field.type"
+              v-model="interviewData[key]"
+              variant="outlined"
+              style="min-width: 300px"
+              density="compact"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <h2>Remarks:</h2>
+        <v-divider class="mb-5"></v-divider>
+        <v-row>
+          <v-col cols="6">
+            <v-textarea
+              v-model="interviewData.remarks"
+              outlined
+              rows="5"
+              auto-grow
+              style="min-width: 300px"
+              variant="outlined"
+              counter="255"
+            ></v-textarea>
+          </v-col>
+        </v-row>
+        <v-btn color="primary">Update Interview</v-btn>
+      </v-container>
+    </v-form>
   </div>
 </template>
 <script setup>
@@ -21,35 +65,33 @@ const inputField1 = ref({
   interview_date: {
     label: "Interview Date",
     type: "text",
-    value: "",
   },
   interview_time: {
     label: "Interview Time",
     type: "text",
-    value: "",
   },
   admission_date_and_time: {
     label: "Admission Date-Time",
     type: "text",
-    value: "",
   },
   basic_ward: {
     label: "Basic Ward",
     type: "text",
-    value: "",
   },
   nonbasic_ward: {
     label: "Non-Basic Ward",
     type: "text",
-    value: "",
   },
   health_record_number: {
     label: "Health Record Number",
     type: "text",
-    value: "",
   },
   mswd_number: {
     label: "MSWD Number",
+    type: "text",
+  },
+  referring_party: {
+    label: "Referring Party",
     type: "text",
     value: "",
   },
@@ -60,11 +102,7 @@ const inputField2 = {
     type: "text",
     value: "",
   },
-  referring_party: {
-    label: "Referring Party",
-    type: "text",
-    value: "",
-  },
+
   address: {
     label: "Referal Address",
     type: "text",
