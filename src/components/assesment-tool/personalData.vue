@@ -18,6 +18,7 @@
               density="compact"
               variant="outlined"
               style="min-width: 300px"
+              class="mb-1"
             ></v-text-field>
           </v-col>
           <!-- col2 -->
@@ -457,8 +458,8 @@ const updatePersonalData = async () => {
   const validate = await validateForm(personalForm);
   console.log(validate);
   if (!validate) return;
-  console.log("update personal data");
-  await updatePatient(patientData.value);
+  const response = await updatePatient(patientData.value);
+  console.log(response);
 };
 </script>
 <style lang="css" scoped></style>
