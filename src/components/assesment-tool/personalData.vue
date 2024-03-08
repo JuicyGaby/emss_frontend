@@ -78,30 +78,25 @@
       <v-divider class="mb-5"></v-divider>
       <v-row v-if="patientData.address">
         <v-col cols="6">
-          <h4 class="mb-5">Permanent Address</h4>
-          <v-text-field
+          <v-combobox
+            :label="regionsCombo.permanent.label"
+            :items="regions"
+            v-model="patientData.address[0].region"
+            item-title="regDesc"
+            item-value="regCode"
+            density="compact"
+            variant="outlined"
+          >
+          </v-combobox>
+          <v-combobox
             v-for="(value, key) in address.permanent"
             :key="key"
+            variant="outlined"
+            density="compact"
             :label="value.label"
-            :type="value.type"
             v-model="patientData.address[0][key]"
-            density="compact"
-            variant="outlined"
-            style="min-width: 300px"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="6">
-          <h4 class="mb-5">Temporary Address</h4>
-          <v-text-field
-            v-for="(value, key) in address.permanent"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="patientData.address[1][key]"
-            density="compact"
-            variant="outlined"
-            style="min-width: 300px"
-          ></v-text-field>
+          >
+          </v-combobox>
         </v-col>
       </v-row>
       <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5"
@@ -187,11 +182,18 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { getPatientByID, updatePatient } from "@/api/patients";
-import { getFamilyComposition } from "@/api/assesment-tool";
+import {
+  getFamilyComposition,
+  getRegions,
+  getProvince,
+  getMunicipality,
+  getBarangay,
+} from "@/api/assesment-tool";
 
 let patientData = ref({});
+let regions = ref([]);
 let familyComposition = ref({});
 const showFamilyComposition = ref(false);
 const personalForm = ref(null);
@@ -329,57 +331,53 @@ const inputFields = {
     },
   },
 };
+
+const regionsCombo = {
+  permanent: {
+    label: "Region",
+    items: regions,
+  },
+  temporary: {
+    label: "Region",
+    items: regions,
+  },
+};
 const address = {
   permanent: {
-    region: {
-      label: "Region",
-      type: "text",
-    },
     province: {
       label: "Province",
-      type: "text",
     },
     district: {
       label: "District",
-      type: "text",
     },
     municipality: {
       label: "Municipality",
-      type: "text",
     },
     barangay: {
       label: "Barangay",
-      type: "text",
     },
     purok: {
       label: "Purok",
-      type: "text",
     },
   },
   temporary: {
     region: {
       label: "Region",
-      type: "text",
     },
     province: {
       label: "Province",
-      type: "text",
     },
     district: {
       label: "District",
-      type: "text",
     },
     municipality: {
       label: "Municipality",
-      type: "text",
     },
     barangay: {
       label: "Barangay",
-      type: "text",
     },
     purok: {
       label: "Purok",
-      type: "text",
     },
   },
 };
@@ -445,9 +443,11 @@ const props = defineProps({
   patientId: Number,
 });
 
+
 onMounted(async () => {
   await getPatientData();
   await getFamilyCompositionData();
+  await getRegionData();
 });
 
 const validateForm = async (formType) => {
@@ -476,5 +476,28 @@ const updatePersonalData = async () => {
     updateBars.value.personalData.isActive = true;
   }
 };
+
+const getRegionData = async () => {
+  const response = await getRegions();
+  regions.value = response;
+};
+
+// const watchAddressChange = (addressType, key, apiCall, optionKey) => {
+//   watch(
+//     () => personalDataInputs.value.address[addressType][key],
+//     async (newVal) => {
+//       options.value[optionKey] = await apiCall(newVal);
+//     }
+//   );
+// };
+
+// watchAddressChange("permanent", "region", getProvince, "provinces");
+// watchAddressChange("permanent", "province", getMunicipality, "municipality");
+// watchAddressChange("permanent", "municipality", getBarangay, "barangay");
+// watchAddressChange("temporary", "region", getProvince, "provinces");
+// watchAddressChange("temporary", "province", getMunicipality, "municipality");
+// watchAddressChange("temporary", "municipality", getBarangay, "barangay");
+
+
 </script>
 <style lang="css" scoped></style>

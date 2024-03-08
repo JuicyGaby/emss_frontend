@@ -1,4 +1,4 @@
-const getPatients = async (req, res) => {
+const getPatients = async () => {
   const API_URL = "http://localhost:3000/patients";
   const response = await fetch(API_URL, {
     method: "GET",
@@ -28,7 +28,7 @@ const getPatientByID = async (patient_id) => {
   return data;
 };
 
-const createPatient = async (req, res) => {
+const createPatient = async (req) => {
   const API_URL = "http://localhost:3000/patients";
   const response = await fetch(API_URL, {
     method: "POST",
