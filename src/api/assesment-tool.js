@@ -18,6 +18,15 @@ const getInterview = async (patient_id) => {
   return data;
 };
 
+const getFamilyComposition = async (patient_id) => {
+  const API_URL = `http://localhost:3000/family-composition/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+}
+
+// * ph address
+
 const getRegions = async () => {
   const API_URL = "http://localhost:3000/region";
   const response = await fetch(API_URL);
@@ -44,6 +53,7 @@ const getBarangay = async (municipalityCode) => {
   return data;
 };
 
+
 export {
   interview,
   getRegions,
@@ -51,4 +61,6 @@ export {
   getMunicipality,
   getBarangay,
   getInterview,
+  getFamilyComposition,
+  
 };

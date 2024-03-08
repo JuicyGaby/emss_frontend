@@ -36,7 +36,7 @@
           <v-col cols="6">
             <v-textarea
               v-model="interviewData.remarks"
-              outlined
+              label="Remarks"
               rows="5"
               auto-grow
               style="min-width: 300px"
@@ -110,7 +110,7 @@ const inputField2 = {
   },
   contact_number: {
     label: "Referal Contact Number",
-    type: "number",
+    type: "text",
     value: "",
   },
   informant: {
@@ -126,7 +126,7 @@ const inputField2 = {
   },
   informant_contact_number: {
     label: "Informant Contact Number",
-    type: "number",
+    type: "text",
     value: "",
   },
   informant_address: {

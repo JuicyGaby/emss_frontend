@@ -3,42 +3,42 @@
     <!-- 1st page -->
     <div class="input-field" v-show="page == 1">
       <v-row>
-      <v-col class="d-flex flex-column">
+        <v-col class="d-flex flex-column">
           <div class="d-flex ga-2">
             <v-text-field
-            v-for="(field, key) in step1.firstRow"
-            :key="key"
-            :label="field.label"
-            :type="field.type"
-            variant="outlined"
-            v-model="interviewInputs[key]"
-            style="min-width: 300px;"
-          ></v-text-field>
+              v-for="(field, key) in step1.firstRow"
+              :key="key"
+              :label="field.label"
+              :type="field.type"
+              variant="outlined"
+              v-model="interviewInputs[key]"
+              style="min-width: 300px"
+            ></v-text-field>
           </div>
           <div class="d-flex ga-2">
             <v-text-field
-            v-for="(value, key) in step1.secondRow"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="interviewInputs[key]"
-            variant="outlined"
-            style="min-width: 300px;"
-          ></v-text-field>
-        </div>
-        <div class="d-flex ga-2">
-          <v-text-field
-          v-for="(value, key) in step1.thirdRow"
-          :key="key"
-          :label="value.label"
-          :type="value.type"
-          v-model="interviewInputs[key]"
-          variant="outlined"
-          style="min-width: 300px;"
-        ></v-text-field>
-      </div>
-      </v-col>
-    </v-row>
+              v-for="(value, key) in step1.secondRow"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              v-model="interviewInputs[key]"
+              variant="outlined"
+              style="min-width: 300px"
+            ></v-text-field>
+          </div>
+          <div class="d-flex ga-2">
+            <v-text-field
+              v-for="(value, key) in step1.thirdRow"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              v-model="interviewInputs[key]"
+              variant="outlined"
+              style="min-width: 300px"
+            ></v-text-field>
+          </div>
+        </v-col>
+      </v-row>
     </div>
     <!-- 2nd page -->
     <div class="input-field" v-show="page == 2">
@@ -46,26 +46,26 @@
         <v-col class="d-flex flex-column">
           <div class="d-flex ga-2">
             <v-text-field
-            v-for="(value, key) in step2.firstRow"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="interviewInputs[key]"
-            variant="outlined"
-            style="min-width: 300px;"
-          ></v-text-field>
+              v-for="(value, key) in step2.firstRow"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              v-model="interviewInputs[key]"
+              variant="outlined"
+              style="min-width: 300px"
+            ></v-text-field>
           </div>
           <div class="d-flex ga-2">
             <v-text-field
-            v-for="(value, key) in step2.secondRow"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="interviewInputs[key]"
-            variant="outlined"
-            style="min-width: 300px;"
-          ></v-text-field>
-        </div>
+              v-for="(value, key) in step2.secondRow"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              v-model="interviewInputs[key]"
+              variant="outlined"
+              style="min-width: 300px"
+            ></v-text-field>
+          </div>
         </v-col>
       </v-row>
     </div>
@@ -81,7 +81,7 @@
               :type="value.type"
               v-model="interviewInputs[key]"
               variant="outlined"
-              style="min-width: 300px;"
+              style="min-width: 300px"
             ></v-text-field>
           </div>
           <div class="d-flex ga-2">
@@ -92,7 +92,7 @@
               :type="value.type"
               v-model="interviewInputs[key]"
               variant="outlined"
-              style="min-width: 300px;"
+              style="min-width: 300px"
             ></v-text-field>
           </div>
         </v-col>
@@ -100,24 +100,20 @@
     </div>
   </v-container>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
-
 </template>
 <script setup>
 import moment from "moment";
-import { reactive, ref, watchEffect} from "vue";
+import { reactive, ref, watchEffect } from "vue";
 import { interview } from "../../api/assesment-tool";
 
 const props = defineProps({
   interviewBody: Object,
 });
 
-const emit = defineEmits([
-  "interviewData"
-])
+const emit = defineEmits(["interviewData"]);
 
 const totalPages = ref(3);
 const page = ref(1);
-
 
 let interviewInputs = ref({
   interview_date_time: moment().format("YYYY-MM-DDTHH:mm"),
@@ -137,15 +133,15 @@ let interviewInputs = ref({
 });
 
 watchEffect(() => {
-  const interviewInputsCopy = Object.keys(interviewInputs.value).reduce((acc, key) => {
-    acc[key] = interviewInputs.value[key];
-    return acc;
-  }, {});
-  emit('interviewData', interviewInputsCopy);
+  const interviewInputsCopy = Object.keys(interviewInputs.value).reduce(
+    (acc, key) => {
+      acc[key] = interviewInputs.value[key];
+      return acc;
+    },
+    {}
+  );
+  emit("interviewData", interviewInputsCopy);
 });
-
-
-
 
 const step1 = {
   firstRow: {
@@ -177,8 +173,8 @@ const step1 = {
       label: "MSWD number",
       type: "text",
     },
-  }
-}
+  },
+};
 
 const step2 = {
   firstRow: {
@@ -195,15 +191,13 @@ const step2 = {
     address: {
       label: "Address",
       type: "text",
-      
     },
     contact_number: {
       label: "Contact Number",
       type: "number",
-      
     },
-  }
-}
+  },
+};
 
 const step3 = {
   firstRow: {
@@ -225,9 +219,8 @@ const step3 = {
       label: "Informant Address",
       type: "text",
     },
-  }
+  },
 };
-
 </script>
 <style lang="css">
 .reb {
