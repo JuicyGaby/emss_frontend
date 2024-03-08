@@ -45,6 +45,22 @@ const createPatient = async (req, res) => {
   return data;
 };
 
+const updatePatient = async (req, res) => {
+  
+  // const API_URL = `http://localhost:3000/patients/${req.id}`;
+  // const response = await fetch(API_URL, {
+  //   method: "PUT",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(req),
+  // });
+  // const data = await response.json();
+  // if (data.error) {
+  //   console.log(data.error);
+  // }
+  // console.log(data);
+  // return data;
+};
 
-
-export { getPatients, getPatientByID, createPatient };
+export { getPatients, getPatientByID, createPatient, updatePatient };

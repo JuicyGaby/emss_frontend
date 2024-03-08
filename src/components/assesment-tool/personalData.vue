@@ -5,6 +5,7 @@
       <v-divider class="mb-5"></v-divider>
       <!-- persnal data -->
       <v-row>
+        <!-- col1 -->
         <v-col cols="4">
           <v-text-field
             v-for="(value, key) in inputFields.col1"
@@ -17,17 +18,19 @@
             style="min-width: 300px"
           ></v-text-field>
         </v-col>
+        <!-- col2 -->
         <v-col cols="4">
-          <v-text-field
+          <v-combobox
             v-for="(value, key) in inputFields.col2"
             :key="key"
             :label="value.label"
-            :type="value.type"
-            v-model="patientData[key]"
+            :items="value.items"
             density="compact"
             variant="outlined"
+            v-model="patientData[key]"
             style="min-width: 300px"
-          ></v-text-field>
+          >
+          </v-combobox>
         </v-col>
         <v-col cols="4">
           <v-text-field
@@ -58,7 +61,13 @@
           ></v-textarea>
         </v-col>
       </v-row>
-      <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5">Update Personal Data</v-btn>
+      <v-btn
+        color="secondary"
+        @click="updatePersonalData"
+        prepend-icon="mdi-content-save"
+        class="mb-5"
+        >Update Personal Data</v-btn
+      >
       <!-- address -->
       <h2>Address:</h2>
       <v-divider class="mb-5"></v-divider>
@@ -90,7 +99,9 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5">Update Address</v-btn>
+      <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5"
+        >Update Address</v-btn
+      >
       <!-- family composition -->
       <h2>Family Composition:</h2>
       <v-divider class="mb-5"></v-divider>
@@ -142,8 +153,9 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5">Update family composition</v-btn>
-
+        <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5"
+          >Update family composition</v-btn
+        >
       </div>
       <v-btn
         color="grey"
@@ -157,7 +169,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { getPatientByID } from "@/api/patients";
+import { getPatientByID, updatePatient } from "@/api/patients";
 import { getFamilyComposition } from "@/api/assesment-tool";
 
 let patientData = ref({});
@@ -184,10 +196,10 @@ const inputFields = {
     },
     birth_date: {
       label: "Birth Date",
-      type: "text",
+      type: "date",
     },
-    sex: {
-      label: "Sex",
+    religion: {
+      label: "Religion",
       type: "text",
     },
     contact_number: {
@@ -198,31 +210,56 @@ const inputFields = {
   col2: {
     gender: {
       label: "Gender Identity",
-      type: "text",
+      items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
     },
-    religion: {
-      label: "Religion",
-      type: "text",
+    sex: {
+      label: "Sex",
+      items: ["Male", "Female"],
     },
     nationality: {
       label: "Nationality",
-      type: "text",
+      items: ["Filipino", "Other"],
     },
     civil_status: {
       label: "Civil Status",
-      type: "text",
+      items: [
+        "Single",
+        "Married",
+        "Widowed",
+        "Divorced",
+        "Annulled",
+        "Common Law OS",
+        "Common Law SS",
+        "Separated Legally",
+        "Separated De Facto",
+      ],
     },
     living_arrangement: {
       label: "Living Arrangement",
-      type: "text",
+      items: [
+        "owned",
+        "shared",
+        "rent",
+        "homeless",
+        "institutionalized",
+        "others",
+      ],
     },
     highest_education_level: {
       label: "Education",
-      type: "text",
+      items: [
+        "Early Childhood Education",
+        "Primary",
+        "Secondary",
+        "Tertiary",
+        "Vocational",
+        "Post Graduate",
+        "No Educational Attainment",
+      ],
     },
     education_status: {
       label: "Education Status",
-      type: "text",
+      items: ["OnGoing", "Graduated", "Stopped", "Others"],
     },
   },
   col3: {
@@ -367,14 +404,16 @@ onMounted(async () => {
 
 const getPatientData = async () => {
   const response = await getPatientByID(props.patientId);
-  console.log(response);
   patientData.value = response;
 };
 
 const getFamilyCompositionData = async () => {
   const response = await getFamilyComposition(props.patientId);
   familyComposition.value = response;
-  console.log(response);
+};
+
+const updatePersonalData = async () => {
+  console.log(patientData.value);
 };
 </script>
 <style lang="css" scoped></style>
