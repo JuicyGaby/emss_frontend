@@ -10,6 +10,7 @@ const interview = async (body) => {
   const data = await response.json();
   return data;
 };
+// * interview
 
 const getInterview = async (patient_id) => {
   const API_URL = `http://localhost:3000/interview/${patient_id}`;
@@ -17,7 +18,23 @@ const getInterview = async (patient_id) => {
   const data = await response.json();
   return data;
 };
+const updateInterview = async (patient_id, body) => {
+  console.log(patient_id, body);
+  const API_URL = `http://localhost:3000/interview/${patient_id}`;
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  console.log('updated', data);
+  return data;
+}
 
+
+// * family composition
 const getFamilyComposition = async (patient_id) => {
   const API_URL = `http://localhost:3000/family-composition/${patient_id}`;
   const response = await fetch(API_URL);
@@ -54,11 +71,15 @@ const getBarangay = async (municipalityCode) => {
 };
 
 export {
+  // interview
   interview,
+  getInterview,
+  updateInterview,
+  // address
   getRegions,
   getProvince,
   getMunicipality,
   getBarangay,
-  getInterview,
+  // family composition
   getFamilyComposition,
 };
