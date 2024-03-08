@@ -1,73 +1,77 @@
 <template lang="">
   <div>
     <v-container class="" style="width: 1000px">
-      <h2>Personal Data:</h2>
-      <v-divider class="mb-5"></v-divider>
-      <!-- persnal data -->
-      <v-row>
-        <!-- col1 -->
-        <v-col cols="4">
-          <v-text-field
-            v-for="(value, key) in inputFields.col1"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="patientData[key]"
-            density="compact"
-            variant="outlined"
-            style="min-width: 300px"
-          ></v-text-field>
-        </v-col>
-        <!-- col2 -->
-        <v-col cols="4">
-          <v-combobox
-            v-for="(value, key) in inputFields.col2"
-            :key="key"
-            :label="value.label"
-            :items="value.items"
-            density="compact"
-            variant="outlined"
-            v-model="patientData[key]"
-            style="min-width: 300px"
-          >
-          </v-combobox>
-        </v-col>
-        <v-col cols="4">
-          <v-text-field
-            v-for="(value, key) in inputFields.col3"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="patientData[key]"
-            density="compact"
-            variant="outlined"
-            style="min-width: 300px"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <!-- remarks -->
-      <h2>Remarks:</h2>
-      <v-divider class="mb-5"></v-divider>
-      <v-row>
-        <v-col cols="12">
-          <v-textarea
-            v-model="patientData.remarks"
-            label="Remarks"
-            rows="5"
-            auto-grow
-            style="min-width: 300px"
-            variant="outlined"
-            counter="255"
-          ></v-textarea>
-        </v-col>
-      </v-row>
-      <v-btn
-        color="secondary"
-        @click="updatePersonalData"
-        prepend-icon="mdi-content-save"
-        class="mb-5"
-        >Update Personal Data</v-btn
-      >
+      <v-form ref="personalForm">
+        <h2>Personal Data:</h2>
+        <v-divider class="mb-5"></v-divider>
+        <!-- persnal data -->
+        <v-row>
+          <!-- col1 -->
+          <v-col cols="4">
+            <v-text-field
+              v-for="(value, key) in inputFields.col1"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              :rules="value.rules"
+              v-model="patientData[key]"
+              density="compact"
+              variant="outlined"
+              style="min-width: 300px"
+            ></v-text-field>
+          </v-col>
+          <!-- col2 -->
+          <v-col cols="4">
+            <v-combobox
+              v-for="(value, key) in inputFields.col2"
+              :key="key"
+              :label="value.label"
+              :items="value.items"
+              density="compact"
+              variant="outlined"
+              v-model="patientData[key]"
+              style="min-width: 300px"
+            >
+            </v-combobox>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-for="(value, key) in inputFields.col3"
+              :key="key"
+              :label="value.label"
+              :type="value.type"
+              v-model="patientData[key]"
+              density="compact"
+              variant="outlined"
+              style="min-width: 300px"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- remarks -->
+        <h2>Remarks:</h2>
+        <v-divider class="mb-5"></v-divider>
+        <v-row>
+          <v-col cols="12">
+            <v-textarea
+              v-model="patientData.remarks"
+              label="Remarks"
+              rows="5"
+              auto-grow
+              style="min-width: 300px"
+              variant="outlined"
+              counter="255"
+              :rules="inputRules.remarks"
+            ></v-textarea>
+          </v-col>
+        </v-row>
+        <v-btn
+          color="secondary"
+          @click="updatePersonalData"
+          prepend-icon="mdi-content-save"
+          class="my-5"
+          >Update Personal Data</v-btn
+        >
+      </v-form>
       <!-- address -->
       <h2>Address:</h2>
       <v-divider class="mb-5"></v-divider>
@@ -175,12 +179,41 @@ import { getFamilyComposition } from "@/api/assesment-tool";
 let patientData = ref({});
 let familyComposition = ref({});
 const showFamilyComposition = ref(false);
+const personalForm = ref(null);
+
+const inputRules = {
+  first_name: [
+    (v) => !!v || "First Name is required",
+  ],
+  last_name: [
+    (v) => !!v || "Last Name is required",
+  ],
+  remarks: [
+    (v) =>
+      v == null ||
+      v.length <= 255 ||
+      "Remarks must be less than 255 characters",
+  ],
+};
+
+const updateBars = ref({
+  personalData: {
+    isActive: false,
+  },
+  addressData: {
+    isActive: false,
+  },
+  familyComposition: {
+    isActive: false,
+  },
+});
 
 const inputFields = {
   col1: {
     first_name: {
       label: "First Name",
       type: "text",
+      rules: inputRules.first_name,
     },
     middle_name: {
       label: "Middle Name",
@@ -189,6 +222,7 @@ const inputFields = {
     last_name: {
       label: "Last Name",
       type: "text",
+      rules: inputRules.last_name,
     },
     age: {
       label: "Age",
@@ -402,6 +436,12 @@ onMounted(async () => {
   await getFamilyCompositionData();
 });
 
+const validateForm = async (formType) => {
+  const form = await formType.value.validate();
+  if (!form.valid) return false;
+  return true;
+};
+// * Fetch Section
 const getPatientData = async () => {
   const response = await getPatientByID(props.patientId);
   patientData.value = response;
@@ -412,8 +452,13 @@ const getFamilyCompositionData = async () => {
   familyComposition.value = response;
 };
 
+// * Update Section
 const updatePersonalData = async () => {
-  console.log(patientData.value);
+  const validate = await validateForm(personalForm);
+  console.log(validate);
+  if (!validate) return;
+  console.log("update personal data");
+  await updatePatient(patientData.value);
 };
 </script>
 <style lang="css" scoped></style>

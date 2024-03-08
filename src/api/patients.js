@@ -45,8 +45,8 @@ const createPatient = async (req, res) => {
   return data;
 };
 
-const updatePatient = async (req, res) => {
-  
+const updatePatient = async (body) => {
+    console.log(body);
   // const API_URL = `http://localhost:3000/patients/${req.id}`;
   // const response = await fetch(API_URL, {
   //   method: "PUT",
