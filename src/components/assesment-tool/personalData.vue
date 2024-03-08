@@ -170,6 +170,20 @@
         >Toggle Family Composition</v-btn
       >
     </v-container>
+
+    <v-snackbar
+      v-for="(bar, key) in updateBars"
+      :key="key"
+      color="green"
+      location="top"
+      :timeout="3000"
+      v-model="bar.isActive"
+    >
+      <div class="d-flex justify-center align-center ga-2">
+        <v-icon icon="mdi-check-bold"></v-icon>
+        <p class="text-subtitle-1">{{ bar.text }}</p>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 <script setup>
@@ -183,12 +197,8 @@ const showFamilyComposition = ref(false);
 const personalForm = ref(null);
 
 const inputRules = {
-  first_name: [
-    (v) => !!v || "First Name is required",
-  ],
-  last_name: [
-    (v) => !!v || "Last Name is required",
-  ],
+  first_name: [(v) => !!v || "First Name is required"],
+  last_name: [(v) => !!v || "Last Name is required"],
   remarks: [
     (v) =>
       v == null ||
@@ -200,12 +210,15 @@ const inputRules = {
 const updateBars = ref({
   personalData: {
     isActive: false,
+    text: "Personal Data Updated",
   },
   addressData: {
     isActive: false,
+    text: "Address Updated",
   },
   familyComposition: {
     isActive: false,
+    text: "Family Composition Updated",
   },
 });
 
@@ -459,7 +472,9 @@ const updatePersonalData = async () => {
   console.log(validate);
   if (!validate) return;
   const response = await updatePatient(patientData.value);
-  console.log(response);
+  if (response) {
+    updateBars.value.personalData.isActive = true;
+  }
 };
 </script>
 <style lang="css" scoped></style>
