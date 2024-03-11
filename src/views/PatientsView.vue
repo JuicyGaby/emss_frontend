@@ -73,6 +73,7 @@
       v-model="editDialog"
       fullscreen
       scrollable
+      persistent
       transition="dialog-transition"
     >
       <v-card class="">

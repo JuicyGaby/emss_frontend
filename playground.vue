@@ -89,108 +89,114 @@
           >
           </v-combobox>
           <v-combobox
-          v-for="(value, key) in address.permanent" 
-          :key="key"
-          variant="outlined"
-          density="compact"
-          :label="value.label"
-          v-model="patientData.address[0][key]"
+            v-for="(value, key) in address.permanent"
+            :key="key"
+            variant="outlined"
+            density="compact"
+            :label="value.label"
+            v-model="patientData.address[0][key]"
           >
-
           </v-combobox>
         </v-col>
         <v-col cols="6">
-          <h4 class="mb-5">Permanent Address</h4>
-          <v-text-field
-            v-for="(value, key) in address.permanent"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            v-model="patientData.address[0][key]"
+          <v-combobox
+            :label="regionsCombo.temporary.label"
+            :items="regions"
+            v-model="patientData.address[1].region"
+            item-title="regDesc"
+            item-value="regCode"
             density="compact"
             variant="outlined"
-            style="min-width: 300px"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="6">
-          <h4 class="mb-5">Temporary Address</h4>
-          <v-text-field
+          >
+          </v-combobox>
+          <v-combobox
             v-for="(value, key) in address.permanent"
             :key="key"
+            variant="outlined"
+            density="compact"
             :label="value.label"
-            :type="value.type"
             v-model="patientData.address[1][key]"
-            density="compact"
-            variant="outlined"
-            style="min-width: 300px"
-          ></v-text-field>
+          >
+          </v-combobox>
         </v-col>
       </v-row>
-      <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5"
+      <v-btn
+        color="secondary"
+        @click="updatePatientAddressData"
+        prepend-icon="mdi-content-save"
+        class="mb-5"
         >Update Address</v-btn
       >
       <!-- family composition -->
       <h2>Family Composition:</h2>
       <v-divider class="mb-5"></v-divider>
-      <div v-if="showFamilyComposition">
-        <v-row
-          v-if="familyComposition"
-          v-for="(item, index) in familyComposition"
-          :key="index"
-        >
-          <!-- display the current number -->
-          <v-col cols="12">
-            <h4>Family Member : {{ index + 1 }}</h4>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field
-              v-for="(value, key) in familyCompositionFields.col1"
-              :key="key"
-              :label="value.label"
-              :type="value.type"
-              v-model="item[key]"
-              density="compact"
-              variant="outlined"
-              style="min-width: 300px"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field
-              v-for="(value, key) in familyCompositionFields.col2"
-              :key="key"
-              :label="value.label"
-              :type="value.type"
-              v-model="item[key]"
-              density="compact"
-              variant="outlined"
-              style="min-width: 300px"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12">
-            <v-text-field
-              v-for="(item, key) in familyCompositionFields.col3"
-              :key="key"
-              :label="item.label"
-              :type="item.type"
-              v-model="familyComposition[key]"
-              variant="outlined"
-              density="compact"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5"
-          >Update family composition</v-btn
+      <div v-if="familyComposition && familyComposition.length">
+        <div v-if="showFamilyComposition">
+          <v-row
+            v-if="familyComposition"
+            v-for="(item, index) in familyComposition"
+            :key="index"
+          >
+            <!-- display the current number -->
+            <v-col cols="12">
+              <h4>Family Member : {{ index + 1 }}</h4>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-for="(value, key) in familyCompositionFields.col1"
+                :key="key"
+                :label="value.label"
+                :type="value.type"
+                v-model="item[key]"
+                density="compact"
+                variant="outlined"
+                style="min-width: 300px"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-for="(value, key) in familyCompositionFields.col2"
+                :key="key"
+                :label="value.label"
+                :type="value.type"
+                v-model="item[key]"
+                density="compact"
+                variant="outlined"
+                style="min-width: 300px"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <v-text-field
+                v-for="(item, key) in familyCompositionFields.col3"
+                :key="key"
+                :label="item.label"
+                :type="item.type"
+                v-model="familyComposition[key]"
+                variant="outlined"
+                density="compact"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5"
+            >Update family composition</v-btn
+          >
+        </div>
+        <v-btn
+          color="grey"
+          class="mb-5"
+          @click="showFamilyComposition = !showFamilyComposition"
+          :append-icon="showFamilyComposition ? 'mdi-menu-up' : 'mdi-menu-down'"
+          >Toggle Family Composition</v-btn
         >
       </div>
-      <v-btn
-        color="grey"
-        class="mb-5"
-        @click="showFamilyComposition = !showFamilyComposition"
-        :append-icon="showFamilyComposition ? 'mdi-menu-up' : 'mdi-menu-down'"
-        >Toggle Family Composition</v-btn
-      >
+      <div>
+        <h3>No Family Record.</h3>
+        <v-btn color="secondary" @click="dialogs.addFamily = !dialogs.addFamily"
+          >Add family composition</v-btn
+        >
+      </div>
     </v-container>
 
     <v-snackbar
@@ -198,7 +204,8 @@
       :key="key"
       color="green"
       location="top"
-      :timeout="3000"
+      :timeout="2500"
+      min-width="250px"
       v-model="bar.isActive"
     >
       <div class="d-flex justify-center align-center ga-2">
@@ -207,11 +214,29 @@
       </div>
     </v-snackbar>
   </div>
+  <v-dialog v-model="dialogs.addFamily" width="500px">
+    <v-card>
+      <v-card-title primary-title> Family Composition </v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-for="(value, key) in inputFields.familyComposition.inputs"
+          :key="key"
+          :label="value.label"
+          density="compact"
+          variant="outlined"
+        ></v-text-field>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { getPatientByID, updatePatient } from "@/api/patients";
-import { getFamilyComposition, getRegions } from "@/api/assesment-tool";
+import {
+  getFamilyComposition,
+  getRegions,
+  updatePatientAddress,
+} from "@/api/assesment-tool";
 
 let patientData = ref({});
 let regions = ref([]);
@@ -243,6 +268,10 @@ const updateBars = ref({
     isActive: false,
     text: "Family Composition Updated",
   },
+});
+
+const dialogs = ref({
+  addFamily: false,
 });
 
 const inputFields = {
@@ -351,6 +380,49 @@ const inputFields = {
       type: "text",
     },
   },
+  familyComposition: {
+    inputs: {
+      full_name: {
+        label: "FullName",
+        type: "text",
+        data: "",
+      },
+      age: {
+        label: "Age",
+        type: "text",
+        data: "",
+      },
+      birth_date: {
+        label: "Birth Date",
+        type: "date",
+        data: "",
+      },
+      civil_status: {
+        label: "Civil Status",
+        type: "text",
+        data: "",
+      },
+      relationship: {
+        label: "Relationship",
+        type: "text",
+        data: "",
+      },
+      educational_attainment: {
+        label: "Educational Attainment",
+        type: "text",
+        data: "",
+      },
+      occupation: {
+        label: "Occupation",
+        type: "text",
+      },
+      monthly_income: {
+        label: "Monthly Income",
+        type: "text",
+        data: "",
+      },
+    }
+  },
 };
 
 const regionsCombo = {
@@ -362,61 +434,46 @@ const regionsCombo = {
     label: "Region",
     items: regions,
   },
-}
-// const address = {
-//   permanent: {
-//     region: {
-//       label: "Region",
-//       type: "text",
-//     },
-//     province: {
-//       label: "Province",
-//       type: "text",
-//     },
-//     district: {
-//       label: "District",
-//       type: "text",
-//     },
-//     municipality: {
-//       label: "Municipality",
-//       type: "text",
-//     },
-//     barangay: {
-//       label: "Barangay",
-//       type: "text",
-//     },
-//     purok: {
-//       label: "Purok",
-//       type: "text",
-//     },
-//   },
-//   temporary: {
-//     region: {
-//       label: "Region",
-//       type: "text",
-//     },
-//     province: {
-//       label: "Province",
-//       type: "text",
-//     },
-//     district: {
-//       label: "District",
-//       type: "text",
-//     },
-//     municipality: {
-//       label: "Municipality",
-//       type: "text",
-//     },
-//     barangay: {
-//       label: "Barangay",
-//       type: "text",
-//     },
-//     purok: {
-//       label: "Purok",
-//       type: "text",
-//     },
-//   },
-// };
+};
+const address = {
+  permanent: {
+    province: {
+      label: "Province",
+    },
+    district: {
+      label: "District",
+    },
+    municipality: {
+      label: "Municipality",
+    },
+    barangay: {
+      label: "Barangay",
+    },
+    purok: {
+      label: "Purok",
+    },
+  },
+  temporary: {
+    region: {
+      label: "Region",
+    },
+    province: {
+      label: "Province",
+    },
+    district: {
+      label: "District",
+    },
+    municipality: {
+      label: "Municipality",
+    },
+    barangay: {
+      label: "Barangay",
+    },
+    purok: {
+      label: "Purok",
+    },
+  },
+};
 
 const familyCompositionFields = {
   col1: {
@@ -490,15 +547,20 @@ const validateForm = async (formType) => {
   if (!form.valid) return false;
   return true;
 };
+
 // * Fetch Section
 const getPatientData = async () => {
   const response = await getPatientByID(props.patientId);
   patientData.value = response;
 };
-
 const getFamilyCompositionData = async () => {
   const response = await getFamilyComposition(props.patientId);
   familyComposition.value = response;
+  console.log(familyComposition);
+};
+const getRegionData = async () => {
+  const response = await getRegions();
+  regions.value = response;
 };
 
 // * Update Section
@@ -511,10 +573,12 @@ const updatePersonalData = async () => {
     updateBars.value.personalData.isActive = true;
   }
 };
-
-const getRegionData = async () => {
-  const response = await getRegions();
-  regions.value = response;
+const updatePatientAddressData = async () => {
+  const patientAddress = patientData.value.address;
+  const response = await updatePatientAddress(patientAddress);
+  if (response) {
+    updateBars.value.addressData.isActive = true;
+  }
 };
 </script>
 <style lang="css" scoped></style>
