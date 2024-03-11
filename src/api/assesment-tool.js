@@ -52,12 +52,6 @@ const createFamilyMember = async (body) => {
   const data = await response.json();
   return data;
 };
-const getFamilyInfo = async (patient_id) => {
-  const API_URL = `http://localhost:3000/family-info/${patient_id}`;
-  const response = await fetch(API_URL);
-  const data = await response.json();
-  return data;
-};
 const updateFamilyMember = async (body) => {
   const API_URL = "http://localhost:3000/family-composition";
   const response = await fetch(API_URL, {
@@ -69,11 +63,23 @@ const updateFamilyMember = async (body) => {
   });
   const data = await response.json();
   return data;
-}
+};
+const deleteFamilyMember = async (id) => {
+  const API_URL = `http://localhost:3000/family-composition/${id}`;
+  const response = await fetch(API_URL, {
+    method: "DELETE",
+  });
+  const data = await response.json();
+  return data;
+};
 
 
-
-
+const getFamilyInfo = async (patient_id) => {
+  const API_URL = `http://localhost:3000/family-info/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
 // * ph address
 
 const getRegions = async () => {
@@ -130,4 +136,5 @@ export {
   getFamilyInfo,
   createFamilyMember,
   updateFamilyMember,
+  deleteFamilyMember,
 };

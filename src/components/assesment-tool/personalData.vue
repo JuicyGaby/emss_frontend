@@ -180,7 +180,7 @@
                   flat
                   size="small"
                 ></v-btn>
-                <v-btn icon="mdi-delete" flat size="small"></v-btn>
+                <v-btn icon="mdi-delete" @click="toggleDeleteFamilyDialog(item)" flat size="small"></v-btn>
               </div>
             </template>
           </v-data-table>
@@ -202,6 +202,7 @@
       </div>
     </v-snackbar>
   </div>
+  <!-- create family member dialog -->
   <v-dialog v-model="dialogs.addFamily" width="600px" persistent>
     <v-card>
       <v-card-title primary-title> Family Composition </v-card-title>
@@ -227,6 +228,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <!-- update family member dialog -->
   <v-dialog v-model="dialogs.editFamily" width="600px" persistent>
     <v-card>
       <v-card-title primary-title>
@@ -252,6 +254,28 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <!-- delete family member dialog -->
+  <v-dialog
+    v-model="dialogs.deleteFamily"
+    width="600px"
+    persistent
+    max-width="600px"
+  >
+      <v-card>
+        <v-card-title primary-title>
+          <h3>Delete family member:</h3>
+        </v-card-title>
+        <v-card-text>
+          <p>Are you sure you want to delete this family member?</p>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-end">
+          <v-btn color="error" @click="dialogs.deleteFamily = false"
+            >Cancel</v-btn
+          >
+          <v-btn color="primary" @click="deleteFamilyMemberData">Delete</v-btn>
+        </v-card-actions>
+      </v-card>
+  </v-dialog>
 </template>
 <script setup>
 import { ref, onMounted, watch } from "vue";
@@ -263,6 +287,7 @@ import {
   createFamilyMember,
   getFamilyInfo,
   updateFamilyMember,
+  deleteFamilyMember,
 } from "@/api/assesment-tool";
 
 let patientData = ref({});
@@ -324,11 +349,16 @@ const updateBars = ref({
     isActive: false,
     text: "Family Member Updated",
   },
+  deleteFamilyMember: {
+    isActive: false,
+    text: "Family Member Deleted",
+  },
 });
 
 const dialogs = ref({
   addFamily: false,
   editFamily: false,
+  deleteFamily: false,
 });
 
 const inputFields = ref({
@@ -549,8 +579,13 @@ const validateForm = async (formType) => {
 
 const toggleEditFamilyDialog = (familyMember) => {
   toEditFamilyMember.value = familyMember;
-  console.log(familyMember);
   dialogs.value.editFamily = true;
+};
+
+const toggleDeleteFamilyDialog = (familyMember) => {
+  toEditFamilyMember.value = familyMember;
+  dialogs.value.deleteFamily = true;
+
 };
 
 // * create section
@@ -606,6 +641,18 @@ const updateFamilyMemberData = async () => {
   if (response) {
     updateBars.value.updateFamilyMember.isActive = true;
     dialogs.value.editFamily = false;
+  }
+};
+
+// * Delete Section
+const deleteFamilyMemberData = async () => {
+  const familyMemberId = toEditFamilyMember.value.id;
+  // remove the item from the  family composition object using the toEditFamilyMember.id
+  const response = await deleteFamilyMember(familyMemberId);
+  if (response) {
+    familyComposition.value = familyComposition.value.filter(member => member.id !== familyMemberId);
+    updateBars.value.deleteFamilyMember.isActive = true;
+    dialogs.value.deleteFamily = false;
   }
 };
 </script>
