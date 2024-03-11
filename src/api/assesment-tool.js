@@ -29,10 +29,9 @@ const updateInterview = async (patient_id, body) => {
     body: JSON.stringify(body),
   });
   const data = await response.json();
-  console.log('updated', data);
+  console.log("updated", data);
   return data;
-}
-
+};
 
 // * family composition
 const getFamilyComposition = async (patient_id) => {
@@ -52,7 +51,13 @@ const createFamilyMember = async (body) => {
   });
   const data = await response.json();
   return data;
-}
+};
+const getFamilyInfo = async (patient_id) => {
+  const API_URL = `http://localhost:3000/family-info/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
 
 // * ph address
 
@@ -81,9 +86,8 @@ const getBarangay = async (municipalityCode) => {
   return data;
 };
 
-
 const updatePatientAddress = async (body) => {
-  const API_URL = 'http://localhost:3000/address';
+  const API_URL = "http://localhost:3000/address";
   const response = await fetch(API_URL, {
     method: "PUT",
     headers: {
@@ -93,7 +97,7 @@ const updatePatientAddress = async (body) => {
   });
   const data = await response.json();
   return data;
-}
+};
 
 export {
   // interview
@@ -108,5 +112,6 @@ export {
   updatePatientAddress,
   // family composition
   getFamilyComposition,
+  getFamilyInfo,
   createFamilyMember,
 };

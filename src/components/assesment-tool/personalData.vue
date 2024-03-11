@@ -153,7 +153,7 @@
       </v-window-item>
       <!-- family composition -->
       <v-window-item :value="2">
-        <v-container style="width: 1000px">
+        <v-container style="width: 90%">
           <h2>Family Composition:</h2>
           <v-divider class="mb-5"></v-divider>
           <div class="d-flex justify-end">
@@ -161,75 +161,29 @@
               color="grey"
               @click="dialogs.addFamily = !dialogs.addFamily"
               prepend-icon="mdi-account-plus"
+              size="small"
+              class="mb-5"
               >Add family member</v-btn
             >
           </div>
-          <div v-if="familyComposition && familyComposition.length">
-            <div v-if="showFamilyComposition">
-              <v-row
-                v-if="familyComposition"
-                v-for="(item, index) in familyComposition"
-                :key="index"
-              >
-                <!-- display the current number -->
-                <v-col cols="12">
-                  <h4>Family Member : {{ index + 1 }}</h4>
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    v-for="(value, key) in familyCompositionFields.col1"
-                    :key="key"
-                    :label="value.label"
-                    :type="value.type"
-                    v-model="item[key]"
-                    density="compact"
-                    variant="outlined"
-                    style="min-width: 300px"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    v-for="(value, key) in familyCompositionFields.col2"
-                    :key="key"
-                    :label="value.label"
-                    :type="value.type"
-                    v-model="item[key]"
-                    density="compact"
-                    variant="outlined"
-                    style="min-width: 300px"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <!-- <v-col cols="12">
-                  <v-text-field
-                    v-for="(item, key) in familyCompositionFields.col3"
-                    :key="key"
-                    :label="item.label"
-                    :type="item.type"
-                    v-model="familyComposition[key]"
-                    variant="outlined"
-                    density="compact"
-                  ></v-text-field>
-                </v-col> -->
-              </v-row>
-              <v-btn
-                color="secondary"
-                prepend-icon="mdi-content-save"
-                class="mb-5"
-                >Update family composition</v-btn
-              >
-            </div>
-            <v-btn
-              color="grey"
-              class="mb-5"
-              @click="showFamilyComposition = !showFamilyComposition"
-              :append-icon="
-                showFamilyComposition ? 'mdi-menu-up' : 'mdi-menu-down'
-              "
-              >Toggle Family Composition</v-btn
-            >
-          </div>
+          <v-data-table
+            :headers="tableHeaders"
+            :items="familyComposition"
+            :items-per-page="5"
+            class="elevation-1"
+          >
+              <template v-slot:[`item.operation`]="{ item }">
+                <div class="d-flex">
+                  <v-btn
+                    icon="mdi-pencil"
+                    @click="toggleEditFamilyDialog(item)"
+                    flat
+                    size="small"
+                  ></v-btn>
+                  <v-btn icon="mdi-delete" flat size="small"></v-btn>
+                </div>
+              </template>
+          </v-data-table>
         </v-container>
       </v-window-item>
     </v-window>
@@ -273,6 +227,31 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="dialogs.editFamily" width="600px" persistent>
+    <v-card>
+      <v-card-title primary-title>
+        <h3>Edit family member:</h3>
+      </v-card-title>
+      <v-card-text>
+        <div class="d-flex ga-2 flex-wrap">
+          <v-text-field
+            v-for="(value, key) in inputFields.familyComposition"
+            :key="key"
+            :label="value.label"
+            :type="value.type"
+            density="compact"
+            variant="outlined"
+            v-model="toEditFamilyMember[key]"
+            style="width: 250px"
+          ></v-text-field>
+        </div>
+      </v-card-text>
+      <v-card-actions class="d-flex justify-end">
+        <v-btn color="error" @click="dialogs.editFamily = false">Cancel</v-btn>
+        <v-btn color="primary">Update</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 <script setup>
 import { ref, onMounted, watch } from "vue";
@@ -282,13 +261,17 @@ import {
   getRegions,
   updatePatientAddress,
   createFamilyMember,
+  getFamilyInfo,
 } from "@/api/assesment-tool";
 
 let patientData = ref({});
 let regions = ref([]);
 let familyComposition = ref({});
+let familyInfo = ref({});
 const showFamilyComposition = ref(false);
+let toEditFamilyMember = ref({});
 const personalForm = ref(null);
+const tab = ref(0);
 
 const inputRules = {
   first_name: [(v) => !!v || "First Name is required"],
@@ -300,7 +283,18 @@ const inputRules = {
       "Remarks must be less than 255 characters",
   ],
 };
-const tab = ref(0);
+const tableHeaders = [
+  { title: "Fullname", value: "full_name" },
+  { title: "Age", value: "age" },
+  { title: "Birth Date", value: "birth_date" },
+  { title: "Civil Status", value: "civil_status" },
+  { title: "Relationship", value: "relationship" },
+  { title: "Educational Attainment", value: "educational_attainment" },
+  { title: "Occupation", value: "occupation" },
+  { title: "Monthly Income", value: "monthly_income" },
+  { title: "Monthly Income", value: "monthly_income" },
+  { title: "Operation", value: "operation" },
+];
 const tabHeaders = {
   personalData: {
     title: "Personal Data",
@@ -330,6 +324,7 @@ const updateBars = ref({
 
 const dialogs = ref({
   addFamily: false,
+  editFamily: false,
 });
 
 const inputFields = ref({
@@ -531,64 +526,6 @@ const address = {
     },
   },
 };
-
-const familyCompositionFields = {
-  col1: {
-    full_name: {
-      label: "Full Name",
-      type: "text",
-    },
-    age: {
-      label: "Age",
-      type: "text",
-    },
-    birth_date: {
-      label: "Birth Date",
-      type: "date",
-    },
-    civil_status: {
-      label: "Civil Status",
-      type: "text",
-    },
-  },
-  col2: {
-    relationship: {
-      label: "Relationship",
-      type: "text",
-    },
-    educational_attainment: {
-      label: "Educational Attainment",
-      type: "text",
-    },
-    occupation: {
-      label: "Occupation",
-      type: "text",
-    },
-    monthly_income: {
-      label: "Monthly Income",
-      type: "text",
-    },
-  },
-  col3: {
-    other_source_of_income: {
-      label: "Other Source of Income",
-      type: "text",
-    },
-    household_size: {
-      label: "Household Size",
-      type: "text",
-    },
-    total_household_income: {
-      label: "Total Household Income",
-      type: "text",
-    },
-    per_capita_income: {
-      label: "Per Capita Income",
-      type: "text",
-    },
-  },
-};
-
 const props = defineProps({
   patientId: Number,
 });
@@ -597,6 +534,7 @@ onMounted(async () => {
   await getPatientData();
   await getFamilyCompositionData();
   await getRegionData();
+  await getFamilyInfoData();
 });
 
 const validateForm = async (formType) => {
@@ -605,6 +543,13 @@ const validateForm = async (formType) => {
   return true;
 };
 
+const toggleEditFamilyDialog = (familyMember) => {
+  toEditFamilyMember.value = familyMember;
+  console.log(familyMember);
+  dialogs.value.editFamily = true;
+};
+
+// * create section
 const createFamilyMemberData = async () => {
   let familyMember = {};
   for (const key in inputFields.value.familyComposition) {
@@ -618,7 +563,6 @@ const createFamilyMemberData = async () => {
     familyComposition.value.push(familyMember);
   }
 };
-
 // * Fetch Section
 const getPatientData = async () => {
   const response = await getPatientByID(props.patientId);
@@ -628,11 +572,15 @@ const getFamilyCompositionData = async () => {
   const response = await getFamilyComposition(props.patientId);
   familyComposition.value = response;
 };
+
+const getFamilyInfoData = async () => {
+  const response = await getFamilyInfo(props.patientId);
+};
+
 const getRegionData = async () => {
   const response = await getRegions();
   regions.value = response;
 };
-
 // * Update Section
 const updatePersonalData = async () => {
   const validate = await validateForm(personalForm);
@@ -649,5 +597,6 @@ const updatePatientAddressData = async () => {
     updateBars.value.addressData.isActive = true;
   }
 };
+
 </script>
 <style lang="css" scoped></style>
