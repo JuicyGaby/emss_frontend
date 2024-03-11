@@ -58,6 +58,21 @@ const getFamilyInfo = async (patient_id) => {
   const data = await response.json();
   return data;
 };
+const updateFamilyMember = async (body) => {
+  const API_URL = "http://localhost:3000/family-composition";
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+}
+
+
+
 
 // * ph address
 
@@ -114,4 +129,5 @@ export {
   getFamilyComposition,
   getFamilyInfo,
   createFamilyMember,
+  updateFamilyMember,
 };

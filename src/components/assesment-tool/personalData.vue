@@ -248,7 +248,7 @@
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
         <v-btn color="error" @click="dialogs.editFamily = false">Cancel</v-btn>
-        <v-btn color="primary">Update</v-btn>
+        <v-btn color="primary" @click="updateFamilyMemberData">Update</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -262,6 +262,7 @@ import {
   updatePatientAddress,
   createFamilyMember,
   getFamilyInfo,
+  updateFamilyMember,
 } from "@/api/assesment-tool";
 
 let patientData = ref({});
@@ -291,7 +292,6 @@ const tableHeaders = [
   { title: "Relationship", value: "relationship" },
   { title: "Educational Attainment", value: "educational_attainment" },
   { title: "Occupation", value: "occupation" },
-  { title: "Monthly Income", value: "monthly_income" },
   { title: "Monthly Income", value: "monthly_income" },
   { title: "Operation", value: "operation" },
 ];
@@ -534,7 +534,7 @@ onMounted(async () => {
   await getPatientData();
   await getFamilyCompositionData();
   await getRegionData();
-  await getFamilyInfoData();
+  // await getFamilyInfoData();
 });
 
 const validateForm = async (formType) => {
@@ -595,6 +595,12 @@ const updatePatientAddressData = async () => {
   const response = await updatePatientAddress(patientAddress);
   if (response) {
     updateBars.value.addressData.isActive = true;
+  }
+};
+const updateFamilyMemberData = async () => {
+  const response = await updateFamilyMember(toEditFamilyMember.value);
+  if (response) {
+    dialogs.value.editFamily = false;
   }
 };
 
