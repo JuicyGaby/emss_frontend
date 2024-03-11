@@ -192,7 +192,8 @@
       :key="key"
       color="green"
       location="top"
-      :timeout="3000"
+      :timeout="2500"
+      min-width = "250px"
       v-model="bar.isActive"
     >
       <div class="d-flex justify-center align-center ga-2">
@@ -505,7 +506,9 @@ const updatePersonalData = async () => {
 const updatePatientAddressData = async () => {
   const patientAddress = patientData.value.address
   const response = await updatePatientAddress(patientAddress)
-  console.log(response);
+  if (response) {
+    updateBars.value.addressData.isActive = true
+  }
 }
 
 
