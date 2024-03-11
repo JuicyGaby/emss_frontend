@@ -56,7 +56,6 @@ const getProvince = async (regionCode) => {
   const data = await response.json();
   return data;
 };
-
 const getMunicipality = async (provinceCode) => {
   const API_URL = `http://localhost:3000/municipality/${provinceCode}`;
   const response = await fetch(API_URL);
@@ -70,6 +69,20 @@ const getBarangay = async (municipalityCode) => {
   return data;
 };
 
+
+const updatePatientAddress = async (body) => {
+  const API_URL = 'http://localhost:3000/address';
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+}
+
 export {
   // interview
   interview,
@@ -80,6 +93,7 @@ export {
   getProvince,
   getMunicipality,
   getBarangay,
+  updatePatientAddress,
   // family composition
   getFamilyComposition,
 };

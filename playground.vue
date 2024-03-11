@@ -99,7 +99,7 @@
 
           </v-combobox>
         </v-col>
-        <!-- <v-col cols="6">
+        <v-col cols="6">
           <h4 class="mb-5">Permanent Address</h4>
           <v-text-field
             v-for="(value, key) in address.permanent"
@@ -124,7 +124,7 @@
             variant="outlined"
             style="min-width: 300px"
           ></v-text-field>
-        </v-col> -->
+        </v-col>
       </v-row>
       <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5"
         >Update Address</v-btn
@@ -363,45 +363,6 @@ const regionsCombo = {
     items: regions,
   },
 }
-const address = {
-  permanent: {
-    province: {
-      label: "Province",
-    },
-    district: {
-      label: "District",
-    },
-    municipality: {
-      label: "Municipality",
-    },
-    barangay: {
-      label: "Barangay",
-    },
-    purok: {
-      label: "Purok",
-    },
-  },
-  temporary: {
-    region: {
-      label: "Region",
-    },
-    province: {
-      label: "Province",
-    },
-    district: {
-      label: "District",
-    },
-    municipality: {
-      label: "Municipality",
-    },
-    barangay: {
-      label: "Barangay",
-    },
-    purok: {
-      label: "Purok",
-    },
-  },
-};
 // const address = {
 //   permanent: {
 //     region: {

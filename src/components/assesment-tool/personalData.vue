@@ -98,8 +98,29 @@
           >
           </v-combobox>
         </v-col>
+        <v-col cols="6">
+          <v-combobox
+            :label="regionsCombo.temporary.label"
+            :items="regions"
+            v-model="patientData.address[1].region"
+            item-title="regDesc"
+            item-value="regCode"
+            density="compact"
+            variant="outlined"
+          >
+          </v-combobox>
+          <v-combobox
+            v-for="(value, key) in address.permanent"
+            :key="key"
+            variant="outlined"
+            density="compact"
+            :label="value.label"
+            v-model="patientData.address[1][key]"
+          >
+          </v-combobox>
+        </v-col>
       </v-row>
-      <v-btn color="secondary" prepend-icon="mdi-content-save" class="mb-5"
+      <v-btn color="secondary" @click="updatePatientAddressData" prepend-icon="mdi-content-save" class="mb-5"
         >Update Address</v-btn
       >
       <!-- family composition -->
@@ -187,9 +208,7 @@ import { getPatientByID, updatePatient } from "@/api/patients";
 import {
   getFamilyComposition,
   getRegions,
-  getProvince,
-  getMunicipality,
-  getBarangay,
+  updatePatientAddress,
 } from "@/api/assesment-tool";
 
 let patientData = ref({});
@@ -465,8 +484,13 @@ const getFamilyCompositionData = async () => {
   const response = await getFamilyComposition(props.patientId);
   familyComposition.value = response;
 };
+const getRegionData = async () => {
+  const response = await getRegions();
+  regions.value = response;
+};
 
 // * Update Section
+
 const updatePersonalData = async () => {
   const validate = await validateForm(personalForm);
   console.log(validate);
@@ -477,26 +501,12 @@ const updatePersonalData = async () => {
   }
 };
 
-const getRegionData = async () => {
-  const response = await getRegions();
-  regions.value = response;
-};
 
-// const watchAddressChange = (addressType, key, apiCall, optionKey) => {
-//   watch(
-//     () => personalDataInputs.value.address[addressType][key],
-//     async (newVal) => {
-//       options.value[optionKey] = await apiCall(newVal);
-//     }
-//   );
-// };
-
-// watchAddressChange("permanent", "region", getProvince, "provinces");
-// watchAddressChange("permanent", "province", getMunicipality, "municipality");
-// watchAddressChange("permanent", "municipality", getBarangay, "barangay");
-// watchAddressChange("temporary", "region", getProvince, "provinces");
-// watchAddressChange("temporary", "province", getMunicipality, "municipality");
-// watchAddressChange("temporary", "municipality", getBarangay, "barangay");
+const updatePatientAddressData = async () => {
+  const patientAddress = patientData.value.address
+  const response = await updatePatientAddress(patientAddress)
+  console.log(response);
+}
 
 
 </script>
