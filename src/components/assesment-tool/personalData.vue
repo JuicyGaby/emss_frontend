@@ -172,17 +172,17 @@
             :items-per-page="5"
             class="elevation-1"
           >
-              <template v-slot:[`item.operation`]="{ item }">
-                <div class="d-flex">
-                  <v-btn
-                    icon="mdi-pencil"
-                    @click="toggleEditFamilyDialog(item)"
-                    flat
-                    size="small"
-                  ></v-btn>
-                  <v-btn icon="mdi-delete" flat size="small"></v-btn>
-                </div>
-              </template>
+            <template v-slot:[`item.operation`]="{ item }">
+              <div class="d-flex">
+                <v-btn
+                  icon="mdi-pencil"
+                  @click="toggleEditFamilyDialog(item)"
+                  flat
+                  size="small"
+                ></v-btn>
+                <v-btn icon="mdi-delete" flat size="small"></v-btn>
+              </div>
+            </template>
           </v-data-table>
         </v-container>
       </v-window-item>
@@ -316,9 +316,13 @@ const updateBars = ref({
     isActive: false,
     text: "Address Updated",
   },
-  familyComposition: {
+  createFamilyMember: {
     isActive: false,
-    text: "Successfully Added Family Member",
+    text: "Family Member Added",
+  },
+  updateFamilyMember: {
+    isActive: false,
+    text: "Family Member Updated",
   },
 });
 
@@ -559,7 +563,7 @@ const createFamilyMemberData = async () => {
   console.log(familyMember);
   const response = await createFamilyMember(familyMember);
   if (response) {
-    updateBars.value.familyComposition.isActive = true;
+    updateBars.value.createFamilyMember.isActive = true;
     familyComposition.value.push(familyMember);
   }
 };
@@ -600,9 +604,9 @@ const updatePatientAddressData = async () => {
 const updateFamilyMemberData = async () => {
   const response = await updateFamilyMember(toEditFamilyMember.value);
   if (response) {
+    updateBars.value.updateFamilyMember.isActive = true;
     dialogs.value.editFamily = false;
   }
 };
-
 </script>
 <style lang="css" scoped></style>
