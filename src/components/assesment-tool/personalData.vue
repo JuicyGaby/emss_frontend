@@ -201,7 +201,7 @@
                 </v-col>
               </v-row>
               <v-row>
-                <v-col cols="12">
+                <!-- <v-col cols="12">
                   <v-text-field
                     v-for="(item, key) in familyCompositionFields.col3"
                     :key="key"
@@ -211,7 +211,7 @@
                     variant="outlined"
                     density="compact"
                   ></v-text-field>
-                </v-col>
+                </v-col> -->
               </v-row>
               <v-btn
                 color="secondary"
@@ -254,13 +254,13 @@
       <v-card-text>
         <div class="d-flex ga-2 flex-wrap">
           <v-text-field
-            v-for="(value, key) in inputFields.familyComposition.inputs"
+            v-for="(value, key) in inputFields.familyComposition"
             :key="key"
             :label="value.label"
             :type="value.type"
             density="compact"
             variant="outlined"
-            v-model="value.data"
+            v-model="inputFields.familyComposition[key].data"
             style="width: 250px"
           ></v-text-field>
         </div>
@@ -269,7 +269,7 @@
         <v-btn color="error" @click="dialogs.addFamily = !dialogs.addFamily"
           >Cancel</v-btn
         >
-        <v-btn color="primary" @click="createFamilyMember">Create</v-btn>
+        <v-btn color="primary" @click="createFamilyMemberData">Create</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -281,6 +281,7 @@ import {
   getFamilyComposition,
   getRegions,
   updatePatientAddress,
+  createFamilyMember,
 } from "@/api/assesment-tool";
 
 let patientData = ref({});
@@ -323,7 +324,7 @@ const updateBars = ref({
   },
   familyComposition: {
     isActive: false,
-    text: "Family Composition Updated",
+    text: "Successfully Added Family Member",
   },
 });
 
@@ -331,7 +332,7 @@ const dialogs = ref({
   addFamily: false,
 });
 
-const inputFields = {
+const inputFields = ref({
   col1: {
     first_name: {
       label: "First Name",
@@ -438,49 +439,48 @@ const inputFields = {
     },
   },
   familyComposition: {
-    inputs: {
-      full_name: {
-        label: "FullName",
-        type: "text",
-        data: "",
-      },
-      age: {
-        label: "Age",
-        type: "text",
-        data: "",
-      },
-      birth_date: {
-        label: "Birth Date",
-        type: "date",
-        data: "",
-      },
-      civil_status: {
-        label: "Civil Status",
-        type: "text",
-        data: "",
-      },
-      relationship: {
-        label: "Relationship",
-        type: "text",
-        data: "",
-      },
-      educational_attainment: {
-        label: "Educational Attainment",
-        type: "text",
-        data: "",
-      },
-      occupation: {
-        label: "Occupation",
-        type: "text",
-      },
-      monthly_income: {
-        label: "Monthly Income",
-        type: "text",
-        data: "",
-      },
+    full_name: {
+      label: "FullName",
+      type: "text",
+      data: "",
+    },
+    age: {
+      label: "Age",
+      type: "text",
+      data: "",
+    },
+    birth_date: {
+      label: "Birth Date",
+      type: "date",
+      data: "",
+    },
+    civil_status: {
+      label: "Civil Status",
+      type: "text",
+      data: "",
+    },
+    relationship: {
+      label: "Relationship",
+      type: "text",
+      data: "",
+    },
+    educational_attainment: {
+      label: "Educational Attainment",
+      type: "text",
+      data: "",
+    },
+    occupation: {
+      label: "Occupation",
+      type: "text",
+      data: "",
+    },
+    monthly_income: {
+      label: "Monthly Income",
+      type: "text",
+      data: "",
     },
   },
-};
+});
 
 const regionsCombo = {
   permanent: {
@@ -605,8 +605,18 @@ const validateForm = async (formType) => {
   return true;
 };
 
-const createFamilyMember = async () => {
-  console.log("Create Family Member");
+const createFamilyMemberData = async () => {
+  let familyMember = {};
+  for (const key in inputFields.value.familyComposition) {
+    familyMember[key] = inputFields.value.familyComposition[key].data;
+  }
+  familyMember.patient_id = props.patientId;
+  console.log(familyMember);
+  const response = await createFamilyMember(familyMember);
+  if (response) {
+    updateBars.value.familyComposition.isActive = true;
+    familyComposition.value.push(familyMember);
+  }
 };
 
 // * Fetch Section
@@ -617,7 +627,6 @@ const getPatientData = async () => {
 const getFamilyCompositionData = async () => {
   const response = await getFamilyComposition(props.patientId);
   familyComposition.value = response;
-  console.log(familyComposition);
 };
 const getRegionData = async () => {
   const response = await getRegions();
@@ -640,7 +649,5 @@ const updatePatientAddressData = async () => {
     updateBars.value.addressData.isActive = true;
   }
 };
-
-
 </script>
 <style lang="css" scoped></style>

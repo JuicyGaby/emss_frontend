@@ -172,7 +172,6 @@ onMounted(async () => {
 const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
   interviewData.value = response;
-  console.log(response);
 };
 
 const validateForm = async () => {
