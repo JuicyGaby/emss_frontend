@@ -1,7 +1,8 @@
 <template lang="">
-  <div>
+  <div v-if="isLoaded">
     <v-container style="width: 1000px">
       <h2>Monthly Expenses:</h2>
+      <!-- input fields -->
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-col cols="12" class="d-flex ga-2 flex-wrap">
@@ -9,10 +10,11 @@
             v-for="(field, key) in InputFields.textFields"
             :key="key"
             :label="field.label"
-            v-model="field.value"
+            v-model="monthlyExpenses[key]"
             variant="outlined"
             style="width: 400px"
             class=""
+            type="number"
             density="comfortable"
           ></v-text-field>
           <v-combobox
@@ -20,6 +22,7 @@
             multiple
             :label="InputFields.comboFields.transportation_type.label"
             :items="InputFields.comboFields.transportation_type.items"
+            v-model="monthlyExpenses.transportation_type"
             variant="outlined"
             style="width: 400px"
             class=""
@@ -28,12 +31,15 @@
           <v-text-field
             :label="InputFields.comboTextFields.transportation_cost.label"
             variant="outlined"
+            v-model="monthlyExpenses.transportation_cost"
             style="width: 400px"
             class=""
+            type="number"
             density="comfortable"
           ></v-text-field>
         </v-col>
       </v-row>
+      <!-- sources -->
       <h3>Light Source:</h3>
       <v-divider class="mb-5"></v-divider>
       <v-row>
@@ -42,9 +48,10 @@
             v-for="(field, key) in InputFields.sourceFields.lightSource"
             :key="key"
             :label="field.label"
-            v-model="field.value"
             variant="outlined"
             style="width: 200px"
+            v-model="monthlyExpenses.patient_light_source[key]"
+            type="number"
             class=""
             density="comfortable"
           ></v-text-field>
@@ -58,9 +65,10 @@
             v-for="(field, key) in InputFields.sourceFields.fuelSource"
             :key="key"
             :label="field.label"
-            v-model="field.value"
+            v-model="monthlyExpenses.patient_fuel_source[key]"
             variant="outlined"
             style="width: 200px"
+            type="number"
             class=""
             density="comfortable"
           ></v-text-field>
@@ -74,9 +82,10 @@
             v-for="(field, key) in InputFields.sourceFields.waterSource"
             :key="key"
             :label="field.label"
-            v-model="field.value"
+            v-model="monthlyExpenses.patient_water_source[key]"
             variant="outlined"
             style="width: 200px"
+            type="number"
             class=""
             density="comfortable"
           ></v-text-field>
@@ -84,31 +93,60 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <v-text-field label="Total Cost" variant="outlined" density="comfortable"></v-text-field>
+          <v-text-field
+            label="Total Cost"
+            variant="outlined"
+            density="comfortable"
+          ></v-text-field>
           <v-textarea
             label="Remarks"
             variant="outlined"
             class=""
+            v-model="monthlyExpenses['remarks']"
             density="comfortable"
           >
           </v-textarea>
-          <v-btn color="success">Update Monthly Expenses</v-btn>
+          <v-btn color="secondary" @click="handleAction">{{
+            monthlyExpenses.isExist ? "Update Patient" : "Create Data"
+          }}</v-btn>
         </v-col>
       </v-row>
     </v-container>
-
-    {{ props.patientId }}
+    <!-- {{ monthlyExpenses }} -->
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
-import { getMonthlyExpenses } from "@/api/assesment-tool";
+import { ref, onMounted, watchEffect } from "vue";
+import { getMonthlyExpenses, createMonthlyExpenses } from "@/api/assesment-tool";
+
 const props = defineProps({
   patientId: Number,
 });
-onMounted(async () => {
-    await fetchMonthlyExpenses();
+
+const monthlyExpenses = ref({
+  isExist: false,
+  patient_light_source: {
+    electric: "",
+    kerosene: "",
+    candle: "",
+  },
+  patient_water_source: {
+    public_artesian_well: "",
+    private_artesian_well: "",
+    water_district: "",
+  },
+  patient_fuel_source: {
+    gas: "",
+    kerosene: "",
+    charcoal: "",
+  },
 });
+const isLoaded = ref(true);
+
+onMounted(async () => {
+  await fetchMonthlyExpenses();
+});
+
 const monthlyExpensesData = ref({});
 const InputFields = {
   comboFields: {
@@ -160,7 +198,7 @@ const InputFields = {
       kerosene: {
         label: "Kerosene Cost",
       },
-      candles: {
+      candle: {
         label: "Candles Cost",
       },
     },
@@ -168,15 +206,15 @@ const InputFields = {
       gas: {
         label: "Gas Cost",
       },
-      firewood: {
-        label: "Firewood Cost",
+      kerosene: {
+        label: "kerosene Cost",
       },
       charcoal: {
         label: "Charcoal Cost",
       },
     },
     waterSource: {
-      publice_artesian_well: {
+      public_artesian_well: {
         label: "Public Artesian Well Cost",
       },
       private_artesian_well: {
@@ -195,11 +233,34 @@ const InputFields = {
   },
 };
 
-
-
 const fetchMonthlyExpenses = async () => {
-    const response = await getMonthlyExpenses(props.patientId);
-    console.log(response);
+  const response = await getMonthlyExpenses(props.patientId);
+  if (!response) {
+    console.log("No Monthly Expenses");
+    return;
+  }
+  monthlyExpenses.value = response;
+  monthlyExpenses.value.isExist = true;
+  monthlyExpenses.value.patient_light_source = response.patient_light_source[0];
+  monthlyExpenses.value.patient_fuel_source = response.patient_fuel_source[0];
+  monthlyExpenses.value.patient_water_source = response.patient_water_source[0];
+  console.log(monthlyExpenses.value);
+};
+
+const handleAction = async () => {
+  if (monthlyExpenses.value.isExist) {
+    await updateMonthlyExpenses();
+    return;
+  }
+  await createMonthlyExpensesData();
+};
+
+const createMonthlyExpensesData = async () => {
+    // const response = await createMonthlyExpenses(monthlyExpenses.value);
+};
+
+const updateMonthlyExpenses = async () => {
+  console.log("Update Monthly Expenses");
 };
 </script>
 <style lang=""></style>

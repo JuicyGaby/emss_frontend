@@ -168,6 +168,34 @@ const getMonthlyExpenses = async (patient_id) => {
   return data;
 }
 
+const createMonthlyExpenses = async (body) => {
+  const API_URL = "http://localhost:3000/monthly-expenses";
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+}
+
+
+
+const updateMonthlyExpenses = async (body) => {
+  const API_URL = "http://localhost:3000/monthly-expenses";
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+}
+
 export {
   // interview
   interview,
@@ -191,4 +219,6 @@ export {
   updateMswdClassification,
   // monthly expenses
   getMonthlyExpenses,
+  createMonthlyExpenses,
+  updateMonthlyExpenses,
 };
