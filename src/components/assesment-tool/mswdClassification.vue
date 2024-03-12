@@ -40,15 +40,14 @@
         </v-col>
       </v-row>
       <v-btn
-        v-if="classficationEmpty"
+        v-if="!mswdClassification.haveClassification"
         color="secondary"
         @click="createMswdClassificationData"
         >Create MSWD Classification</v-btn
       >
-      <v-btn v-else color="secondary" class="" @click="updateMswdClassification"
+      <v-btn v-if="mswdClassification.haveClassification" color="secondary" class="" @click="updateMswdClassificationData"
         >Update MSWD Classification</v-btn
       >
-
       {{ mswdClassification }}
     </v-container>
   </div>
@@ -68,7 +67,7 @@ const classficationEmpty = ref(false);
 let mswdClassification = ref({
   main_classification_type: null,
   sub_classification_type: null,
-  sectors: [],
+  membership_to_marginalized_sector: [],
   remarks: null,
 });
 
@@ -126,6 +125,7 @@ const updateMswdClassificationData = () => {
 };
 
 const createMswdClassificationData = async () => {
+  console.log("creating");
   mswdClassification.value.patient_id = props.patientId;
   const response = await createMswdClassification(mswdClassification.value);
   console.log(response);
@@ -133,6 +133,10 @@ const createMswdClassificationData = async () => {
 
 const fetchMswdClassification = async () => {
   const response = await getMswdClassification(props.patientId);
+  if (!response) {
+    classficationEmpty.value = true;
+    return;
+  }
   mswdClassification.value = response;
 };
 </script>

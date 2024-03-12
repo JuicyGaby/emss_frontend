@@ -131,12 +131,10 @@ const getMswdClassification = async (patient_id) => {
   const API_URL = `http://localhost:3000/mswd-classification/${patient_id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
-  console.log(data);
   return data;
 };
 
 const createMswdClassification = async (body) => {
-  console.log(body);
   const API_URL = "http://localhost:3000/mswd-classification";
   const response = await fetch(API_URL, {
     method: "POST",
