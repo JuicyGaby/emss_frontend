@@ -125,9 +125,10 @@ const updateMswdClassificationData = () => {
 };
 
 const createMswdClassificationData = async () => {
-  console.log("creating");
   mswdClassification.value.patient_id = props.patientId;
   const response = await createMswdClassification(mswdClassification.value);
+  mswdClassification.value.haveClassification = true;
+
   console.log(response);
 };
 
