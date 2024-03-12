@@ -73,13 +73,18 @@ const deleteFamilyMember = async (id) => {
   return data;
 };
 
-
 const getFamilyInfo = async (patient_id) => {
   const API_URL = `http://localhost:3000/family-info/${patient_id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
+
+
+// mswd 
+
+
+
 // * ph address
 
 const getRegions = async () => {
@@ -120,6 +125,43 @@ const updatePatientAddress = async (body) => {
   return data;
 };
 
+
+// * mswd classification
+const getMswdClassification = async (patient_id) => {
+  const API_URL = `http://localhost:3000/mswd-classification/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
+
+const createMswdClassification = async (body) => {
+  console.log(body);
+  const API_URL = "http://localhost:3000/mswd-classification";
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+}
+
+const updateMswdClassification = async (body) => {
+  const API_URL = "http://localhost:3000/mswd-classification";
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+}
+
 export {
   // interview
   interview,
@@ -137,4 +179,8 @@ export {
   createFamilyMember,
   updateFamilyMember,
   deleteFamilyMember,
+  // mswd classification
+  getMswdClassification,
+  createMswdClassification,
+  updateMswdClassification,
 };
