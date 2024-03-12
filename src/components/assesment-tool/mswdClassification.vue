@@ -45,12 +45,30 @@
         @click="createMswdClassificationData"
         >Create MSWD Classification</v-btn
       >
-      <v-btn v-if="mswdClassification.haveClassification" color="secondary" class="" @click="updateMswdClassificationData"
+      <v-btn
+        v-if="mswdClassification.haveClassification"
+        color="secondary"
+        class=""
+        @click="updateMswdClassificationData"
         >Update MSWD Classification</v-btn
       >
       {{ mswdClassification }}
     </v-container>
   </div>
+  <v-snackbar
+    v-for="(bar, key) in snackBars"
+    :key="key"
+    color="green"
+    location="top"
+    :timeout="2500"
+    min-width="250px"
+    v-model="bar.isActive"
+  >
+    <div class="d-flex justify-center align-center ga-2">
+      <v-icon icon="mdi-check-bold"></v-icon>
+      <p class="text-subtitle-1">{{ bar.text }}</p>
+    </div>
+  </v-snackbar>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
@@ -59,11 +77,24 @@ import {
   createMswdClassification,
   updateMswdClassification,
 } from "@/api/assesment-tool";
+
+const classficationEmpty = ref(false);
+
+const snackBars = ref({
+  update: {
+    isActive: false,
+    text: "MSWD Classification Updated",
+  },
+  create: {
+    isActive: false,
+    text: "MSWD Classification Created",
+  },
+});
+
 const props = defineProps({
   patientId: Number,
 });
 
-const classficationEmpty = ref(false);
 let mswdClassification = ref({
   main_classification_type: null,
   sub_classification_type: null,
@@ -120,15 +151,17 @@ onMounted(async () => {
   await fetchMswdClassification();
 });
 
-const updateMswdClassificationData = () => {
-  console.log(mswdClassification);
+const updateMswdClassificationData = async () => {
+  const response = await updateMswdClassification(mswdClassification.value);
+  console.log("updated", response);
+  snackBars.value.update.isActive = true;
 };
 
 const createMswdClassificationData = async () => {
   mswdClassification.value.patient_id = props.patientId;
   const response = await createMswdClassification(mswdClassification.value);
   mswdClassification.value.haveClassification = true;
-
+  snackBars.value.create.isActive = true;
   console.log(response);
 };
 
