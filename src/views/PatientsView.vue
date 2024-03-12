@@ -115,7 +115,9 @@
             <v-window-item :value="3">
               <mswdClassification :patientId="patientId"></mswdClassification>
             </v-window-item>
-            <v-window-item :value="4"> Four </v-window-item>
+            <v-window-item :value="4">
+              <monthlyExpenses :patientId="patientId"></monthlyExpenses>
+            </v-window-item>
             <v-window-item :value="5"> Five </v-window-item>
             <v-window-item :value="6"> Six </v-window-item>
             <v-window-item :value="7"> Seven </v-window-item>
@@ -137,6 +139,7 @@ import initialAssesment from "@/components/assesment-tool/initialAssesment.vue";
 import interviewView from "@/components/assesment-tool/InterviewView.vue";
 import mswdClassification from "@/components/assesment-tool/mswdClassification.vue";
 import personalData from "@/components/assesment-tool/personalData.vue";
+import monthlyExpenses from "@/components/assesment-tool/monthly-expenses.vue";
 
 const props = defineProps({
   user: Object,

@@ -1,8 +1,10 @@
 <template lang="">
   <div>
-    <v-container>
+    <v-container style="width: 1000px">
+      <h2>MSWD Classification:</h2>
+      <v-divider class="mb-5"></v-divider>
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12">
           <v-autocomplete
             label="Main Classification"
             v-model="mswdClassification.main_classification_type"
@@ -52,7 +54,6 @@
         @click="updateMswdClassificationData"
         >Update MSWD Classification</v-btn
       >
-      {{ mswdClassification }}
     </v-container>
   </div>
   <v-snackbar
@@ -167,10 +168,6 @@ const createMswdClassificationData = async () => {
 
 const fetchMswdClassification = async () => {
   const response = await getMswdClassification(props.patientId);
-  if (!response) {
-    classficationEmpty.value = true;
-    return;
-  }
   mswdClassification.value = response;
 };
 </script>
