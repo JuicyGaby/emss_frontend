@@ -86,7 +86,6 @@
         <v-col cols="12">
           <v-text-field label="Total Cost" variant="outlined" density="comfortable"></v-text-field>
           <v-textarea
-            v-model="remarks"
             label="Remarks"
             variant="outlined"
             class=""
@@ -97,14 +96,19 @@
         </v-col>
       </v-row>
     </v-container>
+
+    {{ props.patientId }}
   </div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import { getMonthlyExpenses } from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
 });
-onMounted(() => {});
+onMounted(async () => {
+    await fetchMonthlyExpenses();
+});
 const monthlyExpensesData = ref({});
 const InputFields = {
   comboFields: {
@@ -189,6 +193,13 @@ const InputFields = {
       value: "",
     },
   },
+};
+
+
+
+const fetchMonthlyExpenses = async () => {
+    const response = await getMonthlyExpenses(props.patientId);
+    console.log(response);
 };
 </script>
 <style lang=""></style>

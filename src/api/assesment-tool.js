@@ -159,6 +159,14 @@ const updateMswdClassification = async (body) => {
   const data = await response.json();
   return data;
 }
+// * monthly expenses
+
+const getMonthlyExpenses = async (patient_id) => {
+  const API_URL = `http://localhost:3000/monthly-expenses/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+}
 
 export {
   // interview
@@ -181,4 +189,6 @@ export {
   getMswdClassification,
   createMswdClassification,
   updateMswdClassification,
+  // monthly expenses
+  getMonthlyExpenses,
 };
