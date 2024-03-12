@@ -126,19 +126,19 @@ const props = defineProps({
 const monthlyExpenses = ref({
   isExist: false,
   patient_light_source: {
-    electric: "",
-    kerosene: "",
-    candle: "",
+    electric: null,
+    kerosene: null,
+    candle: null,
   },
   patient_water_source: {
-    public_artesian_well: "",
-    private_artesian_well: "",
-    water_district: "",
+    public_artesian_well: null,
+    private_artesian_well: null,
+    water_district: null,
   },
   patient_fuel_source: {
-    gas: "",
-    kerosene: "",
-    charcoal: "",
+    gas: null,
+    kerosene: null,
+    charcoal: null,
   },
 });
 const isLoaded = ref(true);
@@ -256,7 +256,12 @@ const handleAction = async () => {
 };
 
 const createMonthlyExpensesData = async () => {
-    // const response = await createMonthlyExpenses(monthlyExpenses.value);
+    // console.log(monthlyExpenses.value);
+    monthlyExpenses.value.patient_id = props.patientId;
+    const response = await createMonthlyExpenses(monthlyExpenses.value);
+    if (response) {
+        monthlyExpenses.value.isExist = true;
+    }
 };
 
 const updateMonthlyExpenses = async () => {

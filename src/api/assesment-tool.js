@@ -181,8 +181,6 @@ const createMonthlyExpenses = async (body) => {
   return data;
 }
 
-
-
 const updateMonthlyExpenses = async (body) => {
   const API_URL = "http://localhost:3000/monthly-expenses";
   const response = await fetch(API_URL, {
