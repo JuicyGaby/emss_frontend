@@ -64,7 +64,7 @@
       <v-btn color="secondary" @click="handleButtonAction">{{
         healthAndMentalHealth.isExist ? "Update Data" : "Create Data"
       }}</v-btn>
-      <!-- {{ healthAndMentalHealth }} -->
+      {{ healthAndMentalHealth }}
     </v-container>
     <v-snackbar
       v-for="(bar, key) in snackBars"
@@ -214,7 +214,7 @@ const updateHealthAndMentalHealthItem = async () => {
 const fetchHealthAndMentalHealth = async () => {
   const response = await getHealthAndMentalHealth(props.patientId);
   if (response) {
-    console.log("response", response);
+    // console.log("response", response);
     handlePatientData(response);
   }
 };

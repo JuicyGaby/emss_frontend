@@ -256,6 +256,38 @@ const updateHealthAndMentalHealth = async (body) => {
   return data;
 };
 
+// * discrimination
+const getDiscrimination = async (patient_id) => {
+  const API_URL = `http://localhost:3000/discrimination/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
+const createDiscrimination = async (body) => {
+  const API_URL = "http://localhost:3000/discrimination";
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+const updateDiscrimination = async (body) => {
+  const API_URL = "http://localhost:3000/discrimination";
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+
 export {
   // interview
   interview,
@@ -289,4 +321,8 @@ export {
   getHealthAndMentalHealth,
   createHealthAndMentalHealth,
   updateHealthAndMentalHealth,
+  // discrimination
+  getDiscrimination,
+  createDiscrimination,
+  updateDiscrimination,
 };

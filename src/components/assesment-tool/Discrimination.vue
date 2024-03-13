@@ -26,9 +26,9 @@
                     density="compact"
                     variant="outlined"
                     :items="indexItems.severity"
+                    v-model="discrimination[key].severity"
                     item-title="text"
                     item-value="value"
-                    v-model="discrimination[key].severity"
                     style="width: 200px"
                   ></v-select>
                 </th>
@@ -51,8 +51,8 @@
                     variant="outlined"
                     :items="indexItems.coping"
                     item-title="text"
-                    item-value="value"
                     v-model="discrimination[key].coping"
+                    item-value="value"
                     style="width: 200px"
                   ></v-select>
                 </th>
@@ -61,7 +61,7 @@
           </v-table>
         </v-col>
       </v-row>
-      <v-btn color="success" @click="handleButtonAction">{{
+      <v-btn color="secondary" @click="handleButtonAction">{{
         discrimination.isExist ? "Update Data" : "Create Data"
       }}</v-btn>
     </v-container>
@@ -84,6 +84,11 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import {
+  getDiscrimination,
+  createDiscrimination,
+  updateDiscrimination,
+} from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
 });
@@ -91,7 +96,7 @@ onMounted(async () => {
   await fetchDiscrimination();
 });
 
-
+const isDataLoaded = ref(false);
 
 const discrimination = ref({
   isExist: false,
@@ -116,7 +121,7 @@ const discrimination = ref({
     duration: "",
     coping: "",
   },
-  SexualOrientation: {
+  Sexual_Orientation: {
     severity: "",
     duration: "",
     coping: "",
@@ -207,7 +212,7 @@ const particulars = {
   Sex: {
     label: "Sex",
   },
-  SexualOrientation: {
+  Sexual_Orientation: {
     label: "Sexual Orientation",
   },
   Lifestyle: {
@@ -231,28 +236,35 @@ const particulars = {
 };
 
 const createDiscriinationItem = async () => {
-  //   try {
-  //     await createDiscrimination(discrimination.value);
-  //     snackBars.value.create.isActive = true;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+  const response = await createDiscrimination(discrimination.value);
+  console.log("response", response);
+  if (response) {
+    discrimination.value.isExist = true;
+    handleSnackBar("create");
+  }
 };
 const updateDiscriminationItem = async () => {
-  //   try {
-  //     await updateDiscrimination(discrimination.value);
-  //     snackBars.value.update.isActive = true;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+  console.log("Update Discrimination");
+  // try {
+  //   await updateDiscrimination(discrimination.value);
+  //   snackBars.value.update.isActive = true;
+  // } catch (error) {
+  //   console.log(error);
+  // }
 };
 
 const fetchDiscrimination = async () => {
-    // const response = await getDiscrimination(props.patientId);
-    // if (response) {
-    //   handlePatientData(response);
-    // }
+  console.log("Fetch Discrimination");
+  const response = await getDiscrimination(props.patientId);
+  if (response) {
+    console.log("response", response);
+    // handlePatientData(response);
+    discrimination.value = response;
+    discrimination.value.isExist = true;
+  }
+//   isDataLoaded.value = true;
 };
+
 const handleSnackBar = (type) => {
   snackBars.value[type].isActive = true;
 };
@@ -261,7 +273,7 @@ const handlePatientData = (response) => {
   discrimination.value.isExist = true;
 };
 const handleButtonAction = async () => {
-  if (healthAndMentalHealth.value.isExist) {
+  if (discrimination.value.isExist) {
     await updateDiscriminationItem();
   } else {
     await createDiscriinationItem();
