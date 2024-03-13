@@ -92,7 +92,6 @@ const inputFields = {
 const fetchMedicalData = async () => {
   const response = await getMedicalData(props.patientId);
   if (response) {
-    console.log("fetchMedicalData", response);
     handlePatientData(response);
   }
 };
@@ -111,10 +110,13 @@ const createMedicalDataItem = async () => {
 };
 const updateMedicalDataItem = async () => {
   console.log("updateMedicalDataItem");
-  //   const response = await updateMedicalData(props.patientId, medicalData.value);
+  const response = await updateMedicalData(medicalData.value);
+  if (response) {
+    handleSnackBar("update");
+  }
 };
 const handleSnackBar = (type) => {
-  snackBars[type].isActive = true;
+  snackBars.value[type].isActive = true;
 };
 
 const handleButtonAction = async () => {
