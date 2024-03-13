@@ -80,10 +80,7 @@ const getFamilyInfo = async (patient_id) => {
   return data;
 };
 
-
-// mswd 
-
-
+// mswd
 
 // * ph address
 
@@ -125,7 +122,6 @@ const updatePatientAddress = async (body) => {
   return data;
 };
 
-
 // * mswd classification
 const getMswdClassification = async (patient_id) => {
   const API_URL = `http://localhost:3000/mswd-classification/${patient_id}`;
@@ -145,7 +141,7 @@ const createMswdClassification = async (body) => {
   });
   const data = await response.json();
   return data;
-}
+};
 
 const updateMswdClassification = async (body) => {
   const API_URL = "http://localhost:3000/mswd-classification";
@@ -158,7 +154,7 @@ const updateMswdClassification = async (body) => {
   });
   const data = await response.json();
   return data;
-}
+};
 // * monthly expenses
 
 const getMonthlyExpenses = async (patient_id) => {
@@ -166,7 +162,7 @@ const getMonthlyExpenses = async (patient_id) => {
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
-}
+};
 
 const createMonthlyExpenses = async (body) => {
   const API_URL = "http://localhost:3000/monthly-expenses";
@@ -179,7 +175,7 @@ const createMonthlyExpenses = async (body) => {
   });
   const data = await response.json();
   return data;
-}
+};
 
 const updateMonthlyExpenses = async (body) => {
   const API_URL = "http://localhost:3000/monthly-expenses";
@@ -192,7 +188,40 @@ const updateMonthlyExpenses = async (body) => {
   });
   const data = await response.json();
   return data;
-}
+};
+
+// * medical data
+
+const getMedicalData = async (patient_id) => {
+  const API_URL = `http://localhost:3000/medical-data/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
+const createMedicalData = async (body) => {
+  const API_URL = "http://localhost:3000/medical-data";
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+const updateMedicalData = async (body) => {
+  const API_URL = "http://localhost:3000/medical-data";
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
 
 export {
   // interview
@@ -219,4 +248,8 @@ export {
   getMonthlyExpenses,
   createMonthlyExpenses,
   updateMonthlyExpenses,
+  // medical data
+  getMedicalData,
+  createMedicalData,
+  updateMedicalData,
 };

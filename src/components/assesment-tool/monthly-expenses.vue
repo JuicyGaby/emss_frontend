@@ -285,13 +285,11 @@ const handleAction = async () => {
 };
 
 const createMonthlyExpensesData = async () => {
-  // console.log(monthlyExpenses.value);
   monthlyExpenses.value.patient_id = props.patientId;
   const response = await createMonthlyExpenses(monthlyExpenses.value);
   if (response) toggleUpdate("create");
 };
 const updateMonthlyExpensesData = async () => {
-  console.log("Updating");
   const response = await updateMonthlyExpenses(monthlyExpenses.value);
   if (response) toggleUpdate("update");
 };
