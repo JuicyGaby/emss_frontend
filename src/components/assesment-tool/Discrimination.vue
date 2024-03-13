@@ -1,59 +1,59 @@
 <template lang="">
   <div>
-    <v-container style="width: 1300px">
-      <h1>Health and Mental Health</h1>
+    <v-container style="width: 1000px">
+      <h1>Discrimination</h1>
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-col>
-          <v-table>
+          <v-table density="compact">
             <thead>
               <tr>
-                <th>Particulars</th>
-                <th>Severity Index</th>
-                <th>Duration Index</th>
-                <th>Coping Index</th>
+                <th
+                  v-for="(header, index) in tableheaders"
+                  :key="index"
+                  class="text-left"
+                >
+                  {{ header }}
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(field, key) in inputFields" :key="key">
+              <tr v-for="(field, key) in particulars" :key="key">
                 <th>{{ field.label }}</th>
                 <th>
                   <v-select
-                    label="----"
                     outlined
                     density="compact"
                     variant="outlined"
                     :items="indexItems.severity"
                     item-title="text"
                     item-value="value"
+                    v-model="discrimination[key].severity"
                     style="width: 200px"
-                    v-model="healthAndMentalHealth[key].severity"
                   ></v-select>
                 </th>
                 <th>
                   <v-select
-                    label="----"
                     outlined
                     density="compact"
                     variant="outlined"
                     :items="indexItems.duration"
                     item-title="text"
                     item-value="value"
+                    v-model="discrimination[key].duration"
                     style="width: 200px"
-                    v-model="healthAndMentalHealth[key].duration"
                   ></v-select>
                 </th>
                 <th>
                   <v-select
-                    label="----"
                     outlined
                     density="compact"
                     variant="outlined"
                     :items="indexItems.coping"
                     item-title="text"
                     item-value="value"
+                    v-model="discrimination[key].coping"
                     style="width: 200px"
-                    v-model="healthAndMentalHealth[key].coping"
                   ></v-select>
                 </th>
               </tr>
@@ -61,10 +61,9 @@
           </v-table>
         </v-col>
       </v-row>
-      <v-btn color="secondary" @click="handleButtonAction">{{
-        healthAndMentalHealth.isExist ? "Update Data" : "Create Data"
+      <v-btn color="success" @click="handleButtonAction">{{
+        discrimination.isExist ? "Update Data" : "Create Data"
       }}</v-btn>
-      <!-- {{ healthAndMentalHealth }} -->
     </v-container>
     <v-snackbar
       v-for="(bar, key) in snackBars"
@@ -81,51 +80,73 @@
       </div>
     </v-snackbar>
   </div>
+  {{ discrimination }}
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import {
-  getHealthAndMentalHealth,
-  createHealthAndMentalHealth,
-  updateHealthAndMentalHealth,
-} from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
 });
-
 onMounted(async () => {
-  await fetchHealthAndMentalHealth();
+  await fetchDiscrimination();
 });
 
-const healthAndMentalHealth = ref({
+
+
+const discrimination = ref({
   isExist: false,
   patient_id: props.patientId,
-  abscence_of_adequate_health_services: {
+  Age: {
     severity: "",
     duration: "",
     coping: "",
   },
-  abscence_of_support_health_services: {
+  Ethnicity: {
     severity: "",
     duration: "",
     coping: "",
   },
-  absence_of_adequate_mental_services: {
+  Religion: {
     severity: "",
     duration: "",
     coping: "",
   },
-  absence_of_support_mental_services: {
+  Sex: {
     severity: "",
     duration: "",
     coping: "",
   },
-  inaccessibility_of_health_services: {
+  SexualOrientation: {
     severity: "",
     duration: "",
     coping: "",
   },
-  inaccessibility_of_mental_services: {
+  Lifestyle: {
+    severity: "",
+    duration: "",
+    coping: "",
+  },
+  NonCitizen: {
+    severity: "",
+    duration: "",
+    coping: "",
+  },
+  Veteran_Status: {
+    severity: "",
+    duration: "",
+    coping: "",
+  },
+  Dependency_Status: {
+    severity: "",
+    duration: "",
+    coping: "",
+  },
+  Disability_Status: {
+    severity: "",
+    duration: "",
+    coping: "",
+  },
+  Marital_Status: {
     severity: "",
     duration: "",
     coping: "",
@@ -141,6 +162,12 @@ const snackBars = ref({
     text: "Health and Mental Health Created",
   },
 });
+const tableheaders = [
+  "Particulars",
+  "Severity Index",
+  "Duration Index",
+  "Coping Index",
+];
 const indexItems = {
   severity: [
     { text: "No Problem", value: 1 },
@@ -167,71 +194,77 @@ const indexItems = {
     { text: "No Coping Skills", value: 6 },
   ],
 };
-const inputFields = {
-  abscence_of_adequate_health_services: {
-    label: "Abscence of Adequate Health Services",
-    severity: "",
-    duration: "",
-    coping: "",
+const particulars = {
+  Age: {
+    label: "Age",
   },
-  abscence_of_support_health_services: {
-    label: "Abscence of Support Health Services",
+  Ethnicity: {
+    label: "Ethnicity",
   },
-  absence_of_adequate_mental_services: {
-    label: "Abscence of Adequate Mental Services",
+  Religion: {
+    label: "Religion",
   },
-  absence_of_support_mental_services: {
-    label: "Abscence of Support Mental Services",
+  Sex: {
+    label: "Sex",
   },
-  inaccessibility_of_health_services: {
-    label: "Inaccessibility of Health Services",
+  SexualOrientation: {
+    label: "Sexual Orientation",
   },
-  inaccessibility_of_mental_services: {
-    label: "Inaccessibility of Mental Services",
+  Lifestyle: {
+    label: "Lifestyle",
+  },
+  NonCitizen: {
+    label: "Non-Citizen",
+  },
+  Veteran_Status: {
+    label: "Veteran Status",
+  },
+  Dependency_Status: {
+    label: "Dependency Status",
+  },
+  Disability_Status: {
+    label: "Disability",
+  },
+  Marital_Status: {
+    label: "Marital Status",
   },
 };
 
-const createHealthAndMentalHealthItem = async () => {
-  console.log("asdfsad");
-  console.log("createHealthAndMentalHealthItem");
-  const response = await createHealthAndMentalHealth(
-    healthAndMentalHealth.value
-  );
-  if (response) {
-    healthAndMentalHealth.value.isExist = true;
-    handleSnackBar("create");
-  }
+const createDiscriinationItem = async () => {
+  //   try {
+  //     await createDiscrimination(discrimination.value);
+  //     snackBars.value.create.isActive = true;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
 };
-const updateHealthAndMentalHealthItem = async () => {
-  console.log("updateHealthAndMentalHealthItem");
-  const response = await updateHealthAndMentalHealth(
-    healthAndMentalHealth.value
-  );
-  if (response) {
-    handleSnackBar("update");
-  }
-};
-const fetchHealthAndMentalHealth = async () => {
-  const response = await getHealthAndMentalHealth(props.patientId);
-  if (response) {
-    console.log("response", response);
-    handlePatientData(response);
-  }
+const updateDiscriminationItem = async () => {
+  //   try {
+  //     await updateDiscrimination(discrimination.value);
+  //     snackBars.value.update.isActive = true;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
 };
 
+const fetchDiscrimination = async () => {
+    // const response = await getDiscrimination(props.patientId);
+    // if (response) {
+    //   handlePatientData(response);
+    // }
+};
 const handleSnackBar = (type) => {
   snackBars.value[type].isActive = true;
 };
 const handlePatientData = (response) => {
-  healthAndMentalHealth.value = response;
-  healthAndMentalHealth.value.isExist = true;
+  discrimination.value = response;
+  discrimination.value.isExist = true;
 };
-
 const handleButtonAction = async () => {
   if (healthAndMentalHealth.value.isExist) {
-    await updateHealthAndMentalHealthItem();
+    await updateDiscriminationItem();
   } else {
-    await createHealthAndMentalHealthItem();
+    await createDiscriinationItem();
   }
 };
 </script>
