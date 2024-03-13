@@ -61,11 +61,25 @@
           </v-table>
         </v-col>
       </v-row>
-      <v-btn color="secondary">{{
+      <v-btn color="secondary" @click="handleButtonAction">{{
         healthAndMentalHealth.isExist ? "Update Data" : "Create Data"
       }}</v-btn>
-      <!-- {{ healthAndMentalHealth }} -->
+      {{ healthAndMentalHealth }}
     </v-container>
+    <v-snackbar
+      v-for="(bar, key) in snackBars"
+      :key="key"
+      color="green"
+      location="top"
+      :timeout="2500"
+      min-width="250px"
+      v-model="bar.isActive"
+    >
+      <div class="d-flex justify-center align-center ga-2">
+        <v-icon icon="mdi-check-bold"></v-icon>
+        <p class="text-subtitle-1">{{ bar.text }}</p>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 <script setup>
@@ -77,6 +91,10 @@ import {
 } from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
+});
+
+onMounted(async () => {
+  await fetchHealthAndMentalHealth();
 });
 
 const healthAndMentalHealth = ref({
@@ -174,10 +192,39 @@ const inputFields = {
 };
 
 const createHealthAndMentalHealthItem = async () => {
+  console.log("asdfsad");
   console.log("createHealthAndMentalHealthItem");
+  const response = await createHealthAndMentalHealth(
+    healthAndMentalHealth.value
+  );
+  if (response) {
+    healthAndMentalHealth.value.isExist = true;
+    handleSnackBar("create");
+  }
 };
 const updateHealthAndMentalHealthItem = async () => {
   console.log("updateHealthAndMentalHealthItem");
+  const response = await updateHealthAndMentalHealth(
+    healthAndMentalHealth.value
+  );
+  if (response) {
+    handleSnackBar("update");
+  }
+};
+const fetchHealthAndMentalHealth = async () => {
+  const response = await getHealthAndMentalHealth(props.patientId);
+  if (response) {
+    console.log("response", response);
+    handlePatientData(response);
+  }
+};
+
+const handleSnackBar = (type) => {
+  snackBars.value[type].isActive = true;
+};
+const handlePatientData = (response) => {
+  healthAndMentalHealth.value = response;
+  healthAndMentalHealth.value.isExist = true;
 };
 
 const handleButtonAction = async () => {
