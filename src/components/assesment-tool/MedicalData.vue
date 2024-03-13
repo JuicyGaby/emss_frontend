@@ -23,11 +23,29 @@
       }}</v-btn>
     </v-container>
     {{ medicalData }}
+    <v-snackbar
+      v-for="(bar, key) in snackBars"
+      :key="key"
+      color="green"
+      location="top"
+      :timeout="2500"
+      min-width="250px"
+      v-model="bar.isActive"
+    >
+      <div class="d-flex justify-center align-center ga-2">
+        <v-icon icon="mdi-check-bold"></v-icon>
+        <p class="text-subtitle-1">{{ bar.text }}</p>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { getMedicalData } from "@/api/assesment-tool";
+import {
+  getMedicalData,
+  createMedicalData,
+  updateMedicalData,
+} from "@/api/assesment-tool";
 
 const props = defineProps({
   patientId: Number,
@@ -36,8 +54,19 @@ onMounted(async () => {
   await fetchMedicalData();
 });
 
+const snackBars = ref({
+  update: {
+    isActive: false,
+    text: "Medical Data Updated",
+  },
+  create: {
+    isActive: false,
+    text: "Medical Data Created",
+  },
+});
 const medicalData = ref({
   isExist: false,
+  patient_id: props.patientId,
 });
 const inputFields = {
   admitting_diagnosis: {
@@ -69,14 +98,23 @@ const fetchMedicalData = async () => {
 };
 const handlePatientData = (response) => {
   medicalData.value = response;
-  medicalData.isExist = true;
+  medicalData.value.isExist = true;
 };
 
 const createMedicalDataItem = async () => {
   console.log("createMedicalDataItem");
+  const response = await createMedicalData(medicalData.value);
+  if (response) {
+    medicalData.value.isExist = true;
+    handleSnackBar("create");
+  }
 };
 const updateMedicalDataItem = async () => {
   console.log("updateMedicalDataItem");
+  //   const response = await updateMedicalData(props.patientId, medicalData.value);
+};
+const handleSnackBar = (type) => {
+  snackBars[type].isActive = true;
 };
 
 const handleButtonAction = async () => {
