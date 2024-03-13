@@ -121,7 +121,9 @@
             <v-window-item :value="5">
               <MedicalData :patientId="patientId"></MedicalData>
             </v-window-item>
-            <v-window-item :value="6"> Six </v-window-item>
+            <v-window-item :value="6">
+              <HealthAndMentalHealth :patientId="patientId"></HealthAndMentalHealth>
+            </v-window-item>
             <v-window-item :value="7"> Seven </v-window-item>
             <v-window-item :value="8"> Eight </v-window-item>
             <v-window-item :value="9"> Nine </v-window-item>
@@ -143,6 +145,7 @@ import mswdClassification from "@/components/assesment-tool/mswdClassification.v
 import personalData from "@/components/assesment-tool/personalData.vue";
 import monthlyExpenses from "@/components/assesment-tool/monthly-expenses.vue";
 import MedicalData from "@/components/assesment-tool/MedicalData.vue";
+import HealthAndMentalHealth from "@/components/assesment-tool/HealthAndMentalHealth.vue";
 
 const props = defineProps({
   user: Object,
