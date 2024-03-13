@@ -129,9 +129,19 @@
             <v-window-item :value="7">
               <Discrimination :patientId="patientId"></Discrimination>
             </v-window-item>
-            <v-window-item :value="8"> Eight </v-window-item>
-            <v-window-item :value="9"> Nine </v-window-item>
-            <v-window-item :value="10"> Ten </v-window-item>
+            <v-window-item :value="8">
+              <Safety :patientId="patientId"></Safety>
+            </v-window-item>
+            <v-window-item :value="9">
+              <AssesmentSocialFunctioning
+                :patientId="patientId"
+              ></AssesmentSocialFunctioning>
+            </v-window-item>
+            <v-window-item :value="10">
+              <ProblemsInEnvironment
+                :patientId="patientId"
+              ></ProblemsInEnvironment>
+            </v-window-item>
           </v-window>
         </v-card-text>
       </v-card>
@@ -151,6 +161,9 @@ import monthlyExpenses from "@/components/assesment-tool/monthly-expenses.vue";
 import MedicalData from "@/components/assesment-tool/MedicalData.vue";
 import HealthAndMentalHealth from "@/components/assesment-tool/HealthAndMentalHealth.vue";
 import Discrimination from "@/components/assesment-tool/Discrimination.vue";
+import Safety from "@/components/assesment-tool/Safety.vue";
+import AssesmentSocialFunctioning from "@/components/assesment-tool/AssesmentSocialFunctioning.vue";
+import ProblemsInEnvironment from "@/components/assesment-tool/ProblemsInEnvironment.vue";
 
 const props = defineProps({
   user: Object,

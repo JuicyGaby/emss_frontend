@@ -245,12 +245,10 @@ const createDiscriinationItem = async () => {
 };
 const updateDiscriminationItem = async () => {
   console.log("Update Discrimination");
-  // try {
-  //   await updateDiscrimination(discrimination.value);
-  //   snackBars.value.update.isActive = true;
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  const response = await updateDiscrimination(discrimination.value);
+  if (response) {
+    handleSnackBar("update");
+  }
 };
 
 const fetchDiscrimination = async () => {
@@ -258,11 +256,9 @@ const fetchDiscrimination = async () => {
   const response = await getDiscrimination(props.patientId);
   if (response) {
     console.log("response", response);
-    // handlePatientData(response);
-    discrimination.value = response;
-    discrimination.value.isExist = true;
+    handlePatientData(response);
   }
-//   isDataLoaded.value = true;
+  //   isDataLoaded.value = true;
 };
 
 const handleSnackBar = (type) => {
