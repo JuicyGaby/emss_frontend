@@ -61,13 +61,20 @@
           </v-table>
         </v-col>
       </v-row>
-      <v-btn color="secondary">{{healthAndMentalHealth.isExist ? 'Update Data' : 'Create Data'}}</v-btn>
+      <v-btn color="secondary">{{
+        healthAndMentalHealth.isExist ? "Update Data" : "Create Data"
+      }}</v-btn>
       <!-- {{ healthAndMentalHealth }} -->
     </v-container>
   </div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import {
+  getHealthAndMentalHealth,
+  createHealthAndMentalHealth,
+  updateHealthAndMentalHealth,
+} from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
 });
@@ -167,10 +174,10 @@ const inputFields = {
 };
 
 const createHealthAndMentalHealthItem = async () => {
-    console.log("createHealthAndMentalHealthItem");
+  console.log("createHealthAndMentalHealthItem");
 };
 const updateHealthAndMentalHealthItem = async () => {
-    console.log("updateHealthAndMentalHealthItem");
+  console.log("updateHealthAndMentalHealthItem");
 };
 
 const handleButtonAction = async () => {
@@ -180,6 +187,5 @@ const handleButtonAction = async () => {
     await createHealthAndMentalHealthItem();
   }
 };
-
 </script>
 <style lang=""></style>

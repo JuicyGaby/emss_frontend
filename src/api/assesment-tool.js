@@ -223,6 +223,39 @@ const updateMedicalData = async (body) => {
   return data;
 };
 
+// * health and mental health
+
+const getHealthAndMentalHealth = async (patient_id) => {
+  const API_URL = `http://localhost:3000/health-and-mental-health/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
+const createHealthAndMentalHealth = async (body) => {
+  const API_URL = "http://localhost:3000/health-and-mental-health";
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+const updateHealthAndMentalHealth = async (body) => {
+  const API_URL = "http://localhost:3000/health-and-mental-health";
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+
 export {
   // interview
   interview,
@@ -252,4 +285,8 @@ export {
   getMedicalData,
   createMedicalData,
   updateMedicalData,
+  // health and mental health
+  getHealthAndMentalHealth,
+  createHealthAndMentalHealth,
+  updateHealthAndMentalHealth,
 };
