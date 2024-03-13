@@ -113,14 +113,43 @@
       </v-row>
     </v-container>
     <!-- {{ monthlyExpenses }} -->
+    <v-snackbar
+      v-for="(bar, key) in snackBars"
+      :key="key"
+      color="green"
+      location="top"
+      :timeout="2500"
+      min-width="250px"
+      v-model="bar.isActive"
+    >
+      <div class="d-flex justify-center align-center ga-2">
+        <v-icon icon="mdi-check-bold"></v-icon>
+        <p class="text-subtitle-1">{{ bar.text }}</p>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 <script setup>
 import { ref, onMounted, watchEffect } from "vue";
-import { getMonthlyExpenses, createMonthlyExpenses } from "@/api/assesment-tool";
+import {
+  getMonthlyExpenses,
+  createMonthlyExpenses,
+  updateMonthlyExpenses,
+} from "@/api/assesment-tool";
 
 const props = defineProps({
   patientId: Number,
+});
+
+const snackBars = ref({
+  update: {
+    isActive: false,
+    text: ref("Successfully Updated Patient Data"),
+  },
+  create: {
+    isActive: false,
+    text: ref("Successfully Created Patient Data"),
+  },
 });
 
 const monthlyExpenses = ref({
@@ -241,31 +270,34 @@ const fetchMonthlyExpenses = async () => {
   }
   monthlyExpenses.value = response;
   monthlyExpenses.value.isExist = true;
+  // returns an object inside of the returned array data
   monthlyExpenses.value.patient_light_source = response.patient_light_source[0];
   monthlyExpenses.value.patient_fuel_source = response.patient_fuel_source[0];
   monthlyExpenses.value.patient_water_source = response.patient_water_source[0];
-  console.log(monthlyExpenses.value);
 };
 
 const handleAction = async () => {
   if (monthlyExpenses.value.isExist) {
-    await updateMonthlyExpenses();
+    await updateMonthlyExpensesData();
     return;
   }
   await createMonthlyExpensesData();
 };
 
 const createMonthlyExpensesData = async () => {
-    // console.log(monthlyExpenses.value);
-    monthlyExpenses.value.patient_id = props.patientId;
-    const response = await createMonthlyExpenses(monthlyExpenses.value);
-    if (response) {
-        monthlyExpenses.value.isExist = true;
-    }
+  // console.log(monthlyExpenses.value);
+  monthlyExpenses.value.patient_id = props.patientId;
+  const response = await createMonthlyExpenses(monthlyExpenses.value);
+  if (response) toggleUpdate("create");
 };
-
-const updateMonthlyExpenses = async () => {
-  console.log("Update Monthly Expenses");
+const updateMonthlyExpensesData = async () => {
+  console.log("Updating");
+  const response = await updateMonthlyExpenses(monthlyExpenses.value);
+  if (response) toggleUpdate("update");
+};
+const toggleUpdate = (type) => {
+  monthlyExpenses.value.isExist = true;
+  snackBars.value[type].isActive = true;
 };
 </script>
 <style lang=""></style>
