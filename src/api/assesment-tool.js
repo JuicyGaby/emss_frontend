@@ -288,6 +288,39 @@ const updateDiscrimination = async (body) => {
   return data;
 };
 
+// * safety
+
+const getSafety = async (patient_id) => {
+  const API_URL = `http://localhost:3000/safety/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
+const createSafety = async (body) => {
+  const API_URL = "http://localhost:3000/safety";
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+const updateSafety = async (body) => {
+  const API_URL = "http://localhost:3000/safety";
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+
 export {
   // interview
   interview,
@@ -325,4 +358,8 @@ export {
   getDiscrimination,
   createDiscrimination,
   updateDiscrimination,
+  // safety
+  getSafety,
+  createSafety,
+  updateSafety,
 };
