@@ -96,7 +96,6 @@ onMounted(async () => {
   await fetchDiscrimination();
 });
 
-const isDataLoaded = ref(false);
 
 const discrimination = ref({
   isExist: false,
@@ -160,11 +159,11 @@ const discrimination = ref({
 const snackBars = ref({
   update: {
     isActive: false,
-    text: "Health and Mental Health Updated",
+    text: "Discrimination Updated",
   },
   create: {
     isActive: false,
-    text: "Health and Mental Health Created",
+    text: "Discrimination Health Created",
   },
 });
 const tableheaders = [
@@ -258,7 +257,6 @@ const fetchDiscrimination = async () => {
     console.log("response", response);
     handlePatientData(response);
   }
-  //   isDataLoaded.value = true;
 };
 
 const handleSnackBar = (type) => {
