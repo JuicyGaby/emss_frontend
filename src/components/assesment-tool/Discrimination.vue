@@ -251,10 +251,10 @@ const updateDiscriminationItem = async () => {
 };
 
 const fetchDiscrimination = async () => {
-  console.log("Fetch Discrimination");
+  // console.log("Fetch Discrimination");
   const response = await getDiscrimination(props.patientId);
   if (response) {
-    console.log("response", response);
+    // console.log("response", response);
     handlePatientData(response);
   }
 };

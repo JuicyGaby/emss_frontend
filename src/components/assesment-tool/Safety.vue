@@ -61,13 +61,32 @@
         safetyData.isExist ? "Update" : "Create"
       }}</v-btn>
     </v-container>
+    <v-snackbar
+      v-for="(bar, key) in snackBars"
+      :key="key"
+      color="green"
+      location="top"
+      :timeout="2500"
+      min-width="250px"
+      v-model="bar.isActive"
+    >
+      <div class="d-flex justify-center align-center ga-2">
+        <v-icon icon="mdi-check-bold"></v-icon>
+        <p class="text-subtitle-1">{{ bar.text }}</p>
+      </div>
+    </v-snackbar>
     {{ safetyData }}
   </div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import { getSafety, createSafety, updateSafety } from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
+});
+
+onMounted(async () => {
+  await fetchSafetyData();
 });
 
 const safetyData = ref({
@@ -169,14 +188,26 @@ const particulars = {
 };
 
 const createSafetyItem = async () => {
-  console.log("create safety item");
+  const response = await createSafety(safetyData.value);
+  if (response) {
+    safetyData.value.isExist = true;
+    handleSnackBar("create");
+  }
 };
-
 const updateSafetyItem = async () => {
   console.log("update safety item");
+  const response = await updateSafety(safetyData.value);
+  if (response) {
+    handleSnackBar("update");
+  }
 };
-
-const fetchSafetyData = async () => {};
+const fetchSafetyData = async () => {
+  const response = await getSafety(props.patientId);
+  if (response) {
+    console.log("response", response);
+    handlePatientData(response);
+  }
+};
 
 const handleSnackBar = (type) => {
   snackBars.value[type].isActive = true;
