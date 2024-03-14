@@ -321,6 +321,38 @@ const updateSafety = async (body) => {
   return data;
 };
 
+// social functioning
+const getSocialFunctioning = async (patient_id) => {
+  const API_URL = `http://localhost:3000/social-functioning/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
+const createSocialFunctioning = async (body) => {
+  const API_URL = "http://localhost:3000/social-functioning";
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+const updateSocialFunctioning = async (body) => {
+  const API_URL = "http://localhost:3000/social-functioning";
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+
 export {
   // interview
   interview,
@@ -362,4 +394,8 @@ export {
   getSafety,
   createSafety,
   updateSafety,
+  // social functioning
+  getSocialFunctioning,
+  createSocialFunctioning,
+  updateSocialFunctioning,
 };

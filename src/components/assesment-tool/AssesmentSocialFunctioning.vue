@@ -243,6 +243,9 @@
           </tr>
         </tbody>
       </v-table>
+      <v-btn color="secondary" @click="handleButtonAction">{{
+        socialFunctioning.isExist ? "Update Data" : "Create Data"
+      }}</v-btn>
     </v-container>
     <v-snackbar
       v-for="(bar, key) in snackBars"
@@ -263,6 +266,11 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import {
+  getSocialFunctioning,
+  createSocialFunctioning,
+  updateSocialFunctioning,
+} from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
 });
@@ -404,8 +412,46 @@ const socialFunctioning = ref({
   },
 });
 
-onMounted(async () => {});
+onMounted(async () => {
+  await fetchSocialFunctioningItem();
+});
 
+const createSocialFunctioningItem = async () => {
+  const response = await createSocialFunctioning(socialFunctioning.value);
+  console.log("response", response);
+  if (response) {
+    socialFunctioning.value.isExist = true;
+    handleSnackBar("create");
+  }
+};
+const updateSocialFunctioningItem = async () => {
+  const response = await updateSocialFunctioning(socialFunctioning.value);
+  if (response) {
+    handleSnackBar("update");
+  }
+};
+const fetchSocialFunctioningItem = async () => {
+  const response = await getSocialFunctioning(props.patientId);
+  if (response) {
+    console.log("response", response);
+    handlePatientData(response);
+  }
+};
+
+const handleSnackBar = (type) => {
+  snackBars.value[type].isActive = true;
+};
+const handlePatientData = (response) => {
+  socialFunctioning.value = response;
+  socialFunctioning.value.isExist = true;
+};
+const handleButtonAction = async () => {
+  if (socialFunctioning.value.isExist) {
+    await updateSocialFunctioningItem();
+    return;
+  }
+  await createSocialFunctioningItem();
+};
 const snackBars = ref({
   update: {
     isActive: false,
@@ -459,7 +505,6 @@ const indexItems = {
     { text: "No Coping Skills", value: 6 },
   ],
 };
-
 const particulars = {
   familialRoles: {
     parent: {
