@@ -24,46 +24,28 @@
             <v-divider class="mb-5"></v-divider>
             <!-- persnal data -->
             <v-row>
-              <!-- col1 -->
-              <v-col cols="4">
+              <v-col cols="12" class="d-flex ga-2 flex-wrap">
                 <v-text-field
-                  v-for="(value, key) in inputFields.col1"
+                  v-for="(value, key) in inputFields.personalData.textField"
                   :key="key"
                   :label="value.label"
                   :type="value.type"
-                  :rules="value.rules"
-                  v-model="patientData[key]"
-                  density="compact"
                   variant="outlined"
-                  style="min-width: 300px"
-                  class=""
+                  style="width: 300px"
+                  density="compact"
+                  v-model="patientData[key]"
+                  :rules="value.rules"
                 ></v-text-field>
-              </v-col>
-              <!-- col2 -->
-              <v-col cols="4">
                 <v-combobox
-                  v-for="(value, key) in inputFields.col2"
+                  v-for="(value, key) in inputFields.personalData.comboField"
                   :key="key"
                   :label="value.label"
                   :items="value.items"
-                  density="compact"
                   variant="outlined"
-                  v-model="patientData[key]"
-                  style="min-width: 300px"
-                >
-                </v-combobox>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  v-for="(value, key) in inputFields.col3"
-                  :key="key"
-                  :label="value.label"
-                  :type="value.type"
-                  v-model="patientData[key]"
+                  style="width: 300px"
                   density="compact"
-                  variant="outlined"
-                  style="min-width: 300px"
-                ></v-text-field>
+                  v-model="patientData[key]"
+                ></v-combobox>
               </v-col>
             </v-row>
             <!-- remarks -->
@@ -180,7 +162,12 @@
                   flat
                   size="small"
                 ></v-btn>
-                <v-btn icon="mdi-delete" @click="toggleDeleteFamilyDialog(item)" flat size="small"></v-btn>
+                <v-btn
+                  icon="mdi-delete"
+                  @click="toggleDeleteFamilyDialog(item)"
+                  flat
+                  size="small"
+                ></v-btn>
               </div>
             </template>
           </v-data-table>
@@ -261,20 +248,20 @@
     persistent
     max-width="600px"
   >
-      <v-card>
-        <v-card-title primary-title>
-          <h3>Delete family member:</h3>
-        </v-card-title>
-        <v-card-text>
-          <p>Are you sure you want to delete this family member?</p>
-        </v-card-text>
-        <v-card-actions class="d-flex justify-end">
-          <v-btn color="error" @click="dialogs.deleteFamily = false"
-            >Cancel</v-btn
-          >
-          <v-btn color="primary" @click="deleteFamilyMemberData">Delete</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-card>
+      <v-card-title primary-title>
+        <h3>Delete family member:</h3>
+      </v-card-title>
+      <v-card-text>
+        <p>Are you sure you want to delete this family member?</p>
+      </v-card-text>
+      <v-card-actions class="d-flex justify-end">
+        <v-btn color="error" @click="dialogs.deleteFamily = false"
+          >Cancel</v-btn
+        >
+        <v-btn color="primary" @click="deleteFamilyMemberData">Delete</v-btn>
+      </v-card-actions>
+    </v-card>
   </v-dialog>
 </template>
 <script setup>
@@ -331,7 +318,6 @@ const tabHeaders = {
     title: "Family Composition",
   },
 };
-
 const updateBars = ref({
   personalData: {
     isActive: false,
@@ -354,117 +340,115 @@ const updateBars = ref({
     text: "Family Member Deleted",
   },
 });
-
 const dialogs = ref({
   addFamily: false,
   editFamily: false,
   deleteFamily: false,
 });
-
 const inputFields = ref({
-  col1: {
-    first_name: {
-      label: "First Name",
-      type: "text",
-      rules: inputRules.first_name,
+  personalData: {
+    textField: {
+      first_name: {
+        label: "First Name",
+        type: "text",
+        rules: inputRules.first_name,
+      },
+      middle_name: {
+        label: "Middle Name",
+        type: "text",
+      },
+      last_name: {
+        label: "Last Name",
+        type: "text",
+        rules: inputRules.last_name,
+      },
+      age: {
+        label: "Age",
+        type: "text",
+      },
+      birth_date: {
+        label: "Birth Date",
+        type: "date",
+      },
+      religion: {
+        label: "Religion",
+        type: "text",
+      },
+      contact_number: {
+        label: "Contact Number",
+        type: "text",
+      },
+      occupation: {
+        label: "Occupation",
+        type: "text",
+      },
+      monthly_income: {
+        label: "Monthly Income",
+        type: "text",
+      },
+      ph_membership_number: {
+        label: "PH Membership Number",
+        type: "text",
+      },
+      ph_membership_type: {
+        label: "PH Membership",
+        type: "text",
+      },
     },
-    middle_name: {
-      label: "Middle Name",
-      type: "text",
-    },
-    last_name: {
-      label: "Last Name",
-      type: "text",
-      rules: inputRules.last_name,
-    },
-    age: {
-      label: "Age",
-      type: "text",
-    },
-    birth_date: {
-      label: "Birth Date",
-      type: "date",
-    },
-    religion: {
-      label: "Religion",
-      type: "text",
-    },
-    contact_number: {
-      label: "Contact Number",
-      type: "text",
-    },
-  },
-  col2: {
-    gender: {
-      label: "Gender Identity",
-      items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
-    },
-    sex: {
-      label: "Sex",
-      items: ["Male", "Female"],
-    },
-    nationality: {
-      label: "Nationality",
-      items: ["Filipino", "Other"],
-    },
-    civil_status: {
-      label: "Civil Status",
-      items: [
-        "Single",
-        "Married",
-        "Widowed",
-        "Divorced",
-        "Annulled",
-        "Common Law OS",
-        "Common Law SS",
-        "Separated Legally",
-        "Separated De Facto",
-      ],
-    },
-    living_arrangement: {
-      label: "Living Arrangement",
-      items: [
-        "owned",
-        "shared",
-        "rent",
-        "homeless",
-        "institutionalized",
-        "others",
-      ],
-    },
-    highest_education_level: {
-      label: "Education",
-      items: [
-        "Early Childhood Education",
-        "Primary",
-        "Secondary",
-        "Tertiary",
-        "Vocational",
-        "Post Graduate",
-        "No Educational Attainment",
-      ],
-    },
-    education_status: {
-      label: "Education Status",
-      items: ["OnGoing", "Graduated", "Stopped", "Others"],
-    },
-  },
-  col3: {
-    occupation: {
-      label: "Occupation",
-      type: "text",
-    },
-    monthly_income: {
-      label: "Monthly Income",
-      type: "text",
-    },
-    ph_membership_number: {
-      label: "PH Membership Number",
-      type: "text",
-    },
-    ph_membership_type: {
-      label: "PH Membership",
-      type: "text",
+    comboField: {
+      gender: {
+        label: "Gender Identity",
+        items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
+      },
+      sex: {
+        label: "Sex",
+        items: ["Male", "Female"],
+      },
+      nationality: {
+        label: "Nationality",
+        items: ["Filipino", "Other"],
+      },
+      civil_status: {
+        label: "Civil Status",
+        items: [
+          "Single",
+          "Married",
+          "Widowed",
+          "Divorced",
+          "Annulled",
+          "Common Law OS",
+          "Common Law SS",
+          "Separated Legally",
+          "Separated De Facto",
+        ],
+      },
+      living_arrangement: {
+        label: "Living Arrangement",
+        items: [
+          "owned",
+          "shared",
+          "rent",
+          "homeless",
+          "institutionalized",
+          "others",
+        ],
+      },
+      highest_education_level: {
+        label: "Education",
+        items: [
+          "Early Childhood Education",
+          "Primary",
+          "Secondary",
+          "Tertiary",
+          "Vocational",
+          "Post Graduate",
+          "No Educational Attainment",
+        ],
+      },
+      education_status: {
+        label: "Education Status",
+        items: ["OnGoing", "Graduated", "Stopped", "Others"],
+      },
     },
   },
   familyComposition: {
@@ -585,7 +569,6 @@ const toggleEditFamilyDialog = (familyMember) => {
 const toggleDeleteFamilyDialog = (familyMember) => {
   toEditFamilyMember.value = familyMember;
   dialogs.value.deleteFamily = true;
-
 };
 
 // * create section
@@ -650,7 +633,9 @@ const deleteFamilyMemberData = async () => {
   // remove the item from the  family composition object using the toEditFamilyMember.id
   const response = await deleteFamilyMember(familyMemberId);
   if (response) {
-    familyComposition.value = familyComposition.value.filter(member => member.id !== familyMemberId);
+    familyComposition.value = familyComposition.value.filter(
+      (member) => member.id !== familyMemberId
+    );
     updateBars.value.deleteFamilyMember.isActive = true;
     dialogs.value.deleteFamily = false;
   }
