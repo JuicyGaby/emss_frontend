@@ -5,28 +5,16 @@
         <h2>Initial Interview</h2>
         <v-divider class="mb-5"></v-divider>
         <v-row v-if="interviewData">
-          <v-col cols="6">
+          <v-col cols="12" class="d-flex ga-2 flex-wrap">
             <v-text-field
-              v-for="(field, key) in inputField1"
+              v-for="(field, key) in inputField"
               :key="key"
               :label="field.label"
               :type="field.type"
-              v-model="interviewData[key]"
               variant="outlined"
-              style="min-width: 300px"
+              style="width: 300px"
               density="compact"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field
-              v-for="(field, key) in inputField2"
-              :key="key"
-              :label="field.label"
-              :type="field.type"
               v-model="interviewData[key]"
-              variant="outlined"
-              style="min-width: 300px"
-              density="compact"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -90,7 +78,7 @@ const inputRules = {
       "Remarks must be less than 255 characters",
   ],
 };
-const inputField1 = ref({
+const inputField = ref({
   interview_date: {
     label: "Interview Date",
     type: "text",
@@ -122,49 +110,36 @@ const inputField1 = ref({
   referring_party: {
     label: "Referring Party",
     type: "text",
-    value: "",
   },
-});
-const inputField2 = {
   source_of_referral: {
     label: "Source of Referral",
     type: "text",
-    value: "",
   },
-
   address: {
     label: "Referal Address",
     type: "text",
-    value: "",
   },
   contact_number: {
     label: "Referal Contact Number",
     type: "text",
-    value: "",
   },
   informant: {
     label: "Informant",
     type: "text",
-    value: "",
   },
-
   relationship_to_patient: {
     label: "Informant relationship to Patient",
     type: "text",
-    value: "",
   },
   informant_contact_number: {
     label: "Informant Contact Number",
     type: "text",
-    value: "",
   },
   informant_address: {
     label: "Informant Address",
     type: "text",
-    value: "",
   },
-};
-
+});
 onMounted(async () => {
   await getInterviewData();
 });
