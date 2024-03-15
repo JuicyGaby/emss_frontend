@@ -270,7 +270,7 @@
             </v-col>
           </v-row>
         </v-container>
-        {{ problemsInEnvironment }}
+        <!-- {{ problemsInEnvironment }} -->
       </v-window-item>
     </v-window>
   </div>
