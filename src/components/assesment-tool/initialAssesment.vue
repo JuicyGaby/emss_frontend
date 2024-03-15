@@ -160,8 +160,8 @@ const personalDataDisplay = {
   educationStatus: "Education Status: ",
   occupation: "Occupation: ",
   monthly_income: "Monthly Income: ",
-  phMembershipNumber: "PH Membership Number: ",
-  phMembership: "PH Membership: ",
+  ph_membership_number: "PH Membership Number: ",
+  ph_membership_type: "PH Membership: ",
 };
 
 const toggleCloseBtn = () => {
