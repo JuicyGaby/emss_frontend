@@ -35,22 +35,6 @@
         </v-col>
       </v-row>
     </div>
-    <!-- 3rd page -->
-    <div class="input-field" v-show="page == 3">
-      <v-row>
-        <v-col class="d-flex flex-wrap ga-2" cols="12">
-          <v-text-field
-            v-for="(field, key) in inputFields.step3"
-            :key="key"
-            :label="field.label"
-            :type="field.type"
-            variant="outlined"
-            style="width: 350px"
-            v-model="interviewInputs[key]"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-    </div>
     {{interviewInputs}}
   </v-container>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
@@ -66,7 +50,7 @@ const props = defineProps({
 
 const emit = defineEmits(["interviewData"]);
 
-const totalPages = ref(3);
+const totalPages = ref(2);
 const page = ref(1);
 
 let interviewInputs = ref({});
@@ -126,8 +110,6 @@ const inputFields = {
       label: "Contact Number",
       type: "number",
     },
-  },
-  step3: {
     informant: {
       label: "Informant",
       type: "text",

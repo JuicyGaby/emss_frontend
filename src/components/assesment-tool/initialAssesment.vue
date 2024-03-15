@@ -36,7 +36,9 @@
               <tbody>
                 <tr v-for="(value, key) in interviewDisplay" :key="key">
                   <td>{{ value }}</td>
-                  <td class="font-weight-bold">{{ dataReceived.interview[key] }}</td>
+                  <td class="font-weight-bold">
+                    {{ dataReceived.interview[key] }}
+                  </td>
                 </tr>
               </tbody>
             </v-table>
@@ -56,7 +58,9 @@
               <tbody>
                 <tr v-for="(value, key) in personalDataDisplay" :key="key">
                   <td>{{ value }}</td>
-                  <td class="font-weight-bold">{{ dataReceived.demographicData[key] }}</td>
+                  <td class="font-weight-bold">
+                    {{ dataReceived.demographicData[key] }}
+                  </td>
                 </tr>
               </tbody>
             </v-table>
@@ -185,7 +189,6 @@ const createPatientData = async () => {
     addPatient();
   }
 };
-
 const handleError = () => {
   dialogs.value.error = true;
 };
