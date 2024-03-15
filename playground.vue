@@ -1,191 +1,580 @@
-<template lang="" class="">
-  <div class="display rb sign-in-container d-flex align-center justify-end">
-    <div
-      class="login-box d-flex flex-column justify-center align-center elevation-3"
-    >
-      <div v-if="toggleAlert" class="w-100">
-        <v-alert
-          variant="tonal"
-          :type="isError ? 'error' : 'success'"
-          :text="
-            isError
-              ? 'Wrong credentials. Please try again'
-              : 'Welcome back! Your account was accessed successfully.'
-          "
-        ></v-alert>
-      </div>
-      <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
-        <h2 class="mb-10">Malasakit System Name</h2>
-        <div class="input-field w-100">
-          <v-form ref="formLogin" class="d-flex flex-column ga-3">
-            <v-text-field
-              v-model="userInput.username.value"
-              name="username"
-              label="Username"
-              variant="outlined"
-              :rules="inputRules.username"
-              clearable
-              @keyup.enter="signIn"
-            ></v-text-field>
-            <v-text-field
-              v-model="userInput.password.value"
-              :rules="inputRules.password"
-              name="password"
-              label="Password"
-              :type="showPassword ? 'text' : 'password'"
-              variant="outlined"
-              hint="Please remember your password"
-              :append-inner-icon="
-                showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'
-              "
-              @click:append-inner="showPassword = !showPassword"
-              @keyup.enter="signIn"
-            ></v-text-field>
-            <v-hover>
-              <template v-slot:default="{ isHovering, props }">
-                <v-btn
-                  class="elevation-3"
-                  append-icon="mdi-login"
-                  @keyup.enter="signIn"
-                  @click="signIn()"
-                  v-bind="props"
-                  size="x-large"
-                  :color="isHovering ? 'primary' : 'secondary'"
-                  color="w-100 mt-2"
-                  >Sign in</v-btn
-                >
-              </template>
-            </v-hover>
-          </v-form>
-        </div>
-      </div>
+<template lang="">
+  <v-container class="" style="width: 900px">
+    <!-- 1st page -->
+    <div class="pages" v-show="page == 1">
+      <v-row>
+        <v-col cols="12" class="d-flex ga-2 flex-wrap">
+          <v-text-field
+            v-for="(field, key) in inputFields.step1.textField"
+            :key="key"
+            :label="field.label"
+            :type="field.type"
+            variant="outlined"
+            style="width: 300px"
+            density="comfortable"
+            :hint="field.hint"
+          ></v-text-field>
+          <v-select
+            v-for="(field, key) in inputFields.step1.selectField"
+            :key="key"
+            :label="field.label"
+            :items="field.items"
+            variant="outlined"
+            style="width: 300px"
+            density="comfortable"
+          ></v-select>
+        </v-col>
+      </v-row>
     </div>
-  </div>
+    <!-- 2nd page -->
+    <div class="pages" v-show="page == 2">
+      <v-card-title sub-title> Permanent Address </v-card-title>
+      <v-autocomplete
+        label="Region"
+        variant="outlined"
+        :items="options.regions"
+        item-title="regDesc"
+        item-value="regCode"
+        v-model="personalDataInputs.address.permanent.region"
+      ></v-autocomplete>
+      <v-autocomplete
+        label="Province"
+        variant="outlined"
+        :items="options.provinces"
+        item-title="provDesc"
+        item-value="provCode"
+        v-model="personalDataInputs.address.permanent.province"
+      >
+      </v-autocomplete>
+      <v-autocomplete
+        label="Municipality"
+        variant="outlined"
+        :items="options.municipality"
+        item-title="citymunDesc"
+        item-value="citymunCode"
+        v-model="personalDataInputs.address.permanent.municipality"
+      >
+      </v-autocomplete>
+      <v-text-field
+        label="District"
+        variant="outlined"
+        v-model="personalDataInputs.address.permanent.district"
+      ></v-text-field>
+      <v-autocomplete
+        label="Baranggay"
+        variant="outlined"
+        :items="options.barangay"
+        item-title="brgyDesc"
+        item-value="brgyCode"
+        v-model="personalDataInputs.address.permanent.baranggay"
+      >
+      </v-autocomplete>
+      <v-text-field
+        label="Purok"
+        variant="outlined"
+        v-model="personalDataInputs.address.permanent.purok"
+      ></v-text-field>
+    </div>
+    <!-- 3rd page -->
+    <div class="pages" v-show="page == 3">
+      <v-card-title sub-title> Temporary Address </v-card-title>
+      <v-autocomplete
+        label="Region"
+        variant="outlined"
+        :items="options.regions"
+        item-title="regDesc"
+        item-value="regCode"
+        v-model="personalDataInputs.address.temporary.region"
+      ></v-autocomplete>
+      <v-autocomplete
+        label="Province"
+        variant="outlined"
+        :items="options.provinces"
+        item-title="provDesc"
+        item-value="provCode"
+        v-model="personalDataInputs.address.temporary.province"
+      >
+      </v-autocomplete>
+      <v-autocomplete
+        label="Municipality"
+        variant="outlined"
+        :items="options.municipality"
+        item-title="citymunDesc"
+        item-value="citymunCode"
+        v-model="personalDataInputs.address.temporary.municipality"
+      >
+      </v-autocomplete>
+      <v-text-field
+        label="District"
+        variant="outlined"
+        v-model="personalDataInputs.address.temporary.district"
+      ></v-text-field>
+      <v-autocomplete
+        label="Baranggay"
+        variant="outlined"
+        :items="options.barangay"
+        item-title="brgyDesc"
+        item-value="brgyCode"
+        v-model="personalDataInputs.address.temporary.baranggay"
+      >
+      </v-autocomplete>
+      <v-text-field
+        label="Purok"
+        variant="outlined"
+        v-model="personalDataInputs.address.temporary.purok"
+      ></v-text-field>
+    </div>
+    <!-- 4th page -->
+    <div class="pages" v-show="page == 4">
+      <v-row>
+        <v-col cols="12" class="d-flex ga-2 flex-wrap">
+          <v-select
+            v-for="(field, key) in inputFields.step3.selectField"
+            :key="key"
+            :label="field.label"
+            :items="field.options"
+            variant="outlined"
+            style="width: 300px"
+            density="comfortable"
+          ></v-select>
+          <v-text-field
+            v-for="(field, key) in inputFields.step3.textField"
+            :key="key"
+            :label="field.label"
+            :type="field.type"
+            variant="outlined"
+            style="width: 300px"
+            density="comfortable"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </div>
+  </v-container>
+  <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
 <script setup>
-import { ref, onMounted, defineProps } from "vue";
-import { useRouter } from "vue-router";
-import { userLogin, employeeRights } from "@/api/authentication";
+import { ref, onMounted, watch, watchEffect } from "vue";
+import {
+  getRegions,
+  getProvince,
+  getMunicipality,
+  getBarangay,
+} from "@/api/assesment-tool";
 
-const { authentication } = defineProps(["authentication"]);
-const router = useRouter();
-const userInput = {
-  username: ref(""),
-  password: ref(""),
-};
+const emit = defineEmits(["personalData"]);
 
-const inputFields = ref({
-  username: {
-    label: "Usename",
+const totalPages = ref(4);
+const page = ref(1);
+const regions = ref({});
+
+onMounted(async () => {
+  options.value.regions = await getRegions();
+});
+
+// create a watch for personalDataInputs.address.permanent.region if theres a change
+
+const personalDataInputs = ref({
+  last_name: null,
+  first_name: null,
+  middle_name: "",
+  age: "",
+  contact_number: "",
+  birth_date: "",
+  place_of_birth: "",
+  sex: null,
+  gender: null,
+  religion: "",
+  nationality: "",
+  civil_status: null,
+  living_arrangement: null,
+  education: null,
+  educationStatus: null,
+  occupation: "",
+  monthly_income: "",
+  ph_membership_number: "",
+  ph_membership_type: null,
+  address: {
+    permanent: {
+      region: "",
+      province: "",
+      district: "",
+      municipality: "",
+      baranggay: "",
+      purok: "",
+    },
+    temporary: {
+      region: "",
+      province: "",
+      district: "",
+      municipality: "",
+      baranggay: "",
+      purok: "",
+    },
   },
-  password: {
-    label: "Password",
-    icon: "mdi-eye",
-  },
+});
+
+watchEffect(() => {
+  const personalDataInputsCopy = Object.keys(personalDataInputs.value).reduce(
+    (acc, key) => {
+      acc[key] = personalDataInputs.value[key];
+      return acc;
+    },
+    {}
+  );
+  emit("personalData", personalDataInputsCopy);
 });
 
 const inputRules = {
-  username: [
-    (v) => !!v || "Username is required",
-    (v) =>
-      (v && v.length >= 3 && v.length <= 20) ||
-      "Username must be between 3 and 20 characters",
-  ],
-  password: [(v) => !!v || "Password is required"],
+  required: [(v) => !!v || "required"],
 };
 
-const formLogin = ref(null);
-const showPassword = ref(false);
-const toggleAlert = ref(false);
-const isError = ref(false);
+const educationOptions = [
+  "Early Childhood Education",
+  "Primary",
+  "Secondary",
+  "Tertiary",
+  "Vocational",
+  "Post Graduate",
+  "No Educational Attainment",
+];
 
-onMounted(() => {
-  checkUserSession();
+const civilStatusOptions = [
+  "Single",
+  "Married",
+  "Widowed",
+  "Divorced",
+  "Annulled",
+  "Common Law OS",
+  "Common Law SS",
+  "Separated Legally",
+  "Separated De Facto",
+];
+
+const livingArrangementOptions = [
+  "owned",
+  "shared",
+  "rent",
+  "homeless",
+  "institutionalized",
+  "others",
+];
+
+const genderOptions = ["Masculine", "Feminine", "LGBTQIA+", "Other"];
+
+const inputFields = {
+  step1: {
+    textField: {
+      last_name: {
+        label: "Last Name",
+        type: "text",
+      },
+      first_name: {
+        label: "First Name",
+        type: "text",
+      },
+      middle_name: {
+        label: "Middle Name",
+        type: "text",
+      },
+      age: {
+        label: "Age",
+        type: "number",
+      },
+      contact_number: {
+        label: "Contact Number",
+        type: "number",
+      },
+      birth_date: {
+        label: "Date of Birth",
+        type: "date",
+      },
+      place_of_birth: {
+        label: "Place of Birth",
+        type: "text",
+      },
+      religion: {
+        label: "Religion",
+        type: "text",
+      },
+      nationality: {
+        label: "Nationality",
+        type: "text",
+      },
+      preferred_name: {
+        label: "Preferred Name",
+        type: "text",
+        hint: "For members of the LGBTQIA+ Community",
+      },
+    },
+    selectField: {
+      sex: {
+        label: "Sex",
+        items: ["Male", "Female"],
+      },
+      gender: {
+        label: "Gender Identity",
+        items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
+      },
+    },
+  },
+  step2: {
+    address: {
+      permanent: {
+        label: "Permanent Address",
+        type: "text",
+        data: ref({
+          region: "",
+          Province: "",
+          District: "",
+          Municipality: "",
+          Baranggay: "",
+          Purok: "",
+        }),
+      },
+      temporary: {
+        label: "Temporary Address",
+        type: "text",
+        data: ref({
+          region: "",
+          Province: "",
+          District: "",
+          Municipality: "",
+          Baranggay: "",
+          Purok: "",
+        }),
+      },
+    },
+  },
+  step3: {
+    selectField: {
+      civil_status: {
+        label: "Civil Status",
+        options: [
+          "Single",
+          "Married",
+          "Widowed",
+          "Divorced",
+          "Annulled",
+          "Common Law OS",
+          "Common Law SS",
+          "Separated Legally",
+          "Separated De Facto",
+        ],
+      },
+      living_arrangement: {
+        label: "Living Arrangement",
+        options: [
+          "owned",
+          "shared",
+          "rent",
+          "homeless",
+          "institutionalized",
+          "others",
+        ],
+      },
+      education: {
+        label: "Education",
+        options: [
+          "Early Childhood Education",
+          "Primary",
+          "Secondary",
+          "Tertiary",
+          "Vocational",
+          "Post Graduate",
+          "No Educational Attainment",
+        ],
+      },
+      educationStatus: {
+        label: "Education Status",
+        options: ["Level", "Graduated", "Ongoing"],
+      },
+    },
+    textField: {
+      occupation: {
+        label: "Occupation",
+        type: "text",
+      },
+      monthly_income: {
+        label: "Monthly Income",
+        type: "number",
+      },
+      ph_membership_number: {
+        label: "PhilHealth Membership Number",
+        type: "text",
+      },
+      ph_membership_type: {
+        label: "PhilHealth Membership",
+        options: ["Direct Contributor", "Indirect Contributor"],
+      },
+    },
+  },
+};
+
+const step1 = {
+  firstRow: {
+    last_name: {
+      label: "Last Name",
+      type: "text",
+      rules: inputRules.required,
+    },
+    first_name: {
+      label: "First Name",
+      type: "text",
+      rules: inputRules.required,
+    },
+    middle_name: {
+      label: "Middle Name",
+      type: "text",
+    },
+  },
+  secondRow: {
+    age: {
+      label: "Age",
+      type: "number",
+    },
+    contact_number: {
+      label: "Contact Number",
+      type: "number",
+    },
+  },
+  thirdRow: {
+    birth_date: {
+      label: "Date of Birth",
+      type: "date",
+    },
+    place_of_birth: {
+      label: "Place of Birth",
+      type: "text",
+    },
+  },
+  fourthRow: {
+    sex: {
+      label: "Sex",
+      options: ["Male", "Female"],
+    },
+    gender: {
+      label: "Gender Identity",
+      options: genderOptions,
+    },
+  },
+  fifthRow: {
+    religion: {
+      label: "Religion",
+      type: "text",
+    },
+    nationality: {
+      label: "Nationality",
+      type: "text",
+    },
+  },
+};
+const step2 = {
+  address: {
+    permanent: {
+      label: "Permanent Address",
+      type: "text",
+      data: ref({
+        region: "",
+        Province: "",
+        District: "",
+        Municipality: "",
+        Baranggay: "",
+        Purok: "",
+      }),
+    },
+    temporary: {
+      label: "Temporary Address",
+      type: "text",
+      data: ref({
+        region: "",
+        Province: "",
+        District: "",
+        Municipality: "",
+        Baranggay: "",
+        Purok: "",
+      }),
+    },
+  },
+};
+const step3 = {
+  firstRow: {
+    civil_status: {
+      label: "Civil Status",
+      options: civilStatusOptions,
+    },
+    living_arrangement: {
+      label: "Living Arrangement",
+      options: livingArrangementOptions,
+    },
+  },
+  secondRow: {
+    education: {
+      label: "Education",
+      options: educationOptions,
+    },
+    educationStatus: {
+      label: "Education Status",
+      options: [
+        { text: "Level", value: "Level" },
+        { text: "Graduated", value: "Graduated" },
+        { text: "Ongoing", value: "Ongoing" },
+      ],
+    },
+  },
+  thirdRow: {
+    occupation: {
+      label: "Occupation",
+      type: "text",
+    },
+    monthly_income: {
+      label: "Monthly Income",
+      type: "number",
+    },
+  },
+  fourthRow: {
+    ph_membership_number: {
+      label: "PhilHealth Membership Number",
+      type: "text",
+    },
+    ph_membership_type: {
+      label: "PhilHealth Membership",
+      options: [
+        { text: "Direct Contributor", value: "Direct Contributor" },
+        { text: "Indirect Contributor", value: "Indirect Contributor" },
+      ],
+    },
+  },
+};
+
+const watchAddressChange = (addressType, key, apiCall, optionKey) => {
+  watch(
+    () => personalDataInputs.value.address[addressType][key],
+    async (newVal) => {
+      options.value[optionKey] = await apiCall(newVal);
+    }
+  );
+};
+watchAddressChange("permanent", "region", getProvince, "provinces");
+watchAddressChange("permanent", "province", getMunicipality, "municipality");
+watchAddressChange("permanent", "municipality", getBarangay, "barangay");
+watchAddressChange("temporary", "region", getProvince, "provinces");
+watchAddressChange("temporary", "province", getMunicipality, "municipality");
+watchAddressChange("temporary", "municipality", getBarangay, "barangay");
+
+const options = ref({
+  regions: [],
+  provinces: [],
+  municipality: [],
+  barangay: [],
+  purok: [],
 });
-// * input rules
 
-const signIn = async () => {
-  await validateForm();
-  const body = {
-    username: userInput.username.value,
-    password: userInput.password.value,
-  };
-  const response = await userLogin(body);
-  validateUserData(response);
-};
-const validateUserData = async (data) => {
-  handleAlert(data);
-  const rights = await checkUserAccessRights(data.user.id);
-  handleAuthentication(data, rights);
-};
-
-const handleAlert = (data) => {
-  if (data.error) {
-    toggleAlert.value = true;
-    isError.value = true;
-    return;
-  }
-  toggleAlert.value = true;
-  isError.value = false;
-};
-
-const handleAuthentication = (data, rights) => {
-  authentication.setUserToken(data.user.login_token);
-  authentication.toggleLogIn(true);
-  console.log(rights);
-  authentication.setAccessRights(rights);
-  router.push("/");
-};
-
-const validateForm = async () => {
-  const form = await formLogin.value.validate();
-  if (!form.valid) return;
-};
-
-const checkUserSession = () => {
-  const isLoggedIn = authentication.isLoggedIn;
-  if (isLoggedIn) {
-    router.push("/");
-  }
-};
-
-const checkUserAccessRights = async (id) => {
-  const employeeAccessRights = await employeeRights(id);
-  return employeeAccessRights.access_rights;
+const dataDebugger = () => {
+  console.log(personalDataInputs.value);
 };
 </script>
-
-<style lang="css" scoped>
-.sign-in-container {
-  background-image: url("/src/assets/signinBG.jpg");
-  background-size: cover;
-
-  background-position: center bottom 5%;
-}
-.alert {
-  visibility: hidden;
-}
-.visible {
-  visibility: visible;
-}
-.sign-in-container {
-  height: 100vh;
-  width: 100%;
-  padding: 1.5em;
-}
-.login-box {
-  margin-right: 2em;
-  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
-  background-color: white;
-  padding: 1em;
-  height: 95%;
-  width: 30%;
-  border-radius: 15px;
-  /* border: 1px solid blue; */
-}
-.display {
-  margin-left: 0em;
-  width: 100%;
-  padding: 1em;
+<style lang="css">
+.pages {
+  min-width: 700px;
 }
 </style>

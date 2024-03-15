@@ -170,7 +170,6 @@ const props = defineProps({
   authentication: Object,
 });
 
-const router = useRouter();
 const searchInput = ref("");
 let patientData = ref([]);
 const isLoading = ref(false);

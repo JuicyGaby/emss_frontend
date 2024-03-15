@@ -1,103 +1,57 @@
 <template lang="">
-  <v-container class="d-flex flex-column justify-center align-center">
+  <v-container
+    class="d-flex flex-column justify-center align-center"
+    style="width: 900px"
+  >
     <!-- 1st page -->
     <div class="input-field" v-show="page == 1">
       <v-row>
-        <v-col class="d-flex flex-column">
-          <div class="d-flex ga-2">
-            <v-text-field
-              v-for="(field, key) in step1.firstRow"
-              :key="key"
-              :label="field.label"
-              :type="field.type"
-              variant="outlined"
-              v-model="interviewInputs[key]"
-              style="min-width: 300px"
-            ></v-text-field>
-          </div>
-          <div class="d-flex ga-2">
-            <v-text-field
-              v-for="(value, key) in step1.secondRow"
-              :key="key"
-              :label="value.label"
-              :type="value.type"
-              v-model="interviewInputs[key]"
-              variant="outlined"
-              style="min-width: 300px"
-            ></v-text-field>
-          </div>
-          <div class="d-flex ga-2">
-            <v-text-field
-              v-for="(value, key) in step1.thirdRow"
-              :key="key"
-              :label="value.label"
-              :type="value.type"
-              v-model="interviewInputs[key]"
-              variant="outlined"
-              style="min-width: 300px"
-            ></v-text-field>
-          </div>
+        <v-col class="d-flex flex-wrap ga-2" cols="12">
+          <v-text-field
+            v-for="(field, key) in inputFields.step1"
+            :key="key"
+            :label="field.label"
+            :type="field.type"
+            variant="outlined"
+            style="width: 300px"
+            v-model="interviewInputs[key]"
+          ></v-text-field>
         </v-col>
       </v-row>
     </div>
     <!-- 2nd page -->
     <div class="input-field" v-show="page == 2">
       <v-row>
-        <v-col class="d-flex flex-column">
-          <div class="d-flex ga-2">
-            <v-text-field
-              v-for="(value, key) in step2.firstRow"
-              :key="key"
-              :label="value.label"
-              :type="value.type"
-              v-model="interviewInputs[key]"
-              variant="outlined"
-              style="min-width: 300px"
-            ></v-text-field>
-          </div>
-          <div class="d-flex ga-2">
-            <v-text-field
-              v-for="(value, key) in step2.secondRow"
-              :key="key"
-              :label="value.label"
-              :type="value.type"
-              v-model="interviewInputs[key]"
-              variant="outlined"
-              style="min-width: 300px"
-            ></v-text-field>
-          </div>
+        <v-col class="d-flex flex-wrap ga-2" cols="12">
+          <v-text-field
+            v-for="(field, key) in inputFields.step2"
+            :key="key"
+            :label="field.label"
+            :type="field.type"
+            variant="outlined"
+            style="width: 350px"
+            v-model="interviewInputs[key]"
+          ></v-text-field>
         </v-col>
       </v-row>
     </div>
     <!-- 3rd page -->
     <div class="input-field" v-show="page == 3">
       <v-row>
-        <v-col class="d-flex flex-column">
-          <div class="d-flex ga-2">
-            <v-text-field
-              v-for="(value, key) in step3.firstRow"
-              :key="key"
-              :label="value.label"
-              :type="value.type"
-              v-model="interviewInputs[key]"
-              variant="outlined"
-              style="min-width: 300px"
-            ></v-text-field>
-          </div>
-          <div class="d-flex ga-2">
-            <v-text-field
-              v-for="(value, key) in step3.secondRow"
-              :key="key"
-              :label="value.label"
-              :type="value.type"
-              v-model="interviewInputs[key]"
-              variant="outlined"
-              style="min-width: 300px"
-            ></v-text-field>
-          </div>
+        <v-col class="d-flex flex-wrap ga-2" cols="12">
+          <v-text-field
+            v-for="(field, key) in inputFields.step3"
+            :key="key"
+            :label="field.label"
+            :type="field.type"
+            variant="outlined"
+            style="width: 350px"
+            v-model="interviewInputs[key]"
+          ></v-text-field>
         </v-col>
       </v-row>
     </div>
+    {{interviewInputs}}
   </v-container>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
@@ -115,22 +69,7 @@ const emit = defineEmits(["interviewData"]);
 const totalPages = ref(3);
 const page = ref(1);
 
-let interviewInputs = ref({
-  interview_date_time: moment().format("YYYY-MM-DDTHH:mm"),
-  admission_date_time: moment().format("YYYY-MM-DDTHH:mm"),
-  basic_ward: "",
-  nonbasic_ward: "",
-  health_record_number: "",
-  mswd_number: "",
-  source_of_referral: "",
-  referring_party: "",
-  address: "",
-  contact_number: "",
-  informant: "",
-  relationship_to_patient: "",
-  informant_contact_number: "",
-  informant_address: "",
-});
+let interviewInputs = ref({});
 
 watchEffect(() => {
   const interviewInputsCopy = Object.keys(interviewInputs.value).reduce(
@@ -143,8 +82,8 @@ watchEffect(() => {
   emit("interviewData", interviewInputsCopy);
 });
 
-const step1 = {
-  firstRow: {
+const inputFields = {
+  step1: {
     interview_date_time: {
       label: "Interview Date and Time",
       type: "datetime-local",
@@ -153,8 +92,6 @@ const step1 = {
       label: "admission Date and Time",
       type: "datetime-local",
     },
-  },
-  secondRow: {
     basic_ward: {
       label: "Basic Ward",
       type: "text",
@@ -163,8 +100,6 @@ const step1 = {
       label: "Nonbasic Ward",
       type: "text",
     },
-  },
-  thirdRow: {
     health_record_number: {
       label: "Health Record Number",
       type: "text",
@@ -174,10 +109,7 @@ const step1 = {
       type: "text",
     },
   },
-};
-
-const step2 = {
-  firstRow: {
+  step2: {
     source_of_referral: {
       label: "Source of Referral",
       type: "text",
@@ -186,8 +118,6 @@ const step2 = {
       label: "Referring Party",
       type: "text",
     },
-  },
-  secondRow: {
     address: {
       label: "Address",
       type: "text",
@@ -197,10 +127,7 @@ const step2 = {
       type: "number",
     },
   },
-};
-
-const step3 = {
-  firstRow: {
+  step3: {
     informant: {
       label: "Informant",
       type: "text",
@@ -209,8 +136,6 @@ const step3 = {
       label: "Patient Relationship",
       type: "text",
     },
-  },
-  secondRow: {
     informant_contact_number: {
       label: "Informant Contact Number",
       type: "number",
@@ -221,6 +146,7 @@ const step3 = {
     },
   },
 };
+
 </script>
 <style lang="css">
 .reb {

@@ -28,6 +28,7 @@
               :append-inner-icon="item.icon"
               :type="item.type"
               @click:append-inner="showPassword = !showPassword"
+              @keyup.enter="signIn"
             ></v-text-field>
             <v-hover>
               <template v-slot:default="{ isHovering, props }">
@@ -46,7 +47,7 @@
             </v-hover>
           </v-form>
         </div>
-      </div>
+    </div>
     </div>
   </div>
 </template>
@@ -131,6 +132,9 @@ const checkUserSession = () => {
   }
 };
 </script>
+
+
+
 
 <style lang="css" scoped>
 .sign-in-container {

@@ -10,7 +10,7 @@
     </template>
     <!-- stepper 2 -->
     <template v-slot:[`item.2`]>
-      <v-card  class="text-center" flat>
+      <v-card class="text-center" flat>
         <v-card-text class="">
           <demographic_data
             @personalData="handlePersonalData"
@@ -20,31 +20,50 @@
     </template>
     <!-- stepper 3 -->
     <template v-slot:[`item.3`]>
-      <v-card title="Review Details" flat>
-        <div style="width: 1000px" class="pa-5">
-          <div class="Interview Data">
-            <!-- <v-table density="dense" hover>
+      <h2>Patient Details</h2>
+      <v-divider></v-divider>
+      <v-container style="width: 1000px">
+        <v-row>
+          <h4>Interview Data</h4>
+          <v-cols>
+            <v-table density="compact" style="width: 1000px">
               <thead>
                 <tr>
-                  <th>Interview Data</th>
-                  <th>Value</th>
+                  <th>Field</th>
+                  <th>Data</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(value, key) in dataReceived.interview" :key="key">
-                  <td>{{ interviewDisplay[key] }}</td>
-                  <td>
-                    <strong>{{ value }}</strong>
-                  </td>
+                <tr v-for="(value, key) in interviewDisplay" :key="key">
+                  <td>{{ value }}</td>
+                  <td class="font-weight-bold">{{ dataReceived.interview[key] }}</td>
                 </tr>
               </tbody>
-            </v-table> -->
-          </div>
-          <v-btn color="secondary" @click="createPatientData"
-            >Create Patient</v-btn
-          >
-        </div>
-      </v-card>
+            </v-table>
+          </v-cols>
+        </v-row>
+        <v-row class="my-5">
+          <h4>Personal Data</h4>
+          <v-divider></v-divider>
+          <v-cols>
+            <v-table density="compact" style="width: 1000px">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(value, key) in personalDataDisplay" :key="key">
+                  <td>{{ value }}</td>
+                  <td class="font-weight-bold">{{ dataReceived.demographicData[key] }}</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-cols>
+        </v-row>
+      </v-container>
+      <v-btn color="secondary" @click="createPatientData">Create Patient</v-btn>
     </template>
   </v-stepper>
   <!-- created Dialog -->
@@ -57,21 +76,12 @@
   >
     <v-alert type="success" title="Successfully Accessed Patient">
       <div class="my-5 d-flex justify-end ga-2">
-        <v-btn color="primary" @click="viewPatient(patient.id)">Edit Patient</v-btn>
+        <v-btn color="primary" @click="viewPatient(patient.id)"
+          >Edit Patient</v-btn
+        >
         <v-btn color="error" @click="toggleCloseBtn">Close</v-btn>
       </div>
     </v-alert>
-
-    <!-- <v-card>
-      <v-card-title class="headline">Assesed Patient Successfuly</v-card-title>
-      <v-card-text> Review Patient Data </v-card-text>
-      <v-card-actions>
-        <v-btn color="secondary" @click="toggleCloseBtn">Close</v-btn>
-        <v-btn color="primary" @click="viewPatient(patient.id)"
-          >View Patient</v-btn
-        >
-      </v-card-actions>
-    </v-card> -->
     <!-- error dialog -->
   </v-dialog>
   <v-dialog v-model="dialogs.error" max-width="500">
