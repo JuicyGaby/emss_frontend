@@ -17,6 +17,11 @@ export const userAuthentication = defineStore('aunthentication', {
       },
       setAccessRights(rights) {
         this.access_rights = rights
+      },
+      resetSession() {
+        this.isLoggedIn = false
+        this.token = ''
+        this.access_rights = {}
       }
     },
     persist: true,

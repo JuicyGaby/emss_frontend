@@ -39,8 +39,6 @@
 <script setup>
 import { defineProps, computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import { employeeRights } from "@/api/authentication";
-
 const props = defineProps({
   user: Object,
   authentication: Object,
@@ -70,10 +68,7 @@ const userFullName = computed(() => {
 });
 
 const signOut = () => {
-  const isLoggedIn = false;
-  props.authentication.toggleLogIn(isLoggedIn);
-  props.authentication.setUserToken("");
-  props.authentication.setAccessRights({});
+  props.authentication.resetSession();
   router.push("/login");
 };
 </script>
