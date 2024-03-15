@@ -352,7 +352,37 @@ const updateSocialFunctioning = async (body) => {
   const data = await response.json();
   return data;
 };
-
+// problems in environment
+const getProblemsInEnvironment = async (patient_id) => {
+  const API_URL = `http://localhost:3000/problems-in-environment/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
+const createProblemsInEnvironment = async (body) => {
+  const API_URL = "http://localhost:3000/problems-in-environment";
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+const updateProblemsInEnvironment = async (body) => {
+  const API_URL = "http://localhost:3000/problems-in-environment";
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
 export {
   // interview
   interview,
@@ -398,4 +428,8 @@ export {
   getSocialFunctioning,
   createSocialFunctioning,
   updateSocialFunctioning,
+  // problems in environment
+  getProblemsInEnvironment,
+  createProblemsInEnvironment,
+  updateProblemsInEnvironment,
 };

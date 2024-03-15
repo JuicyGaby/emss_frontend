@@ -433,7 +433,7 @@ const updateSocialFunctioningItem = async () => {
 const fetchSocialFunctioningItem = async () => {
   const response = await getSocialFunctioning(props.patientId);
   if (response) {
-    console.log("response", response);
+    // console.log("response", response);
     handlePatientData(response);
   }
 };
