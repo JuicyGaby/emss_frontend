@@ -1,63 +1,77 @@
 <template lang="" class="">
-    <div class="display rb sign-in-container d-flex align-center justify-end">
-        <div class="login-box d-flex flex-column justify-center align-center elevation-3">
-            <div v-if="toggleAlert" class="w-100" >
-                <v-alert
-                variant="tonal"
-                :type="isError ? 'error' : 'success'"
-                :text="isError ? 'Wrong credentials. Please try again' : 'Welcome back! Your account was accessed successfully.'"
-              ></v-alert>
-            </div>
-          <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
-              <h2 class="mb-10">Malasakit System Name</h2>
-              <div class="input-field w-100">
-                  <v-form ref="formLogin" class="d-flex flex-column ga-3">
-                      <v-text-field
-                        v-model="userInput.username.value"
-                        name="username"
-                        label="Username"
-                        variant="outlined"
-                        :rules="inputRules.username"
-                        clearable
-                        @keyup.enter="signIn"
-                      ></v-text-field>
-                      <v-text-field
-                      v-model="userInput.password.value"
-                        :rules="inputRules.password"
-                        name="password"
-                        label="Password"
-                        :type="showPassword ? 'text' : 'password'"
-                        variant="outlined"
-                        hint="Please remember your password"
-                        :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'"
-                        @click:append-inner="showPassword = !showPassword"
-                        @keyup.enter="signIn"
-                      ></v-text-field>
-                      <v-hover>
-                        <template v-slot:default="{ isHovering, props }">
-                          <v-btn class="elevation-3" append-icon="mdi-login" @keyup.enter="signIn" @click="signIn()" v-bind="props" size="x-large" :color="isHovering ?  'primary' : 'secondary'" color="w-100 mt-2">Sign in</v-btn>
-                        </template>
-                      </v-hover>
-                  </v-form>
-              </div>
-          </div>
+  <div class="display rb sign-in-container d-flex align-center justify-end">
+    <div
+      class="login-box d-flex flex-column justify-center align-center elevation-3"
+    >
+      <div v-if="toggleAlert" class="w-100">
+        <v-alert
+          variant="tonal"
+          :type="isError ? 'error' : 'success'"
+          :text="
+            isError
+              ? 'Wrong credentials. Please try again'
+              : 'Welcome back! Your account was accessed successfully.'
+          "
+        ></v-alert>
+      </div>
+      <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
+        <h2 class="mb-10">EMSS</h2>
+        <div class="input-field w-100">
+          <v-form ref="formLogin" class="d-flex flex-column ga-3">
+            <v-text-field
+              v-for="(item, index) in inputFields"
+              :key="index"
+              :label="item.label"
+              variant="outlined"
+              :rules="inputRules[index]"
+              v-model="userInput[index]"
+              :append-inner-icon="item.icon"
+              :type="item.type"
+              @click:append-inner="showPassword = !showPassword"
+            ></v-text-field>
+            <v-hover>
+              <template v-slot:default="{ isHovering, props }">
+                <v-btn
+                  class="elevation-3"
+                  append-icon="mdi-login"
+                  @keyup.enter="signIn"
+                  @click="signIn()"
+                  v-bind="props"
+                  size="x-large"
+                  :color="isHovering ? 'primary' : 'secondary'"
+                  color="w-100 mt-2"
+                  >Sign in</v-btn
+                >
+              </template>
+            </v-hover>
+          </v-form>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 <script setup>
-
-import { ref, onMounted, defineProps } from "vue";
+import { ref, onMounted, defineProps, computed } from "vue";
 import { useRouter } from "vue-router";
 import { userLogin, employeeRights } from "@/api/authentication";
 
 const { authentication } = defineProps(["authentication"]);
 const router = useRouter();
 
-
-const userInput = {
-  username: ref(""),
-  password: ref(""),
-};
+const userInput = ref({});
+const inputFields = ref({
+  username: {
+    label: "Usename",
+    type: "text",
+  },
+  password: {
+    label: "Password",
+    type: computed(() => (showPassword.value ? "text" : "password")),
+    icon: computed(() =>
+      showPassword.value ? "mdi-eye-off-outline" : "mdi-eye"
+    ),
+  },
+});
 
 const inputRules = {
   username: [
@@ -68,7 +82,6 @@ const inputRules = {
   ],
   password: [(v) => !!v || "Password is required"],
 };
-
 const formLogin = ref(null);
 const showPassword = ref(false);
 const toggleAlert = ref(false);
@@ -77,69 +90,49 @@ const isError = ref(false);
 onMounted(() => {
   checkUserSession();
 });
-// * input rules
-
-
 const signIn = async () => {
-  await validateForm();
-  const body = {
-    username: userInput.username.value,
-    password: userInput.password.value,
-  };
-  const response = await userLogin(body);
-  validateUserData(response);
+  const validated = await validateForm();
+  if (!validated) return;
+  const response = await userLogin(userInput.value);
+  await validateUserData(response);
 };
 const validateUserData = async (data) => {
-  handleAlert(data);
-  const rights = await checkUserAccessRights(data.user.id)
-  handleAuthentication(data, rights);
+  const validated = handleAlert(data);
+  if (validated) {
+    handleAuthentication(data);
+    console.log(data);
+    return;
+  }
 };
-
-const handleAlert = data => {
+const handleAlert = (data) => {
   if (data.error) {
     toggleAlert.value = true;
     isError.value = true;
-    return
+    return false;
   }
   toggleAlert.value = true;
   isError.value = false;
-}
-
-const handleAuthentication = (data, rights) => {
+  return true;
+};
+const handleAuthentication = (data) => {
   authentication.setUserToken(data.user.login_token);
   authentication.toggleLogIn(true);
-  console.log(rights);
-  authentication.setAccessRights(rights)
   router.push("/");
 };
-
 const validateForm = async () => {
   const form = await formLogin.value.validate();
-  if (!form.valid) return;
+  if (!form.valid) return false;
+  return true;
 };
-
 const checkUserSession = () => {
   const isLoggedIn = authentication.isLoggedIn;
   if (isLoggedIn) {
     router.push("/");
   }
 };
-
-const checkUserAccessRights = async id => {
-  const employeeAccessRights = await employeeRights(id);
-  return employeeAccessRights.access_rights
-};
 </script>
 
-
-
-
-
-
 <style lang="css" scoped>
-
-
-
 .sign-in-container {
   background-image: url("/src/assets/signinBG.jpg");
   background-size: cover;

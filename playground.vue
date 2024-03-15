@@ -1,660 +1,191 @@
-<template lang="">
-  <div>
-    <v-tabs
-      class="tabs"
-      v-model="tab"
-      align-tabs="center"
-      color="black"
-      density="compact"
+<template lang="" class="">
+  <div class="display rb sign-in-container d-flex align-center justify-end">
+    <div
+      class="login-box d-flex flex-column justify-center align-center elevation-3"
     >
-      <v-tab
-        v-for="(header, index) in tabHeaders"
-        :value="header.value"
-        :key="index"
-      >
-        {{ header.title }}
-      </v-tab>
-    </v-tabs>
-    <v-window class="" v-model="tab">
-      <!-- personal data -->
-      <v-window-item :value="0">
-        <v-container style="width: 1000px">
-          <v-form ref="personalForm">
-            <h2>Personal Data:</h2>
-            <v-divider class="mb-5"></v-divider>
-            <!-- persnal data -->
-            <v-row>
-              <!-- col1 -->
-              <v-col cols="4">
-                <v-text-field
-                  v-for="(value, key) in inputFields.col1"
-                  :key="key"
-                  :label="value.label"
-                  :type="value.type"
-                  :rules="value.rules"
-                  v-model="patientData[key]"
-                  density="compact"
-                  variant="outlined"
-                  style="min-width: 300px"
-                  class=""
-                ></v-text-field>
-              </v-col>
-              <!-- col2 -->
-              <v-col cols="4">
-                <v-combobox
-                  v-for="(value, key) in inputFields.col2"
-                  :key="key"
-                  :label="value.label"
-                  :items="value.items"
-                  density="compact"
-                  variant="outlined"
-                  v-model="patientData[key]"
-                  style="min-width: 300px"
-                >
-                </v-combobox>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  v-for="(value, key) in inputFields.col3"
-                  :key="key"
-                  :label="value.label"
-                  :type="value.type"
-                  v-model="patientData[key]"
-                  density="compact"
-                  variant="outlined"
-                  style="min-width: 300px"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <!-- remarks -->
-            <h2>Remarks:</h2>
-            <v-divider class="mb-5"></v-divider>
-            <v-row>
-              <v-col cols="12">
-                <v-textarea
-                  v-model="patientData.remarks"
-                  label="Remarks"
-                  rows="5"
-                  auto-grow
-                  style="min-width: 300px"
-                  variant="outlined"
-                  counter="255"
-                  :rules="inputRules.remarks"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-            <v-btn
-              color="secondary"
-              @click="updatePersonalData"
-              prepend-icon="mdi-content-save"
-              class="my-5"
-              >Update Personal Data</v-btn
-            >
-          </v-form>
-        </v-container>
-      </v-window-item>
-      <!-- address -->
-      <v-window-item :value="1">
-        <v-container style="width: 1000px">
-          <h2>Address:</h2>
-          <v-divider class="mb-5"></v-divider>
-          <v-row v-if="patientData.address">
-            <v-col cols="6">
-              <v-combobox
-                :label="regionsCombo.permanent.label"
-                :items="regions"
-                v-model="patientData.address[0].region"
-                item-title="regDesc"
-                item-value="regCode"
-                density="compact"
-                variant="outlined"
-              >
-              </v-combobox>
-              <v-combobox
-                v-for="(value, key) in address.permanent"
-                :key="key"
-                variant="outlined"
-                density="compact"
-                :label="value.label"
-                v-model="patientData.address[0][key]"
-              >
-              </v-combobox>
-            </v-col>
-            <v-col cols="6">
-              <v-combobox
-                :label="regionsCombo.temporary.label"
-                :items="regions"
-                v-model="patientData.address[1].region"
-                item-title="regDesc"
-                item-value="regCode"
-                density="compact"
-                variant="outlined"
-              >
-              </v-combobox>
-              <v-combobox
-                v-for="(value, key) in address.permanent"
-                :key="key"
-                variant="outlined"
-                density="compact"
-                :label="value.label"
-                v-model="patientData.address[1][key]"
-              >
-              </v-combobox>
-            </v-col>
-          </v-row>
-          <v-btn
-            color="secondary"
-            @click="updatePatientAddressData"
-            prepend-icon="mdi-content-save"
-            class="mb-5"
-            >Update Address</v-btn
-          >
-        </v-container>
-      </v-window-item>
-      <!-- family composition -->
-      <v-window-item :value="2">
-        <v-container style="width: 1000px">
-          <h2>Family Composition:</h2>
-          <v-divider class="mb-5"></v-divider>
-          <div class="d-flex justify-end">
-            <v-btn
-              color="grey"
-              @click="dialogs.addFamily = !dialogs.addFamily"
-              prepend-icon="mdi-account-plus"
-              >Add family member</v-btn
-            >
-          </div>
-          <div v-if="familyComposition && familyComposition.length">
-            <div v-if="showFamilyComposition">
-              <v-row
-                v-if="familyComposition"
-                v-for="(item, index) in familyComposition"
-                :key="index"
-              >
-                <!-- display the current number -->
-                <v-col cols="12">
-                  <h4>Family Member : {{ index + 1 }}</h4>
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    v-for="(value, key) in familyCompositionFields.col1"
-                    :key="key"
-                    :label="value.label"
-                    :type="value.type"
-                    v-model="item[key]"
-                    density="compact"
-                    variant="outlined"
-                    style="min-width: 300px"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    v-for="(value, key) in familyCompositionFields.col2"
-                    :key="key"
-                    :label="value.label"
-                    :type="value.type"
-                    v-model="item[key]"
-                    density="compact"
-                    variant="outlined"
-                    style="min-width: 300px"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12">
-                  <v-text-field
-                    v-for="(item, key) in inputFields.col3"
-                    :key="key"
-                    :label="item.label"
-                    :type="item.type"
-                    variant="outlined"
-                    density="compact"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-btn
-                color="secondary"
-                prepend-icon="mdi-content-save"
-                class="mb-5"
-                >Update family composition</v-btn
-              >
-            </div>
-            <v-btn
-              color="grey"
-              class="mb-5"
-              @click="showFamilyComposition = !showFamilyComposition"
-              :append-icon="
-                showFamilyComposition ? 'mdi-menu-up' : 'mdi-menu-down'
-              "
-              >Toggle Family Composition</v-btn
-            >
-          </div>
-        </v-container>
-      </v-window-item>
-    </v-window>
-    <v-snackbar
-      v-for="(bar, key) in updateBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
+      <div v-if="toggleAlert" class="w-100">
+        <v-alert
+          variant="tonal"
+          :type="isError ? 'error' : 'success'"
+          :text="
+            isError
+              ? 'Wrong credentials. Please try again'
+              : 'Welcome back! Your account was accessed successfully.'
+          "
+        ></v-alert>
       </div>
-    </v-snackbar>
-  </div>
-  <v-dialog v-model="dialogs.addFamily" width="600px" persistent>
-    <v-card>
-      <v-card-title primary-title> Family Composition </v-card-title>
-      <v-card-text>
-        <div class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(value, key) in inputFields.familyComposition"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            density="compact"
-            variant="outlined"
-            v-model="inputFields.familyComposition[key].data"
-            style="width: 250px"
-          ></v-text-field>
+      <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
+        <h2 class="mb-10">Malasakit System Name</h2>
+        <div class="input-field w-100">
+          <v-form ref="formLogin" class="d-flex flex-column ga-3">
+            <v-text-field
+              v-model="userInput.username.value"
+              name="username"
+              label="Username"
+              variant="outlined"
+              :rules="inputRules.username"
+              clearable
+              @keyup.enter="signIn"
+            ></v-text-field>
+            <v-text-field
+              v-model="userInput.password.value"
+              :rules="inputRules.password"
+              name="password"
+              label="Password"
+              :type="showPassword ? 'text' : 'password'"
+              variant="outlined"
+              hint="Please remember your password"
+              :append-inner-icon="
+                showPassword ? 'mdi-eye-off-outline' : 'mdi-eye'
+              "
+              @click:append-inner="showPassword = !showPassword"
+              @keyup.enter="signIn"
+            ></v-text-field>
+            <v-hover>
+              <template v-slot:default="{ isHovering, props }">
+                <v-btn
+                  class="elevation-3"
+                  append-icon="mdi-login"
+                  @keyup.enter="signIn"
+                  @click="signIn()"
+                  v-bind="props"
+                  size="x-large"
+                  :color="isHovering ? 'primary' : 'secondary'"
+                  color="w-100 mt-2"
+                  >Sign in</v-btn
+                >
+              </template>
+            </v-hover>
+          </v-form>
         </div>
-      </v-card-text>
-      <v-card-actions class="d-flex justify-end">
-        <v-btn color="error" @click="dialogs.addFamily = !dialogs.addFamily"
-          >Cancel</v-btn
-        >
-        <v-btn color="primary" @click="createFamilyMemberData">Create</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+      </div>
+    </div>
+  </div>
 </template>
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { getPatientByID, updatePatient } from "@/api/patients";
-import {
-  getFamilyComposition,
-  getRegions,
-  updatePatientAddress,
-  createFamilyMember,
-  getFamilyInfo,
-} from "@/api/assesment-tool";
+import { ref, onMounted, defineProps } from "vue";
+import { useRouter } from "vue-router";
+import { userLogin, employeeRights } from "@/api/authentication";
 
-let patientData = ref({});
-let regions = ref([]);
-let familyComposition = ref({});
-let familyInfo = ref({});
-const showFamilyComposition = ref(false);
-const personalForm = ref(null);
-
-const inputRules = {
-  first_name: [(v) => !!v || "First Name is required"],
-  last_name: [(v) => !!v || "Last Name is required"],
-  remarks: [
-    (v) =>
-      v == null ||
-      v.length <= 255 ||
-      "Remarks must be less than 255 characters",
-  ],
+const { authentication } = defineProps(["authentication"]);
+const router = useRouter();
+const userInput = {
+  username: ref(""),
+  password: ref(""),
 };
-const tab = ref(0);
-const tabHeaders = {
-  personalData: {
-    title: "Personal Data",
-  },
-  addressData: {
-    title: "Address Data",
-  },
-  familyComposition: {
-    title: "Family Composition",
-  },
-};
-
-const updateBars = ref({
-  personalData: {
-    isActive: false,
-    text: "Personal Data Updated",
-  },
-  addressData: {
-    isActive: false,
-    text: "Address Updated",
-  },
-  familyComposition: {
-    isActive: false,
-    text: "Successfully Added Family Member",
-  },
-});
-
-const dialogs = ref({
-  addFamily: false,
-});
 
 const inputFields = ref({
-  col1: {
-    first_name: {
-      label: "First Name",
-      type: "text",
-      rules: inputRules.first_name,
-    },
-    middle_name: {
-      label: "Middle Name",
-      type: "text",
-    },
-    last_name: {
-      label: "Last Name",
-      type: "text",
-      rules: inputRules.last_name,
-    },
-    age: {
-      label: "Age",
-      type: "text",
-    },
-    birth_date: {
-      label: "Birth Date",
-      type: "date",
-    },
-    religion: {
-      label: "Religion",
-      type: "text",
-    },
-    contact_number: {
-      label: "Contact Number",
-      type: "text",
-    },
+  username: {
+    label: "Usename",
   },
-  col2: {
-    gender: {
-      label: "Gender Identity",
-      items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
-    },
-    sex: {
-      label: "Sex",
-      items: ["Male", "Female"],
-    },
-    nationality: {
-      label: "Nationality",
-      items: ["Filipino", "Other"],
-    },
-    civil_status: {
-      label: "Civil Status",
-      items: [
-        "Single",
-        "Married",
-        "Widowed",
-        "Divorced",
-        "Annulled",
-        "Common Law OS",
-        "Common Law SS",
-        "Separated Legally",
-        "Separated De Facto",
-      ],
-    },
-    living_arrangement: {
-      label: "Living Arrangement",
-      items: [
-        "owned",
-        "shared",
-        "rent",
-        "homeless",
-        "institutionalized",
-        "others",
-      ],
-    },
-    highest_education_level: {
-      label: "Education",
-      items: [
-        "Early Childhood Education",
-        "Primary",
-        "Secondary",
-        "Tertiary",
-        "Vocational",
-        "Post Graduate",
-        "No Educational Attainment",
-      ],
-    },
-    education_status: {
-      label: "Education Status",
-      items: ["OnGoing", "Graduated", "Stopped", "Others"],
-    },
-  },
-  col3: {
-    occupation: {
-      label: "Occupation",
-      type: "text",
-    },
-    monthly_income: {
-      label: "Monthly Income",
-      type: "text",
-    },
-    ph_membership_number: {
-      label: "PH Membership Number",
-      type: "text",
-    },
-    ph_membership_type: {
-      label: "PH Membership",
-      type: "text",
-    },
-  },
-  familyComposition: {
-    full_name: {
-      label: "FullName",
-      type: "text",
-      data: "",
-    },
-    age: {
-      label: "Age",
-      type: "text",
-      data: "",
-    },
-    birth_date: {
-      label: "Birth Date",
-      type: "date",
-      data: "",
-    },
-    civil_status: {
-      label: "Civil Status",
-      type: "text",
-      data: "",
-    },
-    relationship: {
-      label: "Relationship",
-      type: "text",
-      data: "",
-    },
-    educational_attainment: {
-      label: "Educational Attainment",
-      type: "text",
-      data: "",
-    },
-    occupation: {
-      label: "Occupation",
-      type: "text",
-      data: "",
-    },
-    monthly_income: {
-      label: "Monthly Income",
-      type: "text",
-      data: "",
-    },
+  password: {
+    label: "Password",
+    icon: "mdi-eye",
   },
 });
 
-const regionsCombo = {
-  permanent: {
-    label: "Region",
-    items: regions,
-  },
-  temporary: {
-    label: "Region",
-    items: regions,
-  },
-};
-const address = {
-  permanent: {
-    province: {
-      label: "Province",
-    },
-    district: {
-      label: "District",
-    },
-    municipality: {
-      label: "Municipality",
-    },
-    barangay: {
-      label: "Barangay",
-    },
-    purok: {
-      label: "Purok",
-    },
-  },
-  temporary: {
-    region: {
-      label: "Region",
-    },
-    province: {
-      label: "Province",
-    },
-    district: {
-      label: "District",
-    },
-    municipality: {
-      label: "Municipality",
-    },
-    barangay: {
-      label: "Barangay",
-    },
-    purok: {
-      label: "Purok",
-    },
-  },
+const inputRules = {
+  username: [
+    (v) => !!v || "Username is required",
+    (v) =>
+      (v && v.length >= 3 && v.length <= 20) ||
+      "Username must be between 3 and 20 characters",
+  ],
+  password: [(v) => !!v || "Password is required"],
 };
 
-const familyCompositionFields = {
-  col1: {
-    full_name: {
-      label: "Full Name",
-      type: "text",
-    },
-    age: {
-      label: "Age",
-      type: "text",
-    },
-    birth_date: {
-      label: "Birth Date",
-      type: "date",
-    },
-    civil_status: {
-      label: "Civil Status",
-      type: "text",
-    },
-  },
-  col2: {
-    relationship: {
-      label: "Relationship",
-      type: "text",
-    },
-    educational_attainment: {
-      label: "Educational Attainment",
-      type: "text",
-    },
-    occupation: {
-      label: "Occupation",
-      type: "text",
-    },
-    monthly_income: {
-      label: "Monthly Income",
-      type: "text",
-    },
-  },
-  col3: {
-    other_source_of_income: {
-      label: "Other Source of Income",
-      type: "text",
-    },
-    household_size: {
-      label: "Household Size",
-      type: "text",
-    },
-    total_household_income: {
-      label: "Total Household Income",
-      type: "text",
-    },
-    per_capita_income: {
-      label: "Per Capita Income",
-      type: "text",
-    },
-  },
-};
+const formLogin = ref(null);
+const showPassword = ref(false);
+const toggleAlert = ref(false);
+const isError = ref(false);
 
-const props = defineProps({
-  patientId: Number,
+onMounted(() => {
+  checkUserSession();
 });
+// * input rules
 
-onMounted(async () => {
-  await getPatientData();
-  await getFamilyCompositionData();
-  await getRegionData();
-  await getFamilyInfoData();
-});
-
-const validateForm = async (formType) => {
-  const form = await formType.value.validate();
-  if (!form.valid) return false;
-  return true;
+const signIn = async () => {
+  await validateForm();
+  const body = {
+    username: userInput.username.value,
+    password: userInput.password.value,
+  };
+  const response = await userLogin(body);
+  validateUserData(response);
+};
+const validateUserData = async (data) => {
+  handleAlert(data);
+  const rights = await checkUserAccessRights(data.user.id);
+  handleAuthentication(data, rights);
 };
 
-const createFamilyMemberData = async () => {
-  let familyMember = {};
-  for (const key in inputFields.value.familyComposition) {
-    familyMember[key] = inputFields.value.familyComposition[key].data;
+const handleAlert = (data) => {
+  if (data.error) {
+    toggleAlert.value = true;
+    isError.value = true;
+    return;
   }
-  familyMember.patient_id = props.patientId;
-  console.log(familyMember);
-  const response = await createFamilyMember(familyMember);
-  if (response) {
-    updateBars.value.familyComposition.isActive = true;
-    familyComposition.value.push(familyMember);
-  }
+  toggleAlert.value = true;
+  isError.value = false;
 };
 
-// * Fetch Section
-const getPatientData = async () => {
-  const response = await getPatientByID(props.patientId);
-  patientData.value = response;
-};
-const getFamilyCompositionData = async () => {
-  const response = await getFamilyComposition(props.patientId);
-  familyComposition.value = response;
+const handleAuthentication = (data, rights) => {
+  authentication.setUserToken(data.user.login_token);
+  authentication.toggleLogIn(true);
+  console.log(rights);
+  authentication.setAccessRights(rights);
+  router.push("/");
 };
 
-const getFamilyInfoData = async () => {
-  const response = await getFamilyInfo(props.patientId);
+const validateForm = async () => {
+  const form = await formLogin.value.validate();
+  if (!form.valid) return;
 };
 
-const getRegionData = async () => {
-  const response = await getRegions();
-  regions.value = response;
-};
-
-// * Update Section
-const updatePersonalData = async () => {
-  const validate = await validateForm(personalForm);
-  if (!validate) return;
-  const response = await updatePatient(patientData.value);
-  if (response) {
-    updateBars.value.personalData.isActive = true;
+const checkUserSession = () => {
+  const isLoggedIn = authentication.isLoggedIn;
+  if (isLoggedIn) {
+    router.push("/");
   }
 };
-const updatePatientAddressData = async () => {
-  const patientAddress = patientData.value.address;
-  const response = await updatePatientAddress(patientAddress);
-  if (response) {
-    updateBars.value.addressData.isActive = true;
-  }
+
+const checkUserAccessRights = async (id) => {
+  const employeeAccessRights = await employeeRights(id);
+  return employeeAccessRights.access_rights;
 };
 </script>
-<style lang="css" scoped></style>
+
+<style lang="css" scoped>
+.sign-in-container {
+  background-image: url("/src/assets/signinBG.jpg");
+  background-size: cover;
+
+  background-position: center bottom 5%;
+}
+.alert {
+  visibility: hidden;
+}
+.visible {
+  visibility: visible;
+}
+.sign-in-container {
+  height: 100vh;
+  width: 100%;
+  padding: 1.5em;
+}
+.login-box {
+  margin-right: 2em;
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+  background-color: white;
+  padding: 1em;
+  height: 95%;
+  width: 30%;
+  border-radius: 15px;
+  /* border: 1px solid blue; */
+}
+.display {
+  margin-left: 0em;
+  width: 100%;
+  padding: 1em;
+}
+</style>
