@@ -219,7 +219,6 @@
             </tbody>
           </v-table>
         </v-container>
-        {{ problemsInEnvironment }}
       </v-window-item>
       <v-window-item :value="2">
         <v-container style="width: 1500px">
@@ -269,10 +268,26 @@
               ></v-text-field>
             </v-col>
           </v-row>
+          <v-btn color="secondary" @click="handleButtonAction">{{
+            problemsInEnvironment.isExist ? "Update Data" : "Create Data"
+          }}</v-btn>
         </v-container>
-        <!-- {{ problemsInEnvironment }} -->
       </v-window-item>
     </v-window>
+    <v-snackbar
+      v-for="(bar, key) in snackBars"
+      :key="key"
+      color="green"
+      location="top"
+      :timeout="2500"
+      min-width="250px"
+      v-model="bar.isActive"
+    >
+      <div class="d-flex justify-center align-center ga-2">
+        <v-icon icon="mdi-check-bold"></v-icon>
+        <p class="text-subtitle-1">{{ bar.text }}</p>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 <script setup>
@@ -285,6 +300,10 @@ import {
 const props = defineProps({
   patientId: Number,
 });
+onMounted(async () => {
+  await fetchProblemsInEnvironmentItem();
+});
+
 const problemsInEnvironment = ref({
   isExist: false,
   patient_id: props.patientId,
@@ -514,7 +533,39 @@ const inputFields = {
     },
   },
 };
-const handleButtonAction = async () => {};
+const createProblemsInEnvironmentItem = async () => {
+  const response = await createProblemsInEnvironment(
+    problemsInEnvironment.value
+  );
+  if (response) {
+    console.log("created", response);
+    problemsInEnvironment.value.isExist = true;
+    handleSnackBar("create");
+  }
+};
+const updateProblemsInEnvironmentItem = async () => {
+  const response = await updateProblemsInEnvironment(
+    problemsInEnvironment.value
+  );
+  if (response) {
+    console.log("updated", response);
+    handleSnackBar("update");
+  }
+};
+const fetchProblemsInEnvironmentItem = async () => {
+  const response = await getProblemsInEnvironment(props.patientId);
+  if (response) {
+    console.log("response", response);
+    handlePatientData(response);
+  }
+};
+const handleButtonAction = async () => {
+  if (problemsInEnvironment.value.isExist) {
+    await updateProblemsInEnvironmentItem();
+    return;
+  }
+  await createProblemsInEnvironmentItem();
+};
 const handlePatientData = (response) => {
   problemsInEnvironment.value = response;
   problemsInEnvironment.value.isExist = true;
