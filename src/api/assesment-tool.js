@@ -108,7 +108,12 @@ const getBarangay = async (municipalityCode) => {
   const data = await response.json();
   return data;
 };
-
+const getPatientAddress = async (patient_id) => {
+  const API_URL = `http://localhost:3000/address/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
 const updatePatientAddress = async (body) => {
   const API_URL = "http://localhost:3000/address";
   const response = await fetch(API_URL, {
@@ -393,6 +398,7 @@ export {
   getProvince,
   getMunicipality,
   getBarangay,
+  getPatientAddress,
   updatePatientAddress,
   // family composition
   getFamilyComposition,

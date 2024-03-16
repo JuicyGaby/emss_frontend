@@ -86,7 +86,7 @@
               <v-combobox
                 v-for="(value, key) in inputFields.address.permanent"
                 :key="key"
-                :label="key"
+                :label="value.label"
                 variant="outlined"
                 :items="value.items"
                 :item-title="value.title"
@@ -109,8 +109,8 @@
                 :items="value.items"
                 :item-title="value.title"
                 :item-value="value.value"
-                style="width: 350px"
                 v-model="patientAddress[1][key]"
+                style="width: 350px"
                 density="compact"
               ></v-combobox>
             </v-col>
@@ -123,6 +123,7 @@
             >Update Address</v-btn
           >
         </v-container>
+        {{ patientAddress }}
       </v-window-item>
       <!-- family composition -->
       <v-window-item :value="2">
@@ -270,6 +271,7 @@ import {
   getProvince,
   getMunicipality,
   getBarangay,
+  getPatientAddress,
 } from "@/api/assesment-tool";
 
 const props = defineProps({
@@ -281,8 +283,9 @@ onMounted(async () => {
   await getFamilyCompositionData();
   await getRegionData();
   // await getFamilyInfoData();
+  await getPatientAddressData();
 });
-
+let regions = ref([]);
 let patientData = ref({});
 let patientAddress = ref([
   {
@@ -304,7 +307,7 @@ let patientAddress = ref([
 ]);
 
 // address
-let regions = ref([]);
+
 let provinces = ref([]);
 let municipalities = ref([]);
 let barangays = ref([]);
@@ -675,9 +678,19 @@ const getPatientData = async () => {
   const response = await getPatientByID(props.patientId);
   patientData.value = response;
   // console.log(patientData.value);
-  patientAddress.value = response.address;
+  // patientAddress.value = response.address;
   // console.log(patientAddress.value);
 };
+
+const getPatientAddressData = async () => {
+  const response = await getPatientAddress(props.patientId);
+  if (!response) {
+    console.log("no address data");
+    return;
+  }
+  patientAddress.value = response;
+};
+
 const getFamilyCompositionData = async () => {
   const response = await getFamilyComposition(props.patientId);
   familyComposition.value = response;
