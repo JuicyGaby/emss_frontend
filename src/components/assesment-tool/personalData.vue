@@ -89,6 +89,8 @@
                 :label="key"
                 variant="outlined"
                 style="width: 350px"
+                :items="regions"
+                item-title="regDesc"
                 v-model="patientAddress[0][key]"
                 density="compact"
               ></v-combobox>
@@ -261,6 +263,19 @@ import {
   updateFamilyMember,
   deleteFamilyMember,
 } from "@/api/assesment-tool";
+
+
+const props = defineProps({
+  patientId: Number,
+});
+
+onMounted(async () => {
+  await getPatientData();
+  await getFamilyCompositionData();
+  await getRegionData();
+  // await getFamilyInfoData();
+});
+
 
 let patientData = ref({});
 let patientAddress = ref([
@@ -546,16 +561,7 @@ const address = {
     },
   },
 };
-const props = defineProps({
-  patientId: Number,
-});
 
-onMounted(async () => {
-  await getPatientData();
-  await getFamilyCompositionData();
-  await getRegionData();
-  // await getFamilyInfoData();
-});
 
 const validateForm = async (formType) => {
   const form = await formType.value.validate();
@@ -617,11 +623,11 @@ const updatePersonalData = async () => {
   }
 };
 const updatePatientAddressData = async () => {
-  const patientAddress = patientData.value.address;
-  const response = await updatePatientAddress(patientAddress);
-  if (response) {
-    updateBars.value.addressData.isActive = true;
-  }
+  // const patientAddress = patientData.value.address;
+  const response = await updatePatientAddress(patientAddress.value);
+  // if (response) {
+  //   updateBars.value.addressData.isActive = true;
+  // }
 };
 const updateFamilyMemberData = async () => {
   const response = await updateFamilyMember(toEditFamilyMember.value);
