@@ -80,48 +80,33 @@
         <v-container style="width: 1000px">
           <h2>Address:</h2>
           <v-divider class="mb-5"></v-divider>
-          <v-row v-if="patientData.address">
-            <v-col cols="6">
+          <v-row>
+            <h3>Permanent</h3>
+            <v-col cols="12" class="d-flex flex-wrap ga-2">
               <v-combobox
-                :label="regionsCombo.permanent.label"
-                :items="regions"
-                v-model="patientData.address[0].region"
-                item-title="regDesc"
-                item-value="regCode"
-                density="compact"
-                variant="outlined"
-              >
-              </v-combobox>
-              <v-combobox
-                v-for="(value, key) in address.permanent"
+                v-for="(value, key) in patientAddress[0]"
                 :key="key"
+                :label="key"
                 variant="outlined"
+                style="width: 350px"
+                v-model="patientAddress[0][key]"
                 density="compact"
-                :label="value.label"
-                v-model="patientData.address[0][key]"
-              >
-              </v-combobox>
+              ></v-combobox>
             </v-col>
-            <v-col cols="6">
+          </v-row>
+          <v-divider class="my-5"></v-divider>
+          <v-row>
+            <h3>Temporary</h3>
+            <v-col cols="12" class="d-flex flex-wrap ga-2">
               <v-combobox
-                :label="regionsCombo.temporary.label"
-                :items="regions"
-                v-model="patientData.address[1].region"
-                item-title="regDesc"
-                item-value="regCode"
-                density="compact"
-                variant="outlined"
-              >
-              </v-combobox>
-              <v-combobox
-                v-for="(value, key) in address.permanent"
+                v-for="(value, key) in patientAddress[1]"
                 :key="key"
+                :label="key"
                 variant="outlined"
+                style="width: 350px"
+                v-model="patientAddress[1][key]"
                 density="compact"
-                :label="value.label"
-                v-model="patientData.address[1][key]"
-              >
-              </v-combobox>
+              ></v-combobox>
             </v-col>
           </v-row>
           <v-btn
@@ -278,10 +263,27 @@ import {
 } from "@/api/assesment-tool";
 
 let patientData = ref({});
+let patientAddress = ref([
+  {
+    region: "",
+    province: "",
+    district: "",
+    municipality: "",
+    barangay: "",
+    purok: "",
+  },
+  {
+    region: "",
+    province: "",
+    district: "",
+    municipality: "",
+    barangay: "",
+    purok: "",
+  },
+]);
 let regions = ref([]);
 let familyComposition = ref({});
 let familyInfo = ref({});
-const showFamilyComposition = ref(false);
 let toEditFamilyMember = ref({});
 const personalForm = ref(null);
 const tab = ref(0);
@@ -589,12 +591,14 @@ const createFamilyMemberData = async () => {
 const getPatientData = async () => {
   const response = await getPatientByID(props.patientId);
   patientData.value = response;
+  console.log(patientData.value);
+  patientAddress.value = response.address;
+  console.log(patientAddress.value);
 };
 const getFamilyCompositionData = async () => {
   const response = await getFamilyComposition(props.patientId);
   familyComposition.value = response;
 };
-
 const getFamilyInfoData = async () => {
   const response = await getFamilyInfo(props.patientId);
 };
@@ -626,7 +630,6 @@ const updateFamilyMemberData = async () => {
     dialogs.value.editFamily = false;
   }
 };
-
 // * Delete Section
 const deleteFamilyMemberData = async () => {
   const familyMemberId = toEditFamilyMember.value.id;
