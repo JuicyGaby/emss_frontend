@@ -106,6 +106,9 @@
                 :key="key"
                 :label="key"
                 variant="outlined"
+                :items="value.items"
+                :item-title="value.title"
+                :item-value="value.value"
                 style="width: 350px"
                 v-model="patientAddress[1][key]"
                 density="compact"
@@ -555,18 +558,30 @@ const inputFields = ref({
     temporary: {
       region: {
         label: "Region",
+        items: regions,
+        title: "regDesc",
+        value: "regCode",
       },
       province: {
         label: "Province",
+        items: provinces,
+        title: "provDesc",
+        value: "provCode",
       },
       district: {
         label: "District",
       },
       municipality: {
         label: "Municipality",
+        items: municipalities,
+        title: "citymunDesc",
+        value: "citymunCode",
       },
       barangay: {
         label: "Barangay",
+        items: barangays,
+        title: "brgyDesc",
+        value: "brgyCode",
       },
       purok: {
         label: "Purok",
@@ -692,9 +707,9 @@ const watchAddressChange = (addressType, key, apiCall, optionKey) => {
 watchAddressChange(0, "region", getProvince, provinces);
 watchAddressChange(0, "province", getMunicipality, municipalities);
 watchAddressChange(0, "municipality", getBarangay, barangays);
-// watchAddressChange("temporary", "region", getProvince, "provinces");
-// watchAddressChange("temporary", "province", getMunicipality, "municipality");
-// watchAddressChange("temporary", "municipality", getBarangay, "barangay");
+watchAddressChange(1, "region", getProvince, provinces);
+watchAddressChange(1, "province", getMunicipality, municipalities);
+watchAddressChange(1, "municipality", getBarangay, barangays);
 
 // * Update Section
 const updatePersonalData = async () => {
