@@ -84,13 +84,14 @@
             <h3>Permanent</h3>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
               <v-combobox
-                v-for="(value, key) in patientAddress[0]"
+                v-for="(value, key) in inputFields.address.permanent"
                 :key="key"
                 :label="key"
                 variant="outlined"
+                :items="value.items"
+                :item-title="value.title"
+                :item-value="value.value"
                 style="width: 350px"
-                :items="regions"
-                item-title="regDesc"
                 v-model="patientAddress[0][key]"
                 density="compact"
               ></v-combobox>
@@ -101,7 +102,7 @@
             <h3>Temporary</h3>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
               <v-combobox
-                v-for="(value, key) in patientAddress[1]"
+                v-for="(value, key) in inputFields.address.temporary"
                 :key="key"
                 :label="key"
                 variant="outlined"
@@ -256,14 +257,17 @@ import { ref, onMounted, watch } from "vue";
 import { getPatientByID, updatePatient } from "@/api/patients";
 import {
   getFamilyComposition,
-  getRegions,
   updatePatientAddress,
   createFamilyMember,
   getFamilyInfo,
   updateFamilyMember,
   deleteFamilyMember,
+  // address
+  getRegions,
+  getProvince,
+  getMunicipality,
+  getBarangay,
 } from "@/api/assesment-tool";
-
 
 const props = defineProps({
   patientId: Number,
@@ -275,7 +279,6 @@ onMounted(async () => {
   await getRegionData();
   // await getFamilyInfoData();
 });
-
 
 let patientData = ref({});
 let patientAddress = ref([
@@ -296,7 +299,13 @@ let patientAddress = ref([
     purok: "",
   },
 ]);
+
+// address
 let regions = ref([]);
+let provinces = ref([]);
+let municipalities = ref([]);
+let barangays = ref([]);
+// family composition
 let familyComposition = ref({});
 let familyInfo = ref({});
 let toEditFamilyMember = ref({});
@@ -510,6 +519,60 @@ const inputFields = ref({
       data: "",
     },
   },
+  address: {
+    permanent: {
+      region: {
+        label: "Region",
+        items: regions,
+        title: "regDesc",
+        value: "regCode",
+      },
+      province: {
+        label: "Province",
+        items: provinces,
+        title: "provDesc",
+        value: "provCode",
+      },
+      district: {
+        label: "District",
+      },
+      municipality: {
+        label: "Municipality",
+        items: municipalities,
+        title: "citymunDesc",
+        value: "citymunCode",
+      },
+      barangay: {
+        label: "Barangay",
+        items: barangays,
+        title: "brgyDesc",
+        value: "brgyCode",
+      },
+      purok: {
+        label: "Purok",
+      },
+    },
+    temporary: {
+      region: {
+        label: "Region",
+      },
+      province: {
+        label: "Province",
+      },
+      district: {
+        label: "District",
+      },
+      municipality: {
+        label: "Municipality",
+      },
+      barangay: {
+        label: "Barangay",
+      },
+      purok: {
+        label: "Purok",
+      },
+    },
+  },
 });
 
 const regionsCombo = {
@@ -562,7 +625,6 @@ const address = {
   },
 };
 
-
 const validateForm = async (formType) => {
   const form = await formType.value.validate();
   if (!form.valid) return false;
@@ -597,9 +659,9 @@ const createFamilyMemberData = async () => {
 const getPatientData = async () => {
   const response = await getPatientByID(props.patientId);
   patientData.value = response;
-  console.log(patientData.value);
+  // console.log(patientData.value);
   patientAddress.value = response.address;
-  console.log(patientAddress.value);
+  // console.log(patientAddress.value);
 };
 const getFamilyCompositionData = async () => {
   const response = await getFamilyComposition(props.patientId);
@@ -613,6 +675,27 @@ const getRegionData = async () => {
   const response = await getRegions();
   regions.value = response;
 };
+
+const watchAddressChange = (addressType, key, apiCall, optionKey) => {
+  watch(
+    () => patientAddress.value[addressType][key],
+    async (newVal) => {
+      console.log(newVal);
+      const firstPropertyName = Object.keys(newVal)[1];
+      const firstPropertyValue = newVal[firstPropertyName];
+      // console.log(firstPropertyValue);
+      optionKey.value = await apiCall(firstPropertyValue);
+      console.log(optionKey.value);
+    }
+  );
+};
+watchAddressChange(0, "region", getProvince, provinces);
+watchAddressChange(0, "province", getMunicipality, municipalities);
+watchAddressChange(0, "municipality", getBarangay, barangays);
+// watchAddressChange("temporary", "region", getProvince, "provinces");
+// watchAddressChange("temporary", "province", getMunicipality, "municipality");
+// watchAddressChange("temporary", "municipality", getBarangay, "barangay");
+
 // * Update Section
 const updatePersonalData = async () => {
   const validate = await validateForm(personalForm);
@@ -624,7 +707,8 @@ const updatePersonalData = async () => {
 };
 const updatePatientAddressData = async () => {
   // const patientAddress = patientData.value.address;
-  const response = await updatePatientAddress(patientAddress.value);
+  console.log(patientAddress.value);
+  // const response = await updatePatientAddress(patientAddress.value);
   // if (response) {
   //   updateBars.value.addressData.isActive = true;
   // }
