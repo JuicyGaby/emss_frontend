@@ -568,6 +568,12 @@ const handleButtonAction = async () => {
 };
 const handlePatientData = (response) => {
   problemsInEnvironment.value = response;
+  if (problemsInEnvironment.value.problems_presented === "") {
+    problemsInEnvironment.value.problems_presented = null;
+  }
+  if (problemsInEnvironment.value.reasons_psychosocial_counselling === "") {
+    problemsInEnvironment.value.reasons_psychosocial_counselling = null;
+  }
   problemsInEnvironment.value.isExist = true;
 };
 </script>
