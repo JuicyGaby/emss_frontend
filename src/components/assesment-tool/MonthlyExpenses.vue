@@ -118,7 +118,7 @@
           }}</v-btn>
         </v-col>
       </v-row>
-      {{ monthlyExpenses }}
+      <!-- {{ monthlyExpenses }} -->
     </v-container>
     <!-- {{ monthlyExpenses }} -->
     <v-snackbar

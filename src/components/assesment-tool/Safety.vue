@@ -75,7 +75,7 @@
         <p class="text-subtitle-1">{{ bar.text }}</p>
       </div>
     </v-snackbar>
-    {{ safetyData }}
+    <!-- {{ safetyData }} -->
   </div>
 </template>
 <script setup>

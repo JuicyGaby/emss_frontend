@@ -261,7 +261,7 @@
         <p class="text-subtitle-1">{{ bar.text }}</p>
       </div>
     </v-snackbar>
-    {{ socialFunctioning }}
+    <!-- {{ socialFunctioning }} -->
   </div>
 </template>
 <script setup>

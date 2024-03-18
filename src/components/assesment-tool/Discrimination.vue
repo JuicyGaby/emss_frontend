@@ -80,7 +80,7 @@
       </div>
     </v-snackbar>
   </div>
-  {{ discrimination }}
+  <!-- {{ discrimination }} -->
 </template>
 <script setup>
 import { ref, onMounted } from "vue";

@@ -64,7 +64,7 @@
       <v-btn color="secondary" @click="handleButtonAction">{{
         healthAndMentalHealth.isExist ? "Update Data" : "Create Data"
       }}</v-btn>
-      {{ healthAndMentalHealth }}
+      <!-- {{ healthAndMentalHealth }} -->
     </v-container>
     <v-snackbar
       v-for="(bar, key) in snackBars"

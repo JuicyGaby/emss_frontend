@@ -22,7 +22,7 @@
         medicalData.isExist ? "Update Data" : "Create Data"
       }}</v-btn>
     </v-container>
-    {{ medicalData }}
+    <!-- {{ medicalData }} -->
     <v-snackbar
       v-for="(bar, key) in snackBars"
       :key="key"

@@ -73,7 +73,7 @@
               >Update Personal Data</v-btn
             >
           </v-form>
-          {{ patientData }}
+          <!-- {{ patientData }} -->
         </v-container>
       </v-window-item>
       <!-- address -->
@@ -127,7 +127,7 @@
             }}</v-btn
           >
         </v-container>
-        {{ patientAddress }}
+        <!-- {{ patientAddress }} -->
       </v-window-item>
       <!-- family composition -->
       <v-window-item :value="2">
