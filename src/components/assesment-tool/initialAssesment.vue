@@ -78,22 +78,43 @@
     persistent
     transition="dialog-transition"
   >
-    <v-alert type="success" title="Successfully Accessed Patient">
+    <!-- <v-alert type="success" title="Successfully Accessed Patient">
       <div class="my-5 d-flex justify-end ga-2">
         <v-btn color="primary" @click="viewPatient(patient.id)"
           >Edit Patient</v-btn
         >
         <v-btn color="error" @click="toggleCloseBtn">Close</v-btn>
       </div>
-    </v-alert>
+    </v-alert> -->
+    <v-card>
+      <v-card-text>
+        <h2>Successfully Assesed Patient</h2>
+      </v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn
+          variant="outlined"
+          prepend-icon="mdi-pencil"
+          color="primary"
+          @click="viewPatient(patient.id)"
+          >Edit Patient</v-btn
+        >
+        <v-btn color="error" @click="toggleCloseBtn" variant="outlined"
+          >Close</v-btn
+        >
+      </v-card-actions>
+    </v-card>
     <!-- error dialog -->
   </v-dialog>
   <v-dialog v-model="dialogs.error" max-width="500">
-    <v-alert
-      title="Please input neccesary fields"
-      text="Fields : First Name, Last Name"
-      color="error"
-    ></v-alert>
+    <v-card>
+      <v-alert
+        variant="outlined"
+        icon="mdi-alert-circle-outline"
+        title="Please input neccesary fields"
+        text="Fields : First Name, Last Name"
+        color="error"
+      ></v-alert>
+    </v-card>
   </v-dialog>
 </template>
 <script setup>

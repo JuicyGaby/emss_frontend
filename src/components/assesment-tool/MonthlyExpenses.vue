@@ -9,6 +9,7 @@
           <v-text-field
             v-for="(field, key) in InputFields.textFields"
             :key="key"
+            prepend-inner-icon="mdi-currency-php"
             :label="field.label"
             v-model="monthlyExpenses[key]"
             variant="outlined"
@@ -31,6 +32,7 @@
           ></v-combobox>
           <v-text-field
             :label="InputFields.comboTextFields.transportation_cost.label"
+            prepend-inner-icon="mdi-currency-php"
             variant="outlined"
             v-model="monthlyExpenses.transportation_cost"
             style="width: 400px"
@@ -48,6 +50,7 @@
           <v-text-field
             v-for="(field, key) in InputFields.sourceFields.lightSource"
             :key="key"
+            prepend-inner-icon="mdi-currency-php"
             :label="field.label"
             variant="outlined"
             style="width: 200px"
@@ -65,6 +68,7 @@
           <v-text-field
             v-for="(field, key) in InputFields.sourceFields.fuelSource"
             :key="key"
+            prepend-inner-icon="mdi-currency-php"
             :label="field.label"
             v-model="monthlyExpenses.patient_fuel_source[key]"
             variant="outlined"
@@ -82,6 +86,7 @@
           <v-text-field
             v-for="(field, key) in InputFields.sourceFields.waterSource"
             :key="key"
+            prepend-inner-icon="mdi-currency-php"
             :label="field.label"
             v-model="monthlyExpenses.patient_water_source[key]"
             variant="outlined"
@@ -95,6 +100,7 @@
       <v-row>
         <v-col cols="12">
           <v-text-field
+            prepend-inner-icon="mdi-currency-php"
             label="Total Cost"
             variant="outlined"
             density="comfortable"
@@ -107,11 +113,12 @@
             density="comfortable"
           >
           </v-textarea>
-          <v-btn color="secondary" @click="handleAction">{{
+          <v-btn color="secondary" @click="handleButtonAction">{{
             monthlyExpenses.isExist ? "Update Patient" : "Create Data"
           }}</v-btn>
         </v-col>
       </v-row>
+      {{ monthlyExpenses }}
     </v-container>
     <!-- {{ monthlyExpenses }} -->
     <v-snackbar
@@ -141,6 +148,9 @@ import {
 const props = defineProps({
   patientId: Number,
 });
+onMounted(async () => {
+  await fetchMonthlyExpenses();
+});
 
 const snackBars = ref({
   update: {
@@ -152,7 +162,6 @@ const snackBars = ref({
     text: ref("Successfully Created Patient Data"),
   },
 });
-
 const monthlyExpenses = ref({
   isExist: false,
   patient_light_source: {
@@ -172,11 +181,6 @@ const monthlyExpenses = ref({
   },
 });
 const isLoaded = ref(true);
-
-onMounted(async () => {
-  await fetchMonthlyExpenses();
-});
-
 const monthlyExpensesData = ref({});
 const InputFields = {
   comboFields: {
@@ -269,15 +273,19 @@ const fetchMonthlyExpenses = async () => {
     console.log("No Monthly Expenses");
     return;
   }
+
   monthlyExpenses.value = response;
   monthlyExpenses.value.isExist = true;
+  if (monthlyExpenses.value.transportation_type === "") {
+    monthlyExpenses.value.transportation_type = null;
+  }
   // returns an object inside of the returned array data
   monthlyExpenses.value.patient_light_source = response.patient_light_source[0];
   monthlyExpenses.value.patient_fuel_source = response.patient_fuel_source[0];
   monthlyExpenses.value.patient_water_source = response.patient_water_source[0];
 };
 
-const handleAction = async () => {
+const handleButtonAction = async () => {
   if (monthlyExpenses.value.isExist) {
     await updateMonthlyExpensesData();
     return;
@@ -298,5 +306,8 @@ const toggleUpdate = (type) => {
   monthlyExpenses.value.isExist = true;
   snackBars.value[type].isActive = true;
 };
+
+
+
 </script>
 <style lang=""></style>

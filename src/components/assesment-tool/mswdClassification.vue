@@ -72,7 +72,12 @@ import {
   createMswdClassification,
   updateMswdClassification,
 } from "@/api/assesment-tool";
-
+const props = defineProps({
+  patientId: Number,
+});
+onMounted(async () => {
+  await fetchMswdClassification();
+});
 const classficationEmpty = ref(false);
 
 const snackBars = ref({
@@ -84,10 +89,6 @@ const snackBars = ref({
     isActive: false,
     text: "MSWD Classification Created",
   },
-});
-
-const props = defineProps({
-  patientId: Number,
 });
 
 let mswdClassification = ref({
@@ -138,10 +139,6 @@ const inputFields = ref({
     label: "Remarks",
     data: null,
   },
-});
-
-onMounted(async () => {
-  await fetchMswdClassification();
 });
 
 const updateMswdClassificationData = async () => {
