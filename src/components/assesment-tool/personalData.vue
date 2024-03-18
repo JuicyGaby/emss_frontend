@@ -73,6 +73,7 @@
               >Update Personal Data</v-btn
             >
           </v-form>
+          {{ patientData }}
         </v-container>
       </v-window-item>
       <!-- address -->
@@ -90,8 +91,8 @@
                 variant="outlined"
                 :items="value.items"
                 :item-title="value.title"
-                :item-value="value.value"
                 style="width: 350px"
+                :return-object="false"
                 v-model="patientAddress[0][key]"
                 density="compact"
               ></v-combobox>
@@ -109,6 +110,7 @@
                 :items="value.items"
                 :item-title="value.title"
                 :item-value="value.value"
+                :return-object="false"
                 v-model="patientAddress[1][key]"
                 style="width: 350px"
                 density="compact"
@@ -117,10 +119,12 @@
           </v-row>
           <v-btn
             color="secondary"
-            @click="updatePatientAddressData"
+            @click="handleAddressButton"
             prepend-icon="mdi-content-save"
             class="mb-5"
-            >Update Address</v-btn
+            >{{
+              patientData.addressExist ? "Update Address" : "Create Address"
+            }}</v-btn
           >
         </v-container>
         {{ patientAddress }}
@@ -272,6 +276,7 @@ import {
   getMunicipality,
   getBarangay,
   getPatientAddress,
+  createPatientAddress,
 } from "@/api/assesment-tool";
 
 const props = defineProps({
@@ -286,23 +291,29 @@ onMounted(async () => {
   await getPatientAddressData();
 });
 let regions = ref([]);
-let patientData = ref({});
+let patientData = ref({
+  addressExist: false,
+});
 let patientAddress = ref([
   {
+    patient_id: props.patientId,
     region: "",
     province: "",
     district: "",
     municipality: "",
     barangay: "",
     purok: "",
+    address_type: "permanent",
   },
   {
+    patient_id: props.patientId,
     region: "",
     province: "",
     district: "",
     municipality: "",
     barangay: "",
     purok: "",
+    address_type: "temporary",
   },
 ]);
 
@@ -530,13 +541,11 @@ const inputFields = ref({
         label: "Region",
         items: regions,
         title: "regDesc",
-        value: "regCode",
       },
       province: {
         label: "Province",
         items: provinces,
         title: "provDesc",
-        value: "provCode",
       },
       district: {
         label: "District",
@@ -545,13 +554,11 @@ const inputFields = ref({
         label: "Municipality",
         items: municipalities,
         title: "citymunDesc",
-        value: "citymunCode",
       },
       barangay: {
         label: "Barangay",
         items: barangays,
         title: "brgyDesc",
-        value: "brgyCode",
       },
       purok: {
         label: "Purok",
@@ -562,13 +569,11 @@ const inputFields = ref({
         label: "Region",
         items: regions,
         title: "regDesc",
-        value: "regCode",
       },
       province: {
         label: "Province",
         items: provinces,
         title: "provDesc",
-        value: "provCode",
       },
       district: {
         label: "District",
@@ -577,13 +582,11 @@ const inputFields = ref({
         label: "Municipality",
         items: municipalities,
         title: "citymunDesc",
-        value: "citymunCode",
       },
       barangay: {
         label: "Barangay",
         items: barangays,
         title: "brgyDesc",
-        value: "brgyCode",
       },
       purok: {
         label: "Purok",
@@ -604,6 +607,15 @@ const toggleDeleteFamilyDialog = (familyMember) => {
   toEditFamilyMember.value = familyMember;
   dialogs.value.deleteFamily = true;
 };
+
+const handleAddressButton = async () => {
+  if (!patientData.value.addressExist) {
+    await createPatientAddressData();
+    return;
+  }
+  await updatePatientAddressData();
+};
+
 // * create section
 const createFamilyMemberData = async () => {
   let familyMember = {};
@@ -618,6 +630,14 @@ const createFamilyMemberData = async () => {
     familyComposition.value.push(familyMember);
   }
 };
+const createPatientAddressData = async () => {
+  console.log("Creating Patient Address");
+  const response = await createPatientAddress(patientAddress.value);
+  if (response) {
+    updateBars.value.addressData.isActive = true;
+    patientAddress.value.addressExist = true;
+  }
+};
 // * Fetch Section
 const getPatientData = async () => {
   const response = await getPatientByID(props.patientId);
@@ -629,6 +649,7 @@ const getPatientAddressData = async () => {
     console.log("no address data");
     return;
   }
+  patientData.value.addressExist = true;
   patientAddress.value = response;
 };
 
@@ -639,7 +660,6 @@ const getFamilyCompositionData = async () => {
 const getFamilyInfoData = async () => {
   const response = await getFamilyInfo(props.patientId);
 };
-
 const getRegionData = async () => {
   const response = await getRegions();
   regions.value = response;
@@ -648,11 +668,11 @@ const watchAddressChange = (addressType, key, apiCall, optionKey) => {
   watch(
     () => patientAddress.value[addressType][key],
     async (newVal) => {
-      console.log(newVal);
-      const firstPropertyName = Object.keys(newVal)[1];
-      const firstPropertyValue = newVal[firstPropertyName];
-      optionKey.value = await apiCall(firstPropertyValue);
-      console.log(optionKey.value);
+      // console.log(newVal);
+      // const firstPropertyName = Object.keys(newVal)[1];
+      // const firstPropertyValue = newVal[firstPropertyName];
+      optionKey.value = await apiCall(newVal);
+      // console.log(optionKey.value);
     }
   );
 };
@@ -664,6 +684,7 @@ watchAddressChange(1, "province", getMunicipality, municipalities);
 watchAddressChange(1, "municipality", getBarangay, barangays);
 
 // * Update Section
+
 const updatePersonalData = async () => {
   const validate = await validateForm(personalForm);
   if (!validate) return;
@@ -673,7 +694,12 @@ const updatePersonalData = async () => {
   }
 };
 const updatePatientAddressData = async () => {
+  console.log('Update');
   console.log(patientAddress.value);
+  const response = await updatePatientAddress(patientAddress.value);
+  if (response){
+    updateBars.value.addressData.isActive = true;
+  }
 };
 const updateFamilyMemberData = async () => {
   const response = await updateFamilyMember(toEditFamilyMember.value);

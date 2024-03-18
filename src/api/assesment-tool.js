@@ -126,6 +126,18 @@ const updatePatientAddress = async (body) => {
   const data = await response.json();
   return data;
 };
+const createPatientAddress = async (body) => {
+  const API_URL = "http://localhost:3000/address";
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+}
 
 // * mswd classification
 const getMswdClassification = async (patient_id) => {
@@ -399,6 +411,7 @@ export {
   getMunicipality,
   getBarangay,
   getPatientAddress,
+  createPatientAddress,
   updatePatientAddress,
   // family composition
   getFamilyComposition,
