@@ -152,18 +152,12 @@
           >
             <template v-slot:[`item.operation`]="{ item }">
               <div class="d-flex">
-                <v-btn
-                  icon="mdi-pencil"
-                  @click="toggleEditFamilyDialog(item)"
-                  flat
-                  size="small"
-                ></v-btn>
-                <v-btn
-                  icon="mdi-delete"
-                  @click="toggleDeleteFamilyDialog(item)"
-                  flat
-                  size="small"
-                ></v-btn>
+                <v-btn @click="toggleEditFamilyDialog(item)" flat
+                  ><v-icon color="primary">mdi-pencil</v-icon></v-btn
+                >
+                <v-btn @click="toggleDeleteFamilyDialog(item)" flat>
+                  <v-icon color="error">mdi-delete</v-icon>
+                </v-btn>
               </div>
             </template>
           </v-data-table>
@@ -265,7 +259,6 @@ import { ref, onMounted, watch } from "vue";
 import { getPatientByID, updatePatient } from "@/api/patients";
 import {
   getFamilyComposition,
-  updatePatientAddress,
   createFamilyMember,
   getFamilyInfo,
   updateFamilyMember,
@@ -276,6 +269,7 @@ import {
   getMunicipality,
   getBarangay,
   getPatientAddress,
+  updatePatientAddress,
   createPatientAddress,
 } from "@/api/assesment-tool";
 
@@ -324,6 +318,7 @@ let barangays = ref([]);
 // family composition
 let familyComposition = ref({});
 let familyInfo = ref({});
+
 let toEditFamilyMember = ref({});
 const personalForm = ref(null);
 const tab = ref(0);
@@ -627,7 +622,8 @@ const createFamilyMemberData = async () => {
   const response = await createFamilyMember(familyMember);
   if (response) {
     updateBars.value.createFamilyMember.isActive = true;
-    familyComposition.value.push(familyMember);
+    familyComposition.value.push(response);
+    dialogs.value.addFamily = false;
   }
 };
 const createPatientAddressData = async () => {
@@ -694,10 +690,10 @@ const updatePersonalData = async () => {
   }
 };
 const updatePatientAddressData = async () => {
-  console.log('Update');
+  console.log("Update");
   console.log(patientAddress.value);
   const response = await updatePatientAddress(patientAddress.value);
-  if (response){
+  if (response) {
     updateBars.value.addressData.isActive = true;
   }
 };
