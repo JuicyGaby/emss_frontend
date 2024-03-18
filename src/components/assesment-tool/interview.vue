@@ -35,7 +35,7 @@
         </v-col>
       </v-row>
     </div>
-    {{interviewInputs}}
+    <!-- {{interviewInputs}} -->
   </v-container>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>

@@ -56,7 +56,7 @@
         </v-col>
       </v-row>
     </div>
-    {{ personalDataInputs }}
+    <!-- {{ personalDataInputs }} -->
   </v-container>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>

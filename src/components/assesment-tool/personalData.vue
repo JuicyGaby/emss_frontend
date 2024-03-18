@@ -307,7 +307,6 @@ let patientAddress = ref([
 ]);
 
 // address
-
 let provinces = ref([]);
 let municipalities = ref([]);
 let barangays = ref([]);
@@ -592,73 +591,19 @@ const inputFields = ref({
     },
   },
 });
-
-const regionsCombo = {
-  permanent: {
-    label: "Region",
-    items: regions,
-  },
-  temporary: {
-    label: "Region",
-    items: regions,
-  },
-};
-const address = {
-  permanent: {
-    province: {
-      label: "Province",
-    },
-    district: {
-      label: "District",
-    },
-    municipality: {
-      label: "Municipality",
-    },
-    barangay: {
-      label: "Barangay",
-    },
-    purok: {
-      label: "Purok",
-    },
-  },
-  temporary: {
-    region: {
-      label: "Region",
-    },
-    province: {
-      label: "Province",
-    },
-    district: {
-      label: "District",
-    },
-    municipality: {
-      label: "Municipality",
-    },
-    barangay: {
-      label: "Barangay",
-    },
-    purok: {
-      label: "Purok",
-    },
-  },
-};
-
 const validateForm = async (formType) => {
   const form = await formType.value.validate();
   if (!form.valid) return false;
   return true;
 };
-
 const toggleEditFamilyDialog = (familyMember) => {
   toEditFamilyMember.value = familyMember;
   dialogs.value.editFamily = true;
 };
-
 const toggleDeleteFamilyDialog = (familyMember) => {
   toEditFamilyMember.value = familyMember;
   dialogs.value.deleteFamily = true;
 };
-
 // * create section
 const createFamilyMemberData = async () => {
   let familyMember = {};
@@ -677,11 +622,7 @@ const createFamilyMemberData = async () => {
 const getPatientData = async () => {
   const response = await getPatientByID(props.patientId);
   patientData.value = response;
-  // console.log(patientData.value);
-  // patientAddress.value = response.address;
-  // console.log(patientAddress.value);
 };
-
 const getPatientAddressData = async () => {
   const response = await getPatientAddress(props.patientId);
   if (!response) {
@@ -703,7 +644,6 @@ const getRegionData = async () => {
   const response = await getRegions();
   regions.value = response;
 };
-
 const watchAddressChange = (addressType, key, apiCall, optionKey) => {
   watch(
     () => patientAddress.value[addressType][key],
@@ -711,7 +651,6 @@ const watchAddressChange = (addressType, key, apiCall, optionKey) => {
       console.log(newVal);
       const firstPropertyName = Object.keys(newVal)[1];
       const firstPropertyValue = newVal[firstPropertyName];
-      // console.log(firstPropertyValue);
       optionKey.value = await apiCall(firstPropertyValue);
       console.log(optionKey.value);
     }
@@ -734,12 +673,7 @@ const updatePersonalData = async () => {
   }
 };
 const updatePatientAddressData = async () => {
-  // const patientAddress = patientData.value.address;
   console.log(patientAddress.value);
-  // const response = await updatePatientAddress(patientAddress.value);
-  // if (response) {
-  //   updateBars.value.addressData.isActive = true;
-  // }
 };
 const updateFamilyMemberData = async () => {
   const response = await updateFamilyMember(toEditFamilyMember.value);
