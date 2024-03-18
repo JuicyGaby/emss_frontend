@@ -1,7 +1,7 @@
 <template lang="">
   <div v-if="isLoaded">
     <v-container style="width: 1000px">
-      <h2>Monthly Expenses:</h2>
+      <h1>Monthly Expenses:</h1>
       <!-- input fields -->
       <v-divider class="mb-5"></v-divider>
       <v-row>
@@ -20,6 +20,7 @@
           <v-combobox
             chips
             multiple
+            closable-chips
             :label="InputFields.comboFields.transportation_type.label"
             :items="InputFields.comboFields.transportation_type.items"
             v-model="monthlyExpenses.transportation_type"

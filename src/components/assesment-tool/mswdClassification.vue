@@ -1,7 +1,7 @@
 <template lang="">
   <div>
     <v-container style="width: 1000px">
-      <h2>MSWD Classification:</h2>
+      <h1>MSWD Classification:</h1>
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-col cols="12">
@@ -26,14 +26,16 @@
           >
           </v-autocomplete>
           <v-combobox
-            chips
             multiple
-            v-model="mswdClassification.membership_to_marginalized_sector"
-            :label="inputFields.sectors.label"
-            :items="inputFields.sectors.items"
+            chips
+            closable-chips
             variant="outlined"
+            label="Sectors"
+            :items="inputFields.sectors.items"
+            v-model="mswdClassification.membership_to_marginalized_sector"
             hint="Specify Other"
-          ></v-combobox>
+          >
+          </v-combobox>
           <v-textarea
             v-model="mswdClassification.remarks"
             :label="inputFields.remarks.label"
@@ -41,19 +43,11 @@
           ></v-textarea>
         </v-col>
       </v-row>
-      <v-btn
-        v-if="!mswdClassification.haveClassification"
-        color="secondary"
-        @click="createMswdClassificationData"
-        >Create MSWD Classification</v-btn
-      >
-      <v-btn
-        v-if="mswdClassification.haveClassification"
-        color="secondary"
-        class=""
-        @click="updateMswdClassificationData"
-        >Update MSWD Classification</v-btn
-      >
+      <v-btn color="success" @click="handleButtonAction">{{
+        mswdClassification.isExisting
+          ? "Update Classification"
+          : "Create Classification"
+      }}</v-btn>
     </v-container>
   </div>
   <v-snackbar
@@ -97,10 +91,8 @@ const props = defineProps({
 });
 
 let mswdClassification = ref({
-  main_classification_type: null,
-  sub_classification_type: null,
-  membership_to_marginalized_sector: [],
-  remarks: null,
+  patient_id: props.patientId,
+  isExisting: false,
 });
 
 const inputFields = ref({
@@ -165,10 +157,24 @@ const createMswdClassificationData = async () => {
   snackBars.value.create.isActive = true;
   console.log(response);
 };
-
+const handleButtonAction = async () => {
+  if (!mswdClassification.value.isExisting) {
+    await createMswdClassificationData();
+    return;
+  }
+  await updateMswdClassificationData();
+};
 const fetchMswdClassification = async () => {
   const response = await getMswdClassification(props.patientId);
+  if (!response) {
+    console.log("No MSWD Classification");
+    return;
+  }
   mswdClassification.value = response;
+  if (mswdClassification.value.membership_to_marginalized_sector === "") {
+    mswdClassification.value.membership_to_marginalized_sector = null;
+  }
+  mswdClassification.value.isExisting = true;
 };
 </script>
 <style lang=""></style>

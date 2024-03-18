@@ -51,10 +51,10 @@ const navItems = {
     title: "Dashboard",
     to: "/",
   },
-  shared: {
-    icon: "mdi-account-multiple",
-    title: "Shared",
-    to: "/about",
+  dailyActivityReport: {
+    icon: "mdi-file-document",
+    title: "Daily Activity Report",
+    to: "/daily-activity-report",
   },
   patients: {
     icon: "mdi-account-group",
@@ -66,7 +66,6 @@ const navItems = {
 const userFullName = computed(() => {
   return `${props.user.fname} ${props.user.lname}`;
 });
-
 const signOut = () => {
   props.authentication.resetSession();
   router.push("/login");

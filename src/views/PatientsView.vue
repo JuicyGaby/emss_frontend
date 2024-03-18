@@ -113,10 +113,10 @@
               <personalData :patientId="patientId"></personalData>
             </v-window-item>
             <v-window-item :value="3">
-              <mswdClassification :patientId="patientId"></mswdClassification>
+              <MswdClassification :patientId="patientId"></MswdClassification>
             </v-window-item>
             <v-window-item :value="4">
-              <monthlyExpenses :patientId="patientId"></monthlyExpenses>
+              <MonthlyExpenses :patientId="patientId"></MonthlyExpenses>
             </v-window-item>
             <v-window-item :value="5">
               <MedicalData :patientId="patientId"></MedicalData>
@@ -155,9 +155,9 @@ import { getPatients } from "@/api/patients";
 import { useRouter } from "vue-router";
 import initialAssesment from "@/components/assesment-tool/initialAssesment.vue";
 import interviewView from "@/components/assesment-tool/InterviewView.vue";
-import mswdClassification from "@/components/assesment-tool/mswdClassification.vue";
+import MswdClassification from "@/components/assesment-tool/MswdClassification.vue";
 import personalData from "@/components/assesment-tool/personalData.vue";
-import monthlyExpenses from "@/components/assesment-tool/monthly-expenses.vue";
+import MonthlyExpenses from "@/components/assesment-tool/MonthlyExpenses.vue";
 import MedicalData from "@/components/assesment-tool/MedicalData.vue";
 import HealthAndMentalHealth from "@/components/assesment-tool/HealthAndMentalHealth.vue";
 import Discrimination from "@/components/assesment-tool/Discrimination.vue";
