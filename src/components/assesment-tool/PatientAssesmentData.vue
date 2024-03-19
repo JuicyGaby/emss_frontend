@@ -298,7 +298,33 @@
             <v-divider></v-divider>
             <v-container>
               <v-row>
-                <v-col cols="12" class="d-flex flex-wrap ga-1"></v-col>
+                <v-col cols="12">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, key) in fields.discrimination
+                            .tableHeaders"
+                          :key="key"
+                        >
+                          {{ header }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, key) in fields.discrimination
+                          .particulars"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
               </v-row>
             </v-container>
           </div>
@@ -307,7 +333,31 @@
             <v-divider></v-divider>
             <v-container>
               <v-row>
-                <v-col cols="12" class="d-flex flex-wrap ga-1"></v-col>
+                <v-col cols="12">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, key) in fields.safety.tableHeaders"
+                          :key="key"
+                        >
+                          {{ header }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, key) in fields.safety.particulars"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
               </v-row>
             </v-container>
           </div>
@@ -316,7 +366,67 @@
             <v-divider></v-divider>
             <v-container>
               <v-row>
-                <v-col cols="12" class="d-flex flex-wrap ga-1"></v-col>
+                <v-col cols="12">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, key) in fields.socialFunctioning
+                            .tableHeaders"
+                          :key="key"
+                        >
+                          {{ header }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, key) in fields.socialFunctioning
+                          .particulars.familialRoles"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.socialFunctioning
+                          .particulars.familialRoles"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.socialFunctioning
+                          .particulars.familialRoles"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.socialFunctioning
+                          .particulars.familialRoles"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
               </v-row>
             </v-container>
           </div>
@@ -325,7 +435,112 @@
             <v-divider></v-divider>
             <v-container>
               <v-row>
-                <v-col cols="12" class="d-flex flex-wrap ga-1"></v-col>
+                <v-col cols="12" class="">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, key) in fields.problemsInEnvironment
+                            .tableHeaders"
+                          :key="key"
+                        >
+                          {{ header }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.foodNutrition"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.shelter"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.employment"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.economicResource"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.transportation"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.affectionalSupportSystem"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
+                <v-col cols="12" class="d-flex flex-wrap ga-2">
+                  <v-combobox
+                    v-for="(item, index) in fields.problemsInEnvironment
+                      .comboField"
+                    :key="index"
+                    :label="item.label"
+                    variant="outlined"
+                    chips
+                    multiple
+                    readonly
+                    style="width: 600px"
+                    density="compact"
+                  ></v-combobox>
+                  <v-textarea
+                    v-for="(item, index) in fields.problemsInEnvironment
+                      .textArea"
+                    :key="index"
+                    :label="item.label"
+                    variant="outlined"
+                    readonly
+                    density="compact"
+                    style="width: 400px"
+                  >
+                  </v-textarea>
+                  <v-text-field
+                    v-for="(item, index) in fields.problemsInEnvironment
+                      .textField"
+                    :key="index"
+                    :label="item.label"
+                    variant="outlined"
+                    readonly
+                    density="compact"
+                    style="width: 400px"
+                  ></v-text-field>
+                </v-col>
               </v-row>
             </v-container>
           </div>
@@ -720,20 +935,256 @@ const fields = {
     },
   },
   discrimination: {
-    textField: {},
-    comboField: {},
+    tableHeaders: [
+      "Particulars",
+      "Severity Index",
+      "Duration Index",
+      "Coping Index",
+    ],
+    particulars: {
+      Age: {
+        label: "Age",
+      },
+      Ethnicity: {
+        label: "Ethnicity",
+      },
+      Religion: {
+        label: "Religion",
+      },
+      Sex: {
+        label: "Sex",
+      },
+      Sexual_Orientation: {
+        label: "Sexual Orientation",
+      },
+      Lifestyle: {
+        label: "Lifestyle",
+      },
+      NonCitizen: {
+        label: "Non-Citizen",
+      },
+      Veteran_Status: {
+        label: "Veteran Status",
+      },
+      Dependency_Status: {
+        label: "Dependency Status",
+      },
+      Disability_Status: {
+        label: "Disability",
+      },
+      Marital_Status: {
+        label: "Marital Status",
+      },
+    },
   },
   safety: {
-    textField: {},
-    comboField: {},
+    tableHeaders: [
+      "Particulars",
+      "Severity Index",
+      "Duration Index",
+      "Coping Index",
+    ],
+    particulars: {
+      voice_crime_in_community: {
+        label: "Voice Crime in Community",
+      },
+      unsafe_working_conditions: {
+        label: "Unsafe Working Conditions",
+      },
+      unsafe_codition_home: {
+        label: "Unsafe Condition at Home",
+      },
+      absence_of_adequate_safety_services: {
+        label: "Absence of Adequate Safety Services",
+      },
+      natural_disasters: {
+        label: "Natural Disasters",
+      },
+      human_created_disasters: {
+        label: "Human Created Disasters",
+      },
+    },
   },
   socialFunctioning: {
-    textField: {},
-    comboField: {},
+    tableHeaders: [
+      "Particulars",
+      "Social Interaction Problem",
+      "Severity Index",
+      "Duration Index",
+      "Coping Index",
+    ],
+    particulars: {
+      familialRoles: {
+        parent: {
+          label: "Parent",
+        },
+        spouse: {
+          label: "Spouse",
+        },
+        child: {
+          label: "Child",
+        },
+        sibling: {
+          label: "Sibling",
+        },
+        other_family_member: {
+          label: "Other Family Member",
+        },
+        significant_others: {
+          label: "Significant Other",
+        },
+      },
+      interpersonalRoles: {
+        lover: {
+          label: "Lover",
+        },
+        friend: {
+          label: "Friend",
+        },
+        neighbor: {
+          label: "Neigbor",
+        },
+        member: {
+          label: "Member",
+        },
+      },
+      occupationalRoles: {
+        worker_paid_economy: {
+          label: "Work Paid Economy",
+        },
+        worker_home: {
+          label: "Worker Home",
+        },
+        worker_volunteer: {
+          label: "Worker Volunteer",
+        },
+        student: {
+          label: "Student",
+        },
+      },
+      specialLifeRoles: {
+        consumer: {
+          label: "Consumer",
+        },
+        inpatient: {
+          label: "Inpatient",
+        },
+        outpatient: {
+          label: "Outpatient",
+        },
+        er_patient: {
+          label: "ER Patient",
+        },
+        prisoner: {
+          label: "Prisoner",
+        },
+        immigrant_legal: {
+          label: "Immigrant Legal",
+        },
+        immigrant_undocumented: {
+          label: "Immigrant undocumented",
+        },
+        imigrant_refugee: {
+          label: "Imigrant Refugee",
+        },
+      },
+    },
   },
   problemsInEnvironment: {
-    textField: {},
-    comboField: {},
+    tableHeaders: ["Particulars", "Severity Index", "Duration Index"],
+    particulars: {
+      foodNutrition: {
+        lack_regular_food: {
+          label: "Lack of regular food supply",
+        },
+        nutritionally_inadequate_food: {
+          label: "Nutritionally inadequate food supply",
+        },
+        documented_malnutrition: {
+          label: "Documented malnutrition",
+        },
+      },
+      shelter: {
+        absence_of_shelter: {
+          label: "Absence of shelter",
+        },
+        inadequate_shelter: {
+          label: "Substandard or inadequate shelter",
+        },
+      },
+      employment: {
+        unemployment: {
+          label: "Unemployment",
+        },
+        underemployment: {
+          label: "Underemployment",
+        },
+        inappropiate_employment: {
+          label: "Inappropriate employment",
+        },
+      },
+      economicResource: {
+        insufficient_community_resources: {
+          label: "Insufficient community resources for basic sustenance",
+        },
+        insufficient_provide_resources: {
+          label:
+            "Insufficient resources in the community to provide for needed services beyond",
+        },
+      },
+      transportation: {
+        no_personal_transportation: {
+          label: "No personal/public transportation to job/needed services",
+        },
+      },
+      affectionalSupportSystem: {
+        absence_of_affectional_support: {
+          label: "Absence of affectional support system",
+        },
+        inadequate_support_system: {
+          label: "Support system inadequate to meet affectional needs",
+        },
+        excessive_support_system: {
+          label: "exccessive involved support system",
+        },
+      },
+    },
+    comboField: {
+      reasons_psychosocial_counselling: {
+        label: "Reasons for Psychosocial Counselling",
+      },
+      problems_presented: {
+        label: "Problems Presented At Intake",
+      },
+    },
+    textField: {
+      person_emergency: {
+        label: "Person to be notified in case of emergency",
+      },
+      relationship_to_patient: {
+        label: "Relation to the patient",
+      },
+      address: {
+        label: "Address",
+      },
+      contact_number: {
+        label: "Contact Number",
+      },
+      interviewed_by: {
+        label: "Interviewer",
+      },
+    },
+    textArea: {
+      assesment_findings: {
+        label: "Assesment Findings",
+      },
+      recommended_intervention: {
+        label: "Recommended Intervention",
+      },
+      action_taken: {
+        label: "Action Taken",
+      },
+    },
   },
 };
 
