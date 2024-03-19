@@ -42,7 +42,7 @@
               <v-icon color="primary" @click="toggleEditBtn(item.id)"
                 >mdi-pencil</v-icon
               >
-              <v-icon color="secondary" @click="deletePatient(item)"
+              <v-icon color="secondary" @click="viewPatientData(item)"
                 >mdi-eye</v-icon
               >
             </div>
@@ -146,6 +146,10 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <!-- view assessment dialog -->
+    <v-dialog v-model="dialogs.viewAssessment" width="70%" scrollable>
+      <PatientAssesmentData :patientId="patientId"></PatientAssesmentData>
+    </v-dialog>
   </div>
 </template>
 
@@ -164,6 +168,7 @@ import Discrimination from "@/components/assesment-tool/Discrimination.vue";
 import Safety from "@/components/assesment-tool/Safety.vue";
 import AssesmentSocialFunctioning from "@/components/assesment-tool/AssesmentSocialFunctioning.vue";
 import ProblemsInEnvironment from "@/components/assesment-tool/ProblemsInEnvironment.vue";
+import PatientAssesmentData from "@/components/assesment-tool/PatientAssesmentData.vue";
 
 const props = defineProps({
   user: Object,
@@ -175,13 +180,12 @@ let patientData = ref([]);
 const isLoading = ref(false);
 const createDialog = ref(false);
 const editDialog = ref(false);
+const dialogs = ref({
+  viewAssessment: false,
+});
 const tab = ref(0);
 const patientId = ref(0);
-const initialAssesmentItems = [
-  "Interview",
-  "Demographic Data",
-  "Create Patient",
-];
+
 const tableHeaders = [
   { title: "First Name", value: "first_name" },
   { title: "Middle Name", value: "middle_name" },
@@ -214,8 +218,10 @@ const toggleEditBtn = (id) => {
   tab.value = 1;
 };
 
-const deletePatient = (patient) => {
-  console.log("Delete:", patient);
+const viewPatientData = (patient) => {
+  // console.log("View Assesment:", patient.id);
+  patientId.value = patient.id;
+  dialogs.value.viewAssessment = !dialogs.value.viewAssessment;
 };
 
 async function fetchPatients() {
@@ -227,7 +233,6 @@ async function fetchPatients() {
     isLoading.value = false;
   }
 }
-
 const toggleCreateDialog = () => {
   createDialog.value = !createDialog.value;
 };
