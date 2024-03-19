@@ -1,6 +1,6 @@
 <template lang="">
   <div>
-    <v-dialog v-model="props.modelValue">
+    <v-dialog v-model="props.modelValue" width="80%">
       <v-card>
         <v-toolbar color="grey">
           <v-toolbar-title class="text-h5"
@@ -11,6 +11,7 @@
         <v-card-title primary-title> </v-card-title>
         <v-spacer></v-spacer>
         <v-card-text>
+          <!-- initial Interview -->
           <div>
             <h2>Initial Interview:</h2>
             <v-divider></v-divider>
@@ -32,6 +33,7 @@
               </v-row>
             </v-container>
           </div>
+          <!-- demographic data -->
           <div>
             <h2>I. Demographic Data:</h2>
             <v-divider></v-divider>
@@ -73,40 +75,271 @@
                       variant="outlined"
                       density="compact"
                       readonly
+                      v-model="
+                        patientAssesmentData.demographicData.address[0][key]
+                      "
                     ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" class="d-flex ga-1 flex-wrap">
+                    <v-text-field
+                      v-for="(field, key) in fields.demographicData.address
+                        .temporary"
+                      :key="key"
+                      :label="field.label"
+                      :type="field.type"
+                      style="width: 400px"
+                      variant="outlined"
+                      density="compact"
+                      readonly
+                      v-model="
+                        patientAssesmentData.demographicData.address[1][key]
+                      "
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <h3>Family Composition</h3>
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-data-table
+                      :headers="
+                        patientAssesmentData.demographicData.tableHeaders
+                      "
+                      :items="
+                        patientAssesmentData.demographicData.familyComposition
+                      "
+                      items-per-page="5"
+                      density="compact"
+                      :items-per-page-options="[5, 10, 15]"
+                    >
+                    </v-data-table>
                   </v-col>
                 </v-row>
               </v-container>
             </div>
           </div>
           <div>
-            <h2>Initial Interview:</h2>
+            <h2>II. MSWD Classification:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex ga-1 flex-wrap">
+                  <v-text-field
+                    v-for="(field, key) in fields.mswdClassification.textField"
+                    :key="key"
+                    :label="field.label"
+                    :type="field.type"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                    v-model="patientAssesmentData.mswdClassification[key]"
+                  ></v-text-field>
+                  <v-combobox
+                    multiple
+                    chips
+                    variant="outlined"
+                    :label="
+                      fields.mswdClassification.comboField
+                        .membership_to_marginalized_sector.label
+                    "
+                    v-model="
+                      patientAssesmentData.mswdClassification
+                        .membership_to_marginalized_sector
+                    "
+                    readonly
+                    density="compact"
+                    style="width: 400px"
+                  >
+                  </v-combobox>
+                </v-col>
+              </v-row>
+            </v-container>
           </div>
-          <v-divider></v-divider>
           <div>
-            <h2>Initial Interview:</h2>
+            <h2>III. Monthly Expenses:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-1">
+                  <v-text-field
+                    v-for="(field, key) in fields.monthlyExpenses.textField"
+                    :key="key"
+                    :label="field.label"
+                    :type="field.type"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                  ></v-text-field>
+                  <v-combobox
+                    multiple
+                    chips
+                    variant="outlined"
+                    :label="
+                      fields.monthlyExpenses.comboField.transportation_type
+                        .label
+                    "
+                    readonly
+                    density="compact"
+                    style="width: 400px"
+                  >
+                  </v-combobox>
+                  <v-text-field
+                    :label="
+                      fields.monthlyExpenses.comboText.transportation_cost.label
+                    "
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="d-flex flex-wrap ga-1">
+                  <v-text-field
+                    v-for="(field, key) in fields.monthlyExpenses.sourceFields
+                      .lightSource"
+                    :key="key"
+                    :label="field.label"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                  ></v-text-field>
+                  <v-text-field
+                    v-for="(field, key) in fields.monthlyExpenses.sourceFields
+                      .fuelSource"
+                    :key="key"
+                    :label="field.label"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                  ></v-text-field>
+                  <v-text-field
+                    v-for="(field, key) in fields.monthlyExpenses.sourceFields
+                      .waterSource"
+                    :key="key"
+                    :label="field.label"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                  ></v-text-field>
+                  <v-text-field
+                    :label="fields.monthlyExpenses.total_cost.label"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
           </div>
-          <v-divider></v-divider>
           <div>
-            <h2>Initial Interview:</h2>
+            <h2>IV. Medical Data:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-1">
+                  <v-textarea
+                    v-for="(field, key) in fields.medicalData.textField"
+                    :key="key"
+                    :label="field.label"
+                    :type="field.type"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                  ></v-textarea>
+                </v-col>
+              </v-row>
+            </v-container>
           </div>
-          <v-divider></v-divider>
+          <div>
+            <h2>V. Health and Mental Health:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-1"></v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <div>
+            <h2>VI. Discrimination:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-1"></v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <div>
+            <h2>VII. Safety:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-1"></v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <div>
+            <h2>VIII. Assesment of Social Functioning:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-1"></v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <div>
+            <h2>IX. Problems in the Environment:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-1"></v-col>
+              </v-row>
+            </v-container>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
-import { getInterview, getPatientAddress } from "@/api/assesment-tool";
+import { ref, onMounted, computed, watch } from "vue";
+import {
+  getInterview,
+  getPatientAddress,
+  getMswdClassification,
+  getFamilyComposition,
+  getMonthlyExpenses,
+  getMedicalData,
+  getHealthAndMentalHealth,
+  getDiscrimination,
+  getSafety,
+  getSocialFunctioning,
+  getProblemsInEnvironment,
+} from "@/api/assesment-tool";
 import { getPatientByID } from "@/api/patients";
 const props = defineProps({
   patientId: Number,
   modelValue: Boolean,
 });
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value) {
+      getPatientData();
+    }
+  }
+);
 const emit = defineEmits(["close"]);
 onMounted(async () => {
-    await getPatientData();
+  await getPatientData();
 });
 const toggleDialog = () => {
   emit("close");
@@ -115,8 +348,44 @@ const patientAssesmentData = ref({
   interview: {},
   demographicData: {
     patientData: {},
-    address: [],
+    address: [
+      {
+        region: "",
+        province: "",
+        district: "",
+        municipality: "",
+        barangay: "",
+        purok: "",
+      },
+      {
+        region: "",
+        province: "",
+        district: "",
+        municipality: "",
+        barangay: "",
+        purok: "",
+      },
+    ],
+    tableHeaders: [
+      { title: "Fullname", value: "full_name" },
+      { title: "Age", value: "age" },
+      { title: "Birth Date", value: "birth_date" },
+      { title: "Civil Status", value: "civil_status" },
+      { title: "Relationship", value: "relationship" },
+      { title: "Educational Attainment", value: "educational_attainment" },
+      { title: "Occupation", value: "occupation" },
+      { title: "Monthly Income", value: "monthly_income" },
+    ],
+    familyComposition: {},
   },
+  mswdClassification: {},
+  monthlyExpenses: {},
+  medicalData: {},
+  healthAndMentalHealth: {},
+  discrimination: {},
+  safety: {},
+  socialFunctioning: {},
+  problemsInEnvironment: {},
 });
 const fields = {
   interview: {
@@ -186,47 +455,36 @@ const fields = {
       textField: {
         first_name: {
           label: "First Name",
-          type: "text",
         },
         middle_name: {
           label: "Middle Name",
-          type: "text",
         },
         last_name: {
           label: "Last Name",
-          type: "text",
         },
         age: {
           label: "Age",
-          type: "text",
         },
         birth_date: {
           label: "Birth Date",
-          type: "date",
         },
         religion: {
           label: "Religion",
-          type: "text",
         },
         contact_number: {
           label: "Contact Number",
-          type: "text",
         },
         occupation: {
           label: "Occupation",
-          type: "text",
         },
         monthly_income: {
           label: "Monthly Income",
-          type: "text",
         },
         ph_membership_number: {
           label: "PH Membership Number",
-          type: "text",
         },
         ph_membership_type: {
           label: "PH Membership",
-          type: "text",
         },
         gender: {
           label: "Gender Identity",
@@ -294,22 +552,189 @@ const fields = {
       },
     },
   },
+  mswdClassification: {
+    textField: {
+      main_classification_type: {
+        label: "Main Classification",
+      },
+      sub_classification_type: {
+        label: "Sub Classification",
+      },
+    },
+    comboField: {
+      membership_to_marginalized_sector: {
+        label: "Sectors",
+      },
+    },
+  },
+  monthlyExpenses: {
+    textField: {
+      house_lot_cost: {
+        label: "House and Lot Cost",
+        value: "",
+      },
+      food_water_cost: {
+        label: "Food and Water Cost",
+        value: "",
+      },
+      education_cost: {
+        label: "Education Cost",
+        value: "",
+      },
+      communication_cost: {
+        label: "Communication Cost",
+        value: "",
+      },
+      house_help_cost: {
+        label: "House Help Cost",
+        value: "",
+      },
+      medical_cost: {
+        label: "Medical Cost",
+        value: "",
+      },
+    },
+    comboField: {
+      transportation_type: {
+        label: "Transportation Type",
+      },
+    },
+    comboText: {
+      transportation_cost: {
+        label: "Transportation Cost",
+      },
+    },
+    sourceFields: {
+      lightSource: {
+        electric: {
+          label: "Electricity Cost",
+        },
+        kerosene: {
+          label: "Kerosene Cost",
+        },
+        candle: {
+          label: "Candles Cost",
+        },
+      },
+      fuelSource: {
+        gas: {
+          label: "Gas Cost",
+        },
+        kerosene: {
+          label: "kerosene Cost",
+        },
+        charcoal: {
+          label: "Charcoal Cost",
+        },
+      },
+      waterSource: {
+        public_artesian_well: {
+          label: "Public Artesian Well Cost",
+        },
+        private_artesian_well: {
+          label: "Private Artesian Well Cost",
+        },
+        water_district: {
+          label: "Water District Cost",
+        },
+      },
+    },
+    total_cost: {
+      label: "Total Cost",
+    },
+  },
+  medicalData: {
+    textField: {
+      admitting_diagnosis: {
+        label: "Admitting Diagnosis",
+      },
+      final_diagnosis: {
+        label: "Final Diagnosis",
+      },
+      duration_of_problems: {
+        label: "Duration of Problems",
+      },
+      previous_treatment: {
+        label: "Previous Treatment",
+      },
+      present_treatment_plan: {
+        label: "Present Treatment Plan",
+      },
+      health_accessibility_problem: {
+        label: "Health Accessibility Problem",
+      },
+    },
+  },
+  healthAndMentalHealth: {
+    textField: {},
+    comboField: {},
+  },
+  discrimination: {
+    textField: {},
+    comboField: {},
+  },
+  safety: {
+    textField: {},
+    comboField: {},
+  },
+  socialFunctioning: {
+    textField: {},
+    comboField: {},
+  },
+  problemsInEnvironment: {
+    textField: {},
+    comboField: {},
+  },
 };
 
 const getPatientData = async () => {
   await getInterviewData();
-  //   await getDemographicData();
+  await getPatientPersonalData();
+  await getMswdClassificationData();
+  await getMonthlyExpensesData();
 };
 const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
   patientAssesmentData.value.interview = response;
 };
-const getDemographicData = async () => {
-  //   const personalData = await getPatientByID(props.patientId);
-  //   const address = await getPatientAddress(props.patientId);
-  //   patientAssesmentData.value.demographicData.patientData = personalData;
-  //   patientAssesmentData.value.demographicData.address = address;
-  //   console.log(patientAssesmentData.value.demographicData);
+const getPatientPersonalData = async () => {
+  const response = await getPatientByID(props.patientId);
+  const address = await getPatientAddress(props.patientId);
+  const familyComposition = await getFamilyComposition(props.patientId);
+  if (address) {
+    patientAssesmentData.value.demographicData.address[0] = address[0];
+    patientAssesmentData.value.demographicData.address[1] = address[1];
+  }
+  patientAssesmentData.value.demographicData.patientData = response;
+  patientAssesmentData.value.demographicData.familyComposition =
+    familyComposition;
+};
+const getMswdClassificationData = async () => {
+  const response = await getMswdClassification(props.patientId);
+  patientAssesmentData.value.mswdClassification = response;
+};
+
+const getMonthlyExpensesData = async () => {
+  const response = await getMonthlyExpenses(props.patientId);
+  console.log(response);
+};
+const getMedicalDataItem = async () => {
+  const response = await getMedicalData(props.patientId);
+};
+const getHealthAndMentalHealthData = async () => {
+  const response = await getHealthAndMentalHealth(props.patientId);
+};
+const getDiscriminationData = async () => {
+  const response = await getDiscrimination(props.patientId);
+};
+const getSafetyData = async () => {
+  const response = await getSafety(props.patientId);
+};
+const getSocialFunctioningData = async () => {
+  const response = await getSocialFunctioning(props.patientId);
+};
+const getProblemsInEnvironmentData = async () => {
+  const response = await getProblemsInEnvironment(props.patientId);
 };
 </script>
 <style lang=""></style>
