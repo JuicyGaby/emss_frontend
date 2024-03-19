@@ -263,7 +263,33 @@
             <v-divider></v-divider>
             <v-container>
               <v-row>
-                <v-col cols="12" class="d-flex flex-wrap ga-1"></v-col>
+                <v-col cols="12">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, key) in fields.healthAndMentalHealth
+                            .tableHeaders"
+                          :key="key"
+                        >
+                          {{ header }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, key) in fields.healthAndMentalHealth
+                          .textField"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
               </v-row>
             </v-container>
           </div>
@@ -666,8 +692,32 @@ const fields = {
     },
   },
   healthAndMentalHealth: {
-    textField: {},
-    comboField: {},
+    tableHeaders: [
+      "Particulars",
+      "Severity Index",
+      "Duration Index",
+      "Coping Index",
+    ],
+    textField: {
+      abscence_of_adequate_health_services: {
+        label: "Abscence of Adequate Health Services",
+      },
+      abscence_of_support_health_services: {
+        label: "Abscence of Support Health Services",
+      },
+      absence_of_adequate_mental_services: {
+        label: "Abscence of Adequate Mental Services",
+      },
+      absence_of_support_mental_services: {
+        label: "Abscence of Support Mental Services",
+      },
+      inaccessibility_of_health_services: {
+        label: "Inaccessibility of Health Services",
+      },
+      inaccessibility_of_mental_services: {
+        label: "Inaccessibility of Mental Services",
+      },
+    },
   },
   discrimination: {
     textField: {},
