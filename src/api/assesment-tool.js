@@ -18,6 +18,8 @@ const getInterview = async (patient_id) => {
   const data = await response.json();
   return data;
 };
+
+
 const updateInterview = async (patient_id, body) => {
   console.log(patient_id, body);
   const API_URL = `http://localhost:3000/interview/${patient_id}`;

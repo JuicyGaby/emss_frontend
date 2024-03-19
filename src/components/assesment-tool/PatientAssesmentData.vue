@@ -119,6 +119,7 @@
               </v-container>
             </div>
           </div>
+          <!-- mswd classification -->
           <div>
             <h2>II. MSWD Classification:</h2>
             <v-divider></v-divider>
@@ -157,6 +158,7 @@
               </v-row>
             </v-container>
           </div>
+          <!-- monthly expenses -->
           <div>
             <h2>III. Monthly Expenses:</h2>
             <v-divider></v-divider>
@@ -172,6 +174,7 @@
                     variant="outlined"
                     density="compact"
                     readonly
+                    v-model="patientAssesmentData.monthlyExpenses[key]"
                   ></v-text-field>
                   <v-combobox
                     multiple
@@ -184,6 +187,9 @@
                     readonly
                     density="compact"
                     style="width: 400px"
+                    v-model="
+                      patientAssesmentData.monthlyExpenses.transportation_type
+                    "
                   >
                   </v-combobox>
                   <v-text-field
@@ -194,6 +200,9 @@
                     variant="outlined"
                     density="compact"
                     readonly
+                    v-model="
+                      patientAssesmentData.monthlyExpenses.transportation_cost
+                    "
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" class="d-flex flex-wrap ga-1">
@@ -206,6 +215,10 @@
                     variant="outlined"
                     density="compact"
                     readonly
+                    v-model="
+                      patientAssesmentData.monthlyExpenses
+                        .patient_light_source[0][key]
+                    "
                   ></v-text-field>
                   <v-text-field
                     v-for="(field, key) in fields.monthlyExpenses.sourceFields
@@ -216,6 +229,10 @@
                     variant="outlined"
                     density="compact"
                     readonly
+                    v-model="
+                      patientAssesmentData.monthlyExpenses
+                        .patient_fuel_source[0][key]
+                    "
                   ></v-text-field>
                   <v-text-field
                     v-for="(field, key) in fields.monthlyExpenses.sourceFields
@@ -226,18 +243,24 @@
                     variant="outlined"
                     density="compact"
                     readonly
+                    v-model="
+                      patientAssesmentData.monthlyExpenses
+                        .patient_water_source[0][key]
+                    "
                   ></v-text-field>
                   <v-text-field
                     :label="fields.monthlyExpenses.total_cost.label"
                     style="width: 400px"
                     variant="outlined"
                     density="compact"
+                    v-model="patientAssesmentData.monthlyExpenses.total_cost"
                     readonly
                   ></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
           </div>
+          <!-- medical data -->
           <div>
             <h2>IV. Medical Data:</h2>
             <v-divider></v-divider>
@@ -258,6 +281,7 @@
               </v-row>
             </v-container>
           </div>
+          <!--  -->
           <div>
             <h2>V. Health and Mental Health:</h2>
             <v-divider></v-divider>
@@ -293,6 +317,7 @@
               </v-row>
             </v-container>
           </div>
+          <!--  -->
           <div>
             <h2>VI. Discrimination:</h2>
             <v-divider></v-divider>
@@ -328,6 +353,7 @@
               </v-row>
             </v-container>
           </div>
+          <!--  -->
           <div>
             <h2>VII. Safety:</h2>
             <v-divider></v-divider>
@@ -361,6 +387,7 @@
               </v-row>
             </v-container>
           </div>
+          <!--  -->
           <div>
             <h2>VIII. Assesment of Social Functioning:</h2>
             <v-divider></v-divider>
@@ -430,6 +457,7 @@
               </v-row>
             </v-container>
           </div>
+          <!--  -->
           <div>
             <h2>IX. Problems in the Environment:</h2>
             <v-divider></v-divider>
@@ -620,7 +648,13 @@ const patientAssesmentData = ref({
     familyComposition: {},
   },
   mswdClassification: {},
-  monthlyExpenses: {},
+  monthlyExpenses: {
+    patient_light_source: [{ electric: 0, kerosene: 0, candle: 0 }],
+    patient_water_source: [
+      { public_artesian_well: 0, private_artesian_well: 0, water_district: 0 },
+    ],
+    patient_fuel_source: [{ gas: 0, kerosene: 0, charcoal: 0 }],
+  },
   medicalData: {},
   healthAndMentalHealth: {},
   discrimination: {},
@@ -1214,10 +1248,12 @@ const getMswdClassificationData = async () => {
   const response = await getMswdClassification(props.patientId);
   patientAssesmentData.value.mswdClassification = response;
 };
-
 const getMonthlyExpensesData = async () => {
   const response = await getMonthlyExpenses(props.patientId);
-  console.log(response);
+  if (response) {
+    patientAssesmentData.value.monthlyExpenses = response;
+    console.log(patientAssesmentData.value.monthlyExpenses);
+  }
 };
 const getMedicalDataItem = async () => {
   const response = await getMedicalData(props.patientId);
