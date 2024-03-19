@@ -42,7 +42,7 @@
               <v-icon color="primary" @click="toggleEditBtn(item.id)"
                 >mdi-pencil</v-icon
               >
-              <v-icon color="secondary" @click="viewPatientData(item)"
+              <v-icon color="secondary" @click="viewPatientAssessmentData(item)"
                 >mdi-eye</v-icon
               >
             </div>
@@ -147,9 +147,11 @@
       </v-card>
     </v-dialog>
     <!-- view assessment dialog -->
-    <v-dialog v-model="dialogs.viewAssessment" width="70%" scrollable>
-      <PatientAssesmentData :patientId="patientId"></PatientAssesmentData>
-    </v-dialog>
+    <PatientAssesmentData
+      :modelValue="dialogs.viewAssessment.isVisibile"
+      :patientId="patientId"
+      @close="toggleViewAssessment"
+    ></PatientAssesmentData>
   </div>
 </template>
 
@@ -181,7 +183,9 @@ const isLoading = ref(false);
 const createDialog = ref(false);
 const editDialog = ref(false);
 const dialogs = ref({
-  viewAssessment: false,
+  viewAssessment: {
+    isVisibile: false,
+  },
 });
 const tab = ref(0);
 const patientId = ref(0);
@@ -217,11 +221,13 @@ const toggleEditBtn = (id) => {
   editDialog.value = !editDialog.value;
   tab.value = 1;
 };
-
-const viewPatientData = (patient) => {
-  // console.log("View Assesment:", patient.id);
+const toggleViewAssessment = () => {
+  dialogs.value.viewAssessment.isVisibile = false;
+};
+const viewPatientAssessmentData = (patient) => {
+  console.log("View Assesment:", patient.id);
   patientId.value = patient.id;
-  dialogs.value.viewAssessment = !dialogs.value.viewAssessment;
+  dialogs.value.viewAssessment.isVisibile = true;
 };
 
 async function fetchPatients() {
