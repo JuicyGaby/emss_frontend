@@ -276,6 +276,7 @@
                     variant="outlined"
                     density="compact"
                     readonly
+                    v-model="patientAssesmentData.medicalData[key]"
                   ></v-textarea>
                 </v-col>
               </v-row>
@@ -1227,6 +1228,7 @@ const getPatientData = async () => {
   await getPatientPersonalData();
   await getMswdClassificationData();
   await getMonthlyExpensesData();
+  await getMedicalDataItem();
 };
 const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
@@ -1252,11 +1254,11 @@ const getMonthlyExpensesData = async () => {
   const response = await getMonthlyExpenses(props.patientId);
   if (response) {
     patientAssesmentData.value.monthlyExpenses = response;
-    console.log(patientAssesmentData.value.monthlyExpenses);
   }
 };
 const getMedicalDataItem = async () => {
   const response = await getMedicalData(props.patientId);
+  if (response) patientAssesmentData.value.medicalData = response;
 };
 const getHealthAndMentalHealthData = async () => {
   const response = await getHealthAndMentalHealth(props.patientId);
