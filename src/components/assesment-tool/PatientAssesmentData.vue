@@ -413,7 +413,7 @@
               </v-row>
             </v-container>
           </div>
-          <!--  -->
+          <!-- Assessment of Social Functioning -->
           <div>
             <h2>VIII. Assesment of Social Functioning:</h2>
             <v-divider></v-divider>
@@ -439,43 +439,111 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.socialFunctioning
-                          .particulars.familialRoles"
+                          .particulars.interpersonalRoles"
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.socialFunctioning
-                          .particulars.familialRoles"
+                          .particulars.occupationalRoles"
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.socialFunctioning
-                          .particulars.familialRoles"
+                          .particulars.specialLifeRoles"
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -803,7 +871,140 @@ const patientAssesmentData = ref({
       coping: "",
     },
   },
-  socialFunctioning: {},
+  socialFunctioning: {
+    parent: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    spouse: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    child: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    sibling: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    other_family_member: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    significant_others: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    lover: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    friend: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    neighbor: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    member: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    worker_paid_economy: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    worker_home: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    worker_volunteer: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    student: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    consumer: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    inpatient: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    outpatient: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    er_patient: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    prisoner: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    immigrant_legal: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    immigrant_undocumented: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    imigrant_refugee: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+  },
   problemsInEnvironment: {},
 });
 const fields = {
