@@ -359,9 +359,19 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>{{patientAssesmentData.discrimination[key].severity}}</td>
-                        <td>{{patientAssesmentData.discrimination[key].duration}}</td>
-                        <td>{{patientAssesmentData.discrimination[key].coping}}</td>
+                        <td>
+                          {{
+                            patientAssesmentData.discrimination[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.discrimination[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{ patientAssesmentData.discrimination[key].coping }}
+                        </td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -393,9 +403,9 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>{{patientAssesmentData.safety[key].severity}}</td>
-                        <td>{{patientAssesmentData.safety[key].duration}}</td>
-                        <td>{{patientAssesmentData.safety[key].coping}}</td>
+                        <td>{{ patientAssesmentData.safety[key].severity }}</td>
+                        <td>{{ patientAssesmentData.safety[key].duration }}</td>
+                        <td>{{ patientAssesmentData.safety[key].coping }}</td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -761,7 +771,38 @@ const patientAssesmentData = ref({
       coping: "",
     },
   },
-  safety: {},
+  safety: {
+    voice_crime_in_community: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    unsafe_working_conditions: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    unsafe_codition_home: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    absence_of_adequate_safety_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    natural_disasters: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    human_created_disasters: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+  },
   socialFunctioning: {},
   problemsInEnvironment: {},
 });
