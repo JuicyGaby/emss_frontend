@@ -67,12 +67,8 @@
         />
       </v-dialog>
       <!-- update dar dialog -->
-      <v-dialog
-        v-model="dialogs.edit"
-        width="600px"
-        transition="dialog-transition"
-      >
-        <EditDARDialog :dar_id="dar_id" />
+      <v-dialog v-model="dialogs.edit" fullscreen scrollable>
+        <EditDARDialog :dar_id="dar_id" @closeDialog="handleCloseDialog"/>
       </v-dialog>
       <!-- view dar dialog -->
       <v-dialog
@@ -143,13 +139,13 @@ const addDARItem = (item) => {
   patients.value.push(item);
   console.log(patients.value);
 };
-
 const handleEditDar = (dar_id) => {
   dialogs.value.create = false;
   editDailyActivityReport(dar_id);
 };
 const handleCloseDialog = () => {
   dialogs.value.create = false;
+  dialogs.value.edit = false;
 };
 </script>
 <style lang=""></style>

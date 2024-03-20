@@ -1,11 +1,12 @@
 <template lang="">
   <div>
     <v-card>
-      <v-card-title primary-title>
-        <v-icon size="x-large">mdi-book-edit</v-icon>
-        <h2>Daily Activity Report {{ props.dar_id }} </h2>
-        
-      </v-card-title>
+      <v-toolbar color="secondary" class="px-5">
+        <v-icon>mdi-book-plus</v-icon>
+        <v-toolbar-title>Update Daily Activity Report</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon="mdi-close" @click="emit('closeDialog')"> </v-btn>
+      </v-toolbar>
       <v-card-text> </v-card-text>
     </v-card>
   </div>
@@ -15,5 +16,6 @@ import { ref } from "vue";
 const props = defineProps({
   dar_id: Number,
 });
+const emit = defineEmits(["closeDialog"]);
 </script>
 <style lang=""></style>
