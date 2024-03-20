@@ -16,6 +16,7 @@
                   variant="outlined"
                   style="width: 300px"
                   density="compact"
+                  v-model="patientData[key]"
                 ></v-text-field>
                 <v-select
                   v-for="(field, key) in inputs.selectField"
@@ -26,6 +27,7 @@
                   variant="outlined"
                   style="width: 300px"
                   density="compact"
+                  v-model="patientData[key]"
                 ></v-select>
                 <v-textarea
                   v-for="(field, key) in inputs.textAreaField"
@@ -35,6 +37,7 @@
                   variant="outlined"
                   style="width: 300px"
                   density="compact"
+                  v-model="patientData[key]"
                 ></v-textarea>
               </v-col>
             </v-form>
@@ -44,10 +47,12 @@
       <v-card-actions class="justify-end">
         <v-btn color="success" @click="createDARItem">Create</v-btn>
       </v-card-actions>
+      {{ patientData }}
     </v-card>
   </div>
 </template>
 <script setup>
+import { createDailyActivityReport } from "@/api/daily-activity-report";
 import { ref, onMounted } from "vue";
 const props = defineProps({});
 
@@ -56,6 +61,8 @@ const createDARForm = ref(null);
 const patientData = ref({});
 const inputRules = {
   required: (v) => !!v || "This field is required",
+  invalidNegative: (v) => v >= 0 || "Invalid input",
+  characters: (v) => v.length <= 80 || "Max 100 characters",
 };
 const inputs = {
   textField: {
@@ -67,12 +74,13 @@ const inputs = {
     patient_name: {
       label: "Patient Name",
       type: "text",
-      rules: [inputRules.required],
+      rules: [inputRules.required, inputRules.characters],
+
     },
     age: {
       label: "Age",
       type: "number",
-      rules: [inputRules.required],
+      rules: [inputRules.required, inputRules.invalidNegative],
     },
   },
   selectField: {
@@ -93,7 +101,11 @@ const inputs = {
 const createDARItem = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
-  console.log("Create DAR Item");
+  const response = await createDailyActivityReport(patientData.value);
+  if (response) {
+    console.log("DAR created successfully");
+    console.log(response);
+  }
 };
 const validateForm = async () => {
   const form = await createDARForm.value.validate();
