@@ -333,7 +333,7 @@
               </v-row>
             </v-container>
           </div>
-          <!--  -->
+          <!-- Discrimination -->
           <div>
             <h2>VI. Discrimination:</h2>
             <v-divider></v-divider>
@@ -359,9 +359,9 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>{{patientAssesmentData.discrimination[key].severity}}</td>
+                        <td>{{patientAssesmentData.discrimination[key].duration}}</td>
+                        <td>{{patientAssesmentData.discrimination[key].coping}}</td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -704,7 +704,63 @@ const patientAssesmentData = ref({
       coping: "",
     },
   },
-  discrimination: {},
+  discrimination: {
+    Age: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Ethnicity: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Religion: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Sex: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Sexual_Orientation: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Lifestyle: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    NonCitizen: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Veteran_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Dependency_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Disability_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Marital_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+  },
   safety: {},
   socialFunctioning: {},
   problemsInEnvironment: {},
@@ -1276,6 +1332,10 @@ const getPatientData = async () => {
   await getMonthlyExpensesData();
   await getMedicalDataItem();
   await getHealthAndMentalHealthData();
+  await getDiscriminationData();
+  await getSafetyData();
+  await getSocialFunctioningData();
+  await getProblemsInEnvironmentData();
 };
 const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
@@ -1310,21 +1370,32 @@ const getMedicalDataItem = async () => {
 const getHealthAndMentalHealthData = async () => {
   const response = await getHealthAndMentalHealth(props.patientId);
   if (response) {
-    console.log(response);
     patientAssesmentData.value.healthAndMentalHealth = response;
   }
 };
 const getDiscriminationData = async () => {
   const response = await getDiscrimination(props.patientId);
+  if (response) {
+    patientAssesmentData.value.discrimination = response;
+  }
 };
 const getSafetyData = async () => {
   const response = await getSafety(props.patientId);
+  if (response) {
+    patientAssesmentData.value.safety = response;
+  }
 };
 const getSocialFunctioningData = async () => {
   const response = await getSocialFunctioning(props.patientId);
+  if (response) {
+    patientAssesmentData.value.socialFunctioning = response;
+  }
 };
 const getProblemsInEnvironmentData = async () => {
   const response = await getProblemsInEnvironment(props.patientId);
+  if (response) {
+    patientAssesmentData.value.problemsInEnvironment = response;
+  }
 };
 </script>
 <style lang=""></style>
