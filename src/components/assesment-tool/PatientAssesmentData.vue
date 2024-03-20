@@ -578,10 +578,16 @@
                       >
                         <td>{{ field.label }}</td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
                         </td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
                         </td>
                       </tr>
                       <tr
@@ -591,10 +597,16 @@
                       >
                         <td>{{ field.label }}</td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
                         </td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
                         </td>
                       </tr>
                       <tr
@@ -604,10 +616,16 @@
                       >
                         <td>{{ field.label }}</td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
                         </td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
                         </td>
                       </tr>
                       <tr
@@ -617,10 +635,16 @@
                       >
                         <td>{{ field.label }}</td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
                         </td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
                         </td>
                       </tr>
                       <tr
@@ -630,10 +654,16 @@
                       >
                         <td>{{ field.label }}</td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
                         </td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
                         </td>
                       </tr>
                       <tr
@@ -643,10 +673,16 @@
                       >
                         <td>{{ field.label }}</td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
                         </td>
                         <td>
-                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
                         </td>
                       </tr>
                     </tbody>
@@ -664,6 +700,7 @@
                     readonly
                     style="width: 600px"
                     density="compact"
+                    v-model="patientAssesmentData.problemsInEnvironment[index]"
                   ></v-combobox>
                   <v-textarea
                     v-for="(item, index) in fields.problemsInEnvironment
@@ -674,6 +711,7 @@
                     readonly
                     density="compact"
                     style="width: 400px"
+                    v-model="patientAssesmentData.problemsInEnvironment[index]"
                   >
                   </v-textarea>
                   <v-text-field
@@ -685,6 +723,7 @@
                     readonly
                     density="compact"
                     style="width: 400px"
+                    v-model="patientAssesmentData.problemsInEnvironment[index]"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -1718,6 +1757,20 @@ const getProblemsInEnvironmentData = async () => {
   const response = await getProblemsInEnvironment(props.patientId);
   if (response) {
     patientAssesmentData.value.problemsInEnvironment = response;
+    if (
+      patientAssesmentData.value.problemsInEnvironment
+        .reasons_psychosocial_counselling === ""
+    ) {
+      patientAssesmentData.value.problemsInEnvironment.reasons_psychosocial_counselling =
+        null;
+    }
+    if (
+      patientAssesmentData.value.problemsInEnvironment
+        .problems_presented === ""
+    ) {
+      patientAssesmentData.value.problemsInEnvironment.problems_presented =
+        null;
+    }
   }
 };
 </script>
