@@ -36,7 +36,7 @@
                   <div class="d-flex ga-5">
                     <v-icon
                       color="primary"
-                      @click="editDailyActivityReport(item)"
+                      @click="editDailyActivityReport(item.id)"
                       >mdi-pencil</v-icon
                     >
                     <v-icon
@@ -60,7 +60,11 @@
         width="600px"
         transition="dialog-transition"
       >
-        <CreateDARDialog @addDAR="addDARItem" />
+        <CreateDARDialog
+          @addDAR="addDARItem"
+          @closeDialog="handleCloseDialog"
+          @editDAR="handleEditDar"
+        />
       </v-dialog>
       <!-- update dar dialog -->
       <v-dialog
@@ -98,7 +102,7 @@ let dar_id = ref(0);
 const dataTable = {
   headers: [
     { title: "Number", value: "Number" },
-    { title: "Admission Date-Time", value: "admission_date" },
+    // { title: "Admission Date-Time", value: "admission_date" },
     { title: "Patient Name", value: "patient_name" },
     { title: "Age", value: "age" },
     { title: "Sex", value: "sex" },
@@ -128,17 +132,24 @@ const patientsWithNumbers = computed(() => {
 
 const editDailyActivityReport = (item) => {
   dialogs.value.edit = true;
-  dar_id.value = item.id;
+  dar_id.value = item;
   console.log("Edit DAR", dar_id.value);
 };
 const viewDailyActivityReport = (id) => {
   console.log("Edit DAR", id);
 };
-
 // emit
 const addDARItem = (item) => {
   patients.value.push(item);
   console.log(patients.value);
+};
+
+const handleEditDar = (dar_id) => {
+  dialogs.value.create = false;
+  editDailyActivityReport(dar_id);
+};
+const handleCloseDialog = () => {
+  dialogs.value.create = false;
 };
 </script>
 <style lang=""></style>
