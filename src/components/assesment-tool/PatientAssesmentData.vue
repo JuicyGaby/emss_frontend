@@ -308,9 +308,24 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.healthAndMentalHealth[key]
+                              .severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.healthAndMentalHealth[key]
+                              .duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.healthAndMentalHealth[key]
+                              .coping
+                          }}
+                        </td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -657,7 +672,38 @@ const patientAssesmentData = ref({
     patient_fuel_source: [{ gas: 0, kerosene: 0, charcoal: 0 }],
   },
   medicalData: {},
-  healthAndMentalHealth: {},
+  healthAndMentalHealth: {
+    abscence_of_adequate_health_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    abscence_of_support_health_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    absence_of_adequate_mental_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    absence_of_support_mental_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    inaccessibility_of_health_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    inaccessibility_of_mental_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+  },
   discrimination: {},
   safety: {},
   socialFunctioning: {},
@@ -1229,6 +1275,7 @@ const getPatientData = async () => {
   await getMswdClassificationData();
   await getMonthlyExpensesData();
   await getMedicalDataItem();
+  await getHealthAndMentalHealthData();
 };
 const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
@@ -1262,6 +1309,10 @@ const getMedicalDataItem = async () => {
 };
 const getHealthAndMentalHealthData = async () => {
   const response = await getHealthAndMentalHealth(props.patientId);
+  if (response) {
+    console.log(response);
+    patientAssesmentData.value.healthAndMentalHealth = response;
+  }
 };
 const getDiscriminationData = async () => {
   const response = await getDiscrimination(props.patientId);
