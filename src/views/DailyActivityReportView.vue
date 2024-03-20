@@ -14,7 +14,7 @@
                 color="grey"
                 prepend-icon="mdi-folder-plus"
                 size="large"
-                @click="dialogs.createDialog = true"
+                @click="dialogs.create = true"
                 >Create Report</v-btn
               >
               <v-text-field
@@ -53,14 +53,32 @@
       </v-row>
     </v-container>
     <!-- dialogs -->
-
-    <v-dialog
-      v-model="dialogs.createDialog"
-      width="600px"
-      transition="dialog-transition"
-    >
-      <CreateDARDialog @addDAR="addDARItem" />
-    </v-dialog>
+    <div>
+      <!-- create dar dialog -->
+      <v-dialog
+        v-model="dialogs.create"
+        width="600px"
+        transition="dialog-transition"
+      >
+        <CreateDARDialog @addDAR="addDARItem" />
+      </v-dialog>
+      <!-- update dar dialog -->
+      <v-dialog
+        v-model="dialogs.edit"
+        width="600px"
+        transition="dialog-transition"
+      >
+        <EditDARDialog :dar_id="dar_id" />
+      </v-dialog>
+      <!-- view dar dialog -->
+      <v-dialog
+        v-model="dialogs.view"
+        width="600px"
+        transition="dialog-transition"
+      >
+        <ViewDARDialog :dar_id="dar_id" />
+      </v-dialog>
+    </div>
   </div>
 </template>
 <script setup>
@@ -69,13 +87,14 @@ import { ref, onMounted, computed } from "vue";
 
 // components
 import CreateDARDialog from "@/components/daily-activity-report/CreateDARDialog.vue";
-// import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue";
-// import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
+import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue";
+import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
 
 onMounted(async () => {
   await getDarItems();
 });
 let patients = ref([]);
+let dar_id = ref(0);
 const dataTable = {
   headers: [
     { title: "Number", value: "Number" },
@@ -87,9 +106,9 @@ const dataTable = {
   ],
 };
 const dialogs = ref({
-  createDialog: false,
-  editDialog: false,
-  viewDialog: false,
+  create: false,
+  edit: false,
+  view: false,
 });
 const getDarItems = async () => {
   const response = await getDailyActivityReport();
@@ -108,7 +127,9 @@ const patientsWithNumbers = computed(() => {
 });
 
 const editDailyActivityReport = (item) => {
-  console.log("Edit DAR", item.id);
+  dialogs.value.edit = true;
+  dar_id.value = item.id;
+  console.log("Edit DAR", dar_id.value);
 };
 const viewDailyActivityReport = (id) => {
   console.log("Edit DAR", id);
