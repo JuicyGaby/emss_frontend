@@ -29,7 +29,7 @@
             <v-card-text>
               <v-data-table
                 :headers="dataTable.headers"
-                :items="[]"
+                :items="patientsWithNumbers"
                 :items-per-page="10"
               ></v-data-table>
             </v-card-text>
@@ -43,30 +43,54 @@
       width="600px"
       transition="dialog-transition"
     >
-        <CreateDARDialog />
+      <CreateDARDialog />
     </v-dialog>
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { getDailyActivityReport } from "@/api/daily-activity-report";
+import { ref, onMounted, computed } from "vue";
+
 // components
 import CreateDARDialog from "@/components/daily-activity-report/CreateDARDialog.vue";
 // import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue";
 // import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
+
+onMounted(async () => {
+  await getDarItems();
+});
 let patients = ref([]);
+
 const dataTable = {
   headers: [
-    { title: "Number" },
-    { title: "Admission Date-Time" },
-    { title: "Patient Name" },
-    { title: "Age" },
-    { title: "Operation" },
+    { title: "Number", value: "Number"},
+    { title: "Admission Date-Time", value: "admission_date" },
+    { title: "Patient Name", value: "patient_name" },
+    { title: "Age", value: "age" },
+    { title: "Sex", value: "sex" },
+    { title: "Operation", value: "operation" },
   ],
 };
 const dialogs = ref({
   createDialog: false,
   editDialog: false,
   viewDialog: false,
+});
+const getDarItems = async () => {
+  const response = await getDailyActivityReport();
+  console.log(response);
+  if (response.length > 0) {
+    patients.value = response;
+  }
+};
+
+const patientsWithNumbers = computed(() => {
+  return patients.value.map((patient, index) => {
+    return {
+      Number: index + 1,
+      ...patient,
+    };
+  });
 });
 </script>
 <style lang=""></style>
