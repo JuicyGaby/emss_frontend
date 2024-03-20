@@ -1,751 +1,1696 @@
 <template lang="">
   <div>
-    <v-tabs
-      class="tabs"
-      v-model="tab"
-      align-tabs="center"
-      color="black"
-      density="compact"
-    >
-      <v-tab
-        v-for="(header, index) in tabHeaders"
-        :value="header.value"
-        :key="index"
-      >
-        {{ header.title }}
-      </v-tab>
-    </v-tabs>
-    <v-window class="" v-model="tab">
-      <!-- personal data -->
-      <v-window-item :value="0">
-        <v-container style="width: 1000px">
-          <v-form ref="personalForm">
-            <h2>Personal Data:</h2>
-            <v-divider class="mb-5"></v-divider>
-            <!-- persnal data -->
-            <v-row>
-              <v-col cols="12" class="d-flex ga-2 flex-wrap">
-                <v-text-field
-                  v-for="(value, key) in inputFields.personalData.textField"
-                  :key="key"
-                  :label="value.label"
-                  :type="value.type"
-                  variant="outlined"
-                  style="width: 300px"
-                  density="compact"
-                  v-model="patientData[key]"
-                  :rules="value.rules"
-                ></v-text-field>
-                <v-combobox
-                  v-for="(value, key) in inputFields.personalData.comboField"
-                  :key="key"
-                  :label="value.label"
-                  :items="value.items"
-                  variant="outlined"
-                  style="width: 300px"
-                  density="compact"
-                  v-model="patientData[key]"
-                ></v-combobox>
-              </v-col>
-            </v-row>
-            <!-- remarks -->
-            <h2>Remarks:</h2>
-            <v-divider class="mb-5"></v-divider>
-            <v-row>
-              <v-col cols="12">
-                <v-textarea
-                  v-model="patientData.remarks"
-                  label="Remarks"
-                  rows="5"
-                  auto-grow
-                  style="min-width: 300px"
-                  variant="outlined"
-                  counter="255"
-                  :rules="inputRules.remarks"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-            <v-btn
-              color="secondary"
-              @click="updatePersonalData"
-              prepend-icon="mdi-content-save"
-              class="my-5"
-              >Update Personal Data</v-btn
-            >
-          </v-form>
-        </v-container>
-      </v-window-item>
-      <!-- address -->
-      <v-window-item :value="1">
-        <v-container style="width: 1000px">
-          <h2>Address:</h2>
-          <v-divider class="mb-5"></v-divider>
-          <!-- <v-row>
-            <h3>Permanent</h3>
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <v-combobox
-                v-for="(value, key) in inputFields.address.permanent"
-                :key="key"
-                :label="key"
-                variant="outlined"
-                :items="value.items"
-                :item-title="value.title"
-                :item-value="value.value"
-                style="width: 350px"
-                density="compact"
-              ></v-combobox>
-            </v-col>
-          </v-row> -->
-          <v-divider class="my-5"></v-divider>
-          <!-- <v-row>
-            <h3>Temporary</h3>
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <v-combobox
-                v-for="(value, key) in inputFields.address.temporary"
-                :key="key"
-                :label="key"
-                variant="outlined"
-                :items="value.items"
-                :item-title="value.title"
-                :item-value="value.value"
-                style="width: 350px"
-                density="compact"
-              ></v-combobox>
-            </v-col>
-          </v-row> -->
-          <v-btn
-            color="secondary"
-            @click="updatePatientAddressData"
-            prepend-icon="mdi-content-save"
-            class="mb-5"
-            >Update Address</v-btn
+    <v-dialog v-model="props.modelValue" width="80%">
+      <v-card>
+        <v-toolbar color="grey">
+          <v-toolbar-title class="text-h5"
+            >Patient Assessment Tool</v-toolbar-title
           >
-        </v-container>
-      </v-window-item>
-      <!-- family composition -->
-      <v-window-item :value="2">
-        <v-container style="width: 90%">
-          <h2>Family Composition:</h2>
-          <v-divider class="mb-5"></v-divider>
-          <div class="d-flex justify-end">
-            <v-btn
-              color="grey"
-              @click="dialogs.addFamily = !dialogs.addFamily"
-              prepend-icon="mdi-account-plus"
-              size="small"
-              class="mb-5"
-              >Add family member</v-btn
-            >
+          <v-btn color="" icon="mdi-close" @click="toggleDialog"></v-btn>
+        </v-toolbar>
+        <v-card-title primary-title> </v-card-title>
+        <v-spacer></v-spacer>
+        <v-card-text>
+          <!-- initial Interview -->
+          <div>
+            <h2>Initial Interview:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex ga-1 flex-wrap">
+                  <v-text-field
+                    v-for="(field, key) in fields.interview"
+                    :key="key"
+                    :label="field.label"
+                    :type="field.type"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                    v-model="patientAssesmentData.interview[key]"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
           </div>
-          <v-data-table
-            :headers="tableHeaders"
-            :items="familyComposition"
-            :items-per-page="5"
-            class="elevation-1"
-          >
-            <template v-slot:[`item.operation`]="{ item }">
-              <div class="d-flex">
-                <v-btn
-                  icon="mdi-pencil"
-                  @click="toggleEditFamilyDialog(item)"
-                  flat
-                  size="small"
-                ></v-btn>
-                <v-btn
-                  icon="mdi-delete"
-                  @click="toggleDeleteFamilyDialog(item)"
-                  flat
-                  size="small"
-                ></v-btn>
-              </div>
-            </template>
-          </v-data-table>
-        </v-container>
-      </v-window-item>
-    </v-window>
-    <v-snackbar
-      v-for="(bar, key) in updateBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
-      </div>
-    </v-snackbar>
+          <!-- demographic data -->
+          <div>
+            <h2>I. Demographic Data:</h2>
+            <v-divider></v-divider>
+            <div class="my-2">
+              <h3>Personal Data</h3>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" class="d-flex ga-1 flex-wrap">
+                    <v-text-field
+                      v-for="(field, key) in fields.demographicData.personalData
+                        .textField"
+                      :key="key"
+                      :label="field.label"
+                      :type="field.type"
+                      style="width: 400px"
+                      variant="outlined"
+                      density="compact"
+                      readonly
+                      v-model="
+                        patientAssesmentData.demographicData.patientData[key]
+                      "
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </div>
+            <div>
+              <h3>Patient's Address</h3>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" class="d-flex ga-1 flex-wrap">
+                    <v-text-field
+                      v-for="(field, key) in fields.demographicData.address
+                        .permanent"
+                      :key="key"
+                      :label="field.label"
+                      :type="field.type"
+                      style="width: 400px"
+                      variant="outlined"
+                      density="compact"
+                      readonly
+                      v-model="
+                        patientAssesmentData.demographicData.address[0][key]
+                      "
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" class="d-flex ga-1 flex-wrap">
+                    <v-text-field
+                      v-for="(field, key) in fields.demographicData.address
+                        .temporary"
+                      :key="key"
+                      :label="field.label"
+                      :type="field.type"
+                      style="width: 400px"
+                      variant="outlined"
+                      density="compact"
+                      readonly
+                      v-model="
+                        patientAssesmentData.demographicData.address[1][key]
+                      "
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <h3>Family Composition</h3>
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-data-table
+                      :headers="
+                        patientAssesmentData.demographicData.tableHeaders
+                      "
+                      :items="
+                        patientAssesmentData.demographicData.familyComposition
+                      "
+                      items-per-page="5"
+                      density="compact"
+                      :items-per-page-options="[5, 10, 15]"
+                    >
+                    </v-data-table>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </div>
+          </div>
+          <!-- mswd classification -->
+          <div>
+            <h2>II. MSWD Classification:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex ga-1 flex-wrap">
+                  <v-text-field
+                    v-for="(field, key) in fields.mswdClassification.textField"
+                    :key="key"
+                    :label="field.label"
+                    :type="field.type"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                    v-model="patientAssesmentData.mswdClassification[key]"
+                  ></v-text-field>
+                  <v-combobox
+                    multiple
+                    chips
+                    variant="outlined"
+                    :label="
+                      fields.mswdClassification.comboField
+                        .membership_to_marginalized_sector.label
+                    "
+                    v-model="
+                      patientAssesmentData.mswdClassification
+                        .membership_to_marginalized_sector
+                    "
+                    readonly
+                    density="compact"
+                    style="width: 400px"
+                  >
+                  </v-combobox>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <!-- monthly expenses -->
+          <div>
+            <h2>III. Monthly Expenses:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-1">
+                  <v-text-field
+                    v-for="(field, key) in fields.monthlyExpenses.textField"
+                    :key="key"
+                    :label="field.label"
+                    :type="field.type"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                    v-model="patientAssesmentData.monthlyExpenses[key]"
+                  ></v-text-field>
+                  <v-combobox
+                    multiple
+                    chips
+                    variant="outlined"
+                    :label="
+                      fields.monthlyExpenses.comboField.transportation_type
+                        .label
+                    "
+                    readonly
+                    density="compact"
+                    style="width: 400px"
+                    v-model="
+                      patientAssesmentData.monthlyExpenses.transportation_type
+                    "
+                  >
+                  </v-combobox>
+                  <v-text-field
+                    :label="
+                      fields.monthlyExpenses.comboText.transportation_cost.label
+                    "
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                    v-model="
+                      patientAssesmentData.monthlyExpenses.transportation_cost
+                    "
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="d-flex flex-wrap ga-1">
+                  <v-text-field
+                    v-for="(field, key) in fields.monthlyExpenses.sourceFields
+                      .lightSource"
+                    :key="key"
+                    :label="field.label"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                    v-model="
+                      patientAssesmentData.monthlyExpenses
+                        .patient_light_source[0][key]
+                    "
+                  ></v-text-field>
+                  <v-text-field
+                    v-for="(field, key) in fields.monthlyExpenses.sourceFields
+                      .fuelSource"
+                    :key="key"
+                    :label="field.label"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                    v-model="
+                      patientAssesmentData.monthlyExpenses
+                        .patient_fuel_source[0][key]
+                    "
+                  ></v-text-field>
+                  <v-text-field
+                    v-for="(field, key) in fields.monthlyExpenses.sourceFields
+                      .waterSource"
+                    :key="key"
+                    :label="field.label"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                    v-model="
+                      patientAssesmentData.monthlyExpenses
+                        .patient_water_source[0][key]
+                    "
+                  ></v-text-field>
+                  <v-text-field
+                    :label="fields.monthlyExpenses.total_cost.label"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    v-model="patientAssesmentData.monthlyExpenses.total_cost"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <!-- medical data -->
+          <div>
+            <h2>IV. Medical Data:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-1">
+                  <v-textarea
+                    v-for="(field, key) in fields.medicalData.textField"
+                    :key="key"
+                    :label="field.label"
+                    :type="field.type"
+                    style="width: 400px"
+                    variant="outlined"
+                    density="compact"
+                    readonly
+                    v-model="patientAssesmentData.medicalData[key]"
+                  ></v-textarea>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <!--  -->
+          <div>
+            <h2>V. Health and Mental Health:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, key) in fields.healthAndMentalHealth
+                            .tableHeaders"
+                          :key="key"
+                        >
+                          {{ header }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, key) in fields.healthAndMentalHealth
+                          .textField"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>
+                          {{
+                            patientAssesmentData.healthAndMentalHealth[key]
+                              .severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.healthAndMentalHealth[key]
+                              .duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.healthAndMentalHealth[key]
+                              .coping
+                          }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <!-- Discrimination -->
+          <div>
+            <h2>VI. Discrimination:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, key) in fields.discrimination
+                            .tableHeaders"
+                          :key="key"
+                        >
+                          {{ header }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, key) in fields.discrimination
+                          .particulars"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>
+                          {{
+                            patientAssesmentData.discrimination[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.discrimination[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{ patientAssesmentData.discrimination[key].coping }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <!-- safety -->
+          <div>
+            <h2>VII. Safety:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, key) in fields.safety.tableHeaders"
+                          :key="key"
+                        >
+                          {{ header }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, key) in fields.safety.particulars"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>{{ patientAssesmentData.safety[key].severity }}</td>
+                        <td>{{ patientAssesmentData.safety[key].duration }}</td>
+                        <td>{{ patientAssesmentData.safety[key].coping }}</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <!-- Assessment of Social Functioning -->
+          <div>
+            <h2>VIII. Assesment of Social Functioning:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, key) in fields.socialFunctioning
+                            .tableHeaders"
+                          :key="key"
+                        >
+                          {{ header }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, key) in fields.socialFunctioning
+                          .particulars.familialRoles"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.socialFunctioning
+                          .particulars.interpersonalRoles"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.socialFunctioning
+                          .particulars.occupationalRoles"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.socialFunctioning
+                          .particulars.specialLifeRoles"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+          <!--  -->
+          <div>
+            <h2>IX. Problems in the Environment:</h2>
+            <v-divider></v-divider>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, key) in fields.problemsInEnvironment
+                            .tableHeaders"
+                          :key="key"
+                        >
+                          {{ header }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.foodNutrition"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>{{patientAssesmentData.problemsInEnvironment[key].severity}}</td>
+                        <td>{{patientAssesmentData.problemsInEnvironment[key].duration}}</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.shelter"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                         <td>{{patientAssesmentData.problemsInEnvironment[key].severity}}</td>
+                        <td>{{patientAssesmentData.problemsInEnvironment[key].duration}}</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.employment"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                         <td>{{patientAssesmentData.problemsInEnvironment[key].severity}}</td>
+                        <td>{{patientAssesmentData.problemsInEnvironment[key].duration}}</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.economicResource"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                         <td>{{patientAssesmentData.problemsInEnvironment[key].severity}}</td>
+                        <td>{{patientAssesmentData.problemsInEnvironment[key].duration}}</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.transportation"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                         <td>{{patientAssesmentData.problemsInEnvironment[key].severity}}</td>
+                        <td>{{patientAssesmentData.problemsInEnvironment[key].duration}}</td>
+                      </tr>
+                      <tr
+                        v-for="(field, key) in fields.problemsInEnvironment
+                          .particulars.affectionalSupportSystem"
+                        :key="key"
+                      >
+                        <td>{{ field.label }}</td>
+                         <td>{{patientAssesmentData.problemsInEnvironment[key].severity}}</td>
+                        <td>{{patientAssesmentData.problemsInEnvironment[key].duration}}</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
+                <v-col cols="12" class="d-flex flex-wrap ga-2">
+                  <v-combobox
+                    v-for="(item, index) in fields.problemsInEnvironment
+                      .comboField"
+                    :key="index"
+                    :label="item.label"
+                    variant="outlined"
+                    chips
+                    multiple
+                    readonly
+                    style="width: 600px"
+                    density="compact"
+                  ></v-combobox>
+                  <v-textarea
+                    v-for="(item, index) in fields.problemsInEnvironment
+                      .textArea"
+                    :key="index"
+                    :label="item.label"
+                    variant="outlined"
+                    readonly
+                    density="compact"
+                    style="width: 400px"
+                  >
+                  </v-textarea>
+                  <v-text-field
+                    v-for="(item, index) in fields.problemsInEnvironment
+                      .textField"
+                    :key="index"
+                    :label="item.label"
+                    variant="outlined"
+                    readonly
+                    density="compact"
+                    style="width: 400px"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
-  <!-- create family member dialog -->
-  <v-dialog v-model="dialogs.addFamily" width="600px" persistent>
-    <v-card>
-      <v-card-title primary-title> Family Composition </v-card-title>
-      <v-card-text>
-        <div class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(value, key) in inputFields.familyComposition"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            density="compact"
-            variant="outlined"
-            v-model="inputFields.familyComposition[key].data"
-            style="width: 250px"
-          ></v-text-field>
-        </div>
-      </v-card-text>
-      <v-card-actions class="d-flex justify-end">
-        <v-btn color="error" @click="dialogs.addFamily = !dialogs.addFamily"
-          >Cancel</v-btn
-        >
-        <v-btn color="primary" @click="createFamilyMemberData">Create</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <!-- update family member dialog -->
-  <v-dialog v-model="dialogs.editFamily" width="600px" persistent>
-    <v-card>
-      <v-card-title primary-title>
-        <h3>Edit family member:</h3>
-      </v-card-title>
-      <v-card-text>
-        <div class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(value, key) in inputFields.familyComposition"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            density="compact"
-            variant="outlined"
-            v-model="toEditFamilyMember[key]"
-            style="width: 250px"
-          ></v-text-field>
-        </div>
-      </v-card-text>
-      <v-card-actions class="d-flex justify-end">
-        <v-btn color="error" @click="dialogs.editFamily = false">Cancel</v-btn>
-        <v-btn color="primary" @click="updateFamilyMemberData">Update</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <!-- delete family member dialog -->
-  <v-dialog
-    v-model="dialogs.deleteFamily"
-    width="600px"
-    persistent
-    max-width="600px"
-  >
-    <v-card>
-      <v-card-title primary-title>
-        <h3>Delete family member:</h3>
-      </v-card-title>
-      <v-card-text>
-        <p>Are you sure you want to delete this family member?</p>
-      </v-card-text>
-      <v-card-actions class="d-flex justify-end">
-        <v-btn color="error" @click="dialogs.deleteFamily = false"
-          >Cancel</v-btn
-        >
-        <v-btn color="primary" @click="deleteFamilyMemberData">Delete</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 </template>
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { getPatientByID, updatePatient } from "@/api/patients";
+import { ref, onMounted, computed, watch } from "vue";
 import {
+  getInterview,
+  getPatientAddress,
+  getMswdClassification,
   getFamilyComposition,
-  updatePatientAddress,
-  createFamilyMember,
-  getFamilyInfo,
-  updateFamilyMember,
-  deleteFamilyMember,
-  // address
-  getRegions,
-  getProvince,
-  getMunicipality,
-  getBarangay,
+  getMonthlyExpenses,
+  getMedicalData,
+  getHealthAndMentalHealth,
+  getDiscrimination,
+  getSafety,
+  getSocialFunctioning,
+  getProblemsInEnvironment,
 } from "@/api/assesment-tool";
-
+import { getPatientByID } from "@/api/patients";
 const props = defineProps({
   patientId: Number,
+  modelValue: Boolean,
 });
 
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value) {
+      getPatientData();
+    }
+  }
+);
+const emit = defineEmits(["close"]);
 onMounted(async () => {
   await getPatientData();
-  await getFamilyCompositionData();
-  await getRegionData();
-  // await getFamilyInfoData();
 });
-
-let patientData = ref({});
-let patientAddress = ref([
-  {
-    region: "",
-    province: "",
-    district: "",
-    municipality: "",
-    barangay: "",
-    purok: "",
-  },
-  {
-    region: "",
-    province: "",
-    district: "",
-    municipality: "",
-    barangay: "",
-    purok: "",
-  },
-]);
-
-// address
-let regions = ref([]);
-let provinces = ref([]);
-let municipalities = ref([]);
-let barangays = ref([]);
-// family composition
-let familyComposition = ref({});
-let familyInfo = ref({});
-let toEditFamilyMember = ref({});
-const personalForm = ref(null);
-const tab = ref(0);
-
-const inputRules = {
-  first_name: [(v) => !!v || "First Name is required"],
-  last_name: [(v) => !!v || "Last Name is required"],
-  remarks: [
-    (v) =>
-      v == null ||
-      v.length <= 255 ||
-      "Remarks must be less than 255 characters",
-  ],
+const toggleDialog = () => {
+  emit("close");
 };
-const tableHeaders = [
-  { title: "Fullname", value: "full_name" },
-  { title: "Age", value: "age" },
-  { title: "Birth Date", value: "birth_date" },
-  { title: "Civil Status", value: "civil_status" },
-  { title: "Relationship", value: "relationship" },
-  { title: "Educational Attainment", value: "educational_attainment" },
-  { title: "Occupation", value: "occupation" },
-  { title: "Monthly Income", value: "monthly_income" },
-  { title: "Operation", value: "operation" },
-];
-const tabHeaders = {
-  personalData: {
-    title: "Personal Data",
+const patientAssesmentData = ref({
+  interview: {},
+  demographicData: {
+    patientData: {},
+    address: [
+      {
+        region: "",
+        province: "",
+        district: "",
+        municipality: "",
+        barangay: "",
+        purok: "",
+      },
+      {
+        region: "",
+        province: "",
+        district: "",
+        municipality: "",
+        barangay: "",
+        purok: "",
+      },
+    ],
+    tableHeaders: [
+      { title: "Fullname", value: "full_name" },
+      { title: "Age", value: "age" },
+      { title: "Birth Date", value: "birth_date" },
+      { title: "Civil Status", value: "civil_status" },
+      { title: "Relationship", value: "relationship" },
+      { title: "Educational Attainment", value: "educational_attainment" },
+      { title: "Occupation", value: "occupation" },
+      { title: "Monthly Income", value: "monthly_income" },
+    ],
+    familyComposition: {},
   },
-  addressData: {
-    title: "Address Data",
+  mswdClassification: {},
+  monthlyExpenses: {
+    patient_light_source: [{ electric: 0, kerosene: 0, candle: 0 }],
+    patient_water_source: [
+      { public_artesian_well: 0, private_artesian_well: 0, water_district: 0 },
+    ],
+    patient_fuel_source: [{ gas: 0, kerosene: 0, charcoal: 0 }],
   },
-  familyComposition: {
-    title: "Family Composition",
+  medicalData: {},
+  healthAndMentalHealth: {
+    abscence_of_adequate_health_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    abscence_of_support_health_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    absence_of_adequate_mental_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    absence_of_support_mental_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    inaccessibility_of_health_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    inaccessibility_of_mental_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
   },
-};
-const updateBars = ref({
-  personalData: {
-    isActive: false,
-    text: "Personal Data Updated",
+  discrimination: {
+    Age: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Ethnicity: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Religion: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Sex: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Sexual_Orientation: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Lifestyle: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    NonCitizen: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Veteran_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Dependency_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Disability_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Marital_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
   },
-  addressData: {
-    isActive: false,
-    text: "Address Updated",
+  safety: {
+    voice_crime_in_community: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    unsafe_working_conditions: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    unsafe_codition_home: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    absence_of_adequate_safety_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    natural_disasters: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    human_created_disasters: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
   },
-  createFamilyMember: {
-    isActive: false,
-    text: "Family Member Added",
+  socialFunctioning: {
+    parent: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    spouse: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    child: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    sibling: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    other_family_member: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    significant_others: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    lover: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    friend: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    neighbor: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    member: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    worker_paid_economy: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    worker_home: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    worker_volunteer: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    student: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    consumer: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    inpatient: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    outpatient: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    er_patient: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    prisoner: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    immigrant_legal: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    immigrant_undocumented: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    imigrant_refugee: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
   },
-  updateFamilyMember: {
-    isActive: false,
-    text: "Family Member Updated",
-  },
-  deleteFamilyMember: {
-    isActive: false,
-    text: "Family Member Deleted",
+  problemsInEnvironment: {
+    nutritionally_inadequate_food: {
+      severity: "",
+      duration: "",
+    },
+    documented_malnutrition: {
+      severity: "",
+      duration: "",
+    },
+    absence_of_shelter: {
+      severity: "",
+      duration: "",
+    },
+    inadequate_shelter: {
+      severity: "",
+      duration: "",
+    },
+    unemployment: {
+      severity: "",
+      duration: "",
+    },
+    underemployment: {
+      severity: "",
+      duration: "",
+    },
+    inappropiate_employment: {
+      severity: "",
+      duration: "",
+    },
+    insufficient_community_resources: {
+      severity: "",
+      duration: "",
+    },
+    insufficient_provide_resources: {
+      severity: "",
+      duration: "",
+    },
+    no_personal_transportation: {
+      severity: "",
+      duration: "",
+    },
+    absence_of_affectional_support: {
+      severity: "",
+      duration: "",
+    },
+    inadequate_support_system: {
+      severity: "",
+      duration: "",
+    },
+    excessive_support_system: {
+      severity: "",
+      duration: "",
+    },
   },
 });
-const dialogs = ref({
-  addFamily: false,
-  editFamily: false,
-  deleteFamily: false,
-});
-const inputFields = ref({
-  personalData: {
+const fields = {
+  interview: {
+    interview_date: {
+      label: "Interview Date",
+      type: "text",
+    },
+    interview_time: {
+      label: "Interview Time",
+      type: "text",
+    },
+    admission_date_and_time: {
+      label: "Admission Date-Time",
+      type: "text",
+    },
+    basic_ward: {
+      label: "Basic Ward",
+      type: "text",
+    },
+    nonbasic_ward: {
+      label: "Non-Basic Ward",
+      type: "text",
+    },
+    health_record_number: {
+      label: "Health Record Number",
+      type: "text",
+    },
+    mswd_number: {
+      label: "MSWD Number",
+      type: "text",
+    },
+    referring_party: {
+      label: "Referring Party",
+      type: "text",
+    },
+    source_of_referral: {
+      label: "Source of Referral",
+      type: "text",
+    },
+    address: {
+      label: "Referal Address",
+      type: "text",
+    },
+    contact_number: {
+      label: "Referal Contact Number",
+      type: "text",
+    },
+    informant: {
+      label: "Informant",
+      type: "text",
+    },
+    relationship_to_patient: {
+      label: "Informant relationship to Patient",
+      type: "text",
+    },
+    informant_contact_number: {
+      label: "Informant Contact Number",
+      type: "text",
+    },
+    informant_address: {
+      label: "Informant Address",
+      type: "text",
+    },
+  },
+  demographicData: {
+    personalData: {
+      textField: {
+        first_name: {
+          label: "First Name",
+        },
+        middle_name: {
+          label: "Middle Name",
+        },
+        last_name: {
+          label: "Last Name",
+        },
+        age: {
+          label: "Age",
+        },
+        birth_date: {
+          label: "Birth Date",
+        },
+        religion: {
+          label: "Religion",
+        },
+        contact_number: {
+          label: "Contact Number",
+        },
+        occupation: {
+          label: "Occupation",
+        },
+        monthly_income: {
+          label: "Monthly Income",
+        },
+        ph_membership_number: {
+          label: "PH Membership Number",
+        },
+        ph_membership_type: {
+          label: "PH Membership",
+        },
+        gender: {
+          label: "Gender Identity",
+        },
+        sex: {
+          label: "Sex",
+        },
+        nationality: {
+          label: "Nationality",
+        },
+        civil_status: {
+          label: "Civil Status",
+        },
+        living_arrangement: {
+          label: "Living Arrangement",
+        },
+        highest_education_level: {
+          label: "Education",
+        },
+        education_status: {
+          label: "Education Status",
+        },
+      },
+    },
+    address: {
+      permanent: {
+        region: {
+          label: "Region",
+        },
+        province: {
+          label: "Province",
+        },
+        district: {
+          label: "District",
+        },
+        municipality: {
+          label: "Municipality",
+        },
+        barangay: {
+          label: "Barangay",
+        },
+        purok: {
+          label: "Purok",
+        },
+      },
+      temporary: {
+        region: {
+          label: "Region",
+        },
+        province: {
+          label: "Province",
+        },
+        district: {
+          label: "District",
+        },
+        municipality: {
+          label: "Municipality",
+        },
+        barangay: {
+          label: "Barangay",
+        },
+        purok: {
+          label: "Purok",
+        },
+      },
+    },
+  },
+  mswdClassification: {
     textField: {
-      first_name: {
-        label: "First Name",
-        type: "text",
-        rules: inputRules.first_name,
+      main_classification_type: {
+        label: "Main Classification",
       },
-      middle_name: {
-        label: "Middle Name",
-        type: "text",
-      },
-      last_name: {
-        label: "Last Name",
-        type: "text",
-        rules: inputRules.last_name,
-      },
-      age: {
-        label: "Age",
-        type: "text",
-      },
-      birth_date: {
-        label: "Birth Date",
-        type: "date",
-      },
-      religion: {
-        label: "Religion",
-        type: "text",
-      },
-      contact_number: {
-        label: "Contact Number",
-        type: "text",
-      },
-      occupation: {
-        label: "Occupation",
-        type: "text",
-      },
-      monthly_income: {
-        label: "Monthly Income",
-        type: "text",
-      },
-      ph_membership_number: {
-        label: "PH Membership Number",
-        type: "text",
-      },
-      ph_membership_type: {
-        label: "PH Membership",
-        type: "text",
+      sub_classification_type: {
+        label: "Sub Classification",
       },
     },
     comboField: {
-      gender: {
-        label: "Gender Identity",
-        items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
+      membership_to_marginalized_sector: {
+        label: "Sectors",
       },
-      sex: {
+    },
+  },
+  monthlyExpenses: {
+    textField: {
+      house_lot_cost: {
+        label: "House and Lot Cost",
+        value: "",
+      },
+      food_water_cost: {
+        label: "Food and Water Cost",
+        value: "",
+      },
+      education_cost: {
+        label: "Education Cost",
+        value: "",
+      },
+      communication_cost: {
+        label: "Communication Cost",
+        value: "",
+      },
+      house_help_cost: {
+        label: "House Help Cost",
+        value: "",
+      },
+      medical_cost: {
+        label: "Medical Cost",
+        value: "",
+      },
+    },
+    comboField: {
+      transportation_type: {
+        label: "Transportation Type",
+      },
+    },
+    comboText: {
+      transportation_cost: {
+        label: "Transportation Cost",
+      },
+    },
+    sourceFields: {
+      lightSource: {
+        electric: {
+          label: "Electricity Cost",
+        },
+        kerosene: {
+          label: "Kerosene Cost",
+        },
+        candle: {
+          label: "Candles Cost",
+        },
+      },
+      fuelSource: {
+        gas: {
+          label: "Gas Cost",
+        },
+        kerosene: {
+          label: "kerosene Cost",
+        },
+        charcoal: {
+          label: "Charcoal Cost",
+        },
+      },
+      waterSource: {
+        public_artesian_well: {
+          label: "Public Artesian Well Cost",
+        },
+        private_artesian_well: {
+          label: "Private Artesian Well Cost",
+        },
+        water_district: {
+          label: "Water District Cost",
+        },
+      },
+    },
+    total_cost: {
+      label: "Total Cost",
+    },
+  },
+  medicalData: {
+    textField: {
+      admitting_diagnosis: {
+        label: "Admitting Diagnosis",
+      },
+      final_diagnosis: {
+        label: "Final Diagnosis",
+      },
+      duration_of_problems: {
+        label: "Duration of Problems",
+      },
+      previous_treatment: {
+        label: "Previous Treatment",
+      },
+      present_treatment_plan: {
+        label: "Present Treatment Plan",
+      },
+      health_accessibility_problem: {
+        label: "Health Accessibility Problem",
+      },
+    },
+  },
+  healthAndMentalHealth: {
+    tableHeaders: [
+      "Particulars",
+      "Severity Index",
+      "Duration Index",
+      "Coping Index",
+    ],
+    textField: {
+      abscence_of_adequate_health_services: {
+        label: "Abscence of Adequate Health Services",
+      },
+      abscence_of_support_health_services: {
+        label: "Abscence of Support Health Services",
+      },
+      absence_of_adequate_mental_services: {
+        label: "Abscence of Adequate Mental Services",
+      },
+      absence_of_support_mental_services: {
+        label: "Abscence of Support Mental Services",
+      },
+      inaccessibility_of_health_services: {
+        label: "Inaccessibility of Health Services",
+      },
+      inaccessibility_of_mental_services: {
+        label: "Inaccessibility of Mental Services",
+      },
+    },
+  },
+  discrimination: {
+    tableHeaders: [
+      "Particulars",
+      "Severity Index",
+      "Duration Index",
+      "Coping Index",
+    ],
+    particulars: {
+      Age: {
+        label: "Age",
+      },
+      Ethnicity: {
+        label: "Ethnicity",
+      },
+      Religion: {
+        label: "Religion",
+      },
+      Sex: {
         label: "Sex",
-        items: ["Male", "Female"],
       },
-      nationality: {
-        label: "Nationality",
-        items: ["Filipino", "Other"],
+      Sexual_Orientation: {
+        label: "Sexual Orientation",
       },
-      civil_status: {
-        label: "Civil Status",
-        items: [
-          "Single",
-          "Married",
-          "Widowed",
-          "Divorced",
-          "Annulled",
-          "Common Law OS",
-          "Common Law SS",
-          "Separated Legally",
-          "Separated De Facto",
-        ],
+      Lifestyle: {
+        label: "Lifestyle",
       },
-      living_arrangement: {
-        label: "Living Arrangement",
-        items: [
-          "owned",
-          "shared",
-          "rent",
-          "homeless",
-          "institutionalized",
-          "others",
-        ],
+      NonCitizen: {
+        label: "Non-Citizen",
       },
-      highest_education_level: {
-        label: "Education",
-        items: [
-          "Early Childhood Education",
-          "Primary",
-          "Secondary",
-          "Tertiary",
-          "Vocational",
-          "Post Graduate",
-          "No Educational Attainment",
-        ],
+      Veteran_Status: {
+        label: "Veteran Status",
       },
-      education_status: {
-        label: "Education Status",
-        items: ["OnGoing", "Graduated", "Stopped", "Others"],
+      Dependency_Status: {
+        label: "Dependency Status",
+      },
+      Disability_Status: {
+        label: "Disability",
+      },
+      Marital_Status: {
+        label: "Marital Status",
       },
     },
   },
-  familyComposition: {
-    full_name: {
-      label: "FullName",
-      type: "text",
-      data: "",
-    },
-    age: {
-      label: "Age",
-      type: "text",
-      data: "",
-    },
-    birth_date: {
-      label: "Birth Date",
-      type: "date",
-      data: "",
-    },
-    civil_status: {
-      label: "Civil Status",
-      type: "text",
-      data: "",
-    },
-    relationship: {
-      label: "Relationship",
-      type: "text",
-      data: "",
-    },
-    educational_attainment: {
-      label: "Educational Attainment",
-      type: "text",
-      data: "",
-    },
-    occupation: {
-      label: "Occupation",
-      type: "text",
-      data: "",
-    },
-    monthly_income: {
-      label: "Monthly Income",
-      type: "text",
-      data: "",
-    },
-  },
-  address: {
-    permanent: {
-      regions: {
-        label: "Region",
-        items: regions,
-        title: "regDesc",
-        value: "regCode",
+  safety: {
+    tableHeaders: [
+      "Particulars",
+      "Severity Index",
+      "Duration Index",
+      "Coping Index",
+    ],
+    particulars: {
+      voice_crime_in_community: {
+        label: "Voice Crime in Community",
       },
-      province: {
-        label: "Province",
-        items: provinces,
-        title: "provDesc",
-        value: "provCode",
+      unsafe_working_conditions: {
+        label: "Unsafe Working Conditions",
       },
-      district: {
-        label: "District",
+      unsafe_codition_home: {
+        label: "Unsafe Condition at Home",
       },
-      municipality: {
-        label: "Municipality",
-        items: municipalities,
-        title: "citymunDesc",
-        value: "citymunCode",
+      absence_of_adequate_safety_services: {
+        label: "Absence of Adequate Safety Services",
       },
-      barangay: {
-        label: "Barangay",
-        items: barangays,
-        title: "brgyDesc",
-        value: "brgyCode",
+      natural_disasters: {
+        label: "Natural Disasters",
       },
-      purok: {
-        label: "Purok",
-      },
-    },
-    temporary: {
-      region: {
-        label: "Region",
-        items: regions,
-        title: "regDesc",
-        value: "regCode",
-      },
-      province: {
-        label: "Province",
-        items: provinces,
-        title: "provDesc",
-        value: "provCode",
-      },
-      district: {
-        label: "District",
-      },
-      municipality: {
-        label: "Municipality",
-        items: municipalities,
-        title: "citymunDesc",
-        value: "citymunCode",
-      },
-      barangay: {
-        label: "Barangay",
-        items: barangays,
-        title: "brgyDesc",
-        value: "brgyCode",
-      },
-      purok: {
-        label: "Purok",
+      human_created_disasters: {
+        label: "Human Created Disasters",
       },
     },
   },
-});
+  socialFunctioning: {
+    tableHeaders: [
+      "Particulars",
+      "Social Interaction Problem",
+      "Severity Index",
+      "Duration Index",
+      "Coping Index",
+    ],
+    particulars: {
+      familialRoles: {
+        parent: {
+          label: "Parent",
+        },
+        spouse: {
+          label: "Spouse",
+        },
+        child: {
+          label: "Child",
+        },
+        sibling: {
+          label: "Sibling",
+        },
+        other_family_member: {
+          label: "Other Family Member",
+        },
+        significant_others: {
+          label: "Significant Other",
+        },
+      },
+      interpersonalRoles: {
+        lover: {
+          label: "Lover",
+        },
+        friend: {
+          label: "Friend",
+        },
+        neighbor: {
+          label: "Neigbor",
+        },
+        member: {
+          label: "Member",
+        },
+      },
+      occupationalRoles: {
+        worker_paid_economy: {
+          label: "Work Paid Economy",
+        },
+        worker_home: {
+          label: "Worker Home",
+        },
+        worker_volunteer: {
+          label: "Worker Volunteer",
+        },
+        student: {
+          label: "Student",
+        },
+      },
+      specialLifeRoles: {
+        consumer: {
+          label: "Consumer",
+        },
+        inpatient: {
+          label: "Inpatient",
+        },
+        outpatient: {
+          label: "Outpatient",
+        },
+        er_patient: {
+          label: "ER Patient",
+        },
+        prisoner: {
+          label: "Prisoner",
+        },
+        immigrant_legal: {
+          label: "Immigrant Legal",
+        },
+        immigrant_undocumented: {
+          label: "Immigrant undocumented",
+        },
+        imigrant_refugee: {
+          label: "Imigrant Refugee",
+        },
+      },
+    },
+  },
+  problemsInEnvironment: {
+    tableHeaders: ["Particulars", "Severity Index", "Duration Index"],
+    particulars: {
+      foodNutrition: {
+        lack_regular_food: {
+          label: "Lack of regular food supply",
+        },
+        nutritionally_inadequate_food: {
+          label: "Nutritionally inadequate food supply",
+        },
+        documented_malnutrition: {
+          label: "Documented malnutrition",
+        },
+      },
+      shelter: {
+        absence_of_shelter: {
+          label: "Absence of shelter",
+        },
+        inadequate_shelter: {
+          label: "Substandard or inadequate shelter",
+        },
+      },
+      employment: {
+        unemployment: {
+          label: "Unemployment",
+        },
+        underemployment: {
+          label: "Underemployment",
+        },
+        inappropiate_employment: {
+          label: "Inappropriate employment",
+        },
+      },
+      economicResource: {
+        insufficient_community_resources: {
+          label: "Insufficient community resources for basic sustenance",
+        },
+        insufficient_provide_resources: {
+          label:
+            "Insufficient resources in the community to provide for needed services beyond",
+        },
+      },
+      transportation: {
+        no_personal_transportation: {
+          label: "No personal/public transportation to job/needed services",
+        },
+      },
+      affectionalSupportSystem: {
+        absence_of_affectional_support: {
+          label: "Absence of affectional support system",
+        },
+        inadequate_support_system: {
+          label: "Support system inadequate to meet affectional needs",
+        },
+        excessive_support_system: {
+          label: "exccessive involved support system",
+        },
+      },
+    },
+    comboField: {
+      reasons_psychosocial_counselling: {
+        label: "Reasons for Psychosocial Counselling",
+      },
+      problems_presented: {
+        label: "Problems Presented At Intake",
+      },
+    },
+    textField: {
+      person_emergency: {
+        label: "Person to be notified in case of emergency",
+      },
+      relationship_to_patient: {
+        label: "Relation to the patient",
+      },
+      address: {
+        label: "Address",
+      },
+      contact_number: {
+        label: "Contact Number",
+      },
+      interviewed_by: {
+        label: "Interviewer",
+      },
+    },
+    textArea: {
+      assesment_findings: {
+        label: "Assesment Findings",
+      },
+      recommended_intervention: {
+        label: "Recommended Intervention",
+      },
+      action_taken: {
+        label: "Action Taken",
+      },
+    },
+  },
+};
 
-const regionsCombo = {
-  permanent: {
-    label: "Region",
-    items: regions,
-  },
-  temporary: {
-    label: "Region",
-    items: regions,
-  },
-};
-const address = {
-  permanent: {
-    province: {
-      label: "Province",
-    },
-    district: {
-      label: "District",
-    },
-    municipality: {
-      label: "Municipality",
-    },
-    barangay: {
-      label: "Barangay",
-    },
-    purok: {
-      label: "Purok",
-    },
-  },
-  temporary: {
-    regions: {
-      label: "Region",
-    },
-    province: {
-      label: "Province",
-    },
-    district: {
-      label: "District",
-    },
-    municipality: {
-      label: "Municipality",
-    },
-    barangay: {
-      label: "Barangay",
-    },
-    purok: {
-      label: "Purok",
-    },
-  },
-};
-
-const validateForm = async (formType) => {
-  const form = await formType.value.validate();
-  if (!form.valid) return false;
-  return true;
-};
-
-const toggleEditFamilyDialog = (familyMember) => {
-  toEditFamilyMember.value = familyMember;
-  dialogs.value.editFamily = true;
-};
-
-const toggleDeleteFamilyDialog = (familyMember) => {
-  toEditFamilyMember.value = familyMember;
-  dialogs.value.deleteFamily = true;
-};
-
-// * create section
-const createFamilyMemberData = async () => {
-  let familyMember = {};
-  for (const key in inputFields.value.familyComposition) {
-    familyMember[key] = inputFields.value.familyComposition[key].data;
-  }
-  familyMember.patient_id = props.patientId;
-  console.log(familyMember);
-  const response = await createFamilyMember(familyMember);
-  if (response) {
-    updateBars.value.createFamilyMember.isActive = true;
-    familyComposition.value.push(familyMember);
-  }
-};
-// * Fetch Section
 const getPatientData = async () => {
+  await getInterviewData();
+  await getPatientPersonalData();
+  await getMswdClassificationData();
+  await getMonthlyExpensesData();
+  await getMedicalDataItem();
+  await getHealthAndMentalHealthData();
+  await getDiscriminationData();
+  await getSafetyData();
+  await getSocialFunctioningData();
+  await getProblemsInEnvironmentData();
+};
+const getInterviewData = async () => {
+  const response = await getInterview(props.patientId);
+  patientAssesmentData.value.interview = response;
+};
+const getPatientPersonalData = async () => {
   const response = await getPatientByID(props.patientId);
-  patientData.value = response;
-  // console.log(patientData.value);
-  patientAddress.value = response.address;
-  // console.log(patientAddress.value);
+  const address = await getPatientAddress(props.patientId);
+  const familyComposition = await getFamilyComposition(props.patientId);
+  if (address) {
+    patientAssesmentData.value.demographicData.address[0] = address[0];
+    patientAssesmentData.value.demographicData.address[1] = address[1];
+  }
+  patientAssesmentData.value.demographicData.patientData = response;
+  patientAssesmentData.value.demographicData.familyComposition =
+    familyComposition;
 };
-const getFamilyCompositionData = async () => {
-  const response = await getFamilyComposition(props.patientId);
-  familyComposition.value = response;
+const getMswdClassificationData = async () => {
+  const response = await getMswdClassification(props.patientId);
+  patientAssesmentData.value.mswdClassification = response;
 };
-const getFamilyInfoData = async () => {
-  const response = await getFamilyInfo(props.patientId);
-};
-
-const getRegionData = async () => {
-  const response = await getRegions();
-  // regions.value = response;
-};
-
-// const watchAddressChange = (addressType, key, apiCall, optionKey) => {
-//   watch(
-//     () => patientAddress.value[addressType][key],
-//     async (newVal) => {
-//       console.log(newVal);
-//       const firstPropertyName = Object.keys(newVal)[1];
-//       const firstPropertyValue = newVal[firstPropertyName];
-//       // console.log(firstPropertyValue);
-//       optionKey.value = await apiCall(firstPropertyValue);
-//       console.log(optionKey.value);
-//     }
-//   );
-// };
-
-// watchAddressChange(0, "region", getProvince, provinces);
-// watchAddressChange(0, "province", getMunicipality, municipalities);
-// watchAddressChange(0, "municipality", getBarangay, barangays);
-// watchAddressChange(1, "region", getProvince, provinces);
-// watchAddressChange(1, "province", getMunicipality, municipalities);
-// watchAddressChange(1, "municipality", getBarangay, barangays);
-
-// * Update Section
-const updatePersonalData = async () => {
-  const validate = await validateForm(personalForm);
-  if (!validate) return;
-  const response = await updatePatient(patientData.value);
+const getMonthlyExpensesData = async () => {
+  const response = await getMonthlyExpenses(props.patientId);
   if (response) {
-    updateBars.value.personalData.isActive = true;
+    patientAssesmentData.value.monthlyExpenses = response;
   }
 };
-const updatePatientAddressData = async () => {
-  // const patientAddress = patientData.value.address;
-  console.log(patientAddress.value);
-  // const response = await updatePatientAddress(patientAddress.value);
-  // if (response) {
-  //   updateBars.value.addressData.isActive = true;
-  // }
+const getMedicalDataItem = async () => {
+  const response = await getMedicalData(props.patientId);
+  if (response) patientAssesmentData.value.medicalData = response;
 };
-const updateFamilyMemberData = async () => {
-  const response = await updateFamilyMember(toEditFamilyMember.value);
+const getHealthAndMentalHealthData = async () => {
+  const response = await getHealthAndMentalHealth(props.patientId);
   if (response) {
-    updateBars.value.updateFamilyMember.isActive = true;
-    dialogs.value.editFamily = false;
+    patientAssesmentData.value.healthAndMentalHealth = response;
   }
 };
-// * Delete Section
-const deleteFamilyMemberData = async () => {
-  const familyMemberId = toEditFamilyMember.value.id;
-  // remove the item from the  family composition object using the toEditFamilyMember.id
-  const response = await deleteFamilyMember(familyMemberId);
+const getDiscriminationData = async () => {
+  const response = await getDiscrimination(props.patientId);
   if (response) {
-    familyComposition.value = familyComposition.value.filter(
-      (member) => member.id !== familyMemberId
-    );
-    updateBars.value.deleteFamilyMember.isActive = true;
-    dialogs.value.deleteFamily = false;
+    patientAssesmentData.value.discrimination = response;
+  }
+};
+const getSafetyData = async () => {
+  const response = await getSafety(props.patientId);
+  if (response) {
+    patientAssesmentData.value.safety = response;
+  }
+};
+const getSocialFunctioningData = async () => {
+  const response = await getSocialFunctioning(props.patientId);
+  if (response) {
+    patientAssesmentData.value.socialFunctioning = response;
+  }
+};
+const getProblemsInEnvironmentData = async () => {
+  const response = await getProblemsInEnvironment(props.patientId);
+  if (response) {
+    patientAssesmentData.value.problemsInEnvironment = response;
   }
 };
 </script>
-<style lang="css" scoped></style>
+<style lang=""></style>

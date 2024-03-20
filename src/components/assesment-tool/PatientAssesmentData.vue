@@ -577,8 +577,12 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                        </td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.problemsInEnvironment
@@ -586,8 +590,12 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                        </td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.problemsInEnvironment
@@ -595,8 +603,12 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                        </td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.problemsInEnvironment
@@ -604,8 +616,12 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                        </td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.problemsInEnvironment
@@ -613,8 +629,12 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                        </td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.problemsInEnvironment
@@ -622,8 +642,12 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].severity }}
+                        </td>
+                        <td>
+                          {{ patientAssesmentData.problemsInEnvironment[key].duration }}
+                        </td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -1005,7 +1029,64 @@ const patientAssesmentData = ref({
       coping: "",
     },
   },
-  problemsInEnvironment: {},
+  problemsInEnvironment: {
+    lack_regular_food: {
+      severity: "",
+      duration: "",
+    },
+    nutritionally_inadequate_food: {
+      severity: "",
+      duration: "",
+    },
+    documented_malnutrition: {
+      severity: "",
+      duration: "",
+    },
+    absence_of_shelter: {
+      severity: "",
+      duration: "",
+    },
+    inadequate_shelter: {
+      severity: "",
+      duration: "",
+    },
+    unemployment: {
+      severity: "",
+      duration: "",
+    },
+    underemployment: {
+      severity: "",
+      duration: "",
+    },
+    inappropiate_employment: {
+      severity: "",
+      duration: "",
+    },
+    insufficient_community_resources: {
+      severity: "",
+      duration: "",
+    },
+    insufficient_provide_resources: {
+      severity: "",
+      duration: "",
+    },
+    no_personal_transportation: {
+      severity: "",
+      duration: "",
+    },
+    absence_of_affectional_support: {
+      severity: "",
+      duration: "",
+    },
+    inadequate_support_system: {
+      severity: "",
+      duration: "",
+    },
+    excessive_support_system: {
+      severity: "",
+      duration: "",
+    },
+  },
 });
 const fields = {
   interview: {
