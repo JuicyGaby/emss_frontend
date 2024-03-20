@@ -369,7 +369,7 @@
               </v-row>
             </v-container>
           </div>
-          <!--  -->
+          <!-- safety -->
           <div>
             <h2>VII. Safety:</h2>
             <v-divider></v-divider>
@@ -393,9 +393,9 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>{{patientAssesmentData.safety[key].severity}}</td>
+                        <td>{{patientAssesmentData.safety[key].duration}}</td>
+                        <td>{{patientAssesmentData.safety[key].coping}}</td>
                       </tr>
                     </tbody>
                   </v-table>
