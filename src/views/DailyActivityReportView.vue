@@ -31,19 +31,35 @@
                 :headers="dataTable.headers"
                 :items="patientsWithNumbers"
                 :items-per-page="10"
-              ></v-data-table>
+              >
+                <template v-slot:[`item.operation`]="{ item }">
+                  <div class="d-flex ga-5">
+                    <v-icon
+                      color="primary"
+                      @click="editDailyActivityReport(item)"
+                      >mdi-pencil</v-icon
+                    >
+                    <v-icon
+                      color="secondary"
+                      @click="viewDailyActivityReport(item)"
+                      >mdi-eye</v-icon
+                    >
+                  </div>
+                </template>
+              </v-data-table>
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
     <!-- dialogs -->
+
     <v-dialog
       v-model="dialogs.createDialog"
       width="600px"
       transition="dialog-transition"
     >
-      <CreateDARDialog />
+      <CreateDARDialog @addDAR="addDARItem" />
     </v-dialog>
   </div>
 </template>
@@ -60,10 +76,9 @@ onMounted(async () => {
   await getDarItems();
 });
 let patients = ref([]);
-
 const dataTable = {
   headers: [
-    { title: "Number", value: "Number"},
+    { title: "Number", value: "Number" },
     { title: "Admission Date-Time", value: "admission_date" },
     { title: "Patient Name", value: "patient_name" },
     { title: "Age", value: "age" },
@@ -83,7 +98,6 @@ const getDarItems = async () => {
     patients.value = response;
   }
 };
-
 const patientsWithNumbers = computed(() => {
   return patients.value.map((patient, index) => {
     return {
@@ -92,5 +106,18 @@ const patientsWithNumbers = computed(() => {
     };
   });
 });
+
+const editDailyActivityReport = (item) => {
+  console.log("Edit DAR", item.id);
+};
+const viewDailyActivityReport = (id) => {
+  console.log("Edit DAR", id);
+};
+
+// emit
+const addDARItem = (item) => {
+  patients.value.push(item);
+  console.log(patients.value);
+};
 </script>
 <style lang=""></style>

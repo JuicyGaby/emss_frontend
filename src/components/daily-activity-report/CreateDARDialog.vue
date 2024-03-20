@@ -55,9 +55,8 @@
 import { createDailyActivityReport } from "@/api/daily-activity-report";
 import { ref, onMounted } from "vue";
 const props = defineProps({});
-
+const emit = defineEmits(["addDAR"]);
 const createDARForm = ref(null);
-
 const patientData = ref({});
 const inputRules = {
   required: (v) => !!v || "This field is required",
@@ -75,7 +74,6 @@ const inputs = {
       label: "Patient Name",
       type: "text",
       rules: [inputRules.required, inputRules.characters],
-
     },
     age: {
       label: "Age",
@@ -97,14 +95,13 @@ const inputs = {
     },
   },
 };
-
 const createDARItem = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
   const response = await createDailyActivityReport(patientData.value);
   if (response) {
     console.log("DAR created successfully");
-    console.log(response);
+    emit("addDAR", response);
   }
 };
 const validateForm = async () => {
