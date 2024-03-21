@@ -27,7 +27,7 @@
         <v-data-table
           :headers="dataTable.headers"
           :items="patientsWithNumbers"
-          :items-per-page="10"
+          :items-per-page="5"
         >
           <template v-slot:[`item.operation`]="{ item }">
             <div class="d-flex ga-5">
