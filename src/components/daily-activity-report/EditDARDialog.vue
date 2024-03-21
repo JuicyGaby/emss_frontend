@@ -1,6 +1,6 @@
 <template lang="">
   <div>
-    <v-card height="100vh">
+    <v-card>
       <v-toolbar color="secondary" class="px-5">
         <v-icon>mdi-book-plus</v-icon>
         <v-toolbar-title>Update Daily Activity Report</v-toolbar-title>

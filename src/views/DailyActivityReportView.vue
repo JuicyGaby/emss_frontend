@@ -58,7 +58,7 @@
       />
     </v-dialog>
     <!-- update dar dialog -->
-    <v-dialog v-model="dialogs.edit" fullscreen scrollable>
+    <v-dialog v-model="dialogs.edit" fullscreen>
       <EditDARDialog :dar_id="dar_id" @closeDialog="handleCloseDialog" />
     </v-dialog>
     <!-- view dar dialog -->
@@ -117,7 +117,6 @@ const patientsWithNumbers = computed(() => {
 const editDailyActivityReport = (item) => {
   dialogs.value.edit = true;
   dar_id.value = item;
-  console.log("Edit DAR", dar_id.value);
 };
 const viewDailyActivityReport = (id) => {
   console.log("Edit DAR", id);
