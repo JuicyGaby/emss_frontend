@@ -698,7 +698,7 @@
                     chips
                     multiple
                     readonly
-                    style="width: 600px"
+                    style="width: 1000px"
                     density="compact"
                     v-model="patientAssesmentData.problemsInEnvironment[index]"
                   ></v-combobox>
@@ -710,7 +710,7 @@
                     variant="outlined"
                     readonly
                     density="compact"
-                    style="width: 400px"
+                    style="width: 1000px"
                     v-model="patientAssesmentData.problemsInEnvironment[index]"
                   >
                   </v-textarea>

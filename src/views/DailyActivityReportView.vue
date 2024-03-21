@@ -20,11 +20,13 @@
           single-line
           hide-details
           variant="outlined"
+          v-model="search"
           style="max-width: 400px"
         ></v-text-field>
       </div>
       <v-card-text>
         <v-data-table
+          :search="search"
           :headers="dataTable.headers"
           :items="patientsWithNumbers"
           :items-per-page="5"
@@ -84,6 +86,7 @@ onMounted(async () => {
 });
 let patients = ref([]);
 let dar_id = ref(0);
+const search = ref("");
 const dataTable = {
   headers: [
     { title: "Number", value: "Number" },
