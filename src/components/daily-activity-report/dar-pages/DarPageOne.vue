@@ -1,6 +1,9 @@
 <template lang="">
   <div>
     <v-card>
+      <v-card-title primary-title>
+        <h1>Daily Activity Report</h1>
+      </v-card-title>
       <v-card-text>
         <v-container>
           <v-row class="mt-5">
@@ -69,16 +72,25 @@
                 v-model="darData[key]"
               ></v-text-field>
             </v-col>
-            <!-- {{ darData }} -->
+            <v-col>
+              <v-btn color="primary" @click="updateDailyActivityReportItem"
+                >Update Dar</v-btn
+              >
+            </v-col>
           </v-row>
         </v-container>
       </v-card-text>
     </v-card>
   </div>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
+import snackBars from "@/components/dialogs/snackBars.vue";
 import { ref, onMounted, watch } from "vue";
-import { getDailyActivityReportById } from "@/api/daily-activity-report";
+import {
+  getDailyActivityReportById,
+  updateDailyActivityReport,
+} from "@/api/daily-activity-report";
 const props = defineProps({
   dar_id: Number,
 });
@@ -86,6 +98,12 @@ onMounted(async () => {
   await fetchDarData();
 });
 const tabValue = ref(0);
+const snackBarData = ref({
+  isVisible: false,
+  type: "",
+  text: "",
+});
+
 const darData = ref({
   id: props.dar_id,
 });
@@ -244,12 +262,24 @@ const inputFields = {
     },
   },
 };
+const updateDailyActivityReportItem = async () => {
+  const response = await updateDailyActivityReport(darData.value);
+  if (response) {
+    console.log("update", response);
+    handleSnackBar("success", "Daily Activity Report Updated");
+  }
+};
 const fetchDarData = async () => {
   const response = await getDailyActivityReportById(props.dar_id);
   darData.value = response;
   darData.value.admission_date = new Date(response.admission_date)
     .toISOString()
     .slice(0, 16);
+};
+const handleSnackBar = (type, text) => {
+  snackBarData.value.isVisible = true;
+  snackBarData.value.type = type;
+  snackBarData.value.text = text;
 };
 </script>
 <style lang=""></style>

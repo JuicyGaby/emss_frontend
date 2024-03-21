@@ -1,7 +1,9 @@
 <template lang="">
   <div class="">
     <v-card style>
-      <v-card-title primary-title> DAR </v-card-title>
+      <v-card-title primary-title>
+        <h2>Daily Activity Report Form</h2>
+      </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>

@@ -1,6 +1,9 @@
 <template lang="">
   <div>
     <v-card>
+      <v-card-title primary-title>
+        <h1>Services</h1>
+      </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>

@@ -10,8 +10,8 @@
       <v-tabs v-model="tabValue" align-tabs="center" density="">
         <v-tab :value="1">Page 1</v-tab>
         <v-tab :value="2">Page 2</v-tab>
-        <v-tab :value="3" disabled>Page 3</v-tab>
-        <v-tab :value="4" disabled>Page 4</v-tab>
+        <v-tab :value="3">Page 3</v-tab>
+        <v-tab :value="4">Page 4</v-tab>
       </v-tabs>
     </v-card-title>
     <v-card-text>

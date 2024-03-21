@@ -22,8 +22,8 @@ const getDailyActivityReportById = async (id) => {
   const data = await response.json();
   return data;
 };
-const updateDailyActivityReport = async (id, body) => {
-  const API_URL = `http://localhost:3000/daily-activity-report/${id}`;
+const updateDailyActivityReport = async (body) => {
+  const API_URL = `http://localhost:3000/daily-activity-report`;
   const response = await fetch(API_URL, {
     method: "PUT",
     headers: {
