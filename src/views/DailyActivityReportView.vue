@@ -79,7 +79,6 @@ import { ref, onMounted, computed } from "vue";
 import CreateDARDialog from "@/components/daily-activity-report/CreateDARDialog.vue";
 import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue";
 import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
-
 onMounted(async () => {
   await getDarItems();
 });
@@ -102,7 +101,6 @@ const dialogs = ref({
 });
 const getDarItems = async () => {
   const response = await getDailyActivityReport();
-  console.log(response);
   if (response.length > 0) {
     patients.value = response;
   }

@@ -1,6 +1,6 @@
 <template lang="">
   <div>
-    <v-card>
+    <v-card height="100vh">
       <v-toolbar color="secondary" class="px-5">
         <v-icon>mdi-book-plus</v-icon>
         <v-toolbar-title>Update Daily Activity Report</v-toolbar-title>
@@ -14,18 +14,27 @@
           <v-tab :value="3" disabled>Page 3</v-tab>
           <v-tab :value="4" disabled>Page 4</v-tab>
         </v-tabs>
+      </v-card-title>
+      <v-card-text>
         <v-window v-model="tabValue">
-          <v-window-item :value="1"> One </v-window-item>
-          <v-window-item :value="2"> Two </v-window-item>
+          <v-window-item :value="1">
+            <DarPageOne :dar_id="dar_id" />
+          </v-window-item>
+          <v-window-item :value="2">
+            <DarPageTwo :dar_id="dar_id" />
+          </v-window-item>
           <v-window-item :value="3"> Three </v-window-item>
           <v-window-item :value="4"> Four </v-window-item>
         </v-window>
-      </v-card-title>
-      <v-card-text> </v-card-text>
+      </v-card-text>
     </v-card>
   </div>
 </template>
 <script setup>
+import DarPageOne from "@/components/daily-activity-report/dar-pages/DarPageOne.vue";
+import DarPageTwo from "@/components/daily-activity-report/dar-pages/DarPageTwo.vue";
+import DarPageThree from "@/components/daily-activity-report/dar-pages/DarPageThree.vue";
+import DarPageFour from "@/components/daily-activity-report/dar-pages/DarPageFour.vue";
 import { ref } from "vue";
 const props = defineProps({
   dar_id: Number,
