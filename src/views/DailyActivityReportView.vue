@@ -1,84 +1,74 @@
 <template lang="">
-  <div>
-    <v-container>
-      <v-row>
-        <v-col cols="12">
-          <v-card>
-            <v-card-title primary-title class="d-flex align-center ga-2">
-              <v-icon size="x-large">mdi-book-edit</v-icon>
-              <h2>Daily Activity Report</h2>
-            </v-card-title>
-            <v-divider></v-divider>
-            <div class="ma-3 d-flex justify-space-between align-center">
-              <v-btn
-                color="grey"
-                prepend-icon="mdi-folder-plus"
-                size="large"
-                @click="dialogs.create = true"
-                >Create Report</v-btn
+  <div class="rb">
+    <v-card width="100%">
+      <v-card-title primary-title class="d-flex align-center ga-2">
+        <v-icon size="x-large">mdi-book-edit</v-icon>
+        <h2>Daily Activity Report</h2>
+      </v-card-title>
+      <v-divider></v-divider>
+      <div class="ma-3 d-flex justify-space-between align-center">
+        <v-btn
+          color="grey"
+          prepend-icon="mdi-folder-plus"
+          size="large"
+          @click="dialogs.create = true"
+          >Create Report</v-btn
+        >
+        <v-text-field
+          prepend-inner-icon="mdi-magnify"
+          label="Search Patient"
+          single-line
+          hide-details
+          variant="outlined"
+          style="max-width: 400px"
+        ></v-text-field>
+      </div>
+      <v-card-text>
+        <v-data-table
+          :headers="dataTable.headers"
+          :items="patientsWithNumbers"
+          :items-per-page="10"
+        >
+          <template v-slot:[`item.operation`]="{ item }">
+            <div class="d-flex ga-5">
+              <v-icon color="primary" @click="editDailyActivityReport(item.id)"
+                >mdi-pencil</v-icon
               >
-              <v-text-field
-                prepend-inner-icon="mdi-magnify"
-                label="Search Patient"
-                single-line
-                hide-details
-                variant="outlined"
-                style="max-width: 400px"
-              ></v-text-field>
+              <v-icon color="secondary" @click="viewDailyActivityReport(item)"
+                >mdi-eye</v-icon
+              >
             </div>
-            <v-card-text>
-              <v-data-table
-                :headers="dataTable.headers"
-                :items="patientsWithNumbers"
-                :items-per-page="10"
-              >
-                <template v-slot:[`item.operation`]="{ item }">
-                  <div class="d-flex ga-5">
-                    <v-icon
-                      color="primary"
-                      @click="editDailyActivityReport(item.id)"
-                      >mdi-pencil</v-icon
-                    >
-                    <v-icon
-                      color="secondary"
-                      @click="viewDailyActivityReport(item)"
-                      >mdi-eye</v-icon
-                    >
-                  </div>
-                </template>
-              </v-data-table>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-    <!-- dialogs -->
-    <div>
-      <!-- create dar dialog -->
-      <v-dialog
-        v-model="dialogs.create"
-        width="600px"
-        transition="dialog-transition"
-      >
-        <CreateDARDialog
-          @addDAR="addDARItem"
-          @closeDialog="handleCloseDialog"
-          @editDAR="handleEditDar"
-        />
-      </v-dialog>
-      <!-- update dar dialog -->
-      <v-dialog v-model="dialogs.edit" fullscreen scrollable>
-        <EditDARDialog :dar_id="dar_id" @closeDialog="handleCloseDialog"/>
-      </v-dialog>
-      <!-- view dar dialog -->
-      <v-dialog
-        v-model="dialogs.view"
-        width="600px"
-        transition="dialog-transition"
-      >
-        <ViewDARDialog :dar_id="dar_id" />
-      </v-dialog>
-    </div>
+          </template>
+        </v-data-table>
+      </v-card-text>
+    </v-card>
+  </div>
+  <!-- dialogs -->
+  <div>
+    <!-- create dar dialog -->
+    <v-dialog
+      v-model="dialogs.create"
+      width="600px"
+      transition="dialog-transition"
+    >
+      <CreateDARDialog
+        @addDAR="addDARItem"
+        @closeDialog="handleCloseDialog"
+        @editDAR="handleEditDar"
+      />
+    </v-dialog>
+    <!-- update dar dialog -->
+    <v-dialog v-model="dialogs.edit" fullscreen scrollable>
+      <EditDARDialog :dar_id="dar_id" @closeDialog="handleCloseDialog" />
+    </v-dialog>
+    <!-- view dar dialog -->
+    <v-dialog
+      v-model="dialogs.view"
+      width="600px"
+      transition="dialog-transition"
+    >
+      <ViewDARDialog :dar_id="dar_id" />
+    </v-dialog>
   </div>
 </template>
 <script setup>
@@ -148,4 +138,9 @@ const handleCloseDialog = () => {
   dialogs.value.edit = false;
 };
 </script>
-<style lang=""></style>
+<style lang="css">
+.rb {
+  border: 1px dashed red;
+  width: 100%;
+}
+</style>
