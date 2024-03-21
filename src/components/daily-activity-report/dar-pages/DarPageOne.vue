@@ -3,7 +3,7 @@
     <v-card>
       <v-card-text>
         <v-container>
-          <v-row>
+          <v-row class="mt-5">
             <v-col cols="12" class="d-flex flex-wrap ga-2">
               <v-text-field
                 v-for="(field, key) in inputFields.part1.textFields"

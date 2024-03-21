@@ -60,7 +60,12 @@
       />
     </v-dialog>
     <!-- update dar dialog -->
-    <v-dialog v-model="dialogs.edit" fullscreen>
+    <v-dialog
+      v-model="dialogs.edit"
+      fullscreen
+      scrollable
+      transition="dialog-transition"
+    >
       <EditDARDialog :dar_id="dar_id" @closeDialog="handleCloseDialog" />
     </v-dialog>
     <!-- view dar dialog -->
