@@ -1,156 +1,264 @@
 <template lang="">
-  <div class="d-flex">
-
-  </div>
-  <v-container class="ma-0">
-    <v-row>
-      <v-col cols="12">
-        <v-card>
-          <v-card-title primary-title class="d-flex align-center ga-2">
-            <v-icon size="x-large">mdi-book-edit</v-icon>
-            <h2>Daily Activity Report</h2>
-          </v-card-title>
-          <v-divider></v-divider>
-          <div class="ma-3 d-flex justify-space-between align-center">
-            <v-btn
-              color="grey"
-              prepend-icon="mdi-folder-plus"
-              size="large"
-              @click="dialogs.create = true"
-              >Create Report</v-btn
-            >
-            <v-text-field
-              prepend-inner-icon="mdi-magnify"
-              label="Search Patient"
-              single-line
-              hide-details
-              variant="outlined"
-              style="max-width: 400px"
-            ></v-text-field>
-          </div>
-          <v-card-text>
-            <v-data-table
-              :headers="dataTable.headers"
-              :items="patientsWithNumbers"
-              :items-per-page="10"
-            >
-              <template v-slot:[`item.operation`]="{ item }">
-                <div class="d-flex ga-5">
-                  <v-icon
-                    color="primary"
-                    @click="editDailyActivityReport(item.id)"
-                    >mdi-pencil</v-icon
-                  >
-                  <v-icon
-                    color="secondary"
-                    @click="viewDailyActivityReport(item)"
-                    >mdi-eye</v-icon
-                  >
-                </div>
-              </template>
-            </v-data-table>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
-  <!-- dialogs -->
   <div>
-    <!-- create dar dialog -->
-    <v-dialog
-      v-model="dialogs.create"
-      width="600px"
-      transition="dialog-transition"
-    >
-      <CreateDARDialog
-        @addDAR="addDARItem"
-        @closeDialog="handleCloseDialog"
-        @editDAR="handleEditDar"
-      />
-    </v-dialog>
-    <!-- update dar dialog -->
-    <v-dialog v-model="dialogs.edit" fullscreen scrollable>
-      <EditDARDialog :dar_id="dar_id" @closeDialog="handleCloseDialog" />
-    </v-dialog>
-    <!-- view dar dialog -->
-    <v-dialog
-      v-model="dialogs.view"
-      width="600px"
-      transition="dialog-transition"
-    >
-      <ViewDARDialog :dar_id="dar_id" />
-    </v-dialog>
+    <v-card>
+      <v-tabs v-model="tabValue" align-tabs="center" density="compact">
+        <v-tab :value="1">Part 1</v-tab>
+        <v-tab :value="2">Part 2</v-tab>
+      </v-tabs>
+      <v-card-text>
+        <v-window v-model="tabValue">
+          <v-window-item :value="1">
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-2">
+                  <v-text-field
+                    v-for="(field, key) in inputFields.part1.textFields"
+                    :key="key"
+                    :label="field.label"
+                    variant="outlined"
+                    density="comfortable"
+                    style="width: 400px"
+                    :type="field.type"
+                    v-model="darData[key]"
+                  ></v-text-field>
+                  <v-select
+                    v-for="(field, key) in inputFields.part1.selectFields"
+                    :key="key"
+                    :label="field.label"
+                    :items="field.items"
+                    variant="outlined"
+                    density="comfortable"
+                    style="width: 400px"
+                    autocomplete
+                    v-model="darData[key]"
+                  ></v-select>
+                  <v-select
+                    v-for="(field, key) in inputFields.part1.titleValueFields"
+                    :key="key"
+                    :label="field.label"
+                    :items="field.items"
+                    item-title="title"
+                    item-value="value"
+                    variant="outlined"
+                    density="comfortable"
+                    style="width: 400px"
+                    autocomplete
+                    v-model="darData[key]"
+                  ></v-select>
+                </v-col>
+                <!-- {{ darData }} -->
+              </v-row>
+            </v-container>
+          </v-window-item>
+          <v-window-item :value="2">
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="d-flex flex-wrap ga-2">
+                  <v-select
+                    v-for="(field, key) in inputFields.part2.selectFields"
+                    :key="key"
+                    :label="field.label"
+                    :items="field.items"
+                    variant="outlined"
+                    density="comfortable"
+                    style="width: 400px"
+                    autocomplete
+                    v-model="darData[key]"
+                  ></v-select>
+                  <v-text-field
+                    v-for="(field, key) in inputFields.part2.textFields"
+                    :key="key"
+                    :label="field.label"
+                    variant="outlined"
+                    density="comfortable"
+                    style="width: 400px"
+                    :type="field.type"
+                    v-model="darData[key]"
+                  ></v-text-field>
+                </v-col>
+                <!-- {{ darData }} -->
+              </v-row>
+            </v-container>
+          </v-window-item>
+        </v-window>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 <script setup>
-import { getDailyActivityReport } from "@/api/daily-activity-report";
-import { ref, onMounted, computed } from "vue";
-
-// components
-import CreateDARDialog from "@/components/daily-activity-report/CreateDARDialog.vue";
-import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue";
-import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
-
+import { ref, onMounted, watch } from "vue";
+import { getDailyActivityReportById } from "@/api/daily-activity-report";
+const props = defineProps({
+  dar_id: Number,
+});
 onMounted(async () => {
-  await getDarItems();
+  await fetchDarData();
 });
-let patients = ref([]);
-let dar_id = ref(0);
-const dataTable = {
-  headers: [
-    { title: "Number", value: "Number" },
-    // { title: "Admission Date-Time", value: "admission_date" },
-    { title: "Patient Name", value: "patient_name" },
-    { title: "Age", value: "age" },
-    { title: "Sex", value: "sex" },
-    { title: "Operation", value: "operation" },
-  ],
-};
-const dialogs = ref({
-  create: false,
-  edit: false,
-  view: false,
+const tabValue = ref(0);
+const darData = ref({
+  id: props.dar_id,
 });
-const getDarItems = async () => {
-  const response = await getDailyActivityReport();
-  console.log(response);
-  if (response.length > 0) {
-    patients.value = response;
-  }
+const inputFields = {
+  part1: {
+    textFields: {
+      admission_date: {
+        label: "Admission Date",
+        type: "datetime-local",
+      },
+      patient_name: {
+        label: "Patient Name",
+      },
+      age: {
+        label: "Age",
+      },
+      address: {
+        label: "Address",
+      },
+    },
+    selectFields: {
+      sex: {
+        label: "Sex",
+        items: ["Male", "Female"],
+      },
+      civil_status: {
+        label: "Civil Status",
+        items: [
+          "Child",
+          "Single",
+          "Married",
+          "Widowed",
+          "Sep - In-Fact",
+          "Sep - Legal",
+          "CLP - Opposite Sex",
+          "CLP - Same Sex",
+        ],
+      },
+      area: {
+        label: "Area",
+        items: ["Basic Ward", "Non-Basic Ward", "OP", "ER/ED"],
+      },
+      case_type: {
+        label: "Case Type",
+        items: ["New Case", "Old Case", "Case Closed"],
+      },
+      contributor_type: {
+        label: "Indirect Contributor",
+        items: [
+          "Indirect - POS",
+          "Indirect - Sponsored",
+          "Indirect - 4PS",
+          "Indirect - PWD",
+          "Indirect - SC",
+          "Direct - Lifetime",
+          "Direct - Employed",
+          "Direct - Voluntary",
+          "Direct - OFW",
+        ],
+      },
+    },
+    titleValueFields: {
+      phic_classification: {
+        label: "PHIC Classification",
+        items: [
+          { title: "Financially Capable", value: "A" },
+          { title: "Financially Capacitated", value: "B" },
+          { title: "Financially Incapable", value: "C1" },
+          { title: "Financially Incapacitated", value: "C2" },
+          { title: "Indigent - C3", value: "C3" },
+          { title: "Indigent - D", value: "D" },
+        ],
+      },
+      non_phic_classification: {
+        label: "Non-PHIC Classification",
+        items: [
+          { title: "Financially Capable", value: "A" },
+          { title: "Financially Capacitated", value: "B" },
+          { title: "Financially Incapable", value: "C1" },
+          { title: "Financially Incapacitated", value: "C2" },
+          { title: "Indigent - C3", value: "C3" },
+          { title: "Indigent - D", value: "D" },
+        ],
+      },
+    },
+  },
+  part2: {
+    textFields: {
+      religion: {
+        label: "Religion",
+      },
+      occupation: {
+        label: "Occupation",
+      },
+      household_size: {
+        label: "Household Size",
+      },
+      monthly_income: {
+        label: "Monthly Income",
+      },
+      referral_source: {
+        label: "Referral Source",
+      },
+      diagnosis: {
+        label: "Diagnosis",
+      },
+      informant_name: {
+        label: "Informant Name",
+      },
+      relationship_to_patient: {
+        label: "Relationship to Patient",
+      },
+      interview_start_time: {
+        label: "Interview Start Time",
+        type: "time",
+      },
+      interview_end_time: {
+        label: "Interview End Time",
+        type: "time",
+      },
+    },
+    selectFields: {
+      sectoral_grouping: {
+        label: "Sectoral Grouping",
+        items: [
+          "SC",
+          "PWD",
+          "Solo Parent",
+          "IP",
+          "BHW",
+          "Brgy. Officials",
+          "Veterans",
+          "Health Worker",
+          "Government Worker",
+          "Custodial",
+          "Artisanal Fisherfolk",
+          "Farmer and Landless Rural Worker",
+          "Urban Poor",
+          "Formal Labor & Migrant Workers",
+          "Workers in Informal Sectors",
+          "Victims of Disaster & Calamity",
+          "Others",
+        ],
+      },
+      educational_attainment: {
+        label: " Educational Attainment",
+        items: [
+          "Undergraduate",
+          "Elementary",
+          "High School",
+          "Vocational",
+          "College",
+          "Post Graduate",
+        ],
+      },
+    },
+  },
 };
-const patientsWithNumbers = computed(() => {
-  return patients.value.map((patient, index) => {
-    return {
-      Number: index + 1,
-      ...patient,
-    };
-  });
-});
-
-const editDailyActivityReport = (item) => {
-  dialogs.value.edit = true;
-  dar_id.value = item;
-  console.log("Edit DAR", dar_id.value);
-};
-const viewDailyActivityReport = (id) => {
-  console.log("Edit DAR", id);
-};
-// emit
-const addDARItem = (item) => {
-  patients.value.push(item);
-  console.log(patients.value);
-};
-const handleEditDar = (dar_id) => {
-  dialogs.value.create = false;
-  editDailyActivityReport(dar_id);
-};
-const handleCloseDialog = () => {
-  dialogs.value.create = false;
-  dialogs.value.edit = false;
+const fetchDarData = async () => {
+  const response = await getDailyActivityReportById(props.dar_id);
+  darData.value = response;
+  darData.value.admission_date = new Date(response.admission_date)
+    .toISOString()
+    .slice(0, 16);
 };
 </script>
-<style lang="css">
-.rb {
-  border: 1px dashed red;
-}
-</style>
+<style lang=""></style>

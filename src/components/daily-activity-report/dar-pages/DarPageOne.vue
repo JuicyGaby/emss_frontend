@@ -1,89 +1,77 @@
 <template lang="">
   <div>
-    <h1>Services</h1>
     <v-card>
-      <v-card-title class="">
-        <v-tabs v-model="tabValue" align-tabs="center">
-          <v-tab :value="1">Part 1</v-tab>
-          <v-tab :value="2">Part 2</v-tab>
-        </v-tabs>
-      </v-card-title>
       <v-card-text>
-        <v-window v-model="tabValue">
-          <v-window-item :value="1">
-            <v-container>
-              <v-row>
-                <v-col cols="12" class="d-flex flex-wrap ga-2">
-                  <v-text-field
-                    v-for="(field, key) in inputFields.part1.textFields"
-                    :key="key"
-                    :label="field.label"
-                    variant="outlined"
-                    density="comfortable"
-                    style="width: 400px"
-                    :type="field.type"
-                    v-model="darData[key]"
-                  ></v-text-field>
-                  <v-select
-                    v-for="(field, key) in inputFields.part1.selectFields"
-                    :key="key"
-                    :label="field.label"
-                    :items="field.items"
-                    variant="outlined"
-                    density="comfortable"
-                    style="width: 400px"
-                    autocomplete
-                    v-model="darData[key]"
-                  ></v-select>
-                  <v-select
-                    v-for="(field, key) in inputFields.part1.titleValueFields"
-                    :key="key"
-                    :label="field.label"
-                    :items="field.items"
-                    item-title="title"
-                    item-value="value"
-                    variant="outlined"
-                    density="comfortable"
-                    style="width: 400px"
-                    autocomplete
-                    v-model="darData[key]"
-                  ></v-select>
-                </v-col>
-                <!-- {{ darData }} -->
-              </v-row>
-            </v-container>
-          </v-window-item>
-          <v-window-item :value="2">
-            <v-container>
-              <v-row>
-                <v-col cols="12" class="d-flex flex-wrap ga-2">
-                  <v-select
-                    v-for="(field, key) in inputFields.part2.selectFields"
-                    :key="key"
-                    :label="field.label"
-                    :items="field.items"
-                    variant="outlined"
-                    density="comfortable"
-                    style="width: 400px"
-                    autocomplete
-                    v-model="darData[key]"
-                  ></v-select>
-                  <v-text-field
-                    v-for="(field, key) in inputFields.part2.textFields"
-                    :key="key"
-                    :label="field.label"
-                    variant="outlined"
-                    density="comfortable"
-                    style="width: 400px"
-                    :type="field.type"
-                    v-model="darData[key]"
-                  ></v-text-field>
-                </v-col>
-                <!-- {{ darData }} -->
-              </v-row>
-            </v-container>
-          </v-window-item>
-        </v-window>
+        <v-container>
+          <v-row>
+            <v-col cols="12" class="d-flex flex-wrap ga-2">
+              <v-text-field
+                v-for="(field, key) in inputFields.part1.textFields"
+                :key="key"
+                :label="field.label"
+                variant="outlined"
+                density="comfortable"
+                style="width: 400px"
+                :type="field.type"
+                v-model="darData[key]"
+              ></v-text-field>
+              <v-select
+                v-for="(field, key) in inputFields.part1.selectFields"
+                :key="key"
+                :label="field.label"
+                :items="field.items"
+                variant="outlined"
+                density="comfortable"
+                style="width: 400px"
+                autocomplete
+                v-model="darData[key]"
+              ></v-select>
+              <v-select
+                v-for="(field, key) in inputFields.part1.titleValueFields"
+                :key="key"
+                :label="field.label"
+                :items="field.items"
+                item-title="title"
+                item-value="value"
+                variant="outlined"
+                density="comfortable"
+                style="width: 400px"
+                autocomplete
+                v-model="darData[key]"
+              ></v-select>
+              <v-text-field
+                label="Remarks"
+                variant="outlined"
+                style="width: 400px"
+                density="comfortable"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="d-flex flex-wrap ga-2">
+              <v-select
+                v-for="(field, key) in inputFields.part2.selectFields"
+                :key="key"
+                :label="field.label"
+                :items="field.items"
+                variant="outlined"
+                density="comfortable"
+                style="width: 400px"
+                autocomplete
+                v-model="darData[key]"
+              ></v-select>
+              <v-text-field
+                v-for="(field, key) in inputFields.part2.textFields"
+                :key="key"
+                :label="field.label"
+                variant="outlined"
+                density="comfortable"
+                style="width: 400px"
+                :type="field.type"
+                v-model="darData[key]"
+              ></v-text-field>
+            </v-col>
+            <!-- {{ darData }} -->
+          </v-row>
+        </v-container>
       </v-card-text>
     </v-card>
   </div>

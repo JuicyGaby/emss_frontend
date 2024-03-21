@@ -8,7 +8,7 @@
         <v-btn icon="mdi-close" @click="emit('closeDialog')"> </v-btn>
       </v-toolbar>
       <v-card-title primary-title>
-        <v-tabs v-model="tabValue" align-tabs="center" density="comfortable">
+        <v-tabs v-model="tabValue" align-tabs="center" density="comfortable" fixed-tabs>
           <v-tab :value="1">Page 1</v-tab>
           <v-tab :value="2">Page 2</v-tab>
           <v-tab :value="3" disabled>Page 3</v-tab>
