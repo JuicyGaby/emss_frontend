@@ -5,50 +5,62 @@
         <v-icon size="x-large">mdi-book-edit</v-icon>
         <h1>Daily Activity Report</h1>
       </v-toolbar>
+      <v-tabs v-model="tabValue" align-tabs="start">
+        <v-tab :value="1">Daily Activity Report</v-tab>
+        <v-tab :value="2">Social Word Administration</v-tab>
+      </v-tabs>
       <v-divider></v-divider>
-      <div class="ma-3 d-flex justify-space-between align-center">
-        <div class="d-flex ga-2">
-          <v-btn
-            color="grey"
-            prepend-icon="mdi-folder-plus"
-            @click="dialogs.create = true"
-            >Create DAR</v-btn
-          >
-          <v-btn
-            color="grey"
-            prepend-icon="mdi-folder-plus"
-            @click="dialogs.create = true"
-            >Create SWA</v-btn
-          >
-        </div>
-        <v-text-field
-          prepend-inner-icon="mdi-magnify"
-          label="Search Patient"
-          single-line
-          hide-details
-          variant="outlined"
-          v-model="search"
-          style="max-width: 400px"
-        ></v-text-field>
-      </div>
       <v-card-text>
-        <v-data-table
-          :search="search"
-          :headers="dataTable.headers"
-          :items="patientsWithNumbers"
-          :items-per-page="5"
-        >
-          <template v-slot:[`item.operation`]="{ item }">
-            <div class="d-flex ga-5">
-              <v-icon color="primary" @click="editDailyActivityReport(item.id)"
-                >mdi-pencil</v-icon
-              >
-              <v-icon color="secondary" @click="viewDailyActivityReport(item)"
-                >mdi-eye</v-icon
-              >
+        <v-window v-model="tabValue">
+          <v-window-item :value="1">
+            <div class="ma-3 d-flex justify-space-between align-center">
+              <div class="">
+                <v-btn
+                  color="grey"
+                  prepend-icon="mdi-folder-plus"
+                  @click="dialogs.create = true"
+                  >Create Entry</v-btn
+                >
+              </div>
+              <v-text-field
+                prepend-inner-icon="mdi-magnify"
+                label="Search Patient"
+                single-line
+                hide-details
+                variant="outlined"
+                density="comfortable" 
+                v-model="search"
+                style="max-width: 400px"
+              ></v-text-field>
             </div>
-          </template>
-        </v-data-table>
+            <v-data-table
+              :search="search"
+              :headers="dataTable.headers"
+              :items="patientsWithNumbers"
+              :items-per-page="5"
+            >
+              <template v-slot:[`item.operation`]="{ item }">
+                <div class="d-flex ga-5">
+                  <v-icon
+                    color="primary"
+                    @click="editDailyActivityReport(item.id)"
+                    >mdi-pencil</v-icon
+                  >
+                  <v-icon
+                    color="secondary"
+                    @click="viewDailyActivityReport(item)"
+                    >mdi-eye</v-icon
+                  >
+                </div>
+              </template>
+            </v-data-table>
+          </v-window-item>
+          <v-window-item :value="2">
+            <div class="ma-3 ">
+              <v-btn color="grey">text</v-btn>
+            </div>
+          </v-window-item>
+        </v-window>
       </v-card-text>
     </v-card>
   </div>
@@ -97,6 +109,7 @@ onMounted(async () => {
   await getDarItems();
 });
 let patients = ref([]);
+const tabValue = ref(1);
 let dar_id = ref(0);
 const search = ref("");
 const dataTable = {

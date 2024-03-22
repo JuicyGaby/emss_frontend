@@ -7,10 +7,9 @@
       <v-btn icon="mdi-close" @click="emit('closeDialog')"> </v-btn>
     </v-toolbar>
     <v-card-title primary-title>
-      <v-tabs v-model="tabValue" align-tabs="center" density="">
-        <v-tab :value="1">Page 1</v-tab>
-        <v-tab :value="2">Page 2</v-tab>
-        <v-tab :value="3">Page 3</v-tab>
+      <v-tabs v-model="tabValue" align-tabs="center">
+        <v-tab :value="1">Demographic Data</v-tab>
+        <v-tab :value="2">Services</v-tab>
       </v-tabs>
     </v-card-title>
     <v-card-text>
@@ -20,9 +19,6 @@
         </v-window-item>
         <v-window-item :value="2">
           <DarPageTwo :dar_id="dar_id" />
-        </v-window-item>
-        <v-window-item :value="3">
-          <DarPageThree :dar_id="dar_id" />
         </v-window-item>
       </v-window>
     </v-card-text>
