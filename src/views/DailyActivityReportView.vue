@@ -18,7 +18,7 @@
                 <v-btn
                   color="grey"
                   prepend-icon="mdi-folder-plus"
-                  @click="dialogs.create = true"
+                  @click="dialogs.dar.create = true"
                   >Create Entry</v-btn
                 >
               </div>
@@ -28,7 +28,7 @@
                 single-line
                 hide-details
                 variant="outlined"
-                density="comfortable" 
+                density="comfortable"
                 v-model="search"
                 style="max-width: 400px"
               ></v-text-field>
@@ -56,8 +56,8 @@
             </v-data-table>
           </v-window-item>
           <v-window-item :value="2">
-            <div class="ma-3 ">
-              <v-btn color="grey">text</v-btn>
+            <div class="ma-3">
+              <v-btn color="grey" @click="dialogs.swa.create = true">Create Entry</v-btn>
             </div>
           </v-window-item>
         </v-window>
@@ -68,7 +68,7 @@
   <div>
     <!-- create dar dialog -->
     <v-dialog
-      v-model="dialogs.create"
+      v-model="dialogs.dar.create"
       width="600px"
       transition="dialog-transition"
     >
@@ -80,7 +80,7 @@
     </v-dialog>
     <!-- update dar dialog -->
     <v-dialog
-      v-model="dialogs.edit"
+      v-model="dialogs.dar.edit"
       fullscreen
       scrollable
       transition="dialog-transition"
@@ -89,12 +89,23 @@
     </v-dialog>
     <!-- view dar dialog -->
     <v-dialog
-      v-model="dialogs.view"
+      v-model="dialogs.dar.view"
       width="600px"
       transition="dialog-transition"
     >
       <ViewDARDialog :dar_id="dar_id" />
     </v-dialog>
+
+    <v-dialog
+      v-model="dialogs.swa.create"
+      width="400px"
+      transition="dialog-transition"
+    >
+      <CreateSWADialog />
+    </v-dialog>
+    <!-- create swa dialog -->
+    <!-- update swa dialog -->
+    <!-- view swa dialog -->
   </div>
 </template>
 <script setup>
@@ -102,9 +113,12 @@ import { getDailyActivityReport } from "@/api/daily-activity-report";
 import { ref, onMounted, computed } from "vue";
 
 // components
+// DAR
 import CreateDARDialog from "@/components/daily-activity-report/CreateDARDialog.vue";
 import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue";
 import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
+// SWA
+import CreateSWADialog from "@/components/daily-activity-report/CreateSWADialog.vue";
 onMounted(async () => {
   await getDarItems();
 });
@@ -123,9 +137,16 @@ const dataTable = {
   ],
 };
 const dialogs = ref({
-  create: false,
-  edit: false,
-  view: false,
+  dar: {
+    create: false,
+    edit: false,
+    view: false,
+  },
+  swa: {
+    create: false,
+    edit: false,
+    view: false,
+  },
 });
 const getDarItems = async () => {
   const response = await getDailyActivityReport();
@@ -143,7 +164,7 @@ const patientsWithNumbers = computed(() => {
 });
 
 const editDailyActivityReport = (item) => {
-  dialogs.value.edit = true;
+  dialogs.value.dar.edit = true;
   dar_id.value = item;
 };
 const viewDailyActivityReport = (id) => {
@@ -155,12 +176,12 @@ const addDARItem = (item) => {
   console.log(patients.value);
 };
 const handleEditDar = (dar_id) => {
-  dialogs.value.create = false;
+  dialogs.value.dar.create = false;
   editDailyActivityReport(dar_id);
 };
 const handleCloseDialog = () => {
-  dialogs.value.create = false;
-  dialogs.value.edit = false;
+  dialogs.value.dar.create = false;
+  dialogs.value.dar.edit = false;
 };
 </script>
 <style lang="css">

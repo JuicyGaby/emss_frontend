@@ -1,6 +1,6 @@
 <template lang="">
   <div class="">
-    <v-card style>
+    <v-card>
       <v-toolbar color="secondary" class="px-5 d-flex align-center">
         <v-icon size="large">mdi-book-plus</v-icon>
         <v-toolbar-title>Create Daily Activity Report</v-toolbar-title>
@@ -71,13 +71,16 @@
 <script setup>
 import { createDailyActivityReport } from "@/api/daily-activity-report";
 import { ref, onMounted } from "vue";
+import moment from "moment";
 const props = defineProps({});
 const emit = defineEmits(["addDAR", "closeDialog", "editDAR"]);
 const dialogs = ref({
   isCreated: false,
 });
 const createDARForm = ref(null);
-const patientData = ref({});
+const patientData = ref({
+  admission_date: moment().format("YYYY-MM-DDTHH:mm"),
+});
 const inputRules = {
   required: (v) => !!v || "This field is required",
   invalidNegative: (v) => v >= 0 || "Invalid input",
@@ -132,7 +135,6 @@ const validateForm = async () => {
   console.log("Form is valid");
   return true;
 };
-
 const handleEditDar = () => {
   const dar_id = patientData.value.id;
   console.log(dar_id);
