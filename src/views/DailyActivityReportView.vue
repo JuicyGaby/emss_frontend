@@ -5,19 +5,22 @@
         <v-icon size="x-large">mdi-book-edit</v-icon>
         <h1>Daily Activity Report</h1>
       </v-toolbar>
-      <!-- <v-card-title primary-title class="d-flex align-center ga-2">
-        <v-icon size="x-large">mdi-book-edit</v-icon>
-        <h2>Daily Activity Report</h2>
-      </v-card-title> -->
       <v-divider></v-divider>
       <div class="ma-3 d-flex justify-space-between align-center">
-        <v-btn
-          color="grey"
-          prepend-icon="mdi-folder-plus"
-          size="large"
-          @click="dialogs.create = true"
-          >Create Report</v-btn
-        >
+        <div class="d-flex ga-2">
+          <v-btn
+            color="grey"
+            prepend-icon="mdi-folder-plus"
+            @click="dialogs.create = true"
+            >Create DAR</v-btn
+          >
+          <v-btn
+            color="grey"
+            prepend-icon="mdi-folder-plus"
+            @click="dialogs.create = true"
+            >Create SWA</v-btn
+          >
+        </div>
         <v-text-field
           prepend-inner-icon="mdi-magnify"
           label="Search Patient"

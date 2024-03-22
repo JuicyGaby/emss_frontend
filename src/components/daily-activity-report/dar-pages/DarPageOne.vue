@@ -42,12 +42,6 @@
                 autocomplete
                 v-model="darData[key]"
               ></v-select>
-              <v-text-field
-                label="Remarks"
-                variant="outlined"
-                style="width: 400px"
-                density="compact"
-              ></v-text-field>
             </v-col>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
               <v-select
@@ -71,6 +65,12 @@
                 :type="field.type"
                 v-model="darData[key]"
               ></v-text-field>
+              <v-textarea
+                label="Remarks"
+                variant="outlined"
+                style="width: 400px"
+                density="compact"
+              ></v-textarea>
             </v-col>
             <v-col>
               <v-btn color="primary" @click="updateDailyActivityReportItem"

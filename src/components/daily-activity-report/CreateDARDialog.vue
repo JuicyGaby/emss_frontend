@@ -47,8 +47,8 @@
           </v-row>
         </v-container>
       </v-card-text>
-      <v-card-actions class="justify-end">
-        <v-btn color="success" @click="createDARItem">Create</v-btn>
+      <v-card-actions class="justify-end pa-8">
+        <v-btn variant="tonal" color="success" @click="createDARItem">Create</v-btn>
       </v-card-actions>
       <!-- {{ patientData }} -->
     </v-card>
