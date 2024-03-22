@@ -57,8 +57,22 @@
           </v-window-item>
           <v-window-item :value="2">
             <div class="ma-3">
-              <v-btn color="grey" @click="dialogs.swa.create = true">Create Entry</v-btn>
+              <v-btn color="grey" @click="dialogs.swa.create = true"
+                >Create Entry</v-btn
+              >
             </div>
+            <v-data-table
+              :headers="dataTable.swa.headers"
+              :items="swaItemsWithNumbers"
+              :items-per-page="5"
+            >
+              <template v-slot:[`item.operation`]="{ item }">
+                <div class="d-flex ga-5">
+                  <v-icon color="primary">mdi-pencil</v-icon>
+                  <v-icon color="secondary">mdi-eye</v-icon>
+                </div>
+              </template>
+            </v-data-table>
           </v-window-item>
         </v-window>
       </v-card-text>
@@ -109,7 +123,11 @@
   </div>
 </template>
 <script setup>
-import { getDailyActivityReport } from "@/api/daily-activity-report";
+import {
+  getDailyActivityReport,
+  getSocialWorkAdministration,
+} from "@/api/daily-activity-report";
+import moment from "moment";
 import { ref, onMounted, computed } from "vue";
 
 // components
@@ -119,10 +137,13 @@ import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue"
 import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
 // SWA
 import CreateSWADialog from "@/components/daily-activity-report/CreateSWADialog.vue";
+
 onMounted(async () => {
   await getDarItems();
+  await getSwaItems();
 });
 let patients = ref([]);
+let swaItems = ref([]);
 const tabValue = ref(1);
 let dar_id = ref(0);
 const search = ref("");
@@ -135,6 +156,15 @@ const dataTable = {
     { title: "Sex", value: "sex" },
     { title: "Operation", value: "operation" },
   ],
+  swa: {
+    headers: [
+      { title: "Number", value: "Number" },
+      { title: "Admission Date-Time", value: "admission_date" },
+      { title: "ID", value: "id" },
+      { title: "Creator", value: "patient_name" },
+      { title: "Operation", value: "operation" },
+    ],
+  },
 };
 const dialogs = ref({
   dar: {
@@ -154,11 +184,26 @@ const getDarItems = async () => {
     patients.value = response;
   }
 };
+const getSwaItems = async () => {
+  const response = await getSocialWorkAdministration();
+  if (response.length > 0) {
+    swaItems.value = response;
+  }
+};
+
 const patientsWithNumbers = computed(() => {
   return patients.value.map((patient, index) => {
     return {
       Number: index + 1,
       ...patient,
+    };
+  });
+});
+const swaItemsWithNumbers = computed(() => {
+  return swaItems.value.map((item, index) => {
+    return {
+      Number: index + 1,
+      ...item,
     };
   });
 });
