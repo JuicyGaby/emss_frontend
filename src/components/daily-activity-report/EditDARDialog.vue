@@ -4,7 +4,7 @@
       <v-icon>mdi-book-plus</v-icon>
       <v-toolbar-title>Update Daily Activity Report</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon="mdi-close" @click="emit('closeDialog')"> </v-btn>
+      <v-btn icon="mdi-close" @click="emit('closeDialog', 'dar')"> </v-btn>
     </v-toolbar>
     <v-card-title primary-title>
       <v-tabs v-model="tabValue" align-tabs="center">

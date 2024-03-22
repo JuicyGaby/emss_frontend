@@ -2,14 +2,9 @@ questions
 
 unique remarks
 
-iscreated by
+iscreated by - put details to pinia 
 confirmation prompt - assessment tool
 confirmation propt - dar
-change dar tab names
 
-Demographic Data
-Services
-
-rename services h1
 
 who creates who edit

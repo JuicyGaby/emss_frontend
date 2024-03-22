@@ -143,7 +143,7 @@ const handleEditDar = () => {
 };
 const handleCloseDialog = () => {
   dialogs.value.isCreated = false;
-  emit("closeDialog");
+  emit("closeDialog", 'dar');
 };
 </script>
 <style lang=""></style>

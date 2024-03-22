@@ -224,9 +224,13 @@ const handleEditDar = (dar_id) => {
   dialogs.value.dar.create = false;
   editDailyActivityReport(dar_id);
 };
-const handleCloseDialog = () => {
-  dialogs.value.dar.create = false;
-  dialogs.value.dar.edit = false;
+const handleEditSwa = (swa_id) => {
+  // dialogs.value.swa.create = false;
+  // editSocialWorkAdministration(swa_id);
+};
+const handleCloseDialog = (type) => {
+  dialogs.value[type].create = false;
+  dialogs.value[type].edit = false;
 };
 </script>
 <style lang="css">
