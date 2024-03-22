@@ -13,7 +13,7 @@
                 :key="key"
                 :label="field.label"
                 variant="outlined"
-                density="comfortable"
+                density="compact"
                 style="width: 400px"
                 :type="field.type"
                 v-model="darData[key]"
@@ -24,7 +24,7 @@
                 :label="field.label"
                 :items="field.items"
                 variant="outlined"
-                density="comfortable"
+                density="compact"
                 style="width: 400px"
                 autocomplete
                 v-model="darData[key]"
@@ -37,7 +37,7 @@
                 item-title="title"
                 item-value="value"
                 variant="outlined"
-                density="comfortable"
+                density="compact"
                 style="width: 400px"
                 autocomplete
                 v-model="darData[key]"
@@ -46,7 +46,7 @@
                 label="Remarks"
                 variant="outlined"
                 style="width: 400px"
-                density="comfortable"
+                density="compact"
               ></v-text-field>
             </v-col>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
@@ -56,7 +56,7 @@
                 :label="field.label"
                 :items="field.items"
                 variant="outlined"
-                density="comfortable"
+                density="compact"
                 style="width: 400px"
                 autocomplete
                 v-model="darData[key]"
@@ -66,7 +66,7 @@
                 :key="key"
                 :label="field.label"
                 variant="outlined"
-                density="comfortable"
+                density="compact"
                 style="width: 400px"
                 :type="field.type"
                 v-model="darData[key]"

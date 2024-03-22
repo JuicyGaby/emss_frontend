@@ -18,6 +18,8 @@
                   :items="inputFields.social_work.items"
                   variant="outlined"
                   density="compact"
+                  item-title="text"
+                  item-value="value"
                   clearable
                 >
                 </v-autocomplete>
@@ -42,6 +44,8 @@
                   "
                   variant="outlined"
                   density="compact"
+                  item-title="text"
+                  item-value="value"
                   autocomplete
                   clearable
                 ></v-autocomplete>
@@ -60,6 +64,8 @@
                   "
                   variant="outlined"
                   density="compact"
+                  item-title="text"
+                  item-value="value"
                   clearable
                 ></v-autocomplete>
                 <!--  Ward Rounds / Pavilion / Dorm Visitation -->
@@ -92,7 +98,7 @@
                   variant="outlined"
                 ></v-text-field>
               </div>
-              <h2>Strategies in Psychosocial Intervention</h2>
+              <h2>III. Strategies in Psychosocial Intervention</h2>
               <div class="px-5 my-5">
                 <h3 class="my-5">Multi Disciplinary Case Consultation</h3>
                 <v-autocomplete
@@ -100,15 +106,17 @@
                   multiple
                   closable-chips
                   :label="
-                    inputFields.psychosocial_interventions.strategies_intervention
-                      .social_work_counseling.label
+                    inputFields.psychosocial_interventions
+                      .strategies_intervention.social_work_counseling.label
                   "
                   :items="
-                    inputFields.psychosocial_interventions.strategies_intervention
-                      .social_work_counseling.items
+                    inputFields.psychosocial_interventions
+                      .strategies_intervention.social_work_counseling.items
                   "
                   variant="outlined"
                   density="compact"
+                  item-title="text"
+                  item-value="value"
                   clearable
                 ></v-autocomplete>
                 <v-autocomplete
@@ -116,15 +124,17 @@
                   multiple
                   closable-chips
                   :label="
-                    inputFields.psychosocial_interventions.strategies_intervention
-                      .therapeutic.label
+                    inputFields.psychosocial_interventions
+                      .strategies_intervention.therapeutic.label
                   "
                   :items="
-                    inputFields.psychosocial_interventions.strategies_intervention
-                      .therapeutic.items
+                    inputFields.psychosocial_interventions
+                      .strategies_intervention.therapeutic.items
                   "
                   variant="outlined"
                   density="compact"
+                  item-title="text"
+                  item-value="value"
                   clearable
                 ></v-autocomplete>
                 <v-text-field
@@ -149,35 +159,45 @@ const props = defineProps({
 const inputFields = {
   social_work: {
     label: "Social Work Assessment",
-    items: ["Psychosocial Assessment", "Risk Assessment", "Social Care Plan"],
+    items: [
+      { text: "Psychosocial Assessment", value: "1" },
+      { text: "Risk Assessment", value: "2" },
+      { text: "Social Care Plan", value: "3" },
+    ],
   },
   psychosocial_interventions: {
     Physicians: {
       label: "Physician",
-      items: ["Attending Physician", "Consultant or Specialist"],
+      items: [
+        { text: "Attending Physician", value: "" },
+        { text: "Consultant or Specialist", value: "" },
+      ],
     },
     md_case_consultation: {
       label: "Multi Disciplinary Case Consultation",
       items: [
-        "Nurses",
-        "Pharmacist",
-        "Nutritionist",
-        "Pathology & Laboratory",
-        "Radiologist",
-        "Rehabilitation Medicine",
-        "Psychologist",
-        "Administrative Service",
-        "Finance Service",
-        "Management",
-        "Pastoral Care",
-        "Other Staff",
-        "Meditation and Conflict Resolution",
-        "Hospice and Palliative Care",
-        "Placement of Abandoned Patients",
-        "Home Visitation",
-        "Home conduction",
-        "Grief Work and Bereavement",
-        "Referral of Abandoned Unclaimed and Unidentified Cadavers",
+        { text: "Nurses", value: "" },
+        { text: "Pharmacist", value: "" },
+        { text: "Nutritionist", value: "" },
+        { text: "Pathology & Laboratory", value: "" },
+        { text: "Radiologist", value: "" },
+        { text: "Rehabilitation Medicine", value: "" },
+        { text: "Psychologist", value: "" },
+        { text: "Administrative Service", value: "" },
+        { text: "Finance Service", value: "" },
+        { text: "Management", value: "" },
+        { text: "Pastoral Care", value: "" },
+        { text: "Other Staff", value: "" },
+        { text: "Meditation and Conflict Resolution", value: "" },
+        { text: "Hospice and Palliative Care", value: "" },
+        { text: "Placement of Abandoned Patients", value: "" },
+        { text: "Home Visitation", value: "" },
+        { text: "Home conduction", value: "" },
+        { text: "Grief Work and Bereavement", value: "" },
+        {
+          text: "Referral of Abandoned Unclaimed and Unidentified Cadavers",
+          value: "",
+        },
       ],
     },
     ward_rounds: {
@@ -196,21 +216,23 @@ const inputFields = {
       social_work_counseling: {
         label: "Social Work Counseling",
         items: [
-          "Financial Literacy",
-          "Spiritual",
-          "Motivational Interviewing",
-          "Marital Conciliation",
+          { text: "Financial Literacy", value: "" },
+          { text: "Spiritual", value: "" },
+          { text: "Motivational Interviewing", value: "" },
+          { text: "Marital Conciliation", value: "" },
         ],
       },
       therapeutic: {
         label: "Therapeutic",
-        items: ["Children and Adolescent", "Adult and Elderly"],
+        items: [
+          { text: "Children and Adolescent", value: "" },
+          { text: "Adult and Elderly", value: "" },
+        ],
       },
     },
   },
   remarks: {
     label: "Remarks",
-    
   },
 };
 </script>

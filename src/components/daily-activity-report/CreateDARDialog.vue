@@ -1,9 +1,10 @@
 <template lang="">
   <div class="">
     <v-card style>
-      <v-card-title primary-title>
-        <h2>Daily Activity Report Form</h2>
-      </v-card-title>
+      <v-toolbar color="secondary" class="px-5 d-flex align-center">
+        <v-icon size="large">mdi-book-plus</v-icon>
+        <v-toolbar-title>Create Daily Activity Report</v-toolbar-title>
+      </v-toolbar>
       <v-card-text>
         <v-container>
           <v-row>

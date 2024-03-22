@@ -11,7 +11,6 @@
         <v-tab :value="1">Page 1</v-tab>
         <v-tab :value="2">Page 2</v-tab>
         <v-tab :value="3">Page 3</v-tab>
-        <v-tab :value="4">Page 4</v-tab>
       </v-tabs>
     </v-card-title>
     <v-card-text>
@@ -22,8 +21,9 @@
         <v-window-item :value="2">
           <DarPageTwo :dar_id="dar_id" />
         </v-window-item>
-        <v-window-item :value="3"> Three </v-window-item>
-        <v-window-item :value="4"> Four </v-window-item>
+        <v-window-item :value="3">
+          <DarPageThree :dar_id="dar_id" />
+        </v-window-item>
       </v-window>
     </v-card-text>
   </v-card>
@@ -32,7 +32,6 @@
 import DarPageOne from "@/components/daily-activity-report/dar-pages/DarPageOne.vue";
 import DarPageTwo from "@/components/daily-activity-report/dar-pages/DarPageTwo.vue";
 import DarPageThree from "@/components/daily-activity-report/dar-pages/DarPageThree.vue";
-import DarPageFour from "@/components/daily-activity-report/dar-pages/DarPageFour.vue";
 import { ref } from "vue";
 const props = defineProps({
   dar_id: Number,

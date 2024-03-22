@@ -1,10 +1,14 @@
 <template lang="">
   <div class="rb">
     <v-card width="100%">
-      <v-card-title primary-title class="d-flex align-center ga-2">
+      <v-toolbar color="secondary" class="d-flex align-center ga-5 px-5">
+        <v-icon size="x-large">mdi-book-edit</v-icon>
+        <h1>Daily Activity Report</h1>
+      </v-toolbar>
+      <!-- <v-card-title primary-title class="d-flex align-center ga-2">
         <v-icon size="x-large">mdi-book-edit</v-icon>
         <h2>Daily Activity Report</h2>
-      </v-card-title>
+      </v-card-title> -->
       <v-divider></v-divider>
       <div class="ma-3 d-flex justify-space-between align-center">
         <v-btn
