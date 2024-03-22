@@ -10,19 +10,77 @@
             <v-col cols="12" class="">
               <h2>IV. Managed Care</h2>
               <div class="px-5 mt-5">
-                <v-text-field label="" variant="outlined"></v-text-field>
+                <v-select
+                  chips
+                  multiple
+                  closable-chips
+                  :label="inputFields.managed_care.selectField.label"
+                  :items="inputFields.managed_care.selectField.items"
+                  item-title="text"
+                  item-value="value"
+                  variant="outlined"
+                  density="compact"
+                ></v-select>
+                <v-select
+                  chips
+                  multiple
+                  closable-chips
+                  :label="inputFields.managed_care.eligibility_assessment.label"
+                  :items="inputFields.managed_care.eligibility_assessment.items"
+                  item-title="text"
+                  item-value="value"
+                  variant="outlined"
+                  density="compact"
+                ></v-select>
+                <v-text-field
+                  label="Managed Care Remarks"
+                  variant="outlined"
+                ></v-text-field>
               </div>
               <h2>V. Social Group Work</h2>
               <div class="px-5 mt-5">
-                <v-text-field label="" variant="outlined"></v-text-field>
+                <v-select
+                  chips
+                  multiple
+                  closable-chips
+                  :label="inputFields.social_group_work.label"
+                  :items="inputFields.social_group_work.items"
+                  item-title="text"
+                  item-value="value"
+                  variant="outlined"
+                  density="compact"
+                ></v-select>
+                <v-text-field label="Remarks" variant="outlined"></v-text-field>
               </div>
               <h2>VI. Community Organizing</h2>
               <div class="px-5 mt-5">
-                <v-text-field label="" variant="outlined"></v-text-field>
+                <v-select
+                  chips
+                  multiple
+                  closable-chips
+                  :label="inputFields.community_organizing.label"
+                  :items="inputFields.community_organizing.items"
+                  item-title="text"
+                  item-value="value"
+                  variant="outlined"
+                  density="compact"
+                ></v-select>
+                <v-text-field label="Remarks" variant="outlined"></v-text-field>
               </div>
               <h2>VII. MSW Documentation</h2>
               <div class="px-5 mt-5">
-                <v-text-field label="" variant="outlined"></v-text-field>
+                <v-select
+                  chips
+                  multiple
+                  closable-chips
+                  :label="inputFields.msw_documentation.label"
+                  :items="inputFields.msw_documentation.items"
+                  item-title="text"
+                  item-value="value"
+                  variant="outlined"
+                  density="compact"
+                ></v-select>
+                <v-text-field label="Remarks" variant="outlined"></v-text-field>
               </div>
             </v-col>
           </v-row>
@@ -39,7 +97,7 @@ const props = defineProps({
 
 const inputFields = {
   managed_care: {
-    comboBox: {
+    selectField: {
       label: "Managed Care",
       items: [
         { text: "Provision of Pre-admission Planning", value: "" },
@@ -81,11 +139,23 @@ const inputFields = {
       { text: "Partnership with Civic Organizations", value: "" },
       { text: "Online Community", value: "" },
       { text: "Adopt a Community Program", value: "" },
+      { text: "Social Action", value: "" },
     ],
   },
   msw_documentation: {
     label: "MSW Documentation",
-    items: [],
+    items: [
+      { text: "MSWD Assessment Tool", value: "" },
+      { text: "Social Profile with Social Care Plan", value: "" },
+      { text: "Medical Social Worker's Progress Note", value: "" },
+      { text: "Group Work Recording", value: "" },
+      { text: "Social Case Study Report", value: "" },
+      { text: "Home Visit Report", value: "" },
+      { text: "Service Card", value: "" },
+      { text: "Registration Book", value: "" },
+      { text: "Daily Activity Report", value: "" },
+      { text: "Feedback Report", value: "" },
+    ],
   },
 };
 </script>
