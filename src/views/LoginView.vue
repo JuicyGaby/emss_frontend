@@ -58,6 +58,10 @@ import { userLogin, employeeRights } from "@/api/authentication";
 
 const { authentication } = defineProps(["authentication"]);
 const router = useRouter();
+onMounted(() => {
+  checkUserSession();
+});
+
 
 const userInput = ref({});
 const inputFields = ref({
@@ -88,9 +92,7 @@ const showPassword = ref(false);
 const toggleAlert = ref(false);
 const isError = ref(false);
 
-onMounted(() => {
-  checkUserSession();
-});
+
 const signIn = async () => {
   const validated = await validateForm();
   if (!validated) return;

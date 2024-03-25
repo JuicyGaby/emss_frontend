@@ -15,6 +15,7 @@
             variant="outlined"
             style="width: 300px"
             v-model="interviewInputs[key]"
+            density="comfortable"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -31,6 +32,7 @@
             variant="outlined"
             style="width: 350px"
             v-model="interviewInputs[key]"
+            density="comfortable"
           ></v-text-field>
         </v-col>
       </v-row>

@@ -1,28 +1,30 @@
 <template lang="">
   <div class="d-flex flex-column">
-    <v-btn
-      size="x-large"
-      color="secondary"
-      prepend-icon="mdi-account-plus"
-      @click="createDialog = !createDialog"
-      >Assess Patient</v-btn
-    >
     <!-- patient list -->
-    <v-card elevation-10>
-      <div class="d-flex justify-space-between pa-5">
-        <v-card-title class="d-flex align-center ga-5" primary-title>
-          <v-icon size="x-large" icon="mdi-account-group"></v-icon>
-          <h1 class="">Patient List</h1>
-        </v-card-title>
+    <v-card>
+      <v-toolbar color="secondary" class="px-5 mb-5">
+        <v-icon size="xx-large" icon="mdi-account-group"></v-icon>
+        <h1 class="">Patient List</h1>
+      </v-toolbar>
+
+      <div class="ma-3 d-flex justify-space-between align-center">
+        <div class="">
+          <v-btn
+            color="secondary"
+            prepend-icon="mdi-account-plus"
+            @click="createDialog = !createDialog"
+            >Assess Patient</v-btn
+          >
+        </div>
         <v-text-field
-          style="max-width: 400px"
-          name="name"
-          label="Search Patient"
-          id="id"
-          flat
-          v-model="searchInput"
           prepend-inner-icon="mdi-magnify"
+          label="Search Patient"
+          single-line
+          hide-details
           variant="outlined"
+          density="comfortable"
+          v-model="searchInput"
+          style="max-width: 400px"
         ></v-text-field>
       </div>
       <v-divider></v-divider>
@@ -53,9 +55,9 @@
     <!-- create dialog -->
     <v-dialog v-model="createDialog" width="auto">
       <v-card>
-        <v-card-title>
-          <h3>Initial Assesment</h3>
-        </v-card-title>
+        <v-toolbar color="secondary">
+          <v-toolbar-title> Initial Assesment </v-toolbar-title>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <initialAssesment
@@ -69,29 +71,26 @@
     </v-dialog>
     <!-- edit dialog -->
     <v-dialog
-      class=""
       v-model="editDialog"
       fullscreen
       scrollable
-      persistent
       transition="dialog-transition"
     >
       <v-card class="">
-        <v-card-text class="">
-          <v-card-title class="pa-0 my-2 d-flex justify-end">
+        <v-card-text class="pa-0">
+          <v-toolbar color="secondary">
+            <v-toolbar-title> Edit Patient Assesment </v-toolbar-title>
+            <v-spacer></v-spacer>
             <v-btn
               icon="mdi-close"
-              color="red-lighten-1"
-              size="x-small"
               @click="editDialog = !editDialog"
             ></v-btn>
-          </v-card-title>
+          </v-toolbar>
           <v-tabs
             class="tabs"
             v-model="tab"
             align-tabs="center"
             center-active
-            bg-color="secondary"
             color="black"
             stacked
             fixed-tabs
@@ -172,7 +171,6 @@ import Safety from "@/components/assesment-tool/Safety.vue";
 import AssesmentSocialFunctioning from "@/components/assesment-tool/AssesmentSocialFunctioning.vue";
 import ProblemsInEnvironment from "@/components/assesment-tool/ProblemsInEnvironment.vue";
 import PatientAssesmentData from "@/components/assesment-tool/PatientAssesmentData.vue";
-
 const props = defineProps({
   user: Object,
   authentication: Object,

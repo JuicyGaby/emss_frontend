@@ -1,5 +1,5 @@
 <template>
-  <v-stepper alt-labels :items="stepperItems">
+  <v-stepper flat alt-labels :items="stepperItems">
     <!-- stepper 1 -->
     <template v-slot:[`item.1`]>
       <v-card class="text-center" title="" flat>
@@ -66,8 +66,14 @@
             </v-table>
           </v-cols>
         </v-row>
+        <v-row>
+          <v-col cols="12" class="justify-end">
+            <v-btn color="secondary" class="" @click="createPatientData"
+              >Create Patient</v-btn
+            >
+          </v-col>
+        </v-row>
       </v-container>
-      <v-btn color="secondary" @click="createPatientData">Create Patient</v-btn>
     </template>
   </v-stepper>
   <!-- created Dialog -->
@@ -78,14 +84,6 @@
     persistent
     transition="dialog-transition"
   >
-    <!-- <v-alert type="success" title="Successfully Accessed Patient">
-      <div class="my-5 d-flex justify-end ga-2">
-        <v-btn color="primary" @click="viewPatient(patient.id)"
-          >Edit Patient</v-btn
-        >
-        <v-btn color="error" @click="toggleCloseBtn">Close</v-btn>
-      </div>
-    </v-alert> -->
     <v-card>
       <v-card-text>
         <h2>Successfully Assesed Patient</h2>
@@ -222,6 +220,5 @@ const validateInput = () => {
   }
   return true;
 };
-
 const stepperItems = ["Interview", "Personal Data", "Review & Create Patient"];
 </script>
