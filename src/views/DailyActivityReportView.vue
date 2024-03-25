@@ -129,7 +129,7 @@
       scrollable
       transition="dialog-transition"
     >
-      <EditSWADialog />
+      <EditSWADialog :swa_id="swa_id" />
     </v-dialog>
     <!-- view swa dialog -->
   </div>
@@ -163,6 +163,7 @@ let patients = ref([]);
 let swaItems = ref([]);
 const tabValue = ref(1);
 let dar_id = ref(0);
+let swa_id = ref(0);
 const search = ref("");
 const dataTable = {
   headers: [
@@ -234,7 +235,7 @@ const viewDailyActivityReport = (id) => {
 };
 const editSocialWorkAdministration = (item) => {
   dialogs.value.swa.edit = true;
-  console.log("Edit SWA", item);
+  swa_id.value = item;
 };
 
 // emit

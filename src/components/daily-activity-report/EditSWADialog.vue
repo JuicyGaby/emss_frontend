@@ -2,7 +2,7 @@
   <v-card>
     <v-toolbar color="secondary">
       <v-icon>mdi-book-plus</v-icon>
-      <v-toolbar-title>Update Social Work Administration</v-toolbar-title>
+      <v-toolbar-title>Update Social Work Administration {{props.swa_id}}</v-toolbar-title>
     </v-toolbar>
     <v-card-text>
       <v-container>
@@ -21,6 +21,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.documentation"
               ></v-select>
             </div>
             <!-- program management -->
@@ -64,6 +65,7 @@
                 density="comfortable"
               ></v-select>
             </div>
+            <!-- Supervision -->
             <h2>III. Supervision</h2>
             <div class="px-5 mt-5">
               <v-select
@@ -100,6 +102,7 @@
                 density="comfortable"
               ></v-select>
             </div>
+            <!-- Human Resource Development -->
             <h2>IV. Human Resource Development</h2>
             <div class="px-5 mt-5">
               <v-select
@@ -150,6 +153,7 @@
                 density="comfortable"
               ></v-select>
             </div>
+            <!-- Social Work Research -->
             <h2>V. Social Work Research</h2>
             <div class="px-5 mt-5">
               <v-select
@@ -176,6 +180,7 @@
               ></v-select>
             </div>
             <v-btn color="success">Update</v-btn>
+            {{ swaData }}
           </v-col>
         </v-row>
       </v-container>
@@ -184,6 +189,12 @@
 </template>
 <script setup>
 import { ref } from "vue";
+const props = defineProps({
+    swa_id: Number
+})
+let swaData = ref({
+    id: props.swa_id,
+});
 const inputFields = {
   documentation: {
     label: "Documentation",
