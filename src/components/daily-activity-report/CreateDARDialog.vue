@@ -123,11 +123,14 @@ const createDARItem = async () => {
   if (!isValid) return;
   const response = await createDailyActivityReport(patientData.value);
   if (response) {
-    console.log("DAR created successfully");
     patientData.value = response;
     dialogs.value.isCreated = true;
-    emit("addDAR", response);
+    handleAddedItem(response);
   }
+};
+const handleAddedItem = (item) => {
+  const type = "dar";
+  emit("addDAR", type, item);
 };
 const validateForm = async () => {
   const form = await createDARForm.value.validate();

@@ -87,7 +87,7 @@
       transition="dialog-transition"
     >
       <CreateDARDialog
-        @addDAR="addDARItem"
+        @addDAR="handlePushItem"
         @closeDialog="handleCloseDialog"
         @editDAR="handleEditDar"
       />
@@ -223,10 +223,6 @@ const viewDailyActivityReport = (id) => {
   console.log("Edit DAR", id);
 };
 // emit
-const addDARItem = (item) => {
-  patients.value.push(item);
-  console.log(patients.value);
-};
 const handlePushItem = (type, item) => {
   if (type === "dar") {
     patients.value.push(item);
