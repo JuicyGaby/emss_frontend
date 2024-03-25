@@ -72,6 +72,7 @@ const updateSocialWorkAdministration = async (body) => {
   const data = await response.json();
   return data;
 };
+
 export {
   createDailyActivityReport,
   getDailyActivityReport,

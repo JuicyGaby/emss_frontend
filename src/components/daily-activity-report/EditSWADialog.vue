@@ -2,7 +2,9 @@
   <v-card>
     <v-toolbar color="secondary">
       <v-icon>mdi-book-plus</v-icon>
-      <v-toolbar-title>Update Social Work Administration {{props.swa_id}}</v-toolbar-title>
+      <v-toolbar-title
+        >Update Social Work Administration {{ props.swa_id }}</v-toolbar-title
+      >
     </v-toolbar>
     <v-card-text>
       <v-container>
@@ -37,6 +39,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.programManagement"
               ></v-select>
               <v-select
                 multiple
@@ -48,6 +51,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.committeeMeetings"
               ></v-select>
               <v-select
                 multiple
@@ -63,6 +67,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.donationsManagementProgram"
               ></v-select>
             </div>
             <!-- Supervision -->
@@ -78,6 +83,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.supervision1"
               ></v-select>
               <v-select
                 multiple
@@ -89,6 +95,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.supervision2"
               ></v-select>
               <v-select
                 multiple
@@ -100,6 +107,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.staffMeeting"
               ></v-select>
             </div>
             <!-- Human Resource Development -->
@@ -121,6 +129,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.humanResourceDevelopment"
               ></v-select>
               <v-select
                 multiple
@@ -136,6 +145,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.affiliationProgram"
               ></v-select>
               <v-select
                 multiple
@@ -151,6 +161,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.staffDevelopment"
               ></v-select>
             </div>
             <!-- Social Work Research -->
@@ -166,6 +177,7 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.socialWorkResearch"
               ></v-select>
               <v-select
                 multiple
@@ -177,9 +189,10 @@
                 item-value="value"
                 variant="outlined"
                 density="comfortable"
+                v-model="swaData.reporting"
               ></v-select>
             </div>
-            <v-btn color="success">Update</v-btn>
+            <v-btn color="success" @click="updateSWA">Update</v-btn>
             {{ swaData }}
           </v-col>
         </v-row>
@@ -189,11 +202,12 @@
 </template>
 <script setup>
 import { ref } from "vue";
+import { updateSocialWorkAdministration } from "@/api/daily-activity-report";
 const props = defineProps({
-    swa_id: Number
-})
+  swa_id: Number,
+});
 let swaData = ref({
-    id: props.swa_id,
+  id: props.swa_id,
 });
 const inputFields = {
   documentation: {
@@ -319,6 +333,9 @@ const inputFields = {
       ],
     },
   },
+};
+const updateSWA = async () => {
+  const response = await updateSocialWorkAdministration(swaData.value);
 };
 </script>
 <style lang=""></style>
