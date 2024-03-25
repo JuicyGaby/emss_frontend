@@ -110,14 +110,14 @@
       <ViewDARDialog :dar_id="dar_id" />
     </v-dialog>
 
+    <!-- create swa dialog -->
     <v-dialog
       v-model="dialogs.swa.create"
       width="400px"
       transition="dialog-transition"
     >
-      <CreateSWADialog />
+      <CreateSWADialog @closeDialog="handleCloseDialog" @addedItem="handlePushItem"/>
     </v-dialog>
-    <!-- create swa dialog -->
     <!-- update swa dialog -->
     <!-- view swa dialog -->
   </div>
@@ -219,6 +219,13 @@ const viewDailyActivityReport = (id) => {
 const addDARItem = (item) => {
   patients.value.push(item);
   console.log(patients.value);
+};
+const handlePushItem = (type, item) => {
+  if (type === "dar") {
+    patients.value.push(item);
+  } else if (type === "swa") {
+    swaItems.value.push(item);
+  }
 };
 const handleEditDar = (dar_id) => {
   dialogs.value.dar.create = false;

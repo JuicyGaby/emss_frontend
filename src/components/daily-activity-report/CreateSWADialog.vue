@@ -66,6 +66,7 @@ const createSWAItem = async () => {
   const response = await createSocialWorkAdministration(swaData.value);
   if (response) {
     handleCreateDialog();
+    handleAddedItem(response);
   }
 };
 const handleCreateDialog = () => {
@@ -73,11 +74,13 @@ const handleCreateDialog = () => {
 };
 const handleCloseDialog = () => {
   createdDialog.value = false;
-  emit("closeDialog");
+  emit("closeDialog", 'swa');
 };
-const handleAddedItem = () => {
-  emit("addedItem");
+const handleAddedItem = (item) => {
+  const type = "swa";
+  emit("addedItem", type, item);
 };
+
 const handleFormValidation = async () => {
   const isValid = await createSWAForm.value.validate();
   return isValid;
