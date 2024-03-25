@@ -23,6 +23,7 @@
               <v-btn color="success" @click="createSWAItem">Create</v-btn>
             </v-card-actions>
           </v-form>
+          {{ swaData }}
         </v-container>
       </v-card-text>
     </v-card>
@@ -45,11 +46,19 @@
 import { createSocialWorkAdministration } from "@/api/daily-activity-report";
 import { ref, onMounted } from "vue";
 import moment from "moment";
+const props = defineProps({
+  user: Object,
+});
+
 const emit = defineEmits(["addedItem", "closeDialog"]);
-onMounted(async () => {});
+onMounted(async () => {
+  console.log("User:", props.user);
+});
 const createdDialog = ref(false);
 const createSWAForm = ref(null);
 const swaData = ref({
+  id: props.user.id,
+  fullname: `${props.user.fname} ${props.user.lname}`,
   admission_date: moment().format("YYYY-MM-DDTHH:mm"),
 });
 const inputFields = {

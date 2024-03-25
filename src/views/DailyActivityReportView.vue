@@ -116,7 +116,11 @@
       width="400px"
       transition="dialog-transition"
     >
-      <CreateSWADialog @closeDialog="handleCloseDialog" @addedItem="handlePushItem"/>
+      <CreateSWADialog
+        @closeDialog="handleCloseDialog"
+        @addedItem="handlePushItem"
+        :user="props.user"
+      />
     </v-dialog>
     <!-- update swa dialog -->
     <!-- view swa dialog -->
@@ -137,6 +141,9 @@ import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue"
 import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
 // SWA
 import CreateSWADialog from "@/components/daily-activity-report/CreateSWADialog.vue";
+const props = defineProps({
+  user: Object,
+});
 
 onMounted(async () => {
   await getDarItems();
@@ -161,7 +168,7 @@ const dataTable = {
       { title: "Number", value: "Number" },
       { title: "Admission Date-Time", value: "admission_date" },
       { title: "ID", value: "id" },
-      { title: "Creator", value: "patient_name" },
+      { title: "Creator", value: "creator_name" },
       { title: "Operation", value: "operation" },
     ],
   },
