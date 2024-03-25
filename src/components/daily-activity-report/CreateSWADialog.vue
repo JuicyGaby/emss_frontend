@@ -16,14 +16,12 @@
                   v-model="swaData.admission_date"
                   variant="outlined"
                 ></v-text-field>
-                <!-- {{ swaData }} -->
               </v-col>
             </v-row>
             <v-card-actions class="justify-end">
               <v-btn color="success" @click="createSWAItem">Create</v-btn>
             </v-card-actions>
           </v-form>
-          {{ swaData }}
         </v-container>
       </v-card-text>
     </v-card>
@@ -61,6 +59,8 @@ const swaData = ref({
   fullname: `${props.user.fname} ${props.user.lname}`,
   admission_date: moment().format("YYYY-MM-DDTHH:mm"),
 });
+
+
 const inputFields = {
   admission_date: {
     label: "Admission Date",

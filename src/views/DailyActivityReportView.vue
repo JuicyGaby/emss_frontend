@@ -7,7 +7,7 @@
       </v-toolbar>
       <v-tabs v-model="tabValue" align-tabs="start">
         <v-tab :value="1">Daily Activity Report</v-tab>
-        <v-tab :value="2">Social Word Administration</v-tab>
+        <v-tab :value="2">Social Work Administration</v-tab>
       </v-tabs>
       <v-divider></v-divider>
       <v-card-text>
@@ -68,7 +68,7 @@
             >
               <template v-slot:[`item.operation`]="{ item }">
                 <div class="d-flex ga-5">
-                  <v-icon color="primary">mdi-pencil</v-icon>
+                  <v-icon color="primary" @click="editSocialWorkAdministration(item.id)">mdi-pencil</v-icon>
                   <v-icon color="secondary">mdi-eye</v-icon>
                 </div>
               </template>
@@ -123,6 +123,14 @@
       />
     </v-dialog>
     <!-- update swa dialog -->
+    <v-dialog
+      v-model="dialogs.swa.edit"
+      fullscreen
+      scrollable
+      transition="dialog-transition"
+    >
+      <EditSWADialog />
+    </v-dialog>
     <!-- view swa dialog -->
   </div>
 </template>
@@ -141,6 +149,8 @@ import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue"
 import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
 // SWA
 import CreateSWADialog from "@/components/daily-activity-report/CreateSWADialog.vue";
+import EditSWADialog from "@/components/daily-activity-report/EditSWADialog.vue";
+import ViewSWADialog from "@/components/daily-activity-report/ViewSWADialog.vue";
 const props = defineProps({
   user: Object,
 });
@@ -222,6 +232,11 @@ const editDailyActivityReport = (item) => {
 const viewDailyActivityReport = (id) => {
   console.log("Edit DAR", id);
 };
+const editSocialWorkAdministration = (item) => {
+  dialogs.value.swa.edit = true;
+  console.log("Edit SWA", item);
+};
+
 // emit
 const handlePushItem = (type, item) => {
   if (type === "dar") {
