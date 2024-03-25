@@ -4,7 +4,7 @@
       <v-container class="interview">
         <h2>Initial Interview</h2>
         <v-divider class="mb-5"></v-divider>
-        <v-row v-if="interviewData">
+        <v-row>
           <v-col cols="12" class="d-flex ga-2 flex-wrap">
             <v-text-field
               v-for="(field, key) in inputField"
@@ -34,7 +34,7 @@
             ></v-textarea>
           </v-col>
         </v-row>
-        <v-btn color="primary" @click="updatePatientInterview"
+        <v-btn color="secondary" @click="updatePatientInterview"
           >Update Interview</v-btn
         >
         <v-snackbar
@@ -61,7 +61,6 @@ const props = defineProps({
 
 const formValidation = ref(null);
 let interviewData = ref({});
-
 const snackBars = ref({
   update: {
     isActive: false,
@@ -69,7 +68,6 @@ const snackBars = ref({
     timeout: 2500,
   },
 });
-
 const inputRules = {
   remarks: [
     (v) =>
@@ -143,18 +141,15 @@ const inputField = ref({
 onMounted(async () => {
   await getInterviewData();
 });
-
 const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
   interviewData.value = response;
 };
-
 const validateForm = async () => {
   const form = await formValidation.value.validate();
   if (!form.valid) return false;
   return true;
 };
-
 const updatePatientInterview = async () => {
   const isValid = await validateForm();
   if (!isValid) return;

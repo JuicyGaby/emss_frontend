@@ -315,6 +315,12 @@ let patientAddress = ref([
 let provinces = ref([]);
 let municipalities = ref([]);
 let barangays = ref([]);
+
+
+let temporaryProvince = ref([]);
+let temporaryMunicipalities = ref([]);
+let temporaryBarangays = ref([]);
+
 // family composition
 let familyComposition = ref({});
 let familyInfo = ref({});
@@ -567,7 +573,7 @@ const inputFields = ref({
       },
       province: {
         label: "Province",
-        items: provinces,
+        items: temporaryProvince,
         title: "provDesc",
       },
       district: {
@@ -575,12 +581,12 @@ const inputFields = ref({
       },
       municipality: {
         label: "Municipality",
-        items: municipalities,
+        items: temporaryMunicipalities,
         title: "citymunDesc",
       },
       barangay: {
         label: "Barangay",
-        items: barangays,
+        items: temporaryBarangays,
         title: "brgyDesc",
       },
       purok: {
@@ -664,20 +670,16 @@ const watchAddressChange = (addressType, key, apiCall, optionKey) => {
   watch(
     () => patientAddress.value[addressType][key],
     async (newVal) => {
-      // console.log(newVal);
-      // const firstPropertyName = Object.keys(newVal)[1];
-      // const firstPropertyValue = newVal[firstPropertyName];
       optionKey.value = await apiCall(newVal);
-      // console.log(optionKey.value);
     }
   );
 };
 watchAddressChange(0, "region", getProvince, provinces);
 watchAddressChange(0, "province", getMunicipality, municipalities);
 watchAddressChange(0, "municipality", getBarangay, barangays);
-watchAddressChange(1, "region", getProvince, provinces);
-watchAddressChange(1, "province", getMunicipality, municipalities);
-watchAddressChange(1, "municipality", getBarangay, barangays);
+watchAddressChange(1, "region", getProvince, temporaryProvince);
+watchAddressChange(1, "province", getMunicipality, temporaryMunicipalities);
+watchAddressChange(1, "municipality", getBarangay, temporaryBarangays);
 
 // * Update Section
 

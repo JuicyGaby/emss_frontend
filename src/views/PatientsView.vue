@@ -190,9 +190,10 @@ const tab = ref(0);
 const patientId = ref(0);
 
 const tableHeaders = [
-  { title: "First Name", value: "first_name" },
-  { title: "Middle Name", value: "middle_name" },
-  { title: "Last Name", value: "last_name" },
+  // { title: "First Name", value: "first_name" },
+  // { title: "Middle Name", value: "middle_name" },
+  // { title: "Last Name", value: "last_name" },
+  { title: "Full Name", value: "fullname" },
   { title: "Age", value: "age" },
   { title: "Sex", value: "sex" },
   { title: "Civil Status", value: "civil_status" },
