@@ -59,9 +59,9 @@ import { userLogin, employeeRights } from "@/api/authentication";
 const { authentication } = defineProps(["authentication"]);
 const router = useRouter();
 onMounted(() => {
-  checkUserSession();
+  console.log('Hello World');
+  // checkUserSession();
 });
-
 
 const userInput = ref({});
 const inputFields = ref({
@@ -77,7 +77,6 @@ const inputFields = ref({
     ),
   },
 });
-
 const inputRules = {
   username: [
     (v) => !!v || "Username is required",
@@ -91,6 +90,7 @@ const formLogin = ref(null);
 const showPassword = ref(false);
 const toggleAlert = ref(false);
 const isError = ref(false);
+
 
 
 const signIn = async () => {

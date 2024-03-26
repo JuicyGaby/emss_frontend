@@ -23,10 +23,6 @@
                   clearable
                 >
                 </v-autocomplete>
-                <v-text-field
-                  :label="inputFields.remarks.label"
-                  variant="outlined"
-                ></v-text-field>
               </div>
               <h2 class="">II. Psychosocial Interventions</h2>
               <div class="px-5 my-5">
@@ -92,11 +88,6 @@
                   variant="outlined"
                   density="compact"
                 ></v-select>
-                <!-- remarks -->
-                <v-text-field
-                  :label="inputFields.remarks.label"
-                  variant="outlined"
-                ></v-text-field>
               </div>
               <h2>III. Strategies in Psychosocial Intervention</h2>
               <div class="px-5 my-5">
@@ -137,11 +128,6 @@
                   item-value="value"
                   clearable
                 ></v-autocomplete>
-                <v-text-field
-                  :label="inputFields.remarks.label"
-                  variant="outlined"
-                  counter="255"
-                ></v-text-field>
               </div>
               <h2>IV. Managed Care</h2>
               <div class="px-5 mt-5">
@@ -167,10 +153,6 @@
                   variant="outlined"
                   density="compact"
                 ></v-select>
-                <v-text-field
-                  label="Managed Care Remarks"
-                  variant="outlined"
-                ></v-text-field>
               </div>
               <h2>V. Social Group Work</h2>
               <div class="px-5 mt-5">
@@ -185,7 +167,6 @@
                   variant="outlined"
                   density="compact"
                 ></v-select>
-                <v-text-field label="Remarks" variant="outlined"></v-text-field>
               </div>
               <h2>VI. Community Organizing</h2>
               <div class="px-5 mt-5">
@@ -200,7 +181,6 @@
                   variant="outlined"
                   density="compact"
                 ></v-select>
-                <v-text-field label="Remarks" variant="outlined"></v-text-field>
               </div>
               <h2>VII. MSW Documentation</h2>
               <div class="px-5 mt-5">
@@ -215,7 +195,6 @@
                   variant="outlined"
                   density="compact"
                 ></v-select>
-                <v-text-field label="Remarks" variant="outlined"></v-text-field>
               </div>
             </v-col>
           </v-row>

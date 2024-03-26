@@ -43,7 +43,7 @@
           ></v-textarea>
         </v-col>
       </v-row>
-      <v-btn color="success" @click="handleButtonAction">{{
+      <v-btn color="secondary" @click="handleButtonAction">{{
         mswdClassification.isExisting
           ? "Update Classification"
           : "Create Classification"

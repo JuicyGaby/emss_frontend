@@ -191,6 +191,12 @@
                 density="comfortable"
                 v-model="swaData.reporting"
               ></v-select>
+              <v-textarea
+              variant="outlined"
+              v-model="swaData.remarks"
+              label="Remarks"
+              >
+              </v-textarea>
             </div>
             <v-btn color="success" @click="updateSWA">Update</v-btn>
             {{ swaData }}
