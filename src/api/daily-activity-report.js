@@ -73,6 +73,12 @@ const updateSocialWorkAdministration = async (body) => {
   return data;
 };
 
+const getDarServices = async () => {
+  const API_URL = `http://localhost:3000/dar-services`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
 export {
   createDailyActivityReport,
   getDailyActivityReport,
@@ -82,4 +88,5 @@ export {
   getSocialWorkAdministration,
   getSocialWorkAdministrationById,
   updateSocialWorkAdministration,
+  getDarServices,
 };

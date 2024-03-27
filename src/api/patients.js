@@ -70,12 +70,12 @@ const searchPatient = async (body) => {
     headers: {
       "Content-Type": "application/json",
     },
-  });
+  }); 
   const data = await response.json();
   if (data.error) {
     console.log(data.error);
   }
-  console.log(data);
+  return data;
 };
 
 export {
