@@ -8,49 +8,33 @@
       <v-card-text>
         <v-container>
           <v-row>
-            <v-form ref="createDARForm">
-              <v-col cols="12" class="d-flex flex-wrap ga-1">
-                <v-text-field
-                  v-for="(field, key) in inputs.textField"
-                  :key="key"
-                  :label="field.label"
-                  :type="field.type"
-                  :rules="field.rules"
-                  variant="outlined"
-                  style="width: 300px"
-                  density="compact"
-                  v-model="patientData[key]"
-                ></v-text-field>
-                <v-select
-                  v-for="(field, key) in inputs.selectField"
-                  :key="key"
-                  :label="field.label"
-                  :items="field.items"
-                  :rules="field.rules"
-                  variant="outlined"
-                  style="width: 300px"
-                  density="compact"
-                  v-model="patientData[key]"
-                ></v-select>
-                <v-textarea
-                  v-for="(field, key) in inputs.textAreaField"
-                  :key="key"
-                  :label="field.label"
-                  :rules="field.rules"
-                  variant="outlined"
-                  style="width: 300px"
-                  density="compact"
-                  v-model="patientData[key]"
-                ></v-textarea>
-              </v-col>
-            </v-form>
+            <v-col cols="12" class="d-flex flex-wrap ga-1">
+              <v-text-field
+                v-for="(item, index) in inputFields.search"
+                :key="index"
+                variant="outlined"
+                :label="item.label"
+                density="compact"
+                style="width: 200px"
+                v-model="searchPatientInput[index]"
+              ></v-text-field>
+              <v-btn
+                prepend-icon="mdi-magnify"
+                variant="plain"
+                color="secondary"
+                @click="searchPatientData"
+                >Search</v-btn
+              >
+            </v-col>
           </v-row>
         </v-container>
       </v-card-text>
       <v-card-actions class="justify-end pa-8">
-        <v-btn variant="tonal" color="success" @click="createDARItem">Create</v-btn>
+        <!-- <v-btn variant="tonal" color="success" @click="createDARItem"
+          >Create</v-btn
+        > -->
       </v-card-actions>
-      <!-- {{ patientData }} -->
+      <!-- {{ darData }} -->
     </v-card>
   </div>
   <!-- dialog -->
@@ -70,60 +54,61 @@
 </template>
 <script setup>
 import { createDailyActivityReport } from "@/api/daily-activity-report";
-import { ref, onMounted } from "vue";
+import { searchPatient } from "@/api/patients";
+import { ref, onMounted, watch, watchEffect } from "vue";
 import moment from "moment";
 const props = defineProps({});
 const emit = defineEmits(["addDAR", "closeDialog", "editDAR"]);
 const dialogs = ref({
   isCreated: false,
 });
+onMounted(async () => {
+  // await getPatientsData();
+});
 const createDARForm = ref(null);
-const patientData = ref({
+const searchPatientInput = ref({});
+const darData = ref({
   admission_date: moment().format("YYYY-MM-DDTHH:mm"),
 });
+const isLoaded = ref(false);
+let patients = ref([]);
 const inputRules = {
   required: (v) => !!v || "This field is required",
   invalidNegative: (v) => v >= 0 || "Invalid input",
   characters: (v) => v.length <= 80 || "Max 100 characters",
 };
-const inputs = {
+const inputFields = {
+  search: {
+    first_name: {
+      label: "First Name",
+      type: "text",
+    },
+    last_name: {
+      label: "Last Name",
+      type: "text",
+    },
+  },
   textField: {
     admission_date: {
       label: "Admission Date-Time",
       type: "datetime-local",
       rules: [inputRules.required],
     },
+  },
+  selectField: {
     patient_name: {
       label: "Patient Name",
       type: "text",
       rules: [inputRules.required, inputRules.characters],
-    },
-    age: {
-      label: "Age",
-      type: "number",
-      rules: [inputRules.required, inputRules.invalidNegative],
-    },
-  },
-  selectField: {
-    sex: {
-      label: "Sex",
-      items: ["Male", "Female", "Others"],
-      rules: [inputRules.required],
-    },
-  },
-  textAreaField: {
-    address: {
-      label: "Address",
-      rules: [inputRules.required],
     },
   },
 };
 const createDARItem = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
-  const response = await createDailyActivityReport(patientData.value);
+  const response = await createDailyActivityReport(darData.value);
   if (response) {
-    patientData.value = response;
+    darData.value = response;
     dialogs.value.isCreated = true;
     handleAddedItem(response);
   }
@@ -139,14 +124,21 @@ const validateForm = async () => {
   return true;
 };
 const handleEditDar = () => {
-  const dar_id = patientData.value.id;
+  const dar_id = darData.value.id;
   console.log(dar_id);
   dialogs.value.isCreated = false;
   emit("editDAR", dar_id);
 };
 const handleCloseDialog = () => {
   dialogs.value.isCreated = false;
-  emit("closeDialog", 'dar');
+  emit("closeDialog", "dar");
+};
+
+const searchPatientData = async () => {
+  const response = await searchPatient(searchPatientInput.value);
+  if (response) {
+    console.log(response);
+  }
 };
 </script>
 <style lang=""></style>

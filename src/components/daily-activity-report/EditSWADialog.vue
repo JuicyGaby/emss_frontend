@@ -340,8 +340,9 @@ const inputFields = {
     },
   },
 };
-const updateSWA = async () => {
+updateSWA = async () => {
   const response = await updateSocialWorkAdministration(swaData.value);
 };
+
 </script>
 <style lang=""></style>
