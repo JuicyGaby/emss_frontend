@@ -1,15 +1,8 @@
 <template>
   <v-app>
     <v-main class="d-flex app-main">
-      <sidebar
-        v-if="authentication.isLoggedIn"
-        class=""
-      ></sidebar>
-      <router-view
-        :user="user"
-        :authentication="authentication"
-        class="display rb"
-      />
+      <sidebar v-if="authentication.isLoggedIn"></sidebar>
+      <router-view/>
     </v-main>
   </v-app>
 </template>

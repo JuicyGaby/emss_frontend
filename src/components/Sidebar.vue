@@ -37,7 +37,7 @@
   </v-card>
 </template>
 <script setup>
-import { defineProps, computed } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { userAuthentication } from "../stores/session";
 

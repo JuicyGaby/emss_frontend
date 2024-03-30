@@ -47,17 +47,21 @@
             </v-hover>
           </v-form>
         </div>
-    </div>
+      </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, defineProps, computed } from "vue";
+import { ref, defineProps, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { userLogin, employeeRights } from "@/api/authentication";
-
-const { authentication } = defineProps(["authentication"]);
+import { userAuthentication } from "../stores/session";
+const authentication = userAuthentication();
 const router = useRouter();
+
+onMounted(() => {
+  checkUserSession();
+});
 
 const userInput = ref({});
 const inputFields = ref({
@@ -86,8 +90,6 @@ const formLogin = ref(null);
 const showPassword = ref(false);
 const toggleAlert = ref(false);
 const isError = ref(false);
-
-
 
 const signIn = async () => {
   const validated = await validateForm();
@@ -130,9 +132,6 @@ const checkUserSession = () => {
   }
 };
 </script>
-
-
-
 
 <style lang="css" scoped>
 .sign-in-container {

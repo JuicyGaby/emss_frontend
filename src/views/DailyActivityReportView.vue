@@ -118,7 +118,6 @@
       <CreateSWADialog
         @closeDialog="handleCloseDialog"
         @addedItem="handlePushItem"
-        :user="props.user"
       />
     </v-dialog>
     <!-- update swa dialog -->
@@ -150,10 +149,6 @@ import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue"
 import CreateSWADialog from "@/components/daily-activity-report/CreateSWADialog.vue";
 import EditSWADialog from "@/components/daily-activity-report/EditSWADialog.vue";
 import ViewSWADialog from "@/components/daily-activity-report/ViewSWADialog.vue";
-const props = defineProps({
-  user: Object,
-});
-
 onMounted(async () => {
   await getDarItems();
   await getSwaItems();

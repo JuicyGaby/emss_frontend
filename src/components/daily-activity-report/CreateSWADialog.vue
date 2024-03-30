@@ -44,9 +44,6 @@
 import { createSocialWorkAdministration } from "@/api/daily-activity-report";
 import { ref, onMounted } from "vue";
 import moment from "moment";
-const props = defineProps({
-  user: Object,
-});
 
 const emit = defineEmits(["addedItem", "closeDialog"]);
 onMounted(async () => {
