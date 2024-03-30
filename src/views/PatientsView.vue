@@ -1,12 +1,10 @@
 <template lang="">
-  <div class="d-flex flex-column">
-    <!-- patient list -->
+  <div style="width: 100%">
     <v-card>
-      <v-toolbar color="secondary" class="px-5 mb-5">
-        <v-icon size="xx-large" icon="mdi-account-group"></v-icon>
+      <v-toolbar color="secondary" class="d-flex align-center px-5">
+        <v-icon size="x-large" icon="mdi-account-group" class="mr-5"></v-icon>
         <h1 class="">Patient List</h1>
       </v-toolbar>
-
       <div class="ma-3 d-flex justify-space-between align-center">
         <div class="">
           <v-btn
@@ -81,10 +79,7 @@
           <v-toolbar color="secondary">
             <v-toolbar-title> Edit Patient Assesment </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn
-              icon="mdi-close"
-              @click="editDialog = !editDialog"
-            ></v-btn>
+            <v-btn icon="mdi-close" @click="editDialog = !editDialog"></v-btn>
           </v-toolbar>
           <v-tabs
             class="tabs"
@@ -252,22 +247,4 @@ const appendCreatedPatient = (patient) => {
 };
 </script>
 
-<style lang="css" scoped>
-.card-bg {
-  background-color: #3d0f0f;
-}
-.patientsTable {
-  /* border: 1px solid red; */
-  width: 40%;
-}
-.rb {
-  border: 1px solid red;
-}
-.tabs {
-  z-index: 1000;
-}
-th {
-  font-weight: 1000;
-  font-size: 20px;
-}
-</style>
+<style lang="css" scoped></style>

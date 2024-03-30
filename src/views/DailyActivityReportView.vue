@@ -68,7 +68,11 @@
             >
               <template v-slot:[`item.operation`]="{ item }">
                 <div class="d-flex ga-5">
-                  <v-icon color="primary" @click="editSocialWorkAdministration(item.id)">mdi-pencil</v-icon>
+                  <v-icon
+                    color="primary"
+                    @click="editSocialWorkAdministration(item.id)"
+                    >mdi-pencil</v-icon
+                  >
                   <v-icon color="secondary">mdi-eye</v-icon>
                 </div>
               </template>
@@ -81,10 +85,7 @@
   <!-- dialogs -->
   <div>
     <!-- create dar dialog -->
-    <v-dialog
-      v-model="dialogs.dar.create"
-      width="600px"
-    >
+    <v-dialog v-model="dialogs.dar.create" width="600px">
       <CreateDARDialog
         @addDAR="handlePushItem"
         @closeDialog="handleCloseDialog"
@@ -139,18 +140,16 @@ import {
 } from "@/api/daily-activity-report";
 import moment from "moment";
 import { ref, onMounted, computed } from "vue";
-
-// components
-// DAR
+// DAR Components
 import CreateDARDialog from "@/components/daily-activity-report/CreateDARDialog.vue";
 import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue";
 import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
-// SWA
+// SWA Components
 import CreateSWADialog from "@/components/daily-activity-report/CreateSWADialog.vue";
 import EditSWADialog from "@/components/daily-activity-report/EditSWADialog.vue";
 import ViewSWADialog from "@/components/daily-activity-report/ViewSWADialog.vue";
 onMounted(async () => {
-  await getDarItems();
+  // await getDarItems();
   await getSwaItems();
 });
 let patients = ref([]);

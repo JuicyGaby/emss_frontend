@@ -6,11 +6,56 @@
         <v-toolbar-title>Create Daily Activity Report</v-toolbar-title>
       </v-toolbar>
       <v-tabs v-model="tabValue" density="compact" align-tabs="center">
-        <v-tab :value="2">Not Existing</v-tab>
-        <v-tab :value="1">Existing</v-tab>
+        <v-tab :value="1">Not Existing</v-tab>
+        <v-tab :value="2">Existing</v-tab>
       </v-tabs>
       <v-window v-model="tabValue">
         <v-window-item :value="1">
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12" class="py-0 d-flex flex-wrap ga-1">
+                  <v-text-field
+                    v-for="(item, index) in inputFields.creation.textFields"
+                    :key="index"
+                    variant="outlined"
+                    :label="item.label"
+                    density="compact"
+                    style="width: 200px"
+                    :type="item.type"
+                    :rules="item.rules"
+                    v-model="patientCreationData[index]"
+                  ></v-text-field>
+                  <v-select
+                    :label="inputFields.creation.sex.label"
+                    variant="outlined"
+                    density="compact"
+                    style="width: 200px"
+                    :items="inputFields.creation.sex.items"
+                    :rules="inputFields.creation.sex.rules"
+                    v-model="patientCreationData.sex"
+                  ></v-select>
+                  <v-select
+                    :label="inputFields.creation.civil_status.label"
+                    variant="outlined"
+                    density="compact"
+                    style="width: 200px"
+                    :items="inputFields.creation.civil_status.items"
+                    :rules="inputFields.creation.civil_status.rules"
+                    v-model="patientCreationData.civil_status"
+                  ></v-select>
+                </v-col>
+              </v-row>
+              <v-card-actions class="justify-end mt-5">
+                <v-btn color="secondary" @click="createPatientItem"
+                  >Create Patient</v-btn
+                >
+              </v-card-actions>
+              {{ patientCreationData }}
+            </v-container>
+          </v-card-text>
+        </v-window-item>
+        <v-window-item :value="2">
           <v-card-text>
             <v-container>
               <v-row>
@@ -68,51 +113,6 @@
             </v-container>
           </v-card-text>
         </v-window-item>
-        <v-window-item :value="2">
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col cols="12" class="py-0 d-flex flex-wrap ga-1">
-                  <v-text-field
-                    v-for="(item, index) in inputFields.creation.textFields"
-                    :key="index"
-                    variant="outlined"
-                    :label="item.label"
-                    density="compact"
-                    style="width: 200px"
-                    :type="item.type"
-                    :rules="item.rules"
-                    v-model="patientCreationData[index]"
-                  ></v-text-field>
-                  <v-select
-                    :label="inputFields.creation.sex.label"
-                    variant="outlined"
-                    density="compact"
-                    style="width: 200px"
-                    :items="inputFields.creation.sex.items"
-                    :rules="inputFields.creation.sex.rules"
-                    v-model="patientCreationData.sex"
-                  ></v-select>
-                  <v-select
-                    :label="inputFields.creation.civil_status.label"
-                    variant="outlined"
-                    density="compact"
-                    style="width: 200px"
-                    :items="inputFields.creation.civil_status.items"
-                    :rules="inputFields.creation.civil_status.rules"
-                    v-model="patientCreationData.civil_status"
-                  ></v-select>
-                </v-col>
-              </v-row>
-              <v-card-actions class="justify-end mt-5">
-                <v-btn color="secondary" @click="createPatientItem"
-                  >Create Patient</v-btn
-                >
-              </v-card-actions>
-              {{ patientCreationData }}
-            </v-container>
-          </v-card-text>
-        </v-window-item>
       </v-window>
       <v-card-actions class="justify-end pa-8"> </v-card-actions>
       <!-- {{ darData }} -->
@@ -137,13 +137,14 @@
 </template>
 <script setup>
 import snackBars from "../dialogs/snackBars.vue";
+import { userAuthentication } from "@/stores/session";
 import {
   createDailyActivityReport,
   getDarServices,
   darCreatePatient,
 } from "@/api/daily-activity-report";
 import { searchPatient } from "@/api/patients";
-import { ref, onMounted, watch, watchEffect } from "vue";
+import { ref, onMounted } from "vue";
 import moment from "moment";
 const props = defineProps({});
 const emit = defineEmits(["addDAR", "closeDialog", "editDAR"]);
@@ -153,20 +154,25 @@ const dialogs = ref({
 onMounted(async () => {
   await getDarServicesData();
 });
+
 const snackBarData = ref({
   isVisible: false,
   type: "",
   text: "",
 });
+
+const authentication = userAuthentication();
 const tabValue = ref(2);
 const createDARForm = ref(null);
 const searchPatientInput = ref({});
 const darData = ref({
   admission_date: moment().format("YYYY-MM-DDTHH:mm"),
 });
-const patientCreationData = ref({});
+const patientCreationData = ref({
+  creatorFullName: `${authentication.user.fname} ${authentication.user.lname}`,
+  creatorId: authentication.user.id,
+});
 let createdPatient = ref({});
-
 let darServices = ref([]);
 let patients = ref([]);
 
@@ -195,17 +201,17 @@ const inputFields = {
   },
   creation: {
     textFields: {
-      first_name: {
+      firstName: {
         label: "First Name",
         type: "text",
         rules: [inputRules.required, inputRules.characters],
       },
-      middle_name: {
+      middleName: {
         label: "Middle Name",
         type: "text",
         rules: [inputRules.required, inputRules.characters],
       },
-      last_name: {
+      lName: {
         label: "Last Name",
         type: "text",
         rules: [inputRules.required, inputRules.characters],
@@ -228,12 +234,10 @@ const inputFields = {
     },
   },
 };
-
 const handleAddedItem = (item) => {
   const type = "dar";
   emit("addDAR", type, item);
 };
-
 const handleEditDar = () => {
   const dar_id = darData.value.id;
   console.log(dar_id);
@@ -271,6 +275,7 @@ const validateForm = async () => {
 const searchPatientData = async () => {
   const response = await searchPatient(searchPatientInput.value);
   if (response.length <= 0) {
+    patients.value = [];
     handleSnackBar("error", "No patient found");
     return;
   }
@@ -281,7 +286,6 @@ const getDarServicesData = async () => {
   const response = await getDarServices();
   darServices.value = response;
 };
-
 const handleSnackBar = (type, text) => {
   snackBarData.value = {
     isVisible: true,
