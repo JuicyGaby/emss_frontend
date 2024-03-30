@@ -7,8 +7,8 @@
             prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"
             :title="userFullName"
             :subtitle="
-              props.user.department
-                ? props.user.department.dept_code
+              authentication.user.department
+                ? authentication.user.department.dept_code
                 : 'No Department'
             "
           ></v-list-item>
@@ -37,22 +37,12 @@
   </v-card>
 </template>
 <script setup>
-import { defineProps, computed, onMounted } from "vue";
+import { defineProps, computed } from "vue";
 import { useRouter } from "vue-router";
-// import { useStore } from 'pinia';
 import { userAuthentication } from "../stores/session";
 
-onMounted(() => {
-  console.log(user.fname);
-});
-const { user } = userAuthentication();
-
-const props = defineProps({
-  user: Object,
-  authentication: Object,
-});
+const authentication = userAuthentication();
 const router = useRouter();
-
 const navItems = {
   dashboard: {
     icon: "mdi-view-dashboard",
@@ -70,14 +60,12 @@ const navItems = {
     to: "/patients",
   },
 };
-
 const userFullName = computed(() => {
-  return `${user.fname} ${user.lname}`;
+  return `${authentication.user.fname} ${authentication.user.lname}`;
 });
 
-
 const signOut = () => {
-  props.authentication.resetSession();
+  authentication.resetSession();
   router.push("/login");
 };
 </script>

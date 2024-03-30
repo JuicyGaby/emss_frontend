@@ -2,8 +2,6 @@
   <v-app>
     <v-main class="d-flex app-main">
       <sidebar
-        :user="user"
-        :authentication="authentication"
         v-if="authentication.isLoggedIn"
         class=""
       ></sidebar>
