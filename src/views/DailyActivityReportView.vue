@@ -6,8 +6,8 @@
         <h1>Daily Activity Report</h1>
       </v-toolbar>
       <v-tabs v-model="tabValue" align-tabs="start">
-        <v-tab :value="2">Social Work Administration</v-tab>
         <v-tab :value="1">Daily Activity Report</v-tab>
+        <v-tab :value="2">Social Work Administration</v-tab>
       </v-tabs>
       <v-divider></v-divider>
       <v-card-text>
@@ -68,11 +68,7 @@
             >
               <template v-slot:[`item.operation`]="{ item }">
                 <div class="d-flex ga-5">
-                  <v-icon
-                    color="primary"
-                    @click="editSocialWorkAdministration(item.id)"
-                    >mdi-pencil</v-icon
-                  >
+                  <v-icon color="primary" @click="editSocialWorkAdministration(item.id)">mdi-pencil</v-icon>
                   <v-icon color="secondary">mdi-eye</v-icon>
                 </div>
               </template>
@@ -88,7 +84,6 @@
     <v-dialog
       v-model="dialogs.dar.create"
       width="600px"
-      transition="dialog-transition"
     >
       <CreateDARDialog
         @addDAR="handlePushItem"

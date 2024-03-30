@@ -52,16 +52,12 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, defineProps, computed } from "vue";
+import { ref, defineProps, computed } from "vue";
 import { useRouter } from "vue-router";
 import { userLogin, employeeRights } from "@/api/authentication";
 
 const { authentication } = defineProps(["authentication"]);
 const router = useRouter();
-onMounted(() => {
-  console.log('Hello World');
-  // checkUserSession();
-});
 
 const userInput = ref({});
 const inputFields = ref({
@@ -103,7 +99,6 @@ const validateUserData = async (data) => {
   const validated = handleAlert(data);
   if (validated) {
     handleAuthentication(data);
-    console.log(data);
     return;
   }
 };
@@ -120,6 +115,7 @@ const handleAlert = (data) => {
 const handleAuthentication = (data) => {
   authentication.setUserToken(data.user.login_token);
   authentication.toggleLogIn(true);
+  authentication.setUser(data.user);
   router.push("/");
 };
 const validateForm = async () => {

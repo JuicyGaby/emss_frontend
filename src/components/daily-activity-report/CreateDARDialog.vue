@@ -1,6 +1,6 @@
 <template lang="">
   <div class="">
-    <v-card>
+    <v-card height="auto">
       <v-toolbar color="secondary" class="px-5 d-flex align-center">
         <v-icon size="large">mdi-book-plus</v-icon>
         <v-toolbar-title>Create Daily Activity Report</v-toolbar-title>
@@ -105,7 +105,9 @@
                 </v-col>
               </v-row>
               <v-card-actions class="justify-end mt-5">
-                <v-btn color="success">Create Patient</v-btn>
+                <v-btn color="secondary" @click="createPatientItem"
+                  >Create Patient</v-btn
+                >
               </v-card-actions>
               {{ patientCreationData }}
             </v-container>
@@ -138,6 +140,7 @@ import snackBars from "../dialogs/snackBars.vue";
 import {
   createDailyActivityReport,
   getDarServices,
+  darCreatePatient,
 } from "@/api/daily-activity-report";
 import { searchPatient } from "@/api/patients";
 import { ref, onMounted, watch, watchEffect } from "vue";
@@ -162,6 +165,7 @@ const darData = ref({
   admission_date: moment().format("YYYY-MM-DDTHH:mm"),
 });
 const patientCreationData = ref({});
+let createdPatient = ref({});
 
 let darServices = ref([]);
 let patients = ref([]);
@@ -250,6 +254,14 @@ const createDARItem = async () => {
     handleAddedItem(response);
   }
 };
+const createPatientItem = async () => {
+  const response = await darCreatePatient(patientCreationData.value);
+  if (response) {
+    createdPatient.value = response;
+    handleSnackBar("success", "Patient created successfully");
+  }
+};
+
 const validateForm = async () => {
   const form = await createDARForm.value.validate();
   if (!form.valid) return false;
@@ -269,6 +281,7 @@ const getDarServicesData = async () => {
   const response = await getDarServices();
   darServices.value = response;
 };
+
 const handleSnackBar = (type, text) => {
   snackBarData.value = {
     isVisible: true,

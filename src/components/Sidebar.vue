@@ -37,8 +37,16 @@
   </v-card>
 </template>
 <script setup>
-import { defineProps, computed, ref } from "vue";
+import { defineProps, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+// import { useStore } from 'pinia';
+import { userAuthentication } from "../stores/session";
+
+onMounted(() => {
+  console.log(user.fname);
+});
+const { user } = userAuthentication();
+
 const props = defineProps({
   user: Object,
   authentication: Object,
@@ -64,8 +72,10 @@ const navItems = {
 };
 
 const userFullName = computed(() => {
-  return `${props.user.fname} ${props.user.lname}`;
+  return `${user.fname} ${user.lname}`;
 });
+
+
 const signOut = () => {
   props.authentication.resetSession();
   router.push("/login");
