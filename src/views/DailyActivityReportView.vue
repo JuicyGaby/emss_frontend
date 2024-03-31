@@ -140,6 +140,7 @@ import {
 } from "@/api/daily-activity-report";
 import moment from "moment";
 import { ref, onMounted, computed } from "vue";
+
 // DAR Components
 import CreateDARDialog from "@/components/daily-activity-report/CreateDARDialog.vue";
 import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue";
@@ -149,7 +150,7 @@ import CreateSWADialog from "@/components/daily-activity-report/CreateSWADialog.
 import EditSWADialog from "@/components/daily-activity-report/EditSWADialog.vue";
 import ViewSWADialog from "@/components/daily-activity-report/ViewSWADialog.vue";
 onMounted(async () => {
-  // await getDarItems();
+  await getDarItems();
   await getSwaItems();
 });
 let patients = ref([]);
@@ -162,9 +163,8 @@ const dataTable = {
   headers: [
     { title: "Number", value: "Number" },
     // { title: "Admission Date-Time", value: "admission_date" },
-    { title: "Patient Name", value: "patient_name" },
-    { title: "Age", value: "age" },
-    { title: "Sex", value: "sex" },
+    { title: "Patient Name", value: "fullname" },
+    { title: "Created By", value: "created_by" },
     { title: "Operation", value: "operation" },
   ],
   swa: {

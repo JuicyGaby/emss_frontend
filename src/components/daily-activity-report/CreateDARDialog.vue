@@ -14,40 +14,42 @@
           <v-card-text>
             <v-container>
               <v-row>
-                <v-col cols="12" class="py-0 d-flex flex-wrap ga-1">
-                  <v-text-field
-                    v-for="(item, index) in inputFields.creation.textFields"
-                    :key="index"
-                    variant="outlined"
-                    :label="item.label"
-                    density="compact"
-                    style="width: 200px"
-                    :type="item.type"
-                    :rules="item.rules"
-                    v-model="patientCreationData[index]"
-                  ></v-text-field>
-                  <v-select
-                    :label="inputFields.creation.sex.label"
-                    variant="outlined"
-                    density="compact"
-                    style="width: 200px"
-                    :items="inputFields.creation.sex.items"
-                    :rules="inputFields.creation.sex.rules"
-                    v-model="patientCreationData.sex"
-                  ></v-select>
-                  <v-select
-                    :label="inputFields.creation.civil_status.label"
-                    variant="outlined"
-                    density="compact"
-                    style="width: 200px"
-                    :items="inputFields.creation.civil_status.items"
-                    :rules="inputFields.creation.civil_status.rules"
-                    v-model="patientCreationData.civil_status"
-                  ></v-select>
-                </v-col>
+                <v-form ref="createDARForm">
+                  <v-col cols="12" class="py-0 d-flex flex-wrap ga-1">
+                    <v-text-field
+                      v-for="(item, index) in inputFields.creation.textFields"
+                      :key="index"
+                      variant="outlined"
+                      :label="item.label"
+                      density="compact"
+                      style="width: 200px"
+                      :type="item.type"
+                      :rules="item.rules"
+                      v-model="patientCreationData[index]"
+                    ></v-text-field>
+                    <v-select
+                      :label="inputFields.creation.sex.label"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      :items="inputFields.creation.sex.items"
+                      :rules="inputFields.creation.sex.rules"
+                      v-model="patientCreationData.sex"
+                    ></v-select>
+                    <v-select
+                      :label="inputFields.creation.civil_status.label"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      :items="inputFields.creation.civil_status.items"
+                      :rules="inputFields.creation.civil_status.rules"
+                      v-model="patientCreationData.civil_status"
+                    ></v-select>
+                  </v-col>
+                </v-form>
               </v-row>
               <v-card-actions class="justify-end mt-5">
-                <v-btn color="secondary" @click="createPatientItem"
+                <v-btn color="secondary" @click="createDARItem(false)"
                   >Create Patient</v-btn
                 >
               </v-card-actions>
@@ -80,35 +82,41 @@
                 </v-col>
               </v-row>
               <v-row v-if="patients && patients.length > 0" class="ma-0">
-                <v-col cols="12" class="ma-0 pa-0 d-flex flex-wrap ga-1">
-                  <v-select
-                    label="Patient Name"
-                    :items="patients"
-                    item-title="fullname"
-                    item-value="id"
-                    variant="outlined"
-                    density="compact"
-                    style="width: 500px"
-                    v-model="darData.patient_id"
-                  ></v-select>
-                  <v-autocomplete
-                    chips
-                    multiple
-                    closable-chips
-                    label="Services"
-                    :items="darServices"
-                    item-title="service_name"
-                    item-value="id"
-                    variant="outlined"
-                    density="compact"
-                    style="width: 500px"
-                    v-model="darData.services"
-                  ></v-autocomplete>
-                  <v-card-actions class="justify-end">
-                    <v-btn color="success">Create Report</v-btn>
-                  </v-card-actions>
-                  {{ darData }}
-                </v-col>
+                <v-form ref="createDARForm">
+                  <v-col cols="12" class="ma-0 pa-0 d-flex flex-wrap ga-1">
+                    <v-select
+                      label="Patient Name"
+                      :items="patients"
+                      item-title="fullname"
+                      item-value="id"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 500px"
+                      v-model="darData.patient_id"
+                      :rules="[inputRules.required]"
+                    ></v-select>
+                    <v-autocomplete
+                      chips
+                      multiple
+                      closable-chips
+                      label="Services"
+                      :items="darServices"
+                      item-title="service_name"
+                      item-value="id"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 500px"
+                      v-model="darData.services"
+                      :rules="[inputRules.required]"
+                    ></v-autocomplete>
+                    <v-card-actions class="justify-end">
+                      <v-btn color="success" @click="createDARItem(true)"
+                        >Create Report</v-btn
+                      >
+                    </v-card-actions>
+                    {{ darData }}
+                  </v-col>
+                </v-form>
               </v-row>
             </v-container>
           </v-card-text>
@@ -122,20 +130,13 @@
   <!-- dialog -->
   <div>
     <v-dialog v-model="dialogs.isCreated" width="auto" persistent>
-      <v-card>
-        <v-card-text>
-          <h2>Successfully Created Patient DAR</h2>
-        </v-card-text>
-        <v-card-actions class="justify-end">
-          <v-btn color="success" @click="handleEditDar">Edit</v-btn>
-          <v-btn color="success" @click="handleCloseDialog">Close</v-btn>
-        </v-card-actions>
-      </v-card>
+      <promptDialogs :dialogData="dialogData" />
     </v-dialog>
   </div>
   <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
+import promptDialogs from "../dialogs/dialogs.vue";
 import snackBars from "../dialogs/snackBars.vue";
 import { userAuthentication } from "@/stores/session";
 import {
@@ -146,8 +147,8 @@ import {
 import { searchPatient } from "@/api/patients";
 import { ref, onMounted } from "vue";
 import moment from "moment";
-const props = defineProps({});
 const emit = defineEmits(["addDAR", "closeDialog", "editDAR"]);
+
 const dialogs = ref({
   isCreated: false,
 });
@@ -155,6 +156,10 @@ onMounted(async () => {
   await getDarServicesData();
 });
 
+const dialogData = ref({
+  type: "success",
+  text: "Social Work Administration created successfully!",
+});
 const snackBarData = ref({
   isVisible: false,
   type: "",
@@ -166,9 +171,12 @@ const tabValue = ref(2);
 const createDARForm = ref(null);
 const searchPatientInput = ref({});
 const darData = ref({
-  admission_date: moment().format("YYYY-MM-DDTHH:mm"),
+  isExisting: true,
+  creatorFullName: `${authentication.user.fname} ${authentication.user.lname}`,
+  creatorId: authentication.user.id,
 });
 const patientCreationData = ref({
+  isExisting: false,
   creatorFullName: `${authentication.user.fname} ${authentication.user.lname}`,
   creatorId: authentication.user.id,
 });
@@ -180,6 +188,8 @@ const inputRules = {
   required: (v) => !!v || "This field is required",
   invalidNegative: (v) => v >= 0 || "Invalid input",
   characters: (v) => v.length <= 20 || "Max 20 characters",
+  // create a rule for vselect
+  vselect: (v) => v.length > 0 || "This field is required",
 };
 const inputFields = {
   search: {
@@ -201,17 +211,17 @@ const inputFields = {
   },
   creation: {
     textFields: {
-      firstName: {
+      first_name: {
         label: "First Name",
         type: "text",
         rules: [inputRules.required, inputRules.characters],
       },
-      middleName: {
+      middle_name: {
         label: "Middle Name",
         type: "text",
         rules: [inputRules.required, inputRules.characters],
       },
-      lName: {
+      last_name: {
         label: "Last Name",
         type: "text",
         rules: [inputRules.required, inputRules.characters],
@@ -248,24 +258,16 @@ const handleCloseDialog = () => {
   dialogs.value.isCreated = false;
   emit("closeDialog", "dar");
 };
-const createDARItem = async () => {
+const createDARItem = async (isExisting) => {
+  const data = isExisting ? darData.value : patientCreationData.value;
   const isValid = await validateForm();
   if (!isValid) return;
-  const response = await createDailyActivityReport(darData.value);
+  const response = await createDailyActivityReport(data);
   if (response) {
-    darData.value = response;
-    dialogs.value.isCreated = true;
-    handleAddedItem(response);
+    console.log(response);
+    emit("addDAR", "dar", response);
   }
 };
-const createPatientItem = async () => {
-  const response = await darCreatePatient(patientCreationData.value);
-  if (response) {
-    createdPatient.value = response;
-    handleSnackBar("success", "Patient created successfully");
-  }
-};
-
 const validateForm = async () => {
   const form = await createDARForm.value.validate();
   if (!form.valid) return false;
