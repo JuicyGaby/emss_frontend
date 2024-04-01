@@ -34,18 +34,18 @@
                         <div class="d-flex ga-5">
                           <v-icon
                             color="primary"
-                            @click="handleEditNoteDialog(item.id)"
+                            @click="handleNoteDialogs(item.id, 'editNote')"
                             >mdi-pencil</v-icon
+                          >
+                          <v-icon
+                            color="secondary"
+                            @click="handleNoteDialogs(item.id, 'viewNote')"
+                            >mdi-eye</v-icon
                           >
                           <v-icon
                             color="secondary"
                             @click="dialogs.deleteNote.isVisible = true"
                             >mdi-delete</v-icon
-                          >
-                          <v-icon
-                            color="secondary"
-                            @click="dialogs.viewNote.isVisible = true"
-                            >mdi-eye</v-icon
                           >
                         </div>
                       </template>
@@ -55,22 +55,31 @@
               </div>
             </v-col>
           </v-row>
-          <h2>II. List of Services</h2>
+          <h2>II. Availed Services</h2>
           <v-row>
             <v-col cols="12" class="">
               <div class="px-5 mt-5">
                 <v-autocomplete
                   chips
                   multiple
-                  closable-chips
                   label="Services"
                   variant="outlined"
                   density="compact"
-                  item-title="text"
-                  item-value="value"
-                  clearable
+                  :items="servicesData"
+                  item-title="service_name"
+                  v-model="servicesData"
+                  readonly
                 >
                 </v-autocomplete>
+                <v-card-actions class="justify-end">
+                  <v-btn
+                    prepend-icon="mdi-plus"
+                    variant="default"
+                    color="primary"
+                    @click="dialogs.createService.isVisible = true"
+                    >Add Service</v-btn
+                  >
+                </v-card-actions>
               </div>
             </v-col>
           </v-row>
@@ -78,7 +87,8 @@
       </v-card-text>
     </v-card>
   </div>
-  <!-- create dialog -->
+
+  <!-- create note dialog -->
   <v-dialog v-model="dialogs.createNote.isVisible" width="600px">
     <v-card>
       <v-toolbar density="comfortable" color="secondary">
@@ -86,23 +96,25 @@
       </v-toolbar>
       <v-form ref="noteForm">
         <v-card-text class="d-flex flex-column ga-2">
-          <v-text-field
+          <v-combobox
             v-for="(field, key) in inputFields.textFields"
             :key="key"
             :label="field.label"
             variant="outlined"
             density="compact"
-            v-model="noteData[key]"
             counter="20"
-            :rules="field.rules"
-          ></v-text-field>
+            :items="servicesData"
+            item-title="service_name"
+            :return-object="false"
+            v-model="noteCreateData[key]"
+          ></v-combobox>
           <v-textarea
             v-for="(field, key) in inputFields.textAreas"
             :key="key"
             :label="field.label"
             variant="outlined"
             density="compact"
-            v-model="noteData[key]"
+            v-model="noteCreateData[key]"
             counter="500"
             :rules="field.rules"
           ></v-textarea>
@@ -110,16 +122,16 @@
             <v-btn color="secondary" @click="createNoteItem">Create Note</v-btn>
           </v-card-actions>
 
-          <!-- {{ noteData }} -->
+          {{ noteCreateData }}
         </v-card-text>
       </v-form>
     </v-card>
   </v-dialog>
-  <!-- delete dialog -->
+  <!-- delete note dialog -->
   <v-dialog v-model="dialogs.deleteNote.isVisible" width="400px">
     <dynamicDialogs :dialogData="dialogData" />
   </v-dialog>
-  <!-- edit dialog -->
+  <!-- edit note dialog -->
   <v-dialog v-model="dialogs.editNote.isVisible" width="600px">
     <v-card>
       <v-toolbar density="comfortable" color="secondary">
@@ -127,16 +139,18 @@
       </v-toolbar>
       <v-form ref="noteForm">
         <v-card-text class="d-flex flex-column ga-2">
-          <v-text-field
+          <v-combobox
             v-for="(field, key) in inputFields.textFields"
             :key="key"
             :label="field.label"
             variant="outlined"
             density="compact"
             counter="20"
-            :rules="field.rules"
+            :items="servicesData"
+            item-title="service_name"
+            :return-object="false"
             v-model="noteData[key]"
-          ></v-text-field>
+          ></v-combobox>
           <v-textarea
             v-for="(field, key) in inputFields.textAreas"
             :key="key"
@@ -150,12 +164,72 @@
           <v-card-actions class="justify-end">
             <v-btn color="secondary" @click="editNoteItem">Update Note</v-btn>
           </v-card-actions>
-          {{ noteData }}
+          <!-- {{ noteData }} -->
         </v-card-text>
       </v-form>
     </v-card>
   </v-dialog>
-  <!-- view only dialog -->
+  <!-- view only note dialog -->
+  <v-dialog v-model="dialogs.viewNote.isVisible" width="600px">
+    <v-card>
+      <v-toolbar density="comfortable" color="secondary">
+        <v-toolbar-title> View Note </v-toolbar-title>
+      </v-toolbar>
+      <v-card-text class="d-flex flex-column ga-2">
+        <v-text-field
+          v-for="(field, key) in inputFields.textFields"
+          :key="key"
+          :label="field.label"
+          variant="outlined"
+          density="compact"
+          counter="20"
+          :rules="field.rules"
+          v-model="noteData[key]"
+          readonly
+        ></v-text-field>
+        <v-textarea
+          v-for="(field, key) in inputFields.textAreas"
+          :key="key"
+          :label="field.label"
+          variant="outlined"
+          density="compact"
+          counter="500"
+          :rules="field.rules"
+          v-model="noteData[key]"
+          readonly
+        ></v-textarea>
+        <!-- {{ noteData }} -->
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+  <!-- create service dialog -->
+  <v-dialog v-model="dialogs.createService.isVisible" width="600px">
+    <v-card>
+      <v-toolbar density="compact" color="secondary">
+        <v-toolbar-title> Add Service </v-toolbar-title>
+      </v-toolbar>
+      <v-card-text>
+        <v-autocomplete
+          chips
+          multiple
+          label="Services"
+          variant="outlined"
+          density="compact"
+          :items="servicesItems"
+          item-title="service_name"
+          item-value="id"
+          v-model="servicesInput.services"
+        >
+        </v-autocomplete>
+        <v-card-actions class="justify-end">
+          <v-btn color="secondary" @click="createDarServices"
+            >Add Service</v-btn
+          >
+        </v-card-actions>
+        <!-- {{ servicesInput }} -->
+      </v-card-text>
+    </v-card>
+  </v-dialog>
   <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
@@ -167,6 +241,9 @@ import {
   getDarNoteById,
   updateDarNote,
   deleteDarNote,
+  getDarServices,
+  getDarServicesByDarId,
+  createDarServicesItem,
 } from "@/api/daily-activity-report";
 import snackBars from "@/components/dialogs/snackBars.vue";
 import dynamicDialogs from "@/components/dialogs/dialogs.vue";
@@ -183,8 +260,9 @@ const dialogData = ref({
   text: "Are you sure to delete this note",
   type: "warning",
 });
-
+// user session
 const authentication = userAuthentication();
+// data
 const noteForm = ref(null);
 const noteFetchData = ref([]);
 const indexedNotes = computed(() => {
@@ -192,11 +270,20 @@ const indexedNotes = computed(() => {
     return { ...note, number: index + 1 };
   });
 });
-const noteData = ref({
+const noteCreateData = ref({
   dar_id: props.dar_id,
   created_by: `${authentication.user.fname} ${authentication.user.lname}`,
   creator_id: authentication.user.id,
 });
+const noteData = ref({});
+const servicesData = ref([]);
+const servicesItems = ref([]);
+const servicesInput = ref({
+  services: [],
+  dar_id: props.dar_id,
+});
+
+// data table
 const dataTable = {
   tableHeaders: [
     { title: "Number", value: "number" },
@@ -217,6 +304,9 @@ const dialogs = ref({
     isVisible: false,
   },
   viewNote: {
+    isVisible: false,
+  },
+  createService: {
     isVisible: false,
   },
 });
@@ -243,20 +333,47 @@ const inputFields = {
   },
 };
 
+// functions
+
 const validateForm = async () => {
   const form = await noteForm.value.validate();
   if (!form.valid) return false;
   return true;
 };
+// ? services functions
+const getDarServicesItems = async () => {
+  const response = await getDarServices();
+  servicesItems.value = response;
+};
+const getDarServicesByDarIdItems = async (dar_id) => {
+  const response = await getDarServicesByDarId(dar_id);
+  servicesData.value = response;
+  // create an array that stores the id of the services
+  servicesInput.value.services = servicesData.value.map(
+    (service) => service.id
+  );
+};
+
+const createDarServices = async () => {
+  const response = await createDarServicesItem(servicesInput.value);
+  if (response) {
+    handleSnackBar("Service added successfully", "success");
+    dialogs.value.createService.isVisible = false;
+    // response is an array of object. push all objects from the response array to the servicesData array
+    servicesData.value = servicesData.value.concat(response);
+  }
+};
+
+// ? note functions
 const createNoteItem = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
-  const response = await createDarNote(noteData.value);
+  const response = await createDarNote(noteCreateData.value);
   if (response) {
     handleSnackBar("Note created successfully", "success");
     dialogs.value.createNote.isVisible = false;
     noteFetchData.value.push(response);
-    noteData.value = {
+    noteCreateData.value = {
       dar_id: props.dar_id,
       created_by: `${authentication.user.fname} ${authentication.user.lname}`,
       creator_id: authentication.user.id,
@@ -286,10 +403,10 @@ const editNoteItem = async () => {
     };
   }
 };
-const handleEditNoteDialog = async (id) => {
+const handleNoteDialogs = async (id, dialogType) => {
   const response = await getDarNoteById(id);
   noteData.value = response;
-  dialogs.value.editNote.isVisible = true;
+  dialogs.value[dialogType].isVisible = true;
 };
 
 const handleSnackBar = (text, type) => {
@@ -297,8 +414,10 @@ const handleSnackBar = (text, type) => {
   snackBarData.value.type = type;
   snackBarData.value.isVisible = true;
 };
-onMounted(() => {
-  getDarNotesItems(props.dar_id);
+onMounted(async () => {
+  await getDarNotesItems(props.dar_id);
+  await getDarServicesItems();
+  await getDarServicesByDarIdItems(props.dar_id);
 });
 </script>
 <style lang=""></style>

@@ -45,6 +45,20 @@
                       :rules="inputFields.creation.civil_status.rules"
                       v-model="patientCreationData.civil_status"
                     ></v-select>
+                    <v-autocomplete
+                      chips
+                      multiple
+                      closable-chips
+                      label="Services"
+                      :items="darServices"
+                      item-title="service_name"
+                      item-value="id"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 500px"
+                      v-model="patientCreationData.services"
+                      :rules="[inputRules.required]"
+                    ></v-autocomplete>
                   </v-col>
                 </v-form>
               </v-row>
