@@ -49,7 +49,7 @@ const updateDailyActivityReport = async (body) => {
 };
 //  DAR NOTES
 
-const createDarNotes = async (body) => {
+const createDarNote = async (body) => {
   const API_URL = `http://localhost:3000/dar-notes`;
   const response = await fetch(API_URL, {
     method: "POST",
@@ -149,4 +149,9 @@ export {
   updateSocialWorkAdministration,
   getDarServices,
   darCreatePatient,
+  createDarNote,
+  getDarNotes,
+  getDarNoteById,
+  updateDarNote,
+  deleteDarNote,
 };

@@ -98,19 +98,33 @@
       </v-form>
     </v-card>
   </v-dialog>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
 import { ref } from "vue";
 import { userAuthentication } from "@/stores/session";
+import {
+  createDarNote,
+  getDarNotes,
+  getDarNoteById,
+  updateDarNote,
+  deleteDarNote,
+} from "@/api/daily-activity-report";
+import snackBars from "@/components/dialogs/snackBars.vue";
 const props = defineProps({
   dar_id: Number,
 });
-
+const snackBarData = ref({
+  isVisible: false,
+  text: "",
+  type: "",
+});
 const authentication = userAuthentication();
 const noteForm = ref(null);
 const noteData = ref({
   dar_id: props.dar_id,
   created_by: `${authentication.user.fname} ${authentication.user.lname}`,
+  creator_id: authentication.user.id,
 });
 const dataTable = {
   tableHeaders: [
@@ -147,16 +161,25 @@ const inputFields = {
     },
   },
 };
-
 const validateForm = async () => {
   const form = await noteForm.value.validate();
   if (!form.valid) return false;
   return true;
 };
-
 const createNoteItem = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
+  const response = await createDarNote(noteData.value);
+  if (response) {
+    handleSnackBar("Note created successfully", "success");
+    dialogs.value.createNote.isVisible = false;
+  }
+};
+
+const handleSnackBar = (text, type) => {
+  snackBarData.value.text = text;
+  snackBarData.value.type = type;
+  snackBarData.value.isVisible = true;
 };
 </script>
 <style lang=""></style>
