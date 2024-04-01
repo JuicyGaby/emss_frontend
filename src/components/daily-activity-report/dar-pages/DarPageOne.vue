@@ -16,7 +16,7 @@
                 density="compact"
                 style="width: 400px"
                 :type="field.type"
-                v-model="darData[key]"
+                v-model="patientData[key]"
               ></v-text-field>
               <v-select
                 v-for="(field, key) in inputFields.part1.selectFields"
@@ -26,8 +26,8 @@
                 variant="outlined"
                 density="compact"
                 style="width: 400px"
+                v-model="patientData[key]"
                 autocomplete
-                v-model="darData[key]"
               ></v-select>
               <v-select
                 v-for="(field, key) in inputFields.part1.titleValueFields"
@@ -40,7 +40,6 @@
                 density="compact"
                 style="width: 400px"
                 autocomplete
-                v-model="darData[key]"
               ></v-select>
             </v-col>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
@@ -53,7 +52,6 @@
                 density="compact"
                 style="width: 400px"
                 autocomplete
-                v-model="darData[key]"
               ></v-select>
               <v-text-field
                 v-for="(field, key) in inputFields.part2.textFields"
@@ -63,7 +61,6 @@
                 density="compact"
                 style="width: 400px"
                 :type="field.type"
-                v-model="darData[key]"
               ></v-text-field>
               <v-textarea
                 label="Remarks"
@@ -107,15 +104,22 @@ const snackBarData = ref({
 const darData = ref({
   id: props.dar_id,
 });
+const patientData = ref({});
 const inputFields = {
   part1: {
     textFields: {
-      admission_date: {
+      date_created: {
         label: "Admission Date",
         type: "datetime-local",
       },
-      patient_name: {
-        label: "Patient Name",
+      first_name: {
+        label: "First Name",
+      },
+      middle_name: {
+        label: "Middle Name",
+      },
+      last_name: {
+        label: "Last Name",
       },
       age: {
         label: "Age",
@@ -272,9 +276,7 @@ const updateDailyActivityReportItem = async () => {
 const fetchDarData = async () => {
   const response = await getDailyActivityReportById(props.dar_id);
   darData.value = response;
-  darData.value.admission_date = new Date(response.admission_date)
-    .toISOString()
-    .slice(0, 16);
+  patientData.value = darData.value.patients;
 };
 const handleSnackBar = (type, text) => {
   snackBarData.value.isVisible = true;

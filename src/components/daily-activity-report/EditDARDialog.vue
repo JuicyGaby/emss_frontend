@@ -28,9 +28,12 @@
 import DarPageOne from "@/components/daily-activity-report/dar-pages/DarPageOne.vue";
 import DarPageTwo from "@/components/daily-activity-report/dar-pages/DarPageTwo.vue";
 import DarPageThree from "@/components/daily-activity-report/dar-pages/DarPageThree.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 const props = defineProps({
   dar_id: Number,
+});
+onMounted(() => {
+  console.log(props.dar_id);
 });
 const emit = defineEmits(["closeDialog"]);
 const tabValue = ref(0);
