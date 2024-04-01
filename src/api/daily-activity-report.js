@@ -61,8 +61,8 @@ const createDarNote = async (body) => {
   const data = await response.json();
   return data;
 };
-const getDarNotes = async () => {
-  const API_URL = `http://localhost:3000/dar-notes`;
+const getDarNotes = async (id) => {
+  const API_URL = `http://localhost:3000/user-dar-notes/${id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;

@@ -1,12 +1,9 @@
 <template lang="">
   <div>
     <v-card>
-      <v-card-title primary-title>
-        <h1>Daily Activity Report</h1>
-      </v-card-title>
       <v-card-text>
         <v-container>
-          <v-row class="mt-5">
+          <v-row class="">
             <v-col cols="12" class="d-flex flex-wrap ga-2">
               <v-text-field
                 v-for="(field, key) in inputFields.part1.textFields"
@@ -70,7 +67,7 @@
               ></v-textarea>
             </v-col>
             <v-col>
-              <v-btn color="primary" @click="updateDailyActivityReportItem"
+              <v-btn color="primary" @click=""
                 >Update Dar</v-btn
               >
             </v-col>

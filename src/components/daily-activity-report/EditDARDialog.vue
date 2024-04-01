@@ -7,7 +7,7 @@
       <v-btn icon="mdi-close" @click="emit('closeDialog', 'dar')"> </v-btn>
     </v-toolbar>
     <v-card-title primary-title>
-      <v-tabs v-model="tabValue" align-tabs="center">
+      <v-tabs v-model="tabValue" align-tabs="center" density="compact">
         <v-tab :value="1">Demographic Data</v-tab>
         <v-tab :value="2">Services</v-tab>
       </v-tabs>
