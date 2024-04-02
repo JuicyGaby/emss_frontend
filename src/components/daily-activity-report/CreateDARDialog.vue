@@ -1,7 +1,7 @@
 <template lang="">
   <div class="">
-    <v-card height="auto">
-      <v-toolbar color="secondary" class="px-5 d-flex align-center">
+    <v-card height="auto" width="auto">
+      <v-toolbar color="secondary" class="px-2 d-flex align-center">
         <v-icon size="large">mdi-book-plus</v-icon>
         <v-toolbar-title>Create Daily Activity Report</v-toolbar-title>
         <v-spacer></v-spacer>

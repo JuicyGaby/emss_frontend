@@ -61,11 +61,7 @@
                 >Create Entry</v-btn
               >
             </div>
-            <v-data-table
-              :headers="dataTable.swa.headers"
-              :items="swaItemsWithNumbers"
-              :items-per-page="5"
-            >
+            <v-data-table :headers="dataTable.swa.headers" :items-per-page="5">
               <template v-slot:[`item.operation`]="{ item }">
                 <div class="d-flex ga-5">
                   <v-icon
@@ -116,10 +112,7 @@
       width="400px"
       transition="dialog-transition"
     >
-      <CreateSWADialog
-        @closeDialog="handleCloseDialog"
-        @addedItem="handlePushItem"
-      />
+      <CreateSWADialog />
     </v-dialog>
     <!-- update swa dialog -->
     <v-dialog
@@ -134,10 +127,7 @@
   </div>
 </template>
 <script setup>
-import {
-  getDailyActivityReport,
-  getSocialWorkAdministration,
-} from "@/api/daily-activity-report";
+import { getDailyActivityReport } from "@/api/daily-activity-report";
 import moment from "moment";
 import { ref, onMounted, computed } from "vue";
 
@@ -184,7 +174,7 @@ const dialogs = ref({
     view: false,
   },
   swa: {
-    create: false,
+    create: true,
     edit: false,
     view: false,
   },
@@ -196,10 +186,10 @@ const getDarItems = async () => {
   }
 };
 const getSwaItems = async () => {
-  const response = await getSocialWorkAdministration();
-  if (response.length > 0) {
-    swaItems.value = response;
-  }
+  // const response = await getSocialWorkAdministration();
+  // if (response.length > 0) {
+  //   swaItems.value = response;
+  // }
 };
 
 const patientsWithNumbers = computed(() => {
