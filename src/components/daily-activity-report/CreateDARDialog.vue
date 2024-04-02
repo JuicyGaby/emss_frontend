@@ -67,7 +67,7 @@
                   >Create Patient</v-btn
                 >
               </v-card-actions>
-              {{ patientCreationData }}
+              <!-- {{ patientCreationData }} -->
             </v-container>
           </v-card-text>
         </v-window-item>
@@ -123,13 +123,12 @@
                       v-model="darData.services"
                       :rules="[inputRules.required]"
                     ></v-autocomplete>
-                    <v-card-actions class="justify-end">
-                      <v-btn color="success" @click="createDARItem(true)"
-                        >Create Report</v-btn
-                      >
-                    </v-card-actions>
-                    {{ darData }}
                   </v-col>
+                  <v-card-actions class="justify-end">
+                    <v-btn color="secondary" @click="createDARItem(true)"
+                      >Create Report</v-btn
+                    >
+                  </v-card-actions>
                 </v-form>
               </v-row>
             </v-container>
@@ -144,7 +143,7 @@
   <!-- dialog -->
   <div>
     <v-dialog v-model="dialogs.isCreated" width="auto" persistent>
-      <promptDialogs :dialogData="dialogData" />
+      <promptDialogs :dialogData="dialogData" @handleAction="editDarItem" />
     </v-dialog>
   </div>
   <snackBars :snackBarData="snackBarData" />
@@ -173,6 +172,9 @@ onMounted(async () => {
 const dialogData = ref({
   type: "success",
   text: "Social Work Administration created successfully!",
+  buttonText: "Edit",
+  buttonColor: "primary",
+  itemId: "",
 });
 const snackBarData = ref({
   isVisible: false,
@@ -202,7 +204,6 @@ const inputRules = {
   required: (v) => !!v || "This field is required",
   invalidNegative: (v) => v >= 0 || "Invalid input",
   characters: (v) => v.length <= 20 || "Max 20 characters",
-  // create a rule for vselect
   vselect: (v) => v.length > 0 || "This field is required",
 };
 const inputFields = {
@@ -278,7 +279,8 @@ const createDARItem = async (isExisting) => {
   if (!isValid) return;
   const response = await createDailyActivityReport(data);
   if (response) {
-    console.log(response);
+    dialogData.value.itemId = response.id;
+    dialogs.value.isCreated = true;
     emit("addDAR", "dar", response);
   }
 };
@@ -308,6 +310,10 @@ const handleSnackBar = (type, text) => {
     type: type,
     text: text,
   };
+};
+const editDarItem = (dar_id) => {
+  emit("editDAR", dar_id);
+  dialogs.value.isCreated = false;
 };
 </script>
 <style lang=""></style>
