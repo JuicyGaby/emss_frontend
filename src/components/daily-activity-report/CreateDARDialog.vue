@@ -4,6 +4,10 @@
       <v-toolbar color="secondary" class="px-5 d-flex align-center">
         <v-icon size="large">mdi-book-plus</v-icon>
         <v-toolbar-title>Create Daily Activity Report</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="handleCloseDialog">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-toolbar>
       <v-tabs v-model="tabValue" density="compact" align-tabs="center">
         <v-tab :value="1">Not Existing</v-tab>
@@ -262,12 +266,6 @@ const inputFields = {
 const handleAddedItem = (item) => {
   const type = "dar";
   emit("addDAR", type, item);
-};
-const handleEditDar = () => {
-  const dar_id = darData.value.id;
-  console.log(dar_id);
-  dialogs.value.isCreated = false;
-  emit("editDAR", dar_id);
 };
 const handleCloseDialog = () => {
   dialogs.value.isCreated = false;

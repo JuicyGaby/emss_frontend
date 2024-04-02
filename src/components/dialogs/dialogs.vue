@@ -9,7 +9,7 @@
           <v-btn :color="props.dialogData.buttonColor" @click="handleAction">{{
             props.dialogData.buttonText
           }}</v-btn>
-          <v-btn color="error" @click="">Close</v-btn>
+          <v-btn color="error" @click="handleClose">Close</v-btn>
         </v-card-actions>
       </v-alert></v-sheet
     >
@@ -26,6 +26,10 @@ onMounted(() => {
 });
 const handleAction = () => {
   emit("handleAction", props.dialogData.itemId);
+};
+const handleClose = () => {
+  console.log("close dialog");
+  emit("closeDialog");
 };
 </script>
 <style lang=""></style>

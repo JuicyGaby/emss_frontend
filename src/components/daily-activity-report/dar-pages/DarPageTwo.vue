@@ -93,6 +93,10 @@
     <v-card>
       <v-toolbar density="comfortable" color="secondary">
         <v-toolbar-title> Add Note </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="dialogs.createNote.isVisible = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-toolbar>
       <v-form ref="noteForm">
         <v-card-text class="d-flex flex-column ga-2">
@@ -129,13 +133,21 @@
   </v-dialog>
   <!-- delete note dialog -->
   <v-dialog v-model="dialogs.deleteNote.isVisible" width="400px">
-    <dynamicDialogs :dialogData="dialogData" @handleAction="deleteNoteItem" />
+    <dynamicDialogs
+      :dialogData="dialogData"
+      @handleAction="deleteNoteItem"
+      @closeDialog="dialogs.deleteNote.isVisible = false"
+    />
   </v-dialog>
   <!-- edit note dialog -->
   <v-dialog v-model="dialogs.editNote.isVisible" width="600px">
     <v-card>
       <v-toolbar density="comfortable" color="secondary">
         <v-toolbar-title> Edit Note </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="dialogs.editNote.isVisible = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-toolbar>
       <v-form ref="noteForm">
         <v-card-text class="d-flex flex-column ga-2">
@@ -174,6 +186,10 @@
     <v-card>
       <v-toolbar density="comfortable" color="secondary">
         <v-toolbar-title> View Note </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="dialogs.viewNote.isVisible = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-toolbar>
       <v-card-text class="d-flex flex-column ga-2">
         <v-text-field
