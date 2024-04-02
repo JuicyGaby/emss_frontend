@@ -44,7 +44,7 @@
                           >
                           <v-icon
                             color="secondary"
-                            @click="dialogs.deleteNote.isVisible = true"
+                            @click="handleNoteDialogs(item.id, 'deleteNote')"
                             >mdi-delete</v-icon
                           >
                         </div>
@@ -129,7 +129,7 @@
   </v-dialog>
   <!-- delete note dialog -->
   <v-dialog v-model="dialogs.deleteNote.isVisible" width="400px">
-    <dynamicDialogs :dialogData="dialogData" />
+    <dynamicDialogs :dialogData="dialogData" @handleAction="deleteNoteItem" />
   </v-dialog>
   <!-- edit note dialog -->
   <v-dialog v-model="dialogs.editNote.isVisible" width="600px">
@@ -259,6 +259,9 @@ const snackBarData = ref({
 const dialogData = ref({
   text: "Are you sure to delete this note",
   type: "warning",
+  buttonText: "Delete",
+  buttonColor: "error",
+  itemId: "",
 });
 // user session
 const authentication = userAuthentication();
@@ -405,8 +408,21 @@ const editNoteItem = async () => {
 };
 const handleNoteDialogs = async (id, dialogType) => {
   const response = await getDarNoteById(id);
+  dialogData.value.itemId = id;
   noteData.value = response;
   dialogs.value[dialogType].isVisible = true;
+};
+const deleteNoteItem = async () => {
+  console.log(dialogData.value.itemId);
+  dialogs.value.deleteNote.isVisible = false;
+  const response = await deleteDarNote(dialogData.value.itemId);
+  if (response) {
+    handleSnackBar("Note deleted successfully", "success");
+    const index = noteFetchData.value.findIndex(
+      (note) => note.id === dialogData.value.itemId
+    );
+    noteFetchData.value.splice(index, 1);
+  }
 };
 
 const handleSnackBar = (text, type) => {

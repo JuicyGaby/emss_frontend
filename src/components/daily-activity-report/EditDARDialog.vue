@@ -32,10 +32,8 @@ import { ref, onMounted } from "vue";
 const props = defineProps({
   dar_id: Number,
 });
-onMounted(() => {
-  console.log(props.dar_id);
-});
+onMounted(() => {});
 const emit = defineEmits(["closeDialog"]);
-const tabValue = ref(0);
+const tabValue = ref(1);
 </script>
 <style lang=""></style>
