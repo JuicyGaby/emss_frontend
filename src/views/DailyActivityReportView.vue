@@ -109,7 +109,6 @@
     <!-- create swa dialog -->
     <v-dialog
       v-model="dialogs.swa.create"
-      width="400px"
       transition="dialog-transition"
     >
       <CreateSWADialog />
@@ -174,7 +173,7 @@ const dialogs = ref({
     view: false,
   },
   swa: {
-    create: true,
+    create: false,
     edit: false,
     view: false,
   },
