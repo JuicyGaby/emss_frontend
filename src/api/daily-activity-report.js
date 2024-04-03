@@ -173,6 +173,18 @@ const deleteSwaNote = async (id) => {
   const data = await response.json();
   return data;
 };
+const createSwaServicesItem = async (body) => {
+  const API_URL = `http://localhost:3000/swa-services`;
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
 
 // DAR SERVICES
 const getDarServices = async () => {
@@ -223,4 +235,5 @@ export {
   getSwaNoteById,
   updateSwaNote,
   deleteSwaNote,
+  createSwaServicesItem,
 };

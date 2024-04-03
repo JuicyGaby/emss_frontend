@@ -40,6 +40,8 @@
                 readonly
                 :items="userServicesAvailed"
                 item-title="service_name"
+                obj
+                item-value="id"
                 label="Services Availed"
                 v-model="userServicesAvailed"
               ></v-select>
@@ -74,22 +76,26 @@
               <v-row>
                 <v-col cols="12">
                   <v-combobox
-                    :items="[]"
                     label="Note Title"
                     variant="outlined"
                     counter="50"
+                    :items="userServicesAvailed"
+                    item-title="service_name"
+                    :return-object="false"
                     :rules="inputFields.comboFields.note_title.rules"
+                    v-model="inputData.note.note_title"
                   ></v-combobox>
                   <v-textarea
                     label="Note"
                     variant="outlined"
                     counter="500"
                     :rules="inputFields.textAreaFields.note_body.rules"
+                    v-model="inputData.note.note_body"
                   ></v-textarea>
                   <v-card-actions class="justify-end">
                     <v-btn color="primary">Create</v-btn>
                   </v-card-actions>
-                  {{ inputData }}
+                  {{ inputData.note }}
                 </v-col>
               </v-row>
             </v-container>
@@ -160,10 +166,12 @@
                   item-value="id"
                   label="Services"
                   variant="outlined"
+                  v-model="inputData.services.services"
                 ></v-autocomplete>
                 <v-card-actions class="justify-end">
                   <v-btn color="primary">Add Service</v-btn>
                 </v-card-actions>
+                {{ inputData.services }}
               </v-col>
             </v-row>
           </v-container>
@@ -187,6 +195,7 @@ import {
   getSwaNoteById,
   updateSwaNote,
   deleteSwaNote,
+  createSwaServicesItem,
 } from "@/api/daily-activity-report";
 import { inputRules } from "@/utils/constants";
 import snackBars from "../dialogs/snackBars.vue";
@@ -201,9 +210,15 @@ const userServicesAvailed = ref([]);
 
 // Objects
 const inputData = ref({
-  dar_swa_id: props.swa_id,
-  created_by: `${authentication.user.fname} ${authentication.user.lname}`,
-  creator_id: authentication.user.id,
+  note: {
+    dar_swa_id: props.swa_id,
+    created_by: `${authentication.user.fname} ${authentication.user.lname}`,
+    creator_id: authentication.user.id,
+  },
+  services: {
+    services: [],
+    swa_id: props.swa_id,
+  },
 });
 const dataTable = ref({
   headers: [
@@ -250,7 +265,10 @@ const getDarSwaServicesItem = async () => {
   const response = await getDarSwaId(props.swa_id);
   if (response) {
     userServicesAvailed.value = response;
-    console.log("User Services Availed", userServicesAvailed.value);
+    inputData.value.services.services = userServicesAvailed.value.map(
+      (service) => service.id
+    );
+    // console.log("User Services Availed", userServicesAvailed.value);
   }
 };
 const getSwaServicesItems = async () => {
