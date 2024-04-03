@@ -116,26 +116,28 @@
         <v-card-text>
           <v-form>
             <v-container>
-              <v-row>
-                <v-col cols="12">
-                  <v-combobox
-                    :items="[]"
-                    label="Note Title"
-                    variant="outlined"
-                    counter="50"
-                    :rules="inputFields.comboFields.note_title.rules"
-                  ></v-combobox>
-                  <v-textarea
-                    label="Note"
-                    variant="outlined"
-                    counter="500"
-                    :rules="inputFields.textAreaFields.note_body.rules"
-                  ></v-textarea>
-                  <v-card-actions class="justify-end">
-                    <v-btn color="primary">Update</v-btn>
-                  </v-card-actions>
-                </v-col>
-              </v-row>
+              <v-form ref="swaForm">
+                <v-row>
+                  <v-col cols="12">
+                    <v-combobox
+                      :items="[]"
+                      label="Note Title"
+                      variant="outlined"
+                      counter="50"
+                      :rules="inputFields.comboFields.note_title.rules"
+                    ></v-combobox>
+                    <v-textarea
+                      label="Note"
+                      variant="outlined"
+                      counter="500"
+                      :rules="inputFields.textAreaFields.note_body.rules"
+                    ></v-textarea>
+                    <v-card-actions class="justify-end">
+                      <v-btn color="primary">Update</v-btn>
+                    </v-card-actions>
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-container>
           </v-form>
         </v-card-text>
@@ -155,32 +157,37 @@
         </v-toolbar>
         <v-card-text>
           <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-autocomplete
-                  chips
-                  multiple
-                  closable-chips
-                  :items="servicesList"
-                  item-title="service_name"
-                  item-value="id"
-                  label="Services"
-                  variant="outlined"
-                  v-model="inputData.services.services"
-                ></v-autocomplete>
-                <v-card-actions class="justify-end">
-                  <v-btn color="primary">Add Service</v-btn>
-                </v-card-actions>
-                {{ inputData.services }}
-              </v-col>
-            </v-row>
+            <v-form ref="swaForm">
+              <v-row>
+                <v-col cols="12">
+                  <v-autocomplete
+                    chips
+                    multiple
+                    closable-chips
+                    :items="servicesList"
+                    item-title="service_name"
+                    item-value="id"
+                    label="Services"
+                    variant="outlined"
+                    v-model="inputData.services.services"
+                    :rules="[inputRules.required, inputRules.vselect]"
+                  ></v-autocomplete>
+                  <v-card-actions class="justify-end">
+                    <v-btn color="primary" @click="createDarSwaServicesItem"
+                      >Add Service</v-btn
+                    >
+                  </v-card-actions>
+                  {{ inputData.services }}
+                </v-col>
+              </v-row>
+            </v-form>
           </v-container>
         </v-card-text>
       </v-card>
     </v-dialog>
   </div>
   <!-- snackbars -->
-  <!-- <snackBars /> -->
+  <snackBars :snackBarData="snackBarData" />
   <!-- dynamic dialogs -->
   <!-- <dynamicDialogs /> -->
 </template>
@@ -205,10 +212,24 @@ const props = defineProps({
 });
 // variables
 const authentication = userAuthentication();
+const swaForm = ref(null);
 const servicesList = ref([]);
 const userServicesAvailed = ref([]);
 
 // Objects
+const snackBarData = ref({
+  isVisible: false,
+  text: "",
+  type: "",
+});
+const dialogData = ref({
+  isVisible: false,
+  type: "",
+  text: "",
+  buttonColor: "",
+  buttonText: "",
+  itemId: null,
+});
 const inputData = ref({
   note: {
     dar_swa_id: props.swa_id,
@@ -275,6 +296,28 @@ const getSwaServicesItems = async () => {
   const response = await getSwaServices();
   servicesList.value = response;
 };
+const createDarSwaServicesItem = async () => {
+  const isValid = await validateForm();
+  if (!isValid) return;
+  const response = await createSwaServicesItem(inputData.value.services);
+  if (response) {
+    handleSnackBar("Service added successfully!", "success");
+    userServicesAvailed.value = userServicesAvailed.value.concat(response);
+    dialogs.value.addServicesDialog.isVisible = false;
+  }
+};
+
+const validateForm = async () => {
+  const form = await swaForm.value.validate();
+  if (!form.valid) return false;
+  return true;
+};
+const handleSnackBar = (message, color) => {
+  snackBarData.value.text = message;
+  snackBarData.value.type = color;
+  snackBarData.value.isVisible = true;
+};
+
 onMounted(async () => {
   await getDarSwaServicesItem();
   await getSwaServicesItems();
