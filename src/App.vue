@@ -2,7 +2,7 @@
   <v-app>
     <v-main class="d-flex app-main">
       <sidebar v-if="authentication.isLoggedIn"></sidebar>
-      <router-view/>
+      <router-view />
     </v-main>
   </v-app>
 </template>
@@ -18,6 +18,12 @@ import Sidebar from "./components/Sidebar.vue";
 let user = ref({});
 const router = useRouter();
 const authentication = userAuthentication();
+const inputRules = {
+  required: (v) => !!v || "This field is required",
+  invalidNegative: (v) => v >= 0 || "Invalid input",
+  characters: (v) => v.length <= 20 || "Max 20 characters",
+  vselect: (v) => v.length > 0 || "This field is required",
+};
 
 watch(
   () => authentication.token,

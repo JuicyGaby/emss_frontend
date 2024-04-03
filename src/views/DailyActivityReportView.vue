@@ -61,7 +61,11 @@
                 >Create Entry</v-btn
               >
             </div>
-            <v-data-table :headers="dataTable.swa.headers" :items-per-page="5">
+            <v-data-table
+              :headers="dataTable.swa.headers"
+              :items-per-page="5"
+              :items="swaItemsWithNumbers"
+            >
               <template v-slot:[`item.operation`]="{ item }">
                 <div class="d-flex ga-5">
                   <v-icon
@@ -107,10 +111,7 @@
     </v-dialog>
 
     <!-- create swa dialog -->
-    <v-dialog
-      v-model="dialogs.swa.create"
-      transition="dialog-transition"
-    >
+    <v-dialog v-model="dialogs.swa.create" transition="dialog-transition">
       <CreateSWADialog />
     </v-dialog>
     <!-- update swa dialog -->
@@ -126,7 +127,7 @@
   </div>
 </template>
 <script setup>
-import { getDailyActivityReport } from "@/api/daily-activity-report";
+import { getDailyActivityReport, getDarSwa } from "@/api/daily-activity-report";
 import moment from "moment";
 import { ref, onMounted, computed } from "vue";
 
@@ -159,8 +160,7 @@ const dataTable = {
   swa: {
     headers: [
       { title: "Number", value: "Number" },
-      { title: "Admission Date-Time", value: "admission_date" },
-      { title: "ID", value: "id" },
+      { title: "Admission Date-Time", value: "date_created" },
       { title: "Creator", value: "creator_name" },
       { title: "Operation", value: "operation" },
     ],
@@ -185,10 +185,10 @@ const getDarItems = async () => {
   }
 };
 const getSwaItems = async () => {
-  // const response = await getSocialWorkAdministration();
-  // if (response.length > 0) {
-  //   swaItems.value = response;
-  // }
+  const response = await getDarSwa();
+  if (response.length > 0) {
+    swaItems.value = response;
+  }
 };
 
 const patientsWithNumbers = computed(() => {
