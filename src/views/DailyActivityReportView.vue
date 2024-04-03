@@ -120,6 +120,7 @@
       fullscreen
       scrollable
       transition="dialog-transition"
+      :swa_id="swa_id"
     >
       <EditSWADialog :swa_id="swa_id" />
     </v-dialog>
@@ -216,8 +217,8 @@ const viewDailyActivityReport = (id) => {
   console.log("Edit DAR", id);
 };
 const editSocialWorkAdministration = (item) => {
-  dialogs.value.swa.edit = true;
   swa_id.value = item;
+  dialogs.value.swa.edit = true;
 };
 
 // emit
@@ -231,10 +232,6 @@ const handlePushItem = (type, item) => {
 const handleEditDar = (dar_id) => {
   dialogs.value.dar.create = false;
   editDailyActivityReport(dar_id);
-};
-const handleEditSwa = (swa_id) => {
-  // dialogs.value.swa.create = false;
-  // editSocialWorkAdministration(swa_id);
 };
 const handleCloseDialog = (type) => {
   dialogs.value[type].create = false;
