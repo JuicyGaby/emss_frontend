@@ -26,9 +26,16 @@
                 <v-card-text>
                   <v-data-table
                     :headers="dataTable.headers"
-                    :items="[]"
+                    :items="indexedSwaNotes"
                     :items-per-page="5"
                   >
+                    <template v-slot:[`item.operation`]="{ item }">
+                      <div class="d-flex ga-5">
+                        <v-icon color="primary">mdi-pencil</v-icon>
+                        <v-icon color="secondary">mdi-eye</v-icon>
+                        <v-icon color="secondary">mdi-delete</v-icon>
+                      </div>
+                    </template>
                   </v-data-table>
                 </v-card-text>
               </v-card>
@@ -49,7 +56,8 @@
                 <v-btn
                   color="primary"
                   @click="dialogs.addServicesDialog.isVisible = true"
-                  >Add Services</v-btn
+                >
+                  Add Services</v-btn
                 >
               </v-card-actions>
             </v-col>
@@ -73,31 +81,35 @@
         <v-card-text>
           <v-form>
             <v-container>
-              <v-row>
-                <v-col cols="12">
-                  <v-combobox
-                    label="Note Title"
-                    variant="outlined"
-                    counter="50"
-                    :items="userServicesAvailed"
-                    item-title="service_name"
-                    :return-object="false"
-                    :rules="inputFields.comboFields.note_title.rules"
-                    v-model="inputData.note.note_title"
-                  ></v-combobox>
-                  <v-textarea
-                    label="Note"
-                    variant="outlined"
-                    counter="500"
-                    :rules="inputFields.textAreaFields.note_body.rules"
-                    v-model="inputData.note.note_body"
-                  ></v-textarea>
-                  <v-card-actions class="justify-end">
-                    <v-btn color="primary">Create</v-btn>
-                  </v-card-actions>
-                  {{ inputData.note }}
-                </v-col>
-              </v-row>
+              <v-form ref="swaForm">
+                <v-row>
+                  <v-col cols="12">
+                    <v-combobox
+                      label="Note Title"
+                      variant="outlined"
+                      counter="50"
+                      :items="userServicesAvailed"
+                      item-title="service_name"
+                      :return-object="false"
+                      :rules="inputFields.comboFields.note_title.rules"
+                      v-model="inputData.note.note_title"
+                    ></v-combobox>
+                    <v-textarea
+                      label="Note"
+                      variant="outlined"
+                      counter="500"
+                      :rules="inputFields.textAreaFields.note_body.rules"
+                      v-model="inputData.note.note_body"
+                    ></v-textarea>
+                    <v-card-actions class="justify-end">
+                      <v-btn color="primary" @click="createDarSwaNotesItem"
+                        >Create Note</v-btn
+                      >
+                    </v-card-actions>
+                    {{ inputData.note }}
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-container>
           </v-form>
         </v-card-text>
@@ -173,8 +185,8 @@
                     :rules="[inputRules.required, inputRules.vselect]"
                   ></v-autocomplete>
                   <v-card-actions class="justify-end">
-                    <v-btn color="primary" @click="createDarSwaServicesItem"
-                      >Add Service</v-btn
+                    <v-btn color="primary" @click="createDarSwaServicesItem">
+                      Add Service</v-btn
                     >
                   </v-card-actions>
                   {{ inputData.services }}
@@ -192,7 +204,7 @@
   <!-- <dynamicDialogs /> -->
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { userAuthentication } from "@/stores/session";
 import {
   getSwaServices,
@@ -215,6 +227,7 @@ const authentication = userAuthentication();
 const swaForm = ref(null);
 const servicesList = ref([]);
 const userServicesAvailed = ref([]);
+const swaNotes = ref([]);
 
 // Objects
 const snackBarData = ref({
@@ -281,6 +294,12 @@ const inputFields = ref({
     },
   },
 });
+const indexedSwaNotes = computed(() => {
+  return swaNotes.value.map((note, index) => {
+    return { ...note, number: index + 1 };
+  });
+});
+
 // functions
 const getDarSwaServicesItem = async () => {
   const response = await getDarSwaId(props.swa_id);
@@ -296,6 +315,13 @@ const getSwaServicesItems = async () => {
   const response = await getSwaServices();
   servicesList.value = response;
 };
+const getSwaNotesItems = async () => {
+  const response = await getSwaNotes(props.swa_id);
+  if (response) {
+    swaNotes.value = response;
+    console.log("SWA Notes", swaNotes.value);
+  }
+};
 const createDarSwaServicesItem = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
@@ -306,7 +332,21 @@ const createDarSwaServicesItem = async () => {
     dialogs.value.addServicesDialog.isVisible = false;
   }
 };
-
+const createDarSwaNotesItem = async () => {
+  const isValid = await validateForm();
+  if (!isValid) return;
+  console.log(inputData.value.note);
+  const response = await createSwaNote(inputData.value.note);
+  handleSnackBar("Note created successfully!", "success");
+  console.log(response);
+  swaNotes.value.push(response);
+  dialogs.value.createDialog.isVisible = false;
+  inputData.value.note = {
+    dar_swa_id: props.swa_id,
+    created_by: `${authentication.user.fname} ${authentication.user.lname}`,
+    creator_id: authentication.user.id,
+  };
+};
 const validateForm = async () => {
   const form = await swaForm.value.validate();
   if (!form.valid) return false;
@@ -321,6 +361,7 @@ const handleSnackBar = (message, color) => {
 onMounted(async () => {
   await getDarSwaServicesItem();
   await getSwaServicesItems();
+  await getSwaNotesItems();
 });
 </script>
 <style lang=""></style>

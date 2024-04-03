@@ -142,7 +142,7 @@ const createSwaNote = async (body) => {
   return data;
 };
 const getSwaNotes = async (id) => {
-  const API_URL = `http://localhost:3000/user-swa-notes/${id}`;
+  const API_URL = `http://localhost:3000/swa-notes/${id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
