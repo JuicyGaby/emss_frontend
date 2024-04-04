@@ -31,9 +31,21 @@
                   >
                     <template v-slot:[`item.operation`]="{ item }">
                       <div class="d-flex ga-5">
-                        <v-icon color="primary">mdi-pencil</v-icon>
-                        <v-icon color="secondary">mdi-eye</v-icon>
-                        <v-icon color="secondary">mdi-delete</v-icon>
+                        <v-icon
+                          color="primary"
+                          @click="handleSwaNoteDialogs(item.id, 'updateDialog')"
+                          >mdi-pencil</v-icon
+                        >
+                        <v-icon
+                          color="secondary"
+                          @click="handleSwaNoteDialogs(item.id, 'readDialog')"
+                          >mdi-eye</v-icon
+                        >
+                        <v-icon
+                          color="secondary"
+                          @click="handleSwaNoteDialogs(item.id, 'deleteDialog')"
+                          >mdi-delete</v-icon
+                        >
                       </div>
                     </template>
                   </v-data-table>
@@ -126,32 +138,37 @@
           </v-btn>
         </v-toolbar>
         <v-card-text>
-          <v-form>
-            <v-container>
-              <v-form ref="swaForm">
-                <v-row>
-                  <v-col cols="12">
-                    <v-combobox
-                      :items="[]"
-                      label="Note Title"
-                      variant="outlined"
-                      counter="50"
-                      :rules="inputFields.comboFields.note_title.rules"
-                    ></v-combobox>
-                    <v-textarea
-                      label="Note"
-                      variant="outlined"
-                      counter="500"
-                      :rules="inputFields.textAreaFields.note_body.rules"
-                    ></v-textarea>
-                    <v-card-actions class="justify-end">
-                      <v-btn color="primary">Update</v-btn>
-                    </v-card-actions>
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-container>
-          </v-form>
+          <v-container>
+            <v-form ref="swaForm">
+              <v-row>
+                <v-col cols="12">
+                  <v-combobox
+                    :items="userServicesAvailed"
+                    item-title="service_name"
+                    :return-object="false"
+                    label="Note Title"
+                    variant="outlined"
+                    counter="50"
+                    v-model="inputData.dynamicInput.note_title"
+                    :rules="inputFields.comboFields.note_title.rules"
+                  ></v-combobox>
+                  <v-textarea
+                    label="Note"
+                    variant="outlined"
+                    counter="500"
+                    v-model="inputData.dynamicInput.note_body"
+                    :rules="inputFields.textAreaFields.note_body.rules"
+                  ></v-textarea>
+                  <v-card-actions class="justify-end">
+                    <v-btn color="primary" @click="updateDarSwaNotesItem"
+                      >Update</v-btn
+                    >
+                  </v-card-actions>
+                  <!-- {{ inputData.dynamicInput }} -->
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -253,6 +270,7 @@ const inputData = ref({
     services: [],
     swa_id: props.swa_id,
   },
+  dynamicInput: {},
 });
 const dataTable = ref({
   headers: [
@@ -319,7 +337,6 @@ const getSwaNotesItems = async () => {
   const response = await getSwaNotes(props.swa_id);
   if (response) {
     swaNotes.value = response;
-    console.log("SWA Notes", swaNotes.value);
   }
 };
 const createDarSwaServicesItem = async () => {
@@ -347,6 +364,20 @@ const createDarSwaNotesItem = async () => {
     creator_id: authentication.user.id,
   };
 };
+const updateDarSwaNotesItem = async () => {
+  const isValid = await validateForm();
+  if (!isValid) return;
+  const response = await updateSwaNote(inputData.value.dynamicInput);
+  if (response) {
+    handleSnackBar("Note updated successfully!", "success");
+    const index = swaNotes.value.findIndex(
+      (note) => note.id === inputData.value.dynamicInput.id
+    );
+    swaNotes.value[index] = response;
+    dialogs.value.updateDialog.isVisible = false;
+  }
+};
+
 const validateForm = async () => {
   const form = await swaForm.value.validate();
   if (!form.valid) return false;
@@ -356,6 +387,11 @@ const handleSnackBar = (message, color) => {
   snackBarData.value.text = message;
   snackBarData.value.type = color;
   snackBarData.value.isVisible = true;
+};
+const handleSwaNoteDialogs = async (id, dialogType) => {
+  const response = await getSwaNoteById(id);
+  inputData.value.dynamicInput = response;
+  dialogs.value[dialogType].isVisible = true;
 };
 
 onMounted(async () => {

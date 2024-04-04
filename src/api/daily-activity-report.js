@@ -148,13 +148,13 @@ const getSwaNotes = async (id) => {
   return data;
 };
 const getSwaNoteById = async (id) => {
-  const API_URL = `http://localhost:3000/swa-notes/${id}`;
+  const API_URL = `http://localhost:3000/swa-note/${id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const updateSwaNote = async (body) => {
-  const API_URL = `http://localhost:3000/swa-notes`;
+  const API_URL = `http://localhost:3000/swa-note`;
   const response = await fetch(API_URL, {
     method: "PUT",
     headers: {
