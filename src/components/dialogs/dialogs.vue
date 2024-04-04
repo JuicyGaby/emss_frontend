@@ -22,7 +22,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["closeDialog", "handleAction"]);
 onMounted(() => {
-  // console.log(props.dialogData);
+  console.log(props.dialogData);
 });
 const handleAction = () => {
   emit("handleAction", props.dialogData.itemId);

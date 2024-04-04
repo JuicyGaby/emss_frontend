@@ -166,7 +166,7 @@ const updateSwaNote = async (body) => {
   return data;
 };
 const deleteSwaNote = async (id) => {
-  const API_URL = `http://localhost:3000/swa-notes/${id}`;
+  const API_URL = `http://localhost:3000/swa-note/${id}`;
   const response = await fetch(API_URL, {
     method: "DELETE",
   });

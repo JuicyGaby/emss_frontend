@@ -118,7 +118,7 @@
                         >Create Note</v-btn
                       >
                     </v-card-actions>
-                    {{ inputData.note }}
+                    <!-- {{ inputData.note }} -->
                   </v-col>
                 </v-row>
               </v-form>
@@ -173,7 +173,51 @@
       </v-card>
     </v-dialog>
     <!-- read -->
+    <v-dialog v-model="dialogs.readDialog.isVisible" width="600">
+      <v-card>
+        <v-toolbar color="secondary">
+          <v-toolbar-title>Read Note</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialogs.readDialog.isVisible = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-combobox
+                  :items="userServicesAvailed"
+                  item-title="service_name"
+                  :return-object="false"
+                  label="Note Title"
+                  variant="outlined"
+                  counter="50"
+                  v-model="inputData.dynamicInput.note_title"
+                  readonly
+                ></v-combobox>
+                <v-textarea
+                  label="Note"
+                  variant="outlined"
+                  counter="500"
+                  v-model="inputData.dynamicInput.note_body"
+                  readonly
+                ></v-textarea>
+                <!-- {{ inputData.dynamicInput }} -->
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <!-- delete -->
+    <v-dialog v-model="dialogs.deleteDialog.isVisible" width="500">
+      <dynamicDialogs
+        :dialogData="dialogData"
+        @handleAction="deleteDarSwaNotesItem"
+        @closeDialog="dialogs.deleteDialog.isVisible = false"
+      />
+    </v-dialog>
     <!-- add services -->
     <v-dialog v-model="dialogs.addServicesDialog.isVisible" width="600">
       <v-card>
@@ -206,7 +250,7 @@
                       Add Service</v-btn
                     >
                   </v-card-actions>
-                  {{ inputData.services }}
+                  <!-- {{ inputData.services }} -->
                 </v-col>
               </v-row>
             </v-form>
@@ -253,12 +297,11 @@ const snackBarData = ref({
   type: "",
 });
 const dialogData = ref({
-  isVisible: false,
-  type: "",
-  text: "",
-  buttonColor: "",
-  buttonText: "",
-  itemId: null,
+  text: "Are you sure to delete this note",
+  type: "warning",
+  buttonText: "Delete",
+  buttonColor: "error",
+  itemId: "",
 });
 const inputData = ref({
   note: {
@@ -377,6 +420,15 @@ const updateDarSwaNotesItem = async () => {
     dialogs.value.updateDialog.isVisible = false;
   }
 };
+const deleteDarSwaNotesItem = async (id) => {
+  // console.log(id);
+  const response = await deleteSwaNote(id);
+  if (response) {
+    handleSnackBar("Note deleted successfully!", "success");
+    swaNotes.value = swaNotes.value.filter((note) => note.id !== id);
+    dialogs.value.deleteDialog.isVisible = false;
+  }
+};
 
 const validateForm = async () => {
   const form = await swaForm.value.validate();
@@ -391,6 +443,7 @@ const handleSnackBar = (message, color) => {
 const handleSwaNoteDialogs = async (id, dialogType) => {
   const response = await getSwaNoteById(id);
   inputData.value.dynamicInput = response;
+  dialogData.value.itemId = id;
   dialogs.value[dialogType].isVisible = true;
 };
 
