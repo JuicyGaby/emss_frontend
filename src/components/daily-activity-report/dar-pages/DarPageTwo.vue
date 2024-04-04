@@ -126,7 +126,7 @@
             <v-btn color="secondary" @click="createNoteItem">Create Note</v-btn>
           </v-card-actions>
 
-          {{ noteCreateData }}
+          <!-- {{ noteCreateData }} -->
         </v-card-text>
       </v-form>
     </v-card>
@@ -162,6 +162,7 @@
             item-title="service_name"
             :return-object="false"
             v-model="noteData[key]"
+            :rules="[inputRules.required]"
           ></v-combobox>
           <v-textarea
             v-for="(field, key) in inputFields.textAreas"
@@ -223,27 +224,35 @@
     <v-card>
       <v-toolbar density="compact" color="secondary">
         <v-toolbar-title> Add Service </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="dialogs.createService.isVisible = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-toolbar>
-      <v-card-text>
-        <v-autocomplete
-          chips
-          multiple
-          label="Services"
-          variant="outlined"
-          density="compact"
-          :items="servicesItems"
-          item-title="service_name"
-          item-value="id"
-          v-model="servicesInput.services"
-        >
-        </v-autocomplete>
-        <v-card-actions class="justify-end">
-          <v-btn color="secondary" @click="createDarServices"
-            >Add Service</v-btn
+      <v-form ref="noteForm">
+        <v-card-text>
+          <v-autocomplete
+            chips
+            multiple
+            closable-chips
+            label="Services"
+            variant="outlined"
+            density="compact"
+            :items="servicesItems"
+            item-title="service_name"
+            item-value="id"
+            v-model="servicesInput.services"
+            :rules="[inputRules.required, inputRules.vselect]"
           >
-        </v-card-actions>
-        <!-- {{ servicesInput }} -->
-      </v-card-text>
+          </v-autocomplete>
+          <v-card-actions class="justify-end">
+            <v-btn color="secondary" @click="createDarServices"
+              >Add Service</v-btn
+            >
+          </v-card-actions>
+          <!-- {{ servicesInput }} -->
+        </v-card-text>
+      </v-form>
     </v-card>
   </v-dialog>
   <snackBars :snackBarData="snackBarData" />
@@ -261,6 +270,7 @@ import {
   getDarServicesByDarId,
   createDarServicesItem,
 } from "@/api/daily-activity-report";
+import { inputRules } from "@/utils/constants";
 import snackBars from "@/components/dialogs/snackBars.vue";
 import dynamicDialogs from "@/components/dialogs/dialogs.vue";
 const props = defineProps({
@@ -329,14 +339,6 @@ const dialogs = ref({
     isVisible: false,
   },
 });
-const inputRules = {
-  required: (value) => !!value || "Required.",
-  // create a rule for max length of characters
-  maxLengthTextField: (value) =>
-    value.length <= 20 || "Max 20 characters are allowed",
-  maxLengthTextArea: (value) =>
-    value.length <= 500 || "Max 500 characters are allowed",
-};
 const inputFields = {
   textFields: {
     note_title: {
@@ -372,8 +374,13 @@ const getDarServicesByDarIdItems = async (dar_id) => {
     (service) => service.id
   );
 };
-
+const getDarNotesItems = async (dar_id) => {
+  const response = await getDarNotes(dar_id);
+  noteFetchData.value = response;
+};
 const createDarServices = async () => {
+  const isValid = await validateForm();
+  if (!isValid) return;
   const response = await createDarServicesItem(servicesInput.value);
   if (response) {
     handleSnackBar("Service added successfully", "success");
@@ -399,10 +406,7 @@ const createNoteItem = async () => {
     };
   }
 };
-const getDarNotesItems = async (dar_id) => {
-  const response = await getDarNotes(dar_id);
-  noteFetchData.value = response;
-};
+
 const editNoteItem = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
