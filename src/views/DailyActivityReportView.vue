@@ -112,7 +112,11 @@
 
     <!-- create swa dialog -->
     <v-dialog v-model="dialogs.swa.create" transition="dialog-transition">
-      <CreateSWADialog />
+      <CreateSWADialog
+        @closeDialog="dialogs.swa.create = false"
+        @addSwa="handlePushItem"
+        @editSwa="handleEditItem"
+      />
     </v-dialog>
     <!-- update swa dialog -->
     <v-dialog
@@ -122,7 +126,8 @@
       transition="dialog-transition"
       :swa_id="swa_id"
     >
-      <EditSWADialog :swa_id="swa_id" />
+      <EditSWADialog :swa_id="swa_id" @closeDialog="dialogs.swa.edit = false" />
+      />
     </v-dialog>
     <!-- view swa dialog -->
   </div>
@@ -226,12 +231,20 @@ const handlePushItem = (type, item) => {
   if (type === "dar") {
     patients.value.push(item);
   } else if (type === "swa") {
+    console.log("pushing", item);
     swaItems.value.push(item);
   }
 };
 const handleEditDar = (dar_id) => {
   dialogs.value.dar.create = false;
   editDailyActivityReport(dar_id);
+};
+const handleEditItem = (type, itemId) => {
+  if (type === "dar") {
+    editDailyActivityReport(itemId);
+  } else if (type === "swa") {
+    editSocialWorkAdministration(itemId);
+  }
 };
 const handleCloseDialog = (type) => {
   dialogs.value[type].create = false;

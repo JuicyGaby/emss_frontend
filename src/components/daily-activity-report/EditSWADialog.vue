@@ -4,7 +4,7 @@
       <v-toolbar color="secondary">
         <v-toolbar-title>Edit SWA</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn icon @click="">
+        <v-btn icon @click="emit('closeDialog')">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
@@ -283,6 +283,7 @@ import dynamicDialogs from "../dialogs/dialogs.vue";
 const props = defineProps({
   swa_id: Number,
 });
+const emit = defineEmits(["closeDialog"]);
 // variables
 const authentication = userAuthentication();
 const swaForm = ref(null);
