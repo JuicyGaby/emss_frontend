@@ -56,10 +56,21 @@
             </v-data-table>
           </v-window-item>
           <v-window-item :value="2">
-            <div class="ma-3">
-              <v-btn color="grey" @click="dialogs.swa.create = true"
+            <div class="ma-3 d-flex justify-space-between align-center">
+              <v-btn color="secondary" @click="dialogs.swa.create = true"
                 >Create Entry</v-btn
               >
+              <div class="d-flex align-center ga-2 justify-center">
+                <v-text-field
+                  type="date"
+                  variant="outlined"
+                  density="comfortable"
+                  v-model="dateInputs.swa"
+                ></v-text-field>
+                <v-btn color="grey" class="mb-6" @click="getDarSwaItemByDate()"
+                  >Filter Date</v-btn
+                >
+              </div>
             </div>
             <v-data-table
               :headers="dataTable.swa.headers"
@@ -131,12 +142,19 @@
     </v-dialog>
     <!-- view swa dialog -->
   </div>
+  <snack-bars :snackBarData="snackBarData" />
 </template>
 <script setup>
-import { getDailyActivityReport, getDarSwa } from "@/api/daily-activity-report";
+import {
+  getDailyActivityReport,
+  getDarSwa,
+  getDarSwaByDate,
+} from "@/api/daily-activity-report";
 import moment from "moment";
 import { ref, onMounted, computed } from "vue";
-
+import { snackBarData } from "@/utils/constants";
+// components
+import snackBars from "@/components/dialogs/snackBars.vue";
 // DAR Components
 import CreateDARDialog from "@/components/daily-activity-report/CreateDARDialog.vue";
 import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue";
@@ -155,6 +173,12 @@ const tabValue = ref(1);
 let dar_id = ref(0);
 let swa_id = ref(0);
 const search = ref("");
+
+// objects
+const dateInputs = ref({
+  dar: moment().format("YYYY-MM-DD"),
+  swa: moment().format("YYYY-MM-DD"),
+});
 const dataTable = {
   headers: [
     { title: "Number", value: "Number" },
@@ -184,6 +208,8 @@ const dialogs = ref({
     view: false,
   },
 });
+
+// functions
 const getDarItems = async () => {
   const response = await getDailyActivityReport();
   if (response.length > 0) {
@@ -195,6 +221,16 @@ const getSwaItems = async () => {
   if (response.length > 0) {
     swaItems.value = response;
   }
+};
+const getDarSwaItemByDate = async () => {
+  console.log(dateInputs.value.swa);
+  const response = await getDarSwaByDate(dateInputs.value.swa);
+  handleSnackBar(`Successfully  fetched ${response.length} Items`, "primary");
+  if (response.length > 0) {
+    swaItems.value = response;
+    return;
+  }
+  swaItems.value = [];
 };
 
 const patientsWithNumbers = computed(() => {
@@ -226,6 +262,11 @@ const editSocialWorkAdministration = (item) => {
   dialogs.value.swa.edit = true;
 };
 
+const handleSnackBar = (message, color) => {
+  snackBarData.value.text = message;
+  snackBarData.value.type = color;
+  snackBarData.value.isVisible = true;
+};
 // emit
 const handlePushItem = (type, item) => {
   if (type === "dar") {

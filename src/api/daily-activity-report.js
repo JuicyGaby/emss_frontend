@@ -126,6 +126,12 @@ const getDarSwaId = async (id) => {
   const data = await response.json();
   return data;
 };
+const getDarSwaByDate = async (date) => {
+  const API_URL = `http://localhost:3000/dar_swa_by_date/${date}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
 
 // SWA NOTES
 
@@ -236,4 +242,5 @@ export {
   updateSwaNote,
   deleteSwaNote,
   createSwaServicesItem,
+  getDarSwaByDate,
 };
