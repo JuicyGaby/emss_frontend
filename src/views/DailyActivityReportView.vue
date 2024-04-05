@@ -13,14 +13,30 @@
       <v-card-text>
         <v-window v-model="tabValue">
           <v-window-item :value="1">
-            <div class="ma-3 d-flex justify-space-between align-center">
-              <div class="">
+            <div class="ma-3">
+              <div class="d-flex justify-space-between align-center">
                 <v-btn
-                  color="grey"
+                  color="secondary"
                   prepend-icon="mdi-folder-plus"
                   @click="dialogs.dar.create = true"
+                  class="mb-6"
                   >Create Entry</v-btn
                 >
+                <div class="d-flex align-center ga-2">
+                  <v-text-field
+                    type="date"
+                    variant="outlined"
+                    density="compact"
+                    v-model="dateInputs.dar"
+                  ></v-text-field>
+                  <v-btn
+                    color="grey"
+                    class="mb-6"
+                    @click="getDarItemByDate()"
+                    prepend-icon="mdi-calendar-range"
+                    >Filter Date</v-btn
+                  >
+                </div>
               </div>
               <v-text-field
                 prepend-inner-icon="mdi-magnify"
@@ -57,17 +73,24 @@
           </v-window-item>
           <v-window-item :value="2">
             <div class="ma-3 d-flex justify-space-between align-center">
-              <v-btn color="secondary" @click="dialogs.swa.create = true"
+              <v-btn
+                color="secondary"
+                @click="dialogs.swa.create = true"
+                prepend-icon="mdi-folder-plus"
                 >Create Entry</v-btn
               >
               <div class="d-flex align-center ga-2 justify-center">
                 <v-text-field
                   type="date"
                   variant="outlined"
-                  density="comfortable"
+                  density="compact"
                   v-model="dateInputs.swa"
                 ></v-text-field>
-                <v-btn color="grey" class="mb-6" @click="getDarSwaItemByDate()"
+                <v-btn
+                  color="grey"
+                  class="mb-6"
+                  @click="getDarSwaItemByDate()"
+                  prepend-icon="mdi-calendar-range"
                   >Filter Date</v-btn
                 >
               </div>
@@ -149,6 +172,7 @@ import {
   getDailyActivityReport,
   getDarSwa,
   getDarSwaByDate,
+  getDailyActivityReportByDate,
 } from "@/api/daily-activity-report";
 import moment from "moment";
 import { ref, onMounted, computed } from "vue";
@@ -182,7 +206,7 @@ const dateInputs = ref({
 const dataTable = {
   headers: [
     { title: "Number", value: "Number" },
-    // { title: "Admission Date-Time", value: "admission_date" },
+    { title: "Admission Date-Time", value: "date_created" },
     { title: "Patient Name", value: "fullname" },
     { title: "Created By", value: "created_by" },
     { title: "Operation", value: "operation" },
@@ -231,6 +255,15 @@ const getDarSwaItemByDate = async () => {
     return;
   }
   swaItems.value = [];
+};
+const getDarItemByDate = async () => {
+  const response = await getDailyActivityReportByDate(dateInputs.value.dar);
+  handleSnackBar(`Successfully  fetched ${response.length} Items`, "primary");
+  if (response.length > 0) {
+    patients.value = response;
+    return;
+  }
+  patients.value = [];
 };
 
 const patientsWithNumbers = computed(() => {

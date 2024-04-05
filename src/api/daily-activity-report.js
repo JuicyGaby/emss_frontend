@@ -35,6 +35,12 @@ const getDailyActivityReportById = async (id) => {
   const data = await response.json();
   return data;
 };
+const getDailyActivityReportByDate = async (date) => {
+  const API_URL = `http://localhost:3000/daily-activity-report-by-date/${date}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
 const updateDailyActivityReport = async (body) => {
   const API_URL = `http://localhost:3000/daily-activity-report`;
   const response = await fetch(API_URL, {
@@ -243,4 +249,6 @@ export {
   deleteSwaNote,
   createSwaServicesItem,
   getDarSwaByDate,
+  getDailyActivityReportByDate,
+  
 };
