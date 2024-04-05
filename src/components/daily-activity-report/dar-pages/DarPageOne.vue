@@ -3,107 +3,121 @@
     <v-card>
       <v-card-text>
         <v-container>
-          <v-row class="">
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <v-text-field
-                label="Admission Date"
-                variant="outlined"
-                density="compact"
-                style="width: 400px"
-                type="date-time"
-                v-model="darData.date_created"
-                readonly
-              ></v-text-field>
-              <v-text-field
-                v-for="(field, key) in inputFields.part1.textFields"
-                :key="key"
-                :label="field.label"
-                variant="outlined"
-                density="compact"
-                style="width: 400px"
-                :type="field.type"
-                v-model="patientData[key]"
-              ></v-text-field>
-              <v-select
-                v-for="(field, key) in inputFields.part1.selectFields"
-                :key="key"
-                :label="field.label"
-                :items="field.items"
-                variant="outlined"
-                density="compact"
-                style="width: 400px"
-                v-model="patientData[key]"
-                autocomplete
-              ></v-select>
-              <!-- dar values -->
-              <v-select
-                v-for="(field, key) in inputFields.part1.darSelectFields"
-                :key="key"
-                :label="field.label"
-                :items="field.items"
-                variant="outlined"
-                density="compact"
-                style="width: 400px"
-                autocomplete
-                v-model="darData[key]"
-              ></v-select>
-              <v-select
-                v-for="(field, key) in inputFields.part1.titleValueFields"
-                :key="key"
-                :label="field.label"
-                :items="field.items"
-                item-title="title"
-                item-value="value"
-                variant="outlined"
-                density="compact"
-                style="width: 400px"
-                autocomplete
-                v-model="darData[key]"
-              ></v-select>
-              <v-select
-                v-for="(field, key) in inputFields.part2.selectFields"
-                :key="key"
-                :label="field.label"
-                :items="field.items"
-                variant="outlined"
-                density="compact"
-                style="width: 400px"
-                v-model="darData[key]"
-                autocomplete
-              ></v-select>
-              <v-text-field
-                v-for="(field, key) in inputFields.part2.textFields"
-                :key="key"
-                :label="field.label"
-                variant="outlined"
-                density="compact"
-                style="width: 400px"
-                :type="field.type"
-                v-model="darData[key]"
-              ></v-text-field>
-              <v-text-field
-                v-for="(field, key) in inputFields.part2.timeFields"
-                :key="key"
-                :label="field.label"
-                variant="outlined"
-                density="compact"
-                type="time"
-                style="width: 400px"
-                v-model="darData[key]"
-              ></v-text-field>
-              <v-textarea
-                label="Remarks"
-                variant="outlined"
-                style="width: 400px"
-                density="compact"
-                v-model="darData.remarks"
-              ></v-textarea>
-            </v-col>
-            <v-col>
-              <v-btn color="primary" @click="">Update Dar</v-btn>
-            </v-col>
-            {{ darData }}
-          </v-row>
+          <v-form ref="darForm">
+            <v-row class="">
+              <v-col cols="12" class="d-flex flex-wrap ga-2">
+                <!-- time fields -->
+                <v-text-field
+                  v-for="(field, key) in inputFields.part2.timeFields"
+                  :key="key"
+                  :label="field.label"
+                  variant="outlined"
+                  density="compact"
+                  type="time"
+                  style="width: 400px"
+                  v-model="darData[key]"
+                  :rules="[inputRules.required]"
+                ></v-text-field>
+                <v-text-field
+                  label="Admission Date"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 400px"
+                  type="date-time"
+                  v-model="darData.date_created"
+                  readonly
+                  :rules="[inputRules.required]"
+                ></v-text-field>
+                <v-text-field
+                  v-for="(field, key) in inputFields.part1.textFields"
+                  :key="key"
+                  :label="field.label"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 400px"
+                  :type="field.type"
+                  v-model="patientData[key]"
+                  :rules="[inputRules.required]"
+                ></v-text-field>
+                <v-select
+                  v-for="(field, key) in inputFields.part1.selectFields"
+                  :key="key"
+                  :label="field.label"
+                  :items="field.items"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 400px"
+                  v-model="patientData[key]"
+                  autocomplete
+                  :rules="[inputRules.required]"
+                ></v-select>
+                <!-- dar values -->
+                <v-select
+                  v-for="(field, key) in inputFields.part1.darSelectFields"
+                  :key="key"
+                  :label="field.label"
+                  :items="field.items"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 400px"
+                  autocomplete
+                  v-model="darData[key]"
+                  :rules="[inputRules.required]"
+                ></v-select>
+                <v-select
+                  v-for="(field, key) in inputFields.part1.titleValueFields"
+                  :key="key"
+                  :label="field.label"
+                  :items="field.items"
+                  item-title="title"
+                  item-value="value"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 400px"
+                  autocomplete
+                  v-model="darData[key]"
+                  :rules="[inputRules.required]"
+                ></v-select>
+                <v-select
+                  v-for="(field, key) in inputFields.part2.selectFields"
+                  :key="key"
+                  :label="field.label"
+                  :items="field.items"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 400px"
+                  v-model="darData[key]"
+                  autocomplete
+                  :rules="[inputRules.required]"
+                ></v-select>
+                <v-text-field
+                  v-for="(field, key) in inputFields.part2.textFields"
+                  :key="key"
+                  :label="field.label"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 400px"
+                  :type="field.type"
+                  v-model="darData[key]"
+                  :rules="[inputRules.required]"
+                ></v-text-field>
+                <v-textarea
+                  label="Remarks"
+                  variant="outlined"
+                  style="width: 400px"
+                  density="compact"
+                  v-model="darData.remarks"
+                  :rules="[inputRules.required]"
+                ></v-textarea>
+              </v-col>
+              <v-col>
+                <v-btn color="primary" @click="updateDailyActivityReportItem"
+                  >Update Dar</v-btn
+                >
+              </v-col>
+              <!-- {{ darData }} -->
+            </v-row>
+          </v-form>
         </v-container>
       </v-card-text>
     </v-card>
@@ -114,6 +128,7 @@
 import moment from "moment";
 import snackBars from "@/components/dialogs/snackBars.vue";
 import { ref, onMounted, watch } from "vue";
+import { inputRules, validateForm } from "@/utils/constants";
 import {
   getDailyActivityReportById,
   updateDailyActivityReport,
@@ -122,22 +137,17 @@ const props = defineProps({
   dar_id: Number,
 });
 onMounted(async () => {
-  // log current time using moment
-  console.log("current time", moment().format("HH:mm"));
   await fetchDarData();
 });
+const darForm = ref(null);
+const darData = ref({});
+const patientData = ref({});
 const tabValue = ref(0);
 const snackBarData = ref({
   isVisible: false,
   type: "",
   text: "",
 });
-
-const darData = ref({
-  id: props.dar_id,
-  // use moment to capture current time
-});
-const patientData = ref({});
 const inputFields = {
   part1: {
     textFields: {
@@ -152,12 +162,14 @@ const inputFields = {
       },
       age: {
         label: "Age",
+        type: "number",
       },
       occupation: {
         label: "Occupation",
       },
       monthly_income: {
         label: "Monthly Income",
+        type: "number",
       },
       religion: {
         label: "Religion",
@@ -297,6 +309,8 @@ const inputFields = {
   },
 };
 const updateDailyActivityReportItem = async () => {
+  const isValid = await validateForm(darForm);
+  if (!isValid) return;
   const response = await updateDailyActivityReport(darData.value);
   if (response) {
     console.log("update", response);
@@ -305,8 +319,10 @@ const updateDailyActivityReportItem = async () => {
 };
 const fetchDarData = async () => {
   const response = await getDailyActivityReportById(props.dar_id);
-  console.log("response", response.patients);
   darData.value = response;
+  if (!response.interview_start_time) {
+    darData.value.interview_start_time = moment().format("HH:mm");
+  }
   patientData.value = darData.value.patients;
 };
 const handleSnackBar = (type, text) => {

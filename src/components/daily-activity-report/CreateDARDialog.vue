@@ -141,7 +141,7 @@
                       density="compact"
                       style="width: 500px"
                       v-model="darData.services"
-                      :rules="[inputRules.required]"
+                      :rules="[inputRules.required, inputRules.vselect]"
                     ></v-autocomplete>
                   </v-col>
                   <v-card-actions class="justify-end">
@@ -163,7 +163,11 @@
   <!-- dialog -->
   <div>
     <v-dialog v-model="dialogs.isCreated" width="auto" persistent>
-      <promptDialogs :dialogData="dialogData" @handleAction="editDarItem" />
+      <promptDialogs
+        :dialogData="dialogData"
+        @handleAction="editDarItem"
+        @closeDialog="handleCloseDialog"
+      />
     </v-dialog>
   </div>
   <snackBars :snackBarData="snackBarData" />

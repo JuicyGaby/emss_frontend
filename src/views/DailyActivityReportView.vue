@@ -177,6 +177,7 @@ import {
 import moment from "moment";
 import { ref, onMounted, computed } from "vue";
 import { snackBarData } from "@/utils/constants";
+import { userAuthentication } from "@/stores/session";
 // components
 import snackBars from "@/components/dialogs/snackBars.vue";
 // DAR Components
@@ -197,6 +198,8 @@ const tabValue = ref(1);
 let dar_id = ref(0);
 let swa_id = ref(0);
 const search = ref("");
+const authentication = userAuthentication();
+const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
 
 // objects
 const dateInputs = ref({
@@ -215,7 +218,7 @@ const dataTable = {
     headers: [
       { title: "Number", value: "Number" },
       { title: "Admission Date-Time", value: "date_created" },
-      { title: "Creator", value: "creator_name" },
+      { title: "Social Worker", value: "creator_name" },
       { title: "Operation", value: "operation" },
     ],
   },
