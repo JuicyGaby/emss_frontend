@@ -33,6 +33,7 @@
                       <template v-slot:[`item.operation`]="{ item }">
                         <div class="d-flex ga-5">
                           <v-icon
+                            v-if="item.creator_id === authentication.user.id"
                             color="primary"
                             @click="handleNoteDialogs(item.id, 'editNote')"
                             >mdi-pencil</v-icon
@@ -43,6 +44,7 @@
                             >mdi-eye</v-icon
                           >
                           <v-icon
+                            v-if="item.creator_id === authentication.user.id"
                             color="secondary"
                             @click="handleNoteDialogs(item.id, 'deleteNote')"
                             >mdi-delete</v-icon

@@ -49,6 +49,22 @@
                       :rules="inputFields.creation.civil_status.rules"
                       v-model="patientCreationData.civil_status"
                     ></v-select>
+                    <v-select
+                      :label="
+                        inputFields.creation.highest_education_level.label
+                      "
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      :items="
+                        inputFields.creation.highest_education_level.items
+                      "
+                      :rules="
+                        inputFields.creation.highest_education_level.rules
+                      "
+                      v-model="patientCreationData.highest_education_level"
+                    ></v-select>
+
                     <v-autocomplete
                       chips
                       multiple
@@ -59,9 +75,9 @@
                       item-value="id"
                       variant="outlined"
                       density="compact"
-                      style="width: 500px"
+                      style="width: 200px"
                       v-model="patientCreationData.services"
-                      :rules="[inputRules.required]"
+                      :rules="[inputRules.required, inputRules.vselect]"
                     ></v-autocomplete>
                   </v-col>
                 </v-form>
@@ -71,7 +87,7 @@
                   >Create Patient</v-btn
                 >
               </v-card-actions>
-              <!-- {{ patientCreationData }} -->
+              {{ patientCreationData }}
             </v-container>
           </v-card-text>
         </v-window-item>
@@ -250,6 +266,11 @@ const inputFields = {
         type: "number",
         rules: [inputRules.required, inputRules.invalidNegative],
       },
+      occupation: {
+        label: "Occupation",
+        type: "text",
+        rules: [inputRules.required, inputRules.characters],
+      },
     },
     sex: {
       label: "Sex",
@@ -259,6 +280,17 @@ const inputFields = {
     civil_status: {
       label: "Civil Status",
       items: ["Child", "Single", "Married", "Widowed", "Separated"],
+      rules: [inputRules.required],
+    },
+    highest_education_level: {
+      label: "Education Attainment",
+      items: [
+        "Elementary",
+        "High School",
+        "College",
+        "Vocational",
+        "Post Graduate",
+      ],
       rules: [inputRules.required],
     },
   },

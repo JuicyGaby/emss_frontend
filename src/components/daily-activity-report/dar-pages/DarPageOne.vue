@@ -6,6 +6,15 @@
           <v-row class="">
             <v-col cols="12" class="d-flex flex-wrap ga-2">
               <v-text-field
+                label="Admission Date"
+                variant="outlined"
+                density="compact"
+                style="width: 400px"
+                type="date-time"
+                v-model="darData.date_created"
+                readonly
+              ></v-text-field>
+              <v-text-field
                 v-for="(field, key) in inputFields.part1.textFields"
                 :key="key"
                 :label="field.label"
@@ -26,6 +35,18 @@
                 v-model="patientData[key]"
                 autocomplete
               ></v-select>
+              <!-- dar values -->
+              <v-select
+                v-for="(field, key) in inputFields.part1.darSelectFields"
+                :key="key"
+                :label="field.label"
+                :items="field.items"
+                variant="outlined"
+                density="compact"
+                style="width: 400px"
+                autocomplete
+                v-model="darData[key]"
+              ></v-select>
               <v-select
                 v-for="(field, key) in inputFields.part1.titleValueFields"
                 :key="key"
@@ -37,9 +58,8 @@
                 density="compact"
                 style="width: 400px"
                 autocomplete
+                v-model="darData[key]"
               ></v-select>
-            </v-col>
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
               <v-select
                 v-for="(field, key) in inputFields.part2.selectFields"
                 :key="key"
@@ -48,6 +68,7 @@
                 variant="outlined"
                 density="compact"
                 style="width: 400px"
+                v-model="darData[key]"
                 autocomplete
               ></v-select>
               <v-text-field
@@ -58,19 +79,30 @@
                 density="compact"
                 style="width: 400px"
                 :type="field.type"
+                v-model="darData[key]"
+              ></v-text-field>
+              <v-text-field
+                v-for="(field, key) in inputFields.part2.timeFields"
+                :key="key"
+                :label="field.label"
+                variant="outlined"
+                density="compact"
+                type="time"
+                style="width: 400px"
+                v-model="darData[key]"
               ></v-text-field>
               <v-textarea
                 label="Remarks"
                 variant="outlined"
                 style="width: 400px"
                 density="compact"
+                v-model="darData.remarks"
               ></v-textarea>
             </v-col>
             <v-col>
-              <v-btn color="primary" @click=""
-                >Update Dar</v-btn
-              >
+              <v-btn color="primary" @click="">Update Dar</v-btn>
             </v-col>
+            {{ darData }}
           </v-row>
         </v-container>
       </v-card-text>
@@ -79,6 +111,7 @@
   <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
+import moment from "moment";
 import snackBars from "@/components/dialogs/snackBars.vue";
 import { ref, onMounted, watch } from "vue";
 import {
@@ -89,6 +122,8 @@ const props = defineProps({
   dar_id: Number,
 });
 onMounted(async () => {
+  // log current time using moment
+  console.log("current time", moment().format("HH:mm"));
   await fetchDarData();
 });
 const tabValue = ref(0);
@@ -100,15 +135,12 @@ const snackBarData = ref({
 
 const darData = ref({
   id: props.dar_id,
+  // use moment to capture current time
 });
 const patientData = ref({});
 const inputFields = {
   part1: {
     textFields: {
-      date_created: {
-        label: "Admission Date",
-        type: "datetime-local",
-      },
       first_name: {
         label: "First Name",
       },
@@ -121,8 +153,14 @@ const inputFields = {
       age: {
         label: "Age",
       },
-      address: {
-        label: "Address",
+      occupation: {
+        label: "Occupation",
+      },
+      monthly_income: {
+        label: "Monthly Income",
+      },
+      religion: {
+        label: "Religion",
       },
     },
     selectFields: {
@@ -143,6 +181,19 @@ const inputFields = {
           "CLP - Same Sex",
         ],
       },
+      highest_education_level: {
+        label: " Educational Attainment",
+        items: [
+          "Undergraduate",
+          "Elementary",
+          "High School",
+          "Vocational",
+          "College",
+          "Post Graduate",
+        ],
+      },
+    },
+    darSelectFields: {
       area: {
         label: "Area",
         items: ["Basic Ward", "Non-Basic Ward", "OP", "ER/ED"],
@@ -151,8 +202,8 @@ const inputFields = {
         label: "Case Type",
         items: ["New Case", "Old Case", "Case Closed"],
       },
-      contributor_type: {
-        label: "Indirect Contributor",
+      indirect_contributor: {
+        label: "Contributor type",
         items: [
           "Indirect - POS",
           "Indirect - Sponsored",
@@ -193,37 +244,20 @@ const inputFields = {
   },
   part2: {
     textFields: {
-      religion: {
-        label: "Religion",
-      },
-      occupation: {
-        label: "Occupation",
-      },
-      household_size: {
+      house_hold_size: {
         label: "Household Size",
       },
-      monthly_income: {
-        label: "Monthly Income",
-      },
-      referral_source: {
+      source_of_referral: {
         label: "Referral Source",
       },
       diagnosis: {
         label: "Diagnosis",
       },
-      informant_name: {
+      informant: {
         label: "Informant Name",
       },
       relationship_to_patient: {
         label: "Relationship to Patient",
-      },
-      interview_start_time: {
-        label: "Interview Start Time",
-        type: "time",
-      },
-      interview_end_time: {
-        label: "Interview End Time",
-        type: "time",
       },
     },
     selectFields: {
@@ -249,16 +283,15 @@ const inputFields = {
           "Others",
         ],
       },
-      educational_attainment: {
-        label: " Educational Attainment",
-        items: [
-          "Undergraduate",
-          "Elementary",
-          "High School",
-          "Vocational",
-          "College",
-          "Post Graduate",
-        ],
+    },
+    timeFields: {
+      interview_start_time: {
+        label: "Interview Start Time",
+        type: "time",
+      },
+      interview_end_time: {
+        label: "Interview End Time",
+        type: "time",
       },
     },
   },
@@ -272,6 +305,7 @@ const updateDailyActivityReportItem = async () => {
 };
 const fetchDarData = async () => {
   const response = await getDailyActivityReportById(props.dar_id);
+  console.log("response", response.patients);
   darData.value = response;
   patientData.value = darData.value.patients;
 };
