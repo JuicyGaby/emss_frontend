@@ -1,41 +1,52 @@
 <template lang="">
-  <div class="d-flex flex-column">
-    <v-btn
-      size="x-large"
-      color="secondary"
-      prepend-icon="mdi-account-plus"
-      @click="createDialog = !createDialog"
-      >Assess Patient</v-btn
-    >
-    <!-- patient list -->
-    <v-card elevation-10>
-      <div class="d-flex justify-space-between pa-5">
-        <v-card-title class="d-flex align-center ga-5" primary-title>
-          <v-icon size="x-large" icon="mdi-account-group"></v-icon>
-          <h1 class="">Patient List</h1>
-        </v-card-title>
-        <v-text-field
-          style="max-width: 400px"
-          name="name"
-          label="Search Patient"
-          id="id"
-          flat
-          v-model="searchInput"
-          prepend-inner-icon="mdi-magnify"
-          variant="outlined"
-        ></v-text-field>
+  <div style="width: 100%">
+    <v-card>
+      <v-toolbar color="secondary" class="d-flex align-center px-5">
+        <v-icon size="x-large" icon="mdi-account-group" class="mr-5"></v-icon>
+        <h1 class="">Patient List</h1>
+      </v-toolbar>
+      <div class="ma-3 d-flex justify-space-between align-center">
+        <div class="">
+          <v-btn
+            color="secondary"
+            prepend-icon="mdi-account-plus"
+            @click="createDialog = !createDialog"
+            >Assess Patient</v-btn
+          >
+        </div>
+        <v-form ref="searchForm">
+          <div class="d-flex ga-2">
+            <v-text-field
+              v-for="(item, key) in inputFields.search"
+              :key="key"
+              :label="item.label"
+              v-model="searchInput[key]"
+              density="compact"
+              style="width: 200px"
+              variant="outlined"
+              @keyup.enter="searchPatientData"
+            ></v-text-field>
+            <v-btn
+              color="grey"
+              @click="searchPatientData"
+              :disabled="!searchInput.first_name && !searchInput.last_name"
+            >
+              Search
+            </v-btn>
+            <!-- {{ searchInput }} -->
+          </div>
+        </v-form>
       </div>
       <v-divider></v-divider>
       <v-card-text class="d-flex align-end">
         <v-data-table
           width="100%"
-          :search="searchInput"
           :loading="isLoading"
           :headers="tableHeaders"
           :items="patientData"
-          items-per-page="5"
+          items-per-page="10"
           density="comfortable"
-          :items-per-page-options="[5, 10, 15]"
+          :items-per-page-options="[5, 10]"
         >
           <template v-slot:[`item.operation`]="{ item }">
             <div class="d-flex ga-5">
@@ -53,45 +64,38 @@
     <!-- create dialog -->
     <v-dialog v-model="createDialog" width="auto">
       <v-card>
-        <v-card-title>
-          <h3>Initial Assesment</h3>
-        </v-card-title>
+        <v-toolbar color="secondary">
+          <v-toolbar-title> Initial Assesment </v-toolbar-title>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <initialAssesment
             @viewPatient="viewPatient"
             @closeCreateDialog="toggleCreateDialog"
             @addPatient="appendCreatedPatient"
-            :user="props.user"
           ></initialAssesment>
         </v-card-text>
       </v-card>
     </v-dialog>
     <!-- edit dialog -->
     <v-dialog
-      class=""
       v-model="editDialog"
       fullscreen
       scrollable
-      persistent
       transition="dialog-transition"
     >
       <v-card class="">
-        <v-card-text class="">
-          <v-card-title class="pa-0 my-2 d-flex justify-end">
-            <v-btn
-              icon="mdi-close"
-              color="red-lighten-1"
-              size="x-small"
-              @click="editDialog = !editDialog"
-            ></v-btn>
-          </v-card-title>
+        <v-card-text class="pa-0">
+          <v-toolbar color="secondary">
+            <v-toolbar-title> Edit Patient Assesment </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon="mdi-close" @click="editDialog = !editDialog"></v-btn>
+          </v-toolbar>
           <v-tabs
             class="tabs"
             v-model="tab"
             align-tabs="center"
             center-active
-            bg-color="secondary"
             color="black"
             stacked
             fixed-tabs
@@ -153,11 +157,14 @@
       @close="toggleViewAssessment"
     ></PatientAssesmentData>
   </div>
+  <snackBars :snackBarData="snackBarData"></snackBars>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, reactive } from "vue";
-import { getPatients } from "@/api/patients";
+import { ref, onMounted, computed } from "vue";
+import { handleSnackBar, inputRules, validateForm } from "@/utils/constants";
+import { getPatients, searchPatient } from "@/api/patients";
+import snackBars from "@/components/dialogs/snackBars.vue";
 import { useRouter } from "vue-router";
 import initialAssesment from "@/components/assesment-tool/initialAssesment.vue";
 import interviewView from "@/components/assesment-tool/InterviewView.vue";
@@ -172,28 +179,37 @@ import AssesmentSocialFunctioning from "@/components/assesment-tool/AssesmentSoc
 import ProblemsInEnvironment from "@/components/assesment-tool/ProblemsInEnvironment.vue";
 import PatientAssesmentData from "@/components/assesment-tool/PatientAssesmentData.vue";
 
-const props = defineProps({
-  user: Object,
-  authentication: Object,
-});
-
-const searchInput = ref("");
 let patientData = ref([]);
 const isLoading = ref(false);
 const createDialog = ref(false);
 const editDialog = ref(false);
+const tab = ref(0);
+const patientId = ref(0);
+const searchInput = ref({
+  first_name: "",
+  last_name: "",
+});
+const searchForm = ref(null);
+const snackBarData = ref({});
 const dialogs = ref({
   viewAssessment: {
     isVisibile: false,
   },
 });
-const tab = ref(0);
-const patientId = ref(0);
+const inputFields = ref({
+  search: {
+    first_name: {
+      label: "First Name",
+    },
+    last_name: {
+      label: "Last Name",
+    },
+  },
+});
 
 const tableHeaders = [
-  { title: "First Name", value: "first_name" },
-  { title: "Middle Name", value: "middle_name" },
-  { title: "Last Name", value: "last_name" },
+  // { title: "Date Created", value: "created_at" },
+  { title: "Full Name", value: "fullname" },
   { title: "Age", value: "age" },
   { title: "Sex", value: "sex" },
   { title: "Civil Status", value: "civil_status" },
@@ -212,10 +228,6 @@ const tabHeaders = [
   { title: "IV - Problems in the Environment", value: 10 },
 ];
 
-onMounted(() => {
-  fetchPatients();
-});
-
 const toggleEditBtn = (id) => {
   patientId.value = id;
   editDialog.value = !editDialog.value;
@@ -229,7 +241,6 @@ const viewPatientAssessmentData = (patient) => {
   patientId.value = patient.id;
   dialogs.value.viewAssessment.isVisibile = true;
 };
-
 async function fetchPatients() {
   isLoading.value = true;
   try {
@@ -239,10 +250,26 @@ async function fetchPatients() {
     isLoading.value = false;
   }
 }
+async function searchPatientData() {
+  const isValid = await validateForm(searchForm);
+  if (!isValid) return;
+
+  const patients = await searchPatient(searchInput.value);
+  if (patients.length <= 0) {
+    snackBarData.value = handleSnackBar("error", "No data found");
+    patientData.value = [];
+    return;
+  }
+  snackBarData.value = handleSnackBar(
+    "success",
+    `${patients.length} Data found`
+  );
+  patientData.value = patients;
+}
+
 const toggleCreateDialog = () => {
   createDialog.value = !createDialog.value;
 };
-
 const viewPatient = (patientId) => {
   toggleEditBtn(patientId);
 };
@@ -250,24 +277,10 @@ const appendCreatedPatient = (patient) => {
   patientData.value.push(patient.value);
   console.log("successfuly added", patientData.value);
 };
+
+onMounted(async () => {
+  await fetchPatients();
+});
 </script>
 
-<style lang="css" scoped>
-.card-bg {
-  background-color: #3d0f0f;
-}
-.patientsTable {
-  /* border: 1px solid red; */
-  width: 40%;
-}
-.rb {
-  border: 1px solid red;
-}
-.tabs {
-  z-index: 1000;
-}
-th {
-  font-weight: 1000;
-  font-size: 20px;
-}
-</style>
+<style lang="css" scoped></style>

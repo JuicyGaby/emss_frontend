@@ -47,17 +47,21 @@
             </v-hover>
           </v-form>
         </div>
-    </div>
+      </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, onMounted, defineProps, computed } from "vue";
+import { ref, defineProps, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { userLogin, employeeRights } from "@/api/authentication";
-
-const { authentication } = defineProps(["authentication"]);
+import { userAuthentication } from "../stores/session";
+const authentication = userAuthentication();
 const router = useRouter();
+
+onMounted(() => {
+  checkUserSession();
+});
 
 const userInput = ref({});
 const inputFields = ref({
@@ -73,7 +77,6 @@ const inputFields = ref({
     ),
   },
 });
-
 const inputRules = {
   username: [
     (v) => !!v || "Username is required",
@@ -88,9 +91,6 @@ const showPassword = ref(false);
 const toggleAlert = ref(false);
 const isError = ref(false);
 
-onMounted(() => {
-  checkUserSession();
-});
 const signIn = async () => {
   const validated = await validateForm();
   if (!validated) return;
@@ -101,7 +101,6 @@ const validateUserData = async (data) => {
   const validated = handleAlert(data);
   if (validated) {
     handleAuthentication(data);
-    console.log(data);
     return;
   }
 };
@@ -118,6 +117,7 @@ const handleAlert = (data) => {
 const handleAuthentication = (data) => {
   authentication.setUserToken(data.user.login_token);
   authentication.toggleLogIn(true);
+  authentication.setUser(data.user);
   router.push("/");
 };
 const validateForm = async () => {
@@ -132,9 +132,6 @@ const checkUserSession = () => {
   }
 };
 </script>
-
-
-
 
 <style lang="css" scoped>
 .sign-in-container {

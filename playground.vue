@@ -1,751 +1,92 @@
 <template lang="">
   <div>
-    <v-tabs
-      class="tabs"
-      v-model="tab"
-      align-tabs="center"
-      color="black"
-      density="compact"
-    >
-      <v-tab
-        v-for="(header, index) in tabHeaders"
-        :value="header.value"
-        :key="index"
-      >
-        {{ header.title }}
-      </v-tab>
-    </v-tabs>
-    <v-window class="" v-model="tab">
-      <!-- personal data -->
-      <v-window-item :value="0">
-        <v-container style="width: 1000px">
-          <v-form ref="personalForm">
-            <h2>Personal Data:</h2>
-            <v-divider class="mb-5"></v-divider>
-            <!-- persnal data -->
-            <v-row>
-              <v-col cols="12" class="d-flex ga-2 flex-wrap">
-                <v-text-field
-                  v-for="(value, key) in inputFields.personalData.textField"
-                  :key="key"
-                  :label="value.label"
-                  :type="value.type"
-                  variant="outlined"
-                  style="width: 300px"
-                  density="compact"
-                  v-model="patientData[key]"
-                  :rules="value.rules"
-                ></v-text-field>
-                <v-combobox
-                  v-for="(value, key) in inputFields.personalData.comboField"
-                  :key="key"
-                  :label="value.label"
-                  :items="value.items"
-                  variant="outlined"
-                  style="width: 300px"
-                  density="compact"
-                  v-model="patientData[key]"
-                ></v-combobox>
-              </v-col>
-            </v-row>
-            <!-- remarks -->
-            <h2>Remarks:</h2>
-            <v-divider class="mb-5"></v-divider>
+    <v-card>
+      <v-toolbar color="secondary" class="px-5 d-flex align-center">
+        <v-icon size="large">mdi-book-plus</v-icon>
+        <v-toolbar-title>Social Work Administration</v-toolbar-title>
+      </v-toolbar>
+      <v-card-text>
+        <v-container>
+          <v-form ref="createSWAForm">
             <v-row>
               <v-col cols="12">
-                <v-textarea
-                  v-model="patientData.remarks"
-                  label="Remarks"
-                  rows="5"
-                  auto-grow
-                  style="min-width: 300px"
+                <v-text-field
+                  :label="inputFields.admission_date.label"
+                  :type="inputFields.admission_date.type"
+                  v-model="swaData.admission_date"
                   variant="outlined"
-                  counter="255"
-                  :rules="inputRules.remarks"
-                ></v-textarea>
+                ></v-text-field>
               </v-col>
             </v-row>
-            <v-btn
-              color="secondary"
-              @click="updatePersonalData"
-              prepend-icon="mdi-content-save"
-              class="my-5"
-              >Update Personal Data</v-btn
-            >
+            <v-card-actions class="justify-end">
+              <v-btn color="success" @click="createSWAItem">Create</v-btn>
+            </v-card-actions>
           </v-form>
         </v-container>
-      </v-window-item>
-      <!-- address -->
-      <v-window-item :value="1">
-        <v-container style="width: 1000px">
-          <h2>Address:</h2>
-          <v-divider class="mb-5"></v-divider>
-          <!-- <v-row>
-            <h3>Permanent</h3>
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <v-combobox
-                v-for="(value, key) in inputFields.address.permanent"
-                :key="key"
-                :label="key"
-                variant="outlined"
-                :items="value.items"
-                :item-title="value.title"
-                :item-value="value.value"
-                style="width: 350px"
-                density="compact"
-              ></v-combobox>
-            </v-col>
-          </v-row> -->
-          <v-divider class="my-5"></v-divider>
-          <!-- <v-row>
-            <h3>Temporary</h3>
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <v-combobox
-                v-for="(value, key) in inputFields.address.temporary"
-                :key="key"
-                :label="key"
-                variant="outlined"
-                :items="value.items"
-                :item-title="value.title"
-                :item-value="value.value"
-                style="width: 350px"
-                density="compact"
-              ></v-combobox>
-            </v-col>
-          </v-row> -->
-          <v-btn
-            color="secondary"
-            @click="updatePatientAddressData"
-            prepend-icon="mdi-content-save"
-            class="mb-5"
-            >Update Address</v-btn
-          >
-        </v-container>
-      </v-window-item>
-      <!-- family composition -->
-      <v-window-item :value="2">
-        <v-container style="width: 90%">
-          <h2>Family Composition:</h2>
-          <v-divider class="mb-5"></v-divider>
-          <div class="d-flex justify-end">
-            <v-btn
-              color="grey"
-              @click="dialogs.addFamily = !dialogs.addFamily"
-              prepend-icon="mdi-account-plus"
-              size="small"
-              class="mb-5"
-              >Add family member</v-btn
-            >
-          </div>
-          <v-data-table
-            :headers="tableHeaders"
-            :items="familyComposition"
-            :items-per-page="5"
-            class="elevation-1"
-          >
-            <template v-slot:[`item.operation`]="{ item }">
-              <div class="d-flex">
-                <v-btn
-                  icon="mdi-pencil"
-                  @click="toggleEditFamilyDialog(item)"
-                  flat
-                  size="small"
-                ></v-btn>
-                <v-btn
-                  icon="mdi-delete"
-                  @click="toggleDeleteFamilyDialog(item)"
-                  flat
-                  size="small"
-                ></v-btn>
-              </div>
-            </template>
-          </v-data-table>
-        </v-container>
-      </v-window-item>
-    </v-window>
-    <v-snackbar
-      v-for="(bar, key) in updateBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
-      </div>
-    </v-snackbar>
+      </v-card-text>
+    </v-card>
   </div>
-  <!-- create family member dialog -->
-  <v-dialog v-model="dialogs.addFamily" width="600px" persistent>
-    <v-card>
-      <v-card-title primary-title> Family Composition </v-card-title>
-      <v-card-text>
-        <div class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(value, key) in inputFields.familyComposition"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            density="compact"
-            variant="outlined"
-            v-model="inputFields.familyComposition[key].data"
-            style="width: 250px"
-          ></v-text-field>
-        </div>
-      </v-card-text>
-      <v-card-actions class="d-flex justify-end">
-        <v-btn color="error" @click="dialogs.addFamily = !dialogs.addFamily"
-          >Cancel</v-btn
-        >
-        <v-btn color="primary" @click="createFamilyMemberData">Create</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <!-- update family member dialog -->
-  <v-dialog v-model="dialogs.editFamily" width="600px" persistent>
-    <v-card>
-      <v-card-title primary-title>
-        <h3>Edit family member:</h3>
-      </v-card-title>
-      <v-card-text>
-        <div class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(value, key) in inputFields.familyComposition"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            density="compact"
-            variant="outlined"
-            v-model="toEditFamilyMember[key]"
-            style="width: 250px"
-          ></v-text-field>
-        </div>
-      </v-card-text>
-      <v-card-actions class="d-flex justify-end">
-        <v-btn color="error" @click="dialogs.editFamily = false">Cancel</v-btn>
-        <v-btn color="primary" @click="updateFamilyMemberData">Update</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <!-- delete family member dialog -->
-  <v-dialog
-    v-model="dialogs.deleteFamily"
-    width="600px"
-    persistent
-    max-width="600px"
-  >
-    <v-card>
-      <v-card-title primary-title>
-        <h3>Delete family member:</h3>
-      </v-card-title>
-      <v-card-text>
-        <p>Are you sure you want to delete this family member?</p>
-      </v-card-text>
-      <v-card-actions class="d-flex justify-end">
-        <v-btn color="error" @click="dialogs.deleteFamily = false"
-          >Cancel</v-btn
-        >
-        <v-btn color="primary" @click="deleteFamilyMemberData">Delete</v-btn>
-      </v-card-actions>
-    </v-card>
+  <v-dialog v-model="createdDialog" width="auto">
+    <v-sheet>
+      <v-alert type="success" variant="outlined">
+        <v-alert-title>
+          Social Work Administration created successfully!
+        </v-alert-title>
+        <v-card-actions class="justify-end mt-5">
+          <v-btn color="primary">Edit</v-btn>
+          <v-btn color="error" @click="handleCloseDialog">Close</v-btn>
+        </v-card-actions>
+      </v-alert></v-sheet
+    >
   </v-dialog>
 </template>
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { getPatientByID, updatePatient } from "@/api/patients";
-import {
-  getFamilyComposition,
-  updatePatientAddress,
-  createFamilyMember,
-  getFamilyInfo,
-  updateFamilyMember,
-  deleteFamilyMember,
-  // address
-  getRegions,
-  getProvince,
-  getMunicipality,
-  getBarangay,
-} from "@/api/assesment-tool";
+import { createSocialWorkAdministration } from "@/api/daily-activity-report";
+import { ref, onMounted } from "vue";
+import moment from "moment";
 
-const props = defineProps({
-  patientId: Number,
-});
-
+const emit = defineEmits(["addedItem", "closeDialog"]);
 onMounted(async () => {
-  await getPatientData();
-  await getFamilyCompositionData();
-  await getRegionData();
-  // await getFamilyInfoData();
+  console.log("User:", props.user);
 });
-
-let patientData = ref({});
-let patientAddress = ref([
-  {
-    region: "",
-    province: "",
-    district: "",
-    municipality: "",
-    barangay: "",
-    purok: "",
-  },
-  {
-    region: "",
-    province: "",
-    district: "",
-    municipality: "",
-    barangay: "",
-    purok: "",
-  },
-]);
-
-// address
-let regions = ref([]);
-let provinces = ref([]);
-let municipalities = ref([]);
-let barangays = ref([]);
-// family composition
-let familyComposition = ref({});
-let familyInfo = ref({});
-let toEditFamilyMember = ref({});
-const personalForm = ref(null);
-const tab = ref(0);
-
-const inputRules = {
-  first_name: [(v) => !!v || "First Name is required"],
-  last_name: [(v) => !!v || "Last Name is required"],
-  remarks: [
-    (v) =>
-      v == null ||
-      v.length <= 255 ||
-      "Remarks must be less than 255 characters",
-  ],
-};
-const tableHeaders = [
-  { title: "Fullname", value: "full_name" },
-  { title: "Age", value: "age" },
-  { title: "Birth Date", value: "birth_date" },
-  { title: "Civil Status", value: "civil_status" },
-  { title: "Relationship", value: "relationship" },
-  { title: "Educational Attainment", value: "educational_attainment" },
-  { title: "Occupation", value: "occupation" },
-  { title: "Monthly Income", value: "monthly_income" },
-  { title: "Operation", value: "operation" },
-];
-const tabHeaders = {
-  personalData: {
-    title: "Personal Data",
-  },
-  addressData: {
-    title: "Address Data",
-  },
-  familyComposition: {
-    title: "Family Composition",
-  },
-};
-const updateBars = ref({
-  personalData: {
-    isActive: false,
-    text: "Personal Data Updated",
-  },
-  addressData: {
-    isActive: false,
-    text: "Address Updated",
-  },
-  createFamilyMember: {
-    isActive: false,
-    text: "Family Member Added",
-  },
-  updateFamilyMember: {
-    isActive: false,
-    text: "Family Member Updated",
-  },
-  deleteFamilyMember: {
-    isActive: false,
-    text: "Family Member Deleted",
-  },
+const createdDialog = ref(false);
+const createSWAForm = ref(null);
+const swaData = ref({
+  id: props.user.id,
+  fullname: `${props.user.fname} ${props.user.lname}`,
+  admission_date: moment().format("YYYY-MM-DDTHH:mm"),
 });
-const dialogs = ref({
-  addFamily: false,
-  editFamily: false,
-  deleteFamily: false,
-});
-const inputFields = ref({
-  personalData: {
-    textField: {
-      first_name: {
-        label: "First Name",
-        type: "text",
-        rules: inputRules.first_name,
-      },
-      middle_name: {
-        label: "Middle Name",
-        type: "text",
-      },
-      last_name: {
-        label: "Last Name",
-        type: "text",
-        rules: inputRules.last_name,
-      },
-      age: {
-        label: "Age",
-        type: "text",
-      },
-      birth_date: {
-        label: "Birth Date",
-        type: "date",
-      },
-      religion: {
-        label: "Religion",
-        type: "text",
-      },
-      contact_number: {
-        label: "Contact Number",
-        type: "text",
-      },
-      occupation: {
-        label: "Occupation",
-        type: "text",
-      },
-      monthly_income: {
-        label: "Monthly Income",
-        type: "text",
-      },
-      ph_membership_number: {
-        label: "PH Membership Number",
-        type: "text",
-      },
-      ph_membership_type: {
-        label: "PH Membership",
-        type: "text",
-      },
-    },
-    comboField: {
-      gender: {
-        label: "Gender Identity",
-        items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
-      },
-      sex: {
-        label: "Sex",
-        items: ["Male", "Female"],
-      },
-      nationality: {
-        label: "Nationality",
-        items: ["Filipino", "Other"],
-      },
-      civil_status: {
-        label: "Civil Status",
-        items: [
-          "Single",
-          "Married",
-          "Widowed",
-          "Divorced",
-          "Annulled",
-          "Common Law OS",
-          "Common Law SS",
-          "Separated Legally",
-          "Separated De Facto",
-        ],
-      },
-      living_arrangement: {
-        label: "Living Arrangement",
-        items: [
-          "owned",
-          "shared",
-          "rent",
-          "homeless",
-          "institutionalized",
-          "others",
-        ],
-      },
-      highest_education_level: {
-        label: "Education",
-        items: [
-          "Early Childhood Education",
-          "Primary",
-          "Secondary",
-          "Tertiary",
-          "Vocational",
-          "Post Graduate",
-          "No Educational Attainment",
-        ],
-      },
-      education_status: {
-        label: "Education Status",
-        items: ["OnGoing", "Graduated", "Stopped", "Others"],
-      },
-    },
-  },
-  familyComposition: {
-    full_name: {
-      label: "FullName",
-      type: "text",
-      data: "",
-    },
-    age: {
-      label: "Age",
-      type: "text",
-      data: "",
-    },
-    birth_date: {
-      label: "Birth Date",
-      type: "date",
-      data: "",
-    },
-    civil_status: {
-      label: "Civil Status",
-      type: "text",
-      data: "",
-    },
-    relationship: {
-      label: "Relationship",
-      type: "text",
-      data: "",
-    },
-    educational_attainment: {
-      label: "Educational Attainment",
-      type: "text",
-      data: "",
-    },
-    occupation: {
-      label: "Occupation",
-      type: "text",
-      data: "",
-    },
-    monthly_income: {
-      label: "Monthly Income",
-      type: "text",
-      data: "",
-    },
-  },
-  address: {
-    permanent: {
-      regions: {
-        label: "Region",
-        items: regions,
-        title: "regDesc",
-        value: "regCode",
-      },
-      province: {
-        label: "Province",
-        items: provinces,
-        title: "provDesc",
-        value: "provCode",
-      },
-      district: {
-        label: "District",
-      },
-      municipality: {
-        label: "Municipality",
-        items: municipalities,
-        title: "citymunDesc",
-        value: "citymunCode",
-      },
-      barangay: {
-        label: "Barangay",
-        items: barangays,
-        title: "brgyDesc",
-        value: "brgyCode",
-      },
-      purok: {
-        label: "Purok",
-      },
-    },
-    temporary: {
-      region: {
-        label: "Region",
-        items: regions,
-        title: "regDesc",
-        value: "regCode",
-      },
-      province: {
-        label: "Province",
-        items: provinces,
-        title: "provDesc",
-        value: "provCode",
-      },
-      district: {
-        label: "District",
-      },
-      municipality: {
-        label: "Municipality",
-        items: municipalities,
-        title: "citymunDesc",
-        value: "citymunCode",
-      },
-      barangay: {
-        label: "Barangay",
-        items: barangays,
-        title: "brgyDesc",
-        value: "brgyCode",
-      },
-      purok: {
-        label: "Purok",
-      },
-    },
-  },
-});
-
-const regionsCombo = {
-  permanent: {
-    label: "Region",
-    items: regions,
-  },
-  temporary: {
-    label: "Region",
-    items: regions,
+const inputFields = {
+  admission_date: {
+    label: "Admission Date",
+    type: "datetime-local",
+    rules: [(v) => !!v || "Admission Date is required"],
   },
 };
-const address = {
-  permanent: {
-    province: {
-      label: "Province",
-    },
-    district: {
-      label: "District",
-    },
-    municipality: {
-      label: "Municipality",
-    },
-    barangay: {
-      label: "Barangay",
-    },
-    purok: {
-      label: "Purok",
-    },
-  },
-  temporary: {
-    regions: {
-      label: "Region",
-    },
-    province: {
-      label: "Province",
-    },
-    district: {
-      label: "District",
-    },
-    municipality: {
-      label: "Municipality",
-    },
-    barangay: {
-      label: "Barangay",
-    },
-    purok: {
-      label: "Purok",
-    },
-  },
-};
-
-const validateForm = async (formType) => {
-  const form = await formType.value.validate();
-  if (!form.valid) return false;
-  return true;
-};
-
-const toggleEditFamilyDialog = (familyMember) => {
-  toEditFamilyMember.value = familyMember;
-  dialogs.value.editFamily = true;
-};
-
-const toggleDeleteFamilyDialog = (familyMember) => {
-  toEditFamilyMember.value = familyMember;
-  dialogs.value.deleteFamily = true;
-};
-
-// * create section
-const createFamilyMemberData = async () => {
-  let familyMember = {};
-  for (const key in inputFields.value.familyComposition) {
-    familyMember[key] = inputFields.value.familyComposition[key].data;
-  }
-  familyMember.patient_id = props.patientId;
-  console.log(familyMember);
-  const response = await createFamilyMember(familyMember);
+const createSWAItem = async () => {
+  const isValid = await handleFormValidation();
+  if (!isValid) return;
+  const response = await createSocialWorkAdministration(swaData.value);
   if (response) {
-    updateBars.value.createFamilyMember.isActive = true;
-    familyComposition.value.push(familyMember);
+    handleCreateDialog();
+    handleAddedItem(response);
   }
 };
-// * Fetch Section
-const getPatientData = async () => {
-  const response = await getPatientByID(props.patientId);
-  patientData.value = response;
-  // console.log(patientData.value);
-  patientAddress.value = response.address;
-  // console.log(patientAddress.value);
+const handleCreateDialog = () => {
+  createdDialog.value = true;
 };
-const getFamilyCompositionData = async () => {
-  const response = await getFamilyComposition(props.patientId);
-  familyComposition.value = response;
+const handleCloseDialog = () => {
+  createdDialog.value = false;
+  emit("closeDialog", 'swa');
 };
-const getFamilyInfoData = async () => {
-  const response = await getFamilyInfo(props.patientId);
+const handleAddedItem = (item) => {
+  const type = "swa";
+  emit("addedItem", type, item);
 };
 
-const getRegionData = async () => {
-  const response = await getRegions();
-  // regions.value = response;
-};
-
-// const watchAddressChange = (addressType, key, apiCall, optionKey) => {
-//   watch(
-//     () => patientAddress.value[addressType][key],
-//     async (newVal) => {
-//       console.log(newVal);
-//       const firstPropertyName = Object.keys(newVal)[1];
-//       const firstPropertyValue = newVal[firstPropertyName];
-//       // console.log(firstPropertyValue);
-//       optionKey.value = await apiCall(firstPropertyValue);
-//       console.log(optionKey.value);
-//     }
-//   );
-// };
-
-// watchAddressChange(0, "region", getProvince, provinces);
-// watchAddressChange(0, "province", getMunicipality, municipalities);
-// watchAddressChange(0, "municipality", getBarangay, barangays);
-// watchAddressChange(1, "region", getProvince, provinces);
-// watchAddressChange(1, "province", getMunicipality, municipalities);
-// watchAddressChange(1, "municipality", getBarangay, barangays);
-
-// * Update Section
-const updatePersonalData = async () => {
-  const validate = await validateForm(personalForm);
-  if (!validate) return;
-  const response = await updatePatient(patientData.value);
-  if (response) {
-    updateBars.value.personalData.isActive = true;
-  }
-};
-const updatePatientAddressData = async () => {
-  // const patientAddress = patientData.value.address;
-  console.log(patientAddress.value);
-  // const response = await updatePatientAddress(patientAddress.value);
-  // if (response) {
-  //   updateBars.value.addressData.isActive = true;
-  // }
-};
-const updateFamilyMemberData = async () => {
-  const response = await updateFamilyMember(toEditFamilyMember.value);
-  if (response) {
-    updateBars.value.updateFamilyMember.isActive = true;
-    dialogs.value.editFamily = false;
-  }
-};
-// * Delete Section
-const deleteFamilyMemberData = async () => {
-  const familyMemberId = toEditFamilyMember.value.id;
-  // remove the item from the  family composition object using the toEditFamilyMember.id
-  const response = await deleteFamilyMember(familyMemberId);
-  if (response) {
-    familyComposition.value = familyComposition.value.filter(
-      (member) => member.id !== familyMemberId
-    );
-    updateBars.value.deleteFamilyMember.isActive = true;
-    dialogs.value.deleteFamily = false;
-  }
+const handleFormValidation = async () => {
+  const isValid = await createSWAForm.value.validate();
+  return isValid;
 };
 </script>
-<style lang="css" scoped></style>
+<style lang=""></style>

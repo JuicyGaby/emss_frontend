@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <v-main class="d-flex app-main">
-      <sidebar :user="user" :authentication = "authentication" v-if="authentication.isLoggedIn" class=""></sidebar>
-      <router-view :user="user" :authentication = "authentication" class="display rb"/>
+      <sidebar v-if="authentication.isLoggedIn"></sidebar>
+      <router-view />
     </v-main>
   </v-app>
 </template>
@@ -13,35 +13,40 @@ import { useRouter } from "vue-router";
 import { userAuthentication } from "./stores/session";
 import { getUserByToken } from "@/api/authentication";
 
-// * components 
-import Sidebar from './components/Sidebar.vue'
-
-
-
+// * components
+import Sidebar from "./components/Sidebar.vue";
 let user = ref({});
 const router = useRouter();
 const authentication = userAuthentication();
+const inputRules = {
+  required: (v) => !!v || "This field is required",
+  invalidNegative: (v) => v >= 0 || "Invalid input",
+  characters: (v) => v.length <= 20 || "Max 20 characters",
+  vselect: (v) => v.length > 0 || "This field is required",
+};
 
-watch(() => authentication.token, async (newToken) => {
-  if (newToken) {
-    try {
-      user.value = await getUserByToken(newToken);
-    } catch (error) {
-      console.error("Failed to get user by token:", error);
+watch(
+  () => authentication.token,
+  async (newToken) => {
+    if (newToken) {
+      try {
+        user.value = await getUserByToken(newToken);
+      } catch (error) {
+        console.error("Failed to get user by token:", error);
+      }
     }
-  }
-}, { immediate: true });
-
+  },
+  { immediate: true }
+);
 
 onMounted(checkUserSession);
-
 
 function checkUserSession() {
   const isLoggedIn = authentication.isLoggedIn;
   if (!isLoggedIn) {
     router.push("/login");
   }
-};
+}
 </script>
 
 <style scoped>
@@ -49,7 +54,6 @@ function checkUserSession() {
 
 .rb {
   border: 1px dashed red;
-
 }
 .bb {
   border: 1px dashed blue;
@@ -66,6 +70,5 @@ function checkUserSession() {
   /* position: absolute; */
   /* padding-left: 21.5em; */
   width: 100%;
-  padding: 1em;
 }
 </style>

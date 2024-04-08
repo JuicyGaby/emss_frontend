@@ -21,7 +21,6 @@ const getInterview = async (patient_id) => {
 
 
 const updateInterview = async (patient_id, body) => {
-  console.log(patient_id, body);
   const API_URL = `http://localhost:3000/interview/${patient_id}`;
   const response = await fetch(API_URL, {
     method: "PUT",
@@ -31,7 +30,6 @@ const updateInterview = async (patient_id, body) => {
     body: JSON.stringify(body),
   });
   const data = await response.json();
-  console.log("updated", data);
   return data;
 };
 

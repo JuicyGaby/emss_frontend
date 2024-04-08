@@ -276,6 +276,7 @@
                     variant="outlined"
                     density="compact"
                     readonly
+                    v-model="patientAssesmentData.medicalData[key]"
                   ></v-textarea>
                 </v-col>
               </v-row>
@@ -307,9 +308,24 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.healthAndMentalHealth[key]
+                              .severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.healthAndMentalHealth[key]
+                              .duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.healthAndMentalHealth[key]
+                              .coping
+                          }}
+                        </td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -317,7 +333,7 @@
               </v-row>
             </v-container>
           </div>
-          <!--  -->
+          <!-- Discrimination -->
           <div>
             <h2>VI. Discrimination:</h2>
             <v-divider></v-divider>
@@ -343,9 +359,19 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.discrimination[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.discrimination[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{ patientAssesmentData.discrimination[key].coping }}
+                        </td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -353,7 +379,7 @@
               </v-row>
             </v-container>
           </div>
-          <!--  -->
+          <!-- safety -->
           <div>
             <h2>VII. Safety:</h2>
             <v-divider></v-divider>
@@ -377,9 +403,9 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>{{ patientAssesmentData.safety[key].severity }}</td>
+                        <td>{{ patientAssesmentData.safety[key].duration }}</td>
+                        <td>{{ patientAssesmentData.safety[key].coping }}</td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -387,7 +413,7 @@
               </v-row>
             </v-container>
           </div>
-          <!--  -->
+          <!-- Assessment of Social Functioning -->
           <div>
             <h2>VIII. Assesment of Social Functioning:</h2>
             <v-divider></v-divider>
@@ -413,43 +439,111 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.socialFunctioning
-                          .particulars.familialRoles"
+                          .particulars.interpersonalRoles"
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.socialFunctioning
-                          .particulars.familialRoles"
+                          .particulars.occupationalRoles"
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.socialFunctioning
-                          .particulars.familialRoles"
+                          .particulars.specialLifeRoles"
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key]
+                              .interaction
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].duration
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.socialFunctioning[key].coping
+                          }}
+                        </td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -483,8 +577,18 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.problemsInEnvironment
@@ -492,8 +596,18 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.problemsInEnvironment
@@ -501,8 +615,18 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.problemsInEnvironment
@@ -510,8 +634,18 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.problemsInEnvironment
@@ -519,8 +653,18 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
+                        </td>
                       </tr>
                       <tr
                         v-for="(field, key) in fields.problemsInEnvironment
@@ -528,8 +672,18 @@
                         :key="key"
                       >
                         <td>{{ field.label }}</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .severity
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            patientAssesmentData.problemsInEnvironment[key]
+                              .duration
+                          }}
+                        </td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -544,8 +698,9 @@
                     chips
                     multiple
                     readonly
-                    style="width: 600px"
+                    style="width: 1000px"
                     density="compact"
+                    v-model="patientAssesmentData.problemsInEnvironment[index]"
                   ></v-combobox>
                   <v-textarea
                     v-for="(item, index) in fields.problemsInEnvironment
@@ -555,7 +710,8 @@
                     variant="outlined"
                     readonly
                     density="compact"
-                    style="width: 400px"
+                    style="width: 1000px"
+                    v-model="patientAssesmentData.problemsInEnvironment[index]"
                   >
                   </v-textarea>
                   <v-text-field
@@ -567,6 +723,7 @@
                     readonly
                     density="compact"
                     style="width: 400px"
+                    v-model="patientAssesmentData.problemsInEnvironment[index]"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -656,11 +813,319 @@ const patientAssesmentData = ref({
     patient_fuel_source: [{ gas: 0, kerosene: 0, charcoal: 0 }],
   },
   medicalData: {},
-  healthAndMentalHealth: {},
-  discrimination: {},
-  safety: {},
-  socialFunctioning: {},
-  problemsInEnvironment: {},
+  healthAndMentalHealth: {
+    abscence_of_adequate_health_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    abscence_of_support_health_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    absence_of_adequate_mental_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    absence_of_support_mental_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    inaccessibility_of_health_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    inaccessibility_of_mental_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+  },
+  discrimination: {
+    Age: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Ethnicity: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Religion: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Sex: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Sexual_Orientation: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Lifestyle: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    NonCitizen: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Veteran_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Dependency_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Disability_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    Marital_Status: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+  },
+  safety: {
+    voice_crime_in_community: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    unsafe_working_conditions: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    unsafe_codition_home: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    absence_of_adequate_safety_services: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    natural_disasters: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    human_created_disasters: {
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+  },
+  socialFunctioning: {
+    parent: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    spouse: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    child: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    sibling: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    other_family_member: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    significant_others: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    lover: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    friend: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    neighbor: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    member: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    worker_paid_economy: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    worker_home: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    worker_volunteer: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    student: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    consumer: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    inpatient: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    outpatient: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    er_patient: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    prisoner: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    immigrant_legal: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    immigrant_undocumented: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+    imigrant_refugee: {
+      interaction: "",
+      severity: "",
+      duration: "",
+      coping: "",
+    },
+  },
+  problemsInEnvironment: {
+    lack_regular_food: {
+      severity: "",
+      duration: "",
+    },
+    nutritionally_inadequate_food: {
+      severity: "",
+      duration: "",
+    },
+    documented_malnutrition: {
+      severity: "",
+      duration: "",
+    },
+    absence_of_shelter: {
+      severity: "",
+      duration: "",
+    },
+    inadequate_shelter: {
+      severity: "",
+      duration: "",
+    },
+    unemployment: {
+      severity: "",
+      duration: "",
+    },
+    underemployment: {
+      severity: "",
+      duration: "",
+    },
+    inappropiate_employment: {
+      severity: "",
+      duration: "",
+    },
+    insufficient_community_resources: {
+      severity: "",
+      duration: "",
+    },
+    insufficient_provide_resources: {
+      severity: "",
+      duration: "",
+    },
+    no_personal_transportation: {
+      severity: "",
+      duration: "",
+    },
+    absence_of_affectional_support: {
+      severity: "",
+      duration: "",
+    },
+    inadequate_support_system: {
+      severity: "",
+      duration: "",
+    },
+    excessive_support_system: {
+      severity: "",
+      duration: "",
+    },
+  },
 });
 const fields = {
   interview: {
@@ -1227,6 +1692,12 @@ const getPatientData = async () => {
   await getPatientPersonalData();
   await getMswdClassificationData();
   await getMonthlyExpensesData();
+  await getMedicalDataItem();
+  await getHealthAndMentalHealthData();
+  await getDiscriminationData();
+  await getSafetyData();
+  await getSocialFunctioningData();
+  await getProblemsInEnvironmentData();
 };
 const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
@@ -1252,26 +1723,55 @@ const getMonthlyExpensesData = async () => {
   const response = await getMonthlyExpenses(props.patientId);
   if (response) {
     patientAssesmentData.value.monthlyExpenses = response;
-    console.log(patientAssesmentData.value.monthlyExpenses);
   }
 };
 const getMedicalDataItem = async () => {
   const response = await getMedicalData(props.patientId);
+  if (response) patientAssesmentData.value.medicalData = response;
 };
 const getHealthAndMentalHealthData = async () => {
   const response = await getHealthAndMentalHealth(props.patientId);
+  if (response) {
+    patientAssesmentData.value.healthAndMentalHealth = response;
+  }
 };
 const getDiscriminationData = async () => {
   const response = await getDiscrimination(props.patientId);
+  if (response) {
+    patientAssesmentData.value.discrimination = response;
+  }
 };
 const getSafetyData = async () => {
   const response = await getSafety(props.patientId);
+  if (response) {
+    patientAssesmentData.value.safety = response;
+  }
 };
 const getSocialFunctioningData = async () => {
   const response = await getSocialFunctioning(props.patientId);
+  if (response) {
+    patientAssesmentData.value.socialFunctioning = response;
+  }
 };
 const getProblemsInEnvironmentData = async () => {
   const response = await getProblemsInEnvironment(props.patientId);
+  if (response) {
+    patientAssesmentData.value.problemsInEnvironment = response;
+    if (
+      patientAssesmentData.value.problemsInEnvironment
+        .reasons_psychosocial_counselling === ""
+    ) {
+      patientAssesmentData.value.problemsInEnvironment.reasons_psychosocial_counselling =
+        null;
+    }
+    if (
+      patientAssesmentData.value.problemsInEnvironment
+        .problems_presented === ""
+    ) {
+      patientAssesmentData.value.problemsInEnvironment.problems_presented =
+        null;
+    }
+  }
 };
 </script>
 <style lang=""></style>

@@ -4,7 +4,7 @@
     style="width: 900px"
   >
     <!-- 1st page -->
-    <div class="input-field" v-show="page == 1">
+    <div class="input-field">
       <v-row>
         <v-col class="d-flex flex-wrap ga-2" cols="12">
           <v-text-field
@@ -15,14 +15,8 @@
             variant="outlined"
             style="width: 300px"
             v-model="interviewInputs[key]"
+            density="compact"
           ></v-text-field>
-        </v-col>
-      </v-row>
-    </div>
-    <!-- 2nd page -->
-    <div class="input-field" v-show="page == 2">
-      <v-row>
-        <v-col class="d-flex flex-wrap ga-2" cols="12">
           <v-text-field
             v-for="(field, key) in inputFields.step2"
             :key="key"
@@ -31,13 +25,13 @@
             variant="outlined"
             style="width: 350px"
             v-model="interviewInputs[key]"
+            density="compact"
           ></v-text-field>
         </v-col>
       </v-row>
     </div>
     <!-- {{interviewInputs}} -->
   </v-container>
-  <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
 <script setup>
 import moment from "moment";
@@ -53,7 +47,10 @@ const emit = defineEmits(["interviewData"]);
 const totalPages = ref(2);
 const page = ref(1);
 
-let interviewInputs = ref({});
+let interviewInputs = ref({
+  interview_date_time: moment().format("YYYY-MM-DDTHH:mm"),
+  admission_date_time: moment().format("YYYY-MM-DDTHH:mm"),
+});
 
 watchEffect(() => {
   const interviewInputsCopy = Object.keys(interviewInputs.value).reduce(
@@ -128,7 +125,6 @@ const inputFields = {
     },
   },
 };
-
 </script>
 <style lang="css">
 .reb {

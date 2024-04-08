@@ -13,6 +13,7 @@
             style="width: 300px"
             density="compact"
             :hint="field.hint"
+            :persistent-hint="true"
             v-model="personalDataInputs[key]"
             :rules="field.rules"
           ></v-text-field>

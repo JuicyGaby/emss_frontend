@@ -7,8 +7,8 @@
             prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"
             :title="userFullName"
             :subtitle="
-              props.user.department
-                ? props.user.department.dept_code
+              authentication.user.department
+                ? authentication.user.department.dept_code
                 : 'No Department'
             "
           ></v-list-item>
@@ -37,14 +37,12 @@
   </v-card>
 </template>
 <script setup>
-import { defineProps, computed, ref } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
-const props = defineProps({
-  user: Object,
-  authentication: Object,
-});
-const router = useRouter();
+import { userAuthentication } from "../stores/session";
 
+const authentication = userAuthentication();
+const router = useRouter();
 const navItems = {
   dashboard: {
     icon: "mdi-view-dashboard",
@@ -62,12 +60,12 @@ const navItems = {
     to: "/patients",
   },
 };
-
 const userFullName = computed(() => {
-  return `${props.user.fname} ${props.user.lname}`;
+  return `${authentication.user.fname} ${authentication.user.lname}`;
 });
+
 const signOut = () => {
-  props.authentication.resetSession();
+  authentication.resetSession();
   router.push("/login");
 };
 </script>
