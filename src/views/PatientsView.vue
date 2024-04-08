@@ -161,7 +161,7 @@ import { getPatients } from "@/api/patients";
 import { useRouter } from "vue-router";
 import initialAssesment from "@/components/assesment-tool/initialAssesment.vue";
 import interviewView from "@/components/assesment-tool/InterviewView.vue";
-import MswdClassification from "@/components/assesment-tool/MswdClassification.vue";
+import MswdClassification from "@/components/assesment-tool/mswdClassification.vue";
 import personalData from "@/components/assesment-tool/personalData.vue";
 import MonthlyExpenses from "@/components/assesment-tool/MonthlyExpenses.vue";
 import MedicalData from "@/components/assesment-tool/MedicalData.vue";
