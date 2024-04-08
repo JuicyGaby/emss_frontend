@@ -110,6 +110,10 @@
                     prepend-icon="mdi-magnify"
                     variant="tonal"
                     color="secondary"
+                    :disabled="
+                      !searchPatientInput.first_name &&
+                      !searchPatientInput.last_name
+                    "
                     @click="searchPatientData"
                     >Search</v-btn
                   >

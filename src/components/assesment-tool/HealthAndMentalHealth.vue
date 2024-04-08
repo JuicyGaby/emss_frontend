@@ -19,7 +19,6 @@
                 <th>{{ field.label }}</th>
                 <th>
                   <v-select
-                    label="----"
                     outlined
                     density="compact"
                     variant="outlined"
@@ -32,7 +31,6 @@
                 </th>
                 <th>
                   <v-select
-                    label="----"
                     outlined
                     density="compact"
                     variant="outlined"
@@ -45,7 +43,6 @@
                 </th>
                 <th>
                   <v-select
-                    label="----"
                     outlined
                     density="compact"
                     variant="outlined"

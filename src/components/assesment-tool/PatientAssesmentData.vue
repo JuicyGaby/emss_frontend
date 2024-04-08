@@ -722,7 +722,7 @@
                     variant="outlined"
                     readonly
                     density="compact"
-                    style="width: 400px"
+                    style="width: 500px"
                     v-model="patientAssesmentData.problemsInEnvironment[index]"
                   ></v-text-field>
                 </v-col>
