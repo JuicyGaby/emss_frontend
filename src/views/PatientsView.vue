@@ -14,28 +14,39 @@
             >Assess Patient</v-btn
           >
         </div>
-        <v-text-field
-          prepend-inner-icon="mdi-magnify"
-          label="Search Patient"
-          single-line
-          hide-details
-          variant="outlined"
-          density="comfortable"
-          v-model="searchInput"
-          style="max-width: 400px"
-        ></v-text-field>
+        <v-form ref="searchForm">
+          <div class="d-flex ga-2">
+            <v-text-field
+              v-for="(item, key) in inputFields.search"
+              :key="key"
+              :label="item.label"
+              v-model="searchInput[key]"
+              density="compact"
+              style="width: 200px"
+              variant="outlined"
+              @keyup.enter="searchPatientData"
+            ></v-text-field>
+            <v-btn
+              color="grey"
+              @click="searchPatientData"
+              :disabled="!searchInput.first_name && !searchInput.last_name"
+            >
+              Search
+            </v-btn>
+            <!-- {{ searchInput }} -->
+          </div>
+        </v-form>
       </div>
       <v-divider></v-divider>
       <v-card-text class="d-flex align-end">
         <v-data-table
           width="100%"
-          :search="searchInput"
           :loading="isLoading"
           :headers="tableHeaders"
           :items="patientData"
-          items-per-page="5"
+          items-per-page="10"
           density="comfortable"
-          :items-per-page-options="[5, 10, 15]"
+          :items-per-page-options="[5, 10]"
         >
           <template v-slot:[`item.operation`]="{ item }">
             <div class="d-flex ga-5">
@@ -62,7 +73,6 @@
             @viewPatient="viewPatient"
             @closeCreateDialog="toggleCreateDialog"
             @addPatient="appendCreatedPatient"
-            :user="props.user"
           ></initialAssesment>
         </v-card-text>
       </v-card>
@@ -147,11 +157,14 @@
       @close="toggleViewAssessment"
     ></PatientAssesmentData>
   </div>
+  <snackBars :snackBarData="snackBarData"></snackBars>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, reactive } from "vue";
-import { getPatients } from "@/api/patients";
+import { ref, onMounted, computed } from "vue";
+import { handleSnackBar, inputRules, validateForm } from "@/utils/constants";
+import { getPatients, searchPatient } from "@/api/patients";
+import snackBars from "@/components/dialogs/snackBars.vue";
 import { useRouter } from "vue-router";
 import initialAssesment from "@/components/assesment-tool/initialAssesment.vue";
 import interviewView from "@/components/assesment-tool/InterviewView.vue";
@@ -166,28 +179,37 @@ import Safety from "@/components/assesment-tool/Safety.vue";
 import AssesmentSocialFunctioning from "@/components/assesment-tool/AssesmentSocialFunctioning.vue";
 import ProblemsInEnvironment from "@/components/assesment-tool/ProblemsInEnvironment.vue";
 import PatientAssesmentData from "@/components/assesment-tool/PatientAssesmentData.vue";
-const props = defineProps({
-  user: Object,
-  authentication: Object,
-});
 
-const searchInput = ref("");
 let patientData = ref([]);
 const isLoading = ref(false);
 const createDialog = ref(false);
 const editDialog = ref(false);
+const tab = ref(0);
+const patientId = ref(0);
+const searchInput = ref({
+  first_name: "",
+  last_name: "",
+});
+const searchForm = ref(null);
+const snackBarData = ref({});
 const dialogs = ref({
   viewAssessment: {
     isVisibile: false,
   },
 });
-const tab = ref(0);
-const patientId = ref(0);
+const inputFields = ref({
+  search: {
+    first_name: {
+      label: "First Name",
+    },
+    last_name: {
+      label: "Last Name",
+    },
+  },
+});
 
 const tableHeaders = [
-  // { title: "First Name", value: "first_name" },
-  // { title: "Middle Name", value: "middle_name" },
-  // { title: "Last Name", value: "last_name" },
+  // { title: "Date Created", value: "created_at" },
   { title: "Full Name", value: "fullname" },
   { title: "Age", value: "age" },
   { title: "Sex", value: "sex" },
@@ -207,10 +229,6 @@ const tabHeaders = [
   { title: "IV - Problems in the Environment", value: 10 },
 ];
 
-onMounted(() => {
-  fetchPatients();
-});
-
 const toggleEditBtn = (id) => {
   patientId.value = id;
   editDialog.value = !editDialog.value;
@@ -224,7 +242,6 @@ const viewPatientAssessmentData = (patient) => {
   patientId.value = patient.id;
   dialogs.value.viewAssessment.isVisibile = true;
 };
-
 async function fetchPatients() {
   isLoading.value = true;
   try {
@@ -234,10 +251,26 @@ async function fetchPatients() {
     isLoading.value = false;
   }
 }
+async function searchPatientData() {
+  const isValid = await validateForm(searchForm);
+  if (!isValid) return;
+
+  const patients = await searchPatient(searchInput.value);
+  if (patients.length <= 0) {
+    snackBarData.value = handleSnackBar("error", "No data found");
+    patientData.value = [];
+    return;
+  }
+  snackBarData.value = handleSnackBar(
+    "success",
+    `${patients.length} Data found`
+  );
+  patientData.value = patients;
+}
+
 const toggleCreateDialog = () => {
   createDialog.value = !createDialog.value;
 };
-
 const viewPatient = (patientId) => {
   toggleEditBtn(patientId);
 };
@@ -245,6 +278,10 @@ const appendCreatedPatient = (patient) => {
   patientData.value.push(patient.value);
   console.log("successfuly added", patientData.value);
 };
+
+onMounted(async () => {
+  await fetchPatients();
+});
 </script>
 
 <style lang="css" scoped></style>

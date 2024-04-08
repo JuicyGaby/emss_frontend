@@ -123,7 +123,7 @@
             prepend-icon="mdi-content-save"
             class="mb-5"
             >{{
-              patientData.addressExist ? "Update Address" : "Create Address"
+              patientData.addressExist ? "Update Address" : "Update Address"
             }}</v-btn
           >
         </v-container>

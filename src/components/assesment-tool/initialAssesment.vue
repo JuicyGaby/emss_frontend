@@ -120,12 +120,10 @@ import { ref } from "vue";
 import interview from "@/components/assesment-tool/interview.vue";
 import demographic_data from "@/components/assesment-tool/patient_demographic_data/demographic-data.vue";
 import { createPatient } from "@/api/patients";
-
-const props = defineProps({
-  user: Object,
-});
+import { userAuthentication } from "@/stores/session";
 
 const emit = defineEmits(["closeCreateDialog", "viewPatient", "addPatient"]);
+const authentication = userAuthentication();
 
 const dialogs = ref({
   created: false,
@@ -199,7 +197,9 @@ const addPatient = () => {
 
 const createPatientData = async () => {
   if (!validateInput()) return;
-  const user_id = props.user.id;
+  console.log(dataReceived.demographicData);
+  console.log(dataReceived.interview);
+  const user_id = authentication.user.id;
   dataReceived.demographicData.created_by = user_id;
   const response = await createPatient(dataReceived);
   if (response) {
