@@ -1,6 +1,6 @@
 <template lang="">
   <div class="d-flex align-center justify-center">
-    <v-card height="auto" width="1000px">
+    <v-card height="auto" width="600px">
       <v-toolbar color="secondary" class="px-2 d-flex align-center">
         <v-icon size="large">mdi-book-plus</v-icon>
         <v-toolbar-title>Social Work Administration</v-toolbar-title>
@@ -14,6 +14,12 @@
           <v-form ref="swaForm">
             <v-row>
               <v-col cols="12">
+                <v-text-field
+                  label="Social Worker"
+                  variant="outlined"
+                  readonly
+                  v-model="swaInputs.creator_fullname"
+                ></v-text-field>
                 <v-autocomplete
                   label="SWA Services"
                   chips
@@ -24,6 +30,8 @@
                   item-title="service_name"
                   item-value="id"
                   variant="outlined"
+                  hint="Double Check Services Availed"
+                  :persistent-hint="true"
                   v-model="swaInputs.services"
                   :rules="[inputRules.required, inputRules.vselect]"
                 >

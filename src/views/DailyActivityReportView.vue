@@ -14,6 +14,10 @@
         <v-window v-model="tabValue">
           <v-window-item :value="1">
             <div class="ma-3">
+              <!-- Display current date using moment and the day -->
+              <h1 class="mb-5">
+                {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
+              </h1>
               <div class="d-flex justify-space-between align-center">
                 <v-btn
                   color="secondary"
@@ -72,6 +76,9 @@
             </v-data-table>
           </v-window-item>
           <v-window-item :value="2">
+            <h1 class="mb-5">
+              {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
+            </h1>
             <div class="ma-3 d-flex justify-space-between align-center">
               <v-btn
                 color="secondary"
@@ -205,6 +212,8 @@ const userFullName = `${authentication.user.fname} ${authentication.user.lname}`
 const dateInputs = ref({
   dar: moment().format("YYYY-MM-DD"),
   swa: moment().format("YYYY-MM-DD"),
+  // make a current date that makes the month name visible using moment
+  current_date: moment().format("MMMM Do YYYY"),
 });
 const dataTable = {
   headers: [
