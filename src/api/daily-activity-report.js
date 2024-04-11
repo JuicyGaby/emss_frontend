@@ -79,6 +79,12 @@ const getDarNoteById = async (id) => {
   const data = await response.json();
   return data;
 };
+const getDarByMonth = async (month) => {
+  const API_URL = `http://localhost:3000/dar-by-month/${month}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
 const updateDarNote = async (body) => {
   const API_URL = `http://localhost:3000/dar-notes`;
   const response = await fetch(API_URL, {
@@ -250,5 +256,5 @@ export {
   createSwaServicesItem,
   getDarSwaByDate,
   getDailyActivityReportByDate,
-  
+  getDarByMonth,
 };

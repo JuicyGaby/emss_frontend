@@ -66,7 +66,7 @@
 
 import moment from "moment";
 import { ref } from "vue";
-import { createPatientData } from "@/api/patients";
+// import { createPatientData } from "@/api/patients";
 
 const createPatientForm = ref(null);
 const emit = defineEmits([

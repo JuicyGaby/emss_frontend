@@ -64,7 +64,26 @@
                       "
                       v-model="patientCreationData.highest_education_level"
                     ></v-select>
-
+                    <v-select
+                      :label="inputFields.creation.phic_member.label"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      :items="inputFields.creation.phic_member.items"
+                      :rules="inputFields.creation.phic_member.rules"
+                      v-model="patientCreationData.phic_member"
+                    ></v-select>
+                    <v-select
+                      :label="inputFields.creation.phic_classification.label"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      :items="inputFields.creation.phic_classification.items"
+                      item-title="title"
+                      item-value="value"
+                      :rules="inputFields.creation.phic_classification.rules"
+                      v-model="patientCreationData.phic_classification"
+                    ></v-select>
                     <v-autocomplete
                       chips
                       multiple
@@ -87,7 +106,7 @@
                   >Create Patient</v-btn
                 >
               </v-card-actions>
-              {{ patientCreationData }}
+              <!-- {{ patientCreationData }} -->
             </v-container>
           </v-card-text>
         </v-window-item>
@@ -298,6 +317,23 @@ const inputFields = {
         "College",
         "Vocational",
         "Post Graduate",
+      ],
+      rules: [inputRules.required],
+    },
+    phic_member: {
+      label: "PHIC Member",
+      items: ["Yes", "No"],
+      rules: [inputRules.required],
+    },
+    phic_classification: {
+      label: "PHIC Classification",
+      items: [
+        { title: "Financially Capable - A", value: "A" },
+        { title: "Financially Capacitated - B", value: "B" },
+        { title: "Financially Incapable - C1", value: "C1" },
+        { title: "Financially Incapacitated - C2", value: "C2" },
+        { title: "Indigent - C3", value: "C3" },
+        { title: "Indigent - D", value: "D" },
       ],
       rules: [inputRules.required],
     },

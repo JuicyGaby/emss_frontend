@@ -14,7 +14,7 @@
                   variant="outlined"
                   density="compact"
                   type="time"
-                  style="width: 400px"
+                  style="width: 500px"
                   v-model="darData[key]"
                   :rules="[inputRules.required]"
                 ></v-text-field>
@@ -22,10 +22,9 @@
                   label="Admission Date"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
-                  type="date-time"
+                  style="width: 500px"
+                  type="datetime-local"
                   v-model="darData.date_created"
-                  readonly
                   :rules="[inputRules.required]"
                 ></v-text-field>
                 <v-text-field
@@ -34,7 +33,7 @@
                   :label="field.label"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   :type="field.type"
                   v-model="patientData[key]"
                   :rules="[inputRules.required]"
@@ -46,7 +45,7 @@
                   :items="field.items"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   v-model="patientData[key]"
                   autocomplete
                   :rules="[inputRules.required]"
@@ -59,7 +58,7 @@
                   :items="field.items"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   autocomplete
                   v-model="darData[key]"
                   :rules="[inputRules.required]"
@@ -73,7 +72,7 @@
                   item-value="value"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   autocomplete
                   v-model="darData[key]"
                   :rules="[inputRules.required]"
@@ -85,7 +84,7 @@
                   :items="field.items"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   v-model="darData[key]"
                   autocomplete
                   :rules="[inputRules.required]"
@@ -96,18 +95,26 @@
                   :label="field.label"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   :type="field.type"
                   v-model="darData[key]"
                   :rules="[inputRules.required]"
                 ></v-text-field>
                 <v-textarea
+                  label="Diagnosis"
+                  variant="outlined"
+                  style="width: 1000px"
+                  density="compact"
+                  :rules="[inputRules.required]"
+                  v-model="darData.diagnosis"
+                >
+                </v-textarea>
+                <v-textarea
                   label="Remarks"
                   variant="outlined"
-                  style="width: 400px"
+                  style="width: 1000px"
                   density="compact"
                   v-model="darData.remarks"
-                  :rules="[inputRules.required]"
                 ></v-textarea>
               </v-col>
               <v-col>
@@ -261,9 +268,6 @@ const inputFields = {
       },
       source_of_referral: {
         label: "Referral Source",
-      },
-      diagnosis: {
-        label: "Diagnosis",
       },
       informant: {
         label: "Informant Name",
