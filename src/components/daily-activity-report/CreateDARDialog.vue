@@ -152,6 +152,28 @@
                       v-model="darData.patient_id"
                       :rules="[inputRules.required]"
                     ></v-select>
+                    <v-select
+                      :label="inputFields.creation.phic_member.label"
+                      :items="inputFields.creation.phic_member.items"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      v-model="darData.phic_member"
+                      :rules="[inputRules.required]"
+                    >
+                    </v-select>
+                    <v-select
+                      :label="inputFields.creation.phic_classification.label"
+                      :items="inputFields.creation.phic_classification.items"
+                      item-title="title"
+                      item-value="value"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      v-model="darData.phic_classification"
+                      :rules="[inputRules.required]"
+                    >
+                    </v-select>
                     <v-autocomplete
                       chips
                       multiple
@@ -179,7 +201,7 @@
         </v-window-item>
       </v-window>
       <v-card-actions class="justify-end pa-8"> </v-card-actions>
-      <!-- {{ darData }} -->
+      {{ darData }}
     </v-card>
   </div>
   <!-- <snackBars /> -->
