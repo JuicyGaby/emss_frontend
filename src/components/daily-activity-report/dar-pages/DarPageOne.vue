@@ -75,7 +75,7 @@
                   style="width: 500px"
                   autocomplete
                   v-model="darData[key]"
-                  :rules="[inputRules.required]"
+                  readonly
                 ></v-select>
                 <v-select
                   v-for="(field, key) in inputFields.part2.selectFields"
@@ -237,24 +237,20 @@ const inputFields = {
       },
     },
     titleValueFields: {
-      phic_classification: {
-        label: "PHIC Classification",
+      is_phic_member: {
+        label: "PHIC Member",
         items: [
-          { title: "Financially Capable", value: "A" },
-          { title: "Financially Capacitated", value: "B" },
-          { title: "Financially Incapable", value: "C1" },
-          { title: "Financially Incapacitated", value: "C2" },
-          { title: "Indigent - C3", value: "C3" },
-          { title: "Indigent - D", value: "D" },
+          { title: "Yes", value: 1 },
+          { title: "No", value: 0 },
         ],
       },
-      non_phic_classification: {
-        label: "Non-PHIC Classification",
+      classification: {
+        label: "PHIC Classification",
         items: [
-          { title: "Financially Capable", value: "A" },
-          { title: "Financially Capacitated", value: "B" },
-          { title: "Financially Incapable", value: "C1" },
-          { title: "Financially Incapacitated", value: "C2" },
+          { title: "Financially Capable - A", value: "A" },
+          { title: "Financially Capacitated - B", value: "B" },
+          { title: "Financially Incapable - C1", value: "C1" },
+          { title: "Financially Incapacitated - C2", value: "C2" },
           { title: "Indigent - C3", value: "C3" },
           { title: "Indigent - D", value: "D" },
         ],

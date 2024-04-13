@@ -126,7 +126,7 @@
   <!-- dialogs -->
   <div>
     <!-- create dar dialog -->
-    <v-dialog v-model="dialogs.dar.create" width="600px">
+    <v-dialog v-model="dialogs.dar.create" width="600px" persistent>
       <CreateDARDialog
         @addDAR="handlePushItem"
         @closeDialog="handleCloseDialog"
