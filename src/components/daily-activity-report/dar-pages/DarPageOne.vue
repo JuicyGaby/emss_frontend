@@ -24,7 +24,7 @@
                   density="compact"
                   style="width: 500px"
                   type="datetime-local"
-                  v-model="darData.date_created"
+                  v-model="darData.admission_date"
                   :rules="[inputRules.required]"
                 ></v-text-field>
                 <v-text-field
@@ -311,6 +311,7 @@ const inputFields = {
 const updateDailyActivityReportItem = async () => {
   const isValid = await validateForm(darForm);
   if (!isValid) return;
+  console.log("darData", darData.value);
   const response = await updateDailyActivityReport(darData.value);
   if (response) {
     console.log("update", response);
