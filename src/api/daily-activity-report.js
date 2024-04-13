@@ -53,6 +53,18 @@ const updateDailyActivityReport = async (body) => {
   const data = await response.json();
   return data;
 };
+
+const updateDarStatus = async (dar_id) => {
+  const API_URL = `http://localhost:3000/update-dar-status/${dar_id}`;
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  return data;
+};
 //  DAR NOTES
 
 const createDarNote = async (body) => {
@@ -257,4 +269,5 @@ export {
   getDarSwaByDate,
   getDailyActivityReportByDate,
   getDarByMonth,
+  updateDarStatus,
 };
