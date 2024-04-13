@@ -201,7 +201,7 @@
         </v-window-item>
       </v-window>
       <v-card-actions class="justify-end pa-8"> </v-card-actions>
-      {{ darData }}
+      <!-- {{ darData }} -->
     </v-card>
   </div>
   <!-- <snackBars /> -->

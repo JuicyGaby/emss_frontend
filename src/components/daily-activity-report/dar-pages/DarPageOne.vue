@@ -262,9 +262,6 @@ const inputFields = {
       house_hold_size: {
         label: "Household Size",
       },
-      source_of_referral: {
-        label: "Referral Source",
-      },
       informant: {
         label: "Informant Name",
       },
@@ -292,6 +289,20 @@ const inputFields = {
           "Formal Labor & Migrant Workers",
           "Workers in Informal Sectors",
           "Victims of Disaster & Calamity",
+          "Others",
+        ],
+      },
+      source_of_referral: {
+        label: "Source of Referral",
+        items: [
+          "Government Hospital",
+          "Private Hospitals/Clinics",
+          "Politicians",
+          "Media",
+          "Health Care Team",
+          "NGO’s/Private Welfare Agencies",
+          "Government Agencies",
+          "Walk – in",
           "Others",
         ],
       },
