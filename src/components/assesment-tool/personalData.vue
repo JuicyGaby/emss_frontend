@@ -61,7 +61,6 @@
                   style="min-width: 300px"
                   variant="outlined"
                   counter="255"
-                  :rules="inputRules.remarks"
                 ></v-textarea>
               </v-col>
             </v-row>
@@ -184,31 +183,35 @@
     <v-card>
       <v-card-title primary-title> Family Composition </v-card-title>
       <v-card-text>
-        <div class="d-flex ga-2 flex-wrap">
-          <template v-for="(value, key) in inputFields.familyComposition">
-            <v-text-field
-              v-if="value.type === 'text'"
-              :key="'text-' + key"
-              :label="value.label"
-              density="compact"
-              variant="outlined"
-              :type="value.inputType"
-              v-model="inputFields.familyComposition[key].data"
-              style="width: 250px"
-            ></v-text-field>
-            <v-select
-              v-else-if="value.type === 'select'"
-              :key="'select-' + key"
-              :label="value.label"
-              :items="value.items"
-              density="compact"
-              variant="outlined"
-              :type="value.inputType"
-              v-model="inputFields.familyComposition[key].data"
-              style="width: 250px"
-            ></v-select>
-          </template>
-        </div>
+        <v-form ref="familyForm">
+          <div class="d-flex ga-2 flex-wrap">
+            <template v-for="(value, key) in inputFields.familyComposition">
+              <v-text-field
+                v-if="value.type === 'text'"
+                :key="'text-' + key"
+                :label="value.label"
+                density="compact"
+                variant="outlined"
+                :type="value.inputType"
+                v-model="inputFields.familyComposition[key].data"
+                :rules="value.rules"
+                style="width: 250px"
+              ></v-text-field>
+              <v-select
+                v-else-if="value.type === 'select'"
+                :key="'select-' + key"
+                :label="value.label"
+                :items="value.items"
+                density="compact"
+                variant="outlined"
+                :type="value.inputType"
+                :rules="value.rules"
+                v-model="inputFields.familyComposition[key].data"
+                style="width: 250px"
+              ></v-select>
+            </template>
+          </div>
+        </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
         <v-btn color="primary" @click="createFamilyMemberData">Create</v-btn>
@@ -226,31 +229,35 @@
         <h3>Edit family member:</h3>
       </v-card-title>
       <v-card-text>
-        <div class="d-flex ga-2 flex-wrap">
-          <template v-for="(value, key) in inputFields.familyComposition">
-            <v-text-field
-              v-if="value.type === 'text'"
-              :key="'text-' + key"
-              :label="value.label"
-              density="compact"
-              variant="outlined"
-              :type="value.inputType"
-              v-model="toEditFamilyMember[key]"
-              style="width: 250px"
-            ></v-text-field>
-            <v-select
-              v-else-if="value.type === 'select'"
-              :key="'select-' + key"
-              :label="value.label"
-              :items="value.items"
-              density="compact"
-              variant="outlined"
-              :type="value.inputType"
-              v-model="toEditFamilyMember[key]"
-              style="width: 250px"
-            ></v-select>
-          </template>
-        </div>
+        <v-form ref="familyForm">
+          <div class="d-flex ga-2 flex-wrap">
+            <template v-for="(value, key) in inputFields.familyComposition">
+              <v-text-field
+                v-if="value.type === 'text'"
+                :key="'text-' + key"
+                :label="value.label"
+                density="compact"
+                variant="outlined"
+                :type="value.inputType"
+                v-model="toEditFamilyMember[key]"
+                :rules="value.rules"
+                style="width: 250px"
+              ></v-text-field>
+              <v-select
+                v-else-if="value.type === 'select'"
+                :key="'select-' + key"
+                :label="value.label"
+                :items="value.items"
+                density="compact"
+                variant="outlined"
+                :type="value.inputType"
+                :rules="value.rules"
+                v-model="toEditFamilyMember[key]"
+                style="width: 250px"
+              ></v-select>
+            </template>
+          </div>
+        </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
         <v-btn color="error" @click="dialogs.editFamily = false">Cancel</v-btn>
@@ -281,9 +288,11 @@
     </v-card>
   </v-dialog>
 </template>
+
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { getPatientByID, updatePatient } from "@/api/patients";
+import { inputRules } from "@/utils/constants";
 import {
   getFamilyComposition,
   createFamilyMember,
@@ -350,21 +359,11 @@ let temporaryBarangays = ref([]);
 // family composition
 let familyComposition = ref({});
 let familyInfo = ref({});
+const familyForm = ref(null);
 
 let toEditFamilyMember = ref({});
 const personalForm = ref(null);
 const tab = ref(0);
-
-const inputRules = {
-  first_name: [(v) => !!v || "First Name is required"],
-  last_name: [(v) => !!v || "Last Name is required"],
-  remarks: [
-    (v) =>
-      v == null ||
-      v.length <= 255 ||
-      "Remarks must be less than 255 characters",
-  ],
-};
 const tableHeaders = [
   { title: "Fullname", value: "full_name" },
   { title: "Age", value: "age" },
@@ -420,7 +419,7 @@ const inputFields = ref({
       first_name: {
         label: "First Name",
         type: "text",
-        rules: inputRules.first_name,
+        rules: [inputRules.required],
       },
       middle_name: {
         label: "Middle Name",
@@ -429,7 +428,7 @@ const inputFields = ref({
       last_name: {
         label: "Last Name",
         type: "text",
-        rules: inputRules.last_name,
+        rules: [inputRules.required],
       },
       age: {
         label: "Age",
@@ -525,23 +524,27 @@ const inputFields = ref({
       label: "FullName",
       type: "text",
       data: "",
+      rules: [inputRules.required],
     },
     age: {
       label: "Age",
       type: "text",
       inputType: "number",
       data: "",
+      rules: [inputRules.required],
     },
     birth_date: {
       label: "Birth Date",
       type: "text",
       inputType: "date",
       data: "",
+      rules: [inputRules.required],
     },
     civil_status: {
       label: "Civil Status",
       type: "select",
       data: "",
+      rules: [inputRules.required],
       items: [
         "Single",
         "Married",
@@ -558,6 +561,7 @@ const inputFields = ref({
       label: "Relationship",
       type: "select",
       data: "",
+      rules: [inputRules.required],
       items: [
         "Father",
         "Mother",
@@ -583,6 +587,7 @@ const inputFields = ref({
       label: "Educational Attainment",
       type: "select",
       data: "",
+      rules: [inputRules.required],
       items: [
         "Early Childhood Education",
         "Primary",
@@ -597,11 +602,13 @@ const inputFields = ref({
       label: "Occupation",
       type: "text",
       data: "",
+      rules: [inputRules.required],
     },
     monthly_income: {
       label: "Monthly Income",
       type: "text",
       data: "",
+      rules: [inputRules.required],
       inputType: "number",
     },
   },
@@ -688,6 +695,9 @@ const handleAddressButton = async () => {
 
 // * create section
 const createFamilyMemberData = async () => {
+  const isValid = await validateForm(familyForm);
+  console.log(isValid);
+  if (!isValid) return;
   let familyMember = {};
   for (const key in inputFields.value.familyComposition) {
     familyMember[key] = inputFields.value.familyComposition[key].data;
@@ -769,6 +779,8 @@ const updatePatientAddressData = async () => {
   }
 };
 const updateFamilyMemberData = async () => {
+  const isValid = await validateForm(familyForm);
+  if (!isValid) return;
   const response = await updateFamilyMember(toEditFamilyMember.value);
   if (response) {
     updateBars.value.updateFamilyMember.isActive = true;
