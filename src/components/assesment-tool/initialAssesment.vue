@@ -109,7 +109,7 @@
         variant="outlined"
         icon="mdi-alert-circle-outline"
         title="Please input neccesary fields"
-        text="Fields : First Name, Last Name"
+        text="Fields : First Name, Last Name, Hospital Number"
         color="error"
       ></v-alert>
     </v-card>

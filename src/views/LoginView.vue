@@ -14,8 +14,8 @@
           "
         ></v-alert>
       </div>
-      <div class="w-100 d-flex flex-column align-center pa-5 ga-2">
-        <h2 class="mb-10">EMSS</h2>
+      <div class="w-100 d-flex flex-column align-center my-10 ga-5">
+        <img src="/src/assets/vsmmc-logo.png" class="vsmmc-logo" />
         <div class="input-field w-100">
           <v-form ref="formLogin" class="d-flex flex-column ga-3">
             <v-text-field
@@ -135,10 +135,13 @@ const checkUserSession = () => {
 
 <style lang="css" scoped>
 .sign-in-container {
-  background-image: url("/src/assets/signinBG.jpg");
+  background-image: url("/src/assets/facade-perspective.jpg");
   background-size: cover;
-
   background-position: center bottom 5%;
+}
+.vsmmc-logo {
+  width: 150px;
+  height: 150px;
 }
 .alert {
   visibility: hidden;
@@ -156,7 +159,7 @@ const checkUserSession = () => {
   /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
   background-color: white;
   padding: 1em;
-  height: 95%;
+  height: 80%;
   width: 30%;
   border-radius: 15px;
   /* border: 1px solid blue; */

@@ -185,24 +185,38 @@
       <v-card-title primary-title> Family Composition </v-card-title>
       <v-card-text>
         <div class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(value, key) in inputFields.familyComposition"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            density="compact"
-            variant="outlined"
-            v-model="inputFields.familyComposition[key].data"
-            style="width: 250px"
-          ></v-text-field>
+          <template v-for="(value, key) in inputFields.familyComposition">
+            <v-text-field
+              v-if="value.type === 'text'"
+              :key="'text-' + key"
+              :label="value.label"
+              density="compact"
+              variant="outlined"
+              :type="value.inputType"
+              v-model="inputFields.familyComposition[key].data"
+              style="width: 250px"
+            ></v-text-field>
+            <v-select
+              v-else-if="value.type === 'select'"
+              :key="'select-' + key"
+              :label="value.label"
+              :items="value.items"
+              density="compact"
+              variant="outlined"
+              :type="value.inputType"
+              v-model="inputFields.familyComposition[key].data"
+              style="width: 250px"
+            ></v-select>
+          </template>
         </div>
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
+        <v-btn color="primary" @click="createFamilyMemberData">Create</v-btn>
         <v-btn color="error" @click="dialogs.addFamily = !dialogs.addFamily"
           >Cancel</v-btn
         >
-        <v-btn color="primary" @click="createFamilyMemberData">Create</v-btn>
       </v-card-actions>
+      <!-- {{ inputFields.familyComposition }} -->
     </v-card>
   </v-dialog>
   <!-- update family member dialog -->
@@ -213,16 +227,29 @@
       </v-card-title>
       <v-card-text>
         <div class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(value, key) in inputFields.familyComposition"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            density="compact"
-            variant="outlined"
-            v-model="toEditFamilyMember[key]"
-            style="width: 250px"
-          ></v-text-field>
+          <template v-for="(value, key) in inputFields.familyComposition">
+            <v-text-field
+              v-if="value.type === 'text'"
+              :key="'text-' + key"
+              :label="value.label"
+              density="compact"
+              variant="outlined"
+              :type="value.inputType"
+              v-model="toEditFamilyMember[key]"
+              style="width: 250px"
+            ></v-text-field>
+            <v-select
+              v-else-if="value.type === 'select'"
+              :key="'select-' + key"
+              :label="value.label"
+              :items="value.items"
+              density="compact"
+              variant="outlined"
+              :type="value.inputType"
+              v-model="toEditFamilyMember[key]"
+              style="width: 250px"
+            ></v-select>
+          </template>
         </div>
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
@@ -315,7 +342,6 @@ let patientAddress = ref([
 let provinces = ref([]);
 let municipalities = ref([]);
 let barangays = ref([]);
-
 
 let temporaryProvince = ref([]);
 let temporaryMunicipalities = ref([]);
@@ -503,27 +529,69 @@ const inputFields = ref({
     age: {
       label: "Age",
       type: "text",
+      inputType: "number",
       data: "",
     },
     birth_date: {
       label: "Birth Date",
-      type: "date",
+      type: "text",
+      inputType: "date",
       data: "",
     },
     civil_status: {
       label: "Civil Status",
-      type: "text",
+      type: "select",
       data: "",
+      items: [
+        "Single",
+        "Married",
+        "Widowed",
+        "Divorced",
+        "Annulled",
+        "Common Law OS",
+        "Common Law SS",
+        "Separated Legally",
+        "Separated De Facto",
+      ],
     },
     relationship: {
       label: "Relationship",
-      type: "text",
+      type: "select",
       data: "",
+      items: [
+        "Father",
+        "Mother",
+        "Son",
+        "Daughter",
+        "Brother",
+        "Sister",
+        "Grandfather",
+        "Grandmother",
+        "Grandson",
+        "Granddaughter",
+        "Uncle",
+        "Aunt",
+        "Nephew",
+        "Niece",
+        "Cousin",
+        "Spouse",
+        "In-Law",
+        "Others",
+      ],
     },
     educational_attainment: {
       label: "Educational Attainment",
-      type: "text",
+      type: "select",
       data: "",
+      items: [
+        "Early Childhood Education",
+        "Primary",
+        "Secondary",
+        "Tertiary",
+        "Vocational",
+        "Post Graduate",
+        "No Educational Attainment",
+      ],
     },
     occupation: {
       label: "Occupation",
@@ -534,6 +602,7 @@ const inputFields = ref({
       label: "Monthly Income",
       type: "text",
       data: "",
+      inputType: "number",
     },
   },
   address: {
