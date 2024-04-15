@@ -1,144 +1,119 @@
 <template lang="">
   <div v-if="isLoaded">
     <v-container style="width: 1000px">
+      {{ props.patientId }}
       <h1>Monthly Expenses:</h1>
-      <!-- input fields -->
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-col cols="12" class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(field, key) in InputFields.textFields"
-            :key="key"
-            prepend-inner-icon="mdi-currency-php"
-            :label="field.label"
-            v-model="monthlyExpenses[key]"
-            variant="outlined"
-            style="width: 400px"
-            class=""
-            type="number"
-            density="comfortable"
-          ></v-text-field>
-          <v-combobox
-            chips
-            multiple
-            closable-chips
-            :label="InputFields.comboFields.transportation_type.label"
-            :items="InputFields.comboFields.transportation_type.items"
-            v-model="monthlyExpenses.transportation_type"
-            variant="outlined"
-            style="width: 400px"
-            class=""
-            density="comfortable"
-          ></v-combobox>
-          <v-text-field
-            :label="InputFields.comboTextFields.transportation_cost.label"
-            prepend-inner-icon="mdi-currency-php"
-            variant="outlined"
-            v-model="monthlyExpenses.transportation_cost"
-            style="width: 400px"
-            class=""
-            type="number"
-            density="comfortable"
-          ></v-text-field>
+          <template v-for="(value, key) in inputFields.row1">
+            <v-text-field
+              v-if="value.type === 'text'"
+              :key="'text-' + key"
+              :label="value.label"
+              :hide-spin-buttons="true"
+              variant="outlined"
+              :type="value.inputType"
+              style="width: 400px"
+              prefix="₱"
+              :rules="value.rules"
+              v-model="userMonthlyExpenses.number[key]"
+              density="comfortable"
+            ></v-text-field>
+            <v-select
+              v-else-if="value.type === 'select'"
+              multiple
+              chips
+              closable-chips
+              :key="'select-' + key"
+              :label="value.label"
+              :items="value.items"
+              variant="outlined"
+              style="width: 400px"
+              v-model="userMonthlyExpenses.text[key]"
+              density="comfortable"
+            ></v-select>
+            <v-combobox
+              v-if="value.type === 'combobox'"
+              :key="'combobox-' + key"
+              :label="value.label"
+              :items="value.items"
+              v-model="userMonthlyExpenses.text[key]"
+              variant="outlined"
+              style="width: 400px"
+              density="comfortable"
+              multiple
+              chips
+              closable-chips
+            ></v-combobox>
+          </template>
         </v-col>
       </v-row>
-      <!-- sources -->
-      <h3>Light Source:</h3>
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-col cols="12" class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(field, key) in InputFields.sourceFields.lightSource"
-            :key="key"
-            prepend-inner-icon="mdi-currency-php"
-            :label="field.label"
-            variant="outlined"
-            style="width: 200px"
-            v-model="monthlyExpenses.patient_light_source[key]"
-            type="number"
-            class=""
-            density="comfortable"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <h3>Fuel Source:</h3>
-      <v-divider class="mb-5"></v-divider>
-      <v-row>
-        <v-col cols="12" class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(field, key) in InputFields.sourceFields.fuelSource"
-            :key="key"
-            prepend-inner-icon="mdi-currency-php"
-            :label="field.label"
-            v-model="monthlyExpenses.patient_fuel_source[key]"
-            variant="outlined"
-            style="width: 200px"
-            type="number"
-            class=""
-            density="comfortable"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <h3>Water Source:</h3>
-      <v-divider class="mb-5"></v-divider>
-      <v-row>
-        <v-col cols="12" class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(field, key) in InputFields.sourceFields.waterSource"
-            :key="key"
-            prepend-inner-icon="mdi-currency-php"
-            :label="field.label"
-            v-model="monthlyExpenses.patient_water_source[key]"
-            variant="outlined"
-            style="width: 200px"
-            type="number"
-            class=""
-            density="comfortable"
-          ></v-text-field>
+          <template v-for="(value, key) in inputFields.row2">
+            <v-combobox
+              v-if="value.type === 'combobox'"
+              :key="'combobox-' + key"
+              :label="value.label"
+              :items="value.items"
+              v-model="userMonthlyExpenses.text[key]"
+              variant="outlined"
+              style="width: 400px"
+              density="comfortable"
+              multiple
+              chips
+              closable-chips
+            ></v-combobox>
+            <v-text-field
+              v-else-if="value.type === 'text'"
+              :key="'text-' + key"
+              :label="value.label"
+              :hide-spin-buttons="true"
+              variant="outlined"
+              :type="value.inputType"
+              style="width: 400px"
+              prefix="₱"
+              :rules="value.rules"
+              v-model="userMonthlyExpenses.number[key]"
+              density="comfortable"
+            ></v-text-field>
+          </template>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12">
           <v-text-field
-            prepend-inner-icon="mdi-currency-php"
+            prefix="₱"
             label="Total Cost"
             variant="outlined"
-            density="comfortable"
+            readonly
+            v-model="totalCost"
           ></v-text-field>
-          <v-textarea
-            label="Remarks"
-            variant="outlined"
-            class=""
-            v-model="monthlyExpenses['remarks']"
-            density="comfortable"
-          >
-          </v-textarea>
-          <v-btn color="secondary" @click="handleButtonAction">{{
-            monthlyExpenses.isExist ? "Update Patient" : "Create Data"
-          }}</v-btn>
         </v-col>
       </v-row>
-      <!-- {{ monthlyExpenses }} -->
+      <v-row>
+        <v-col cols="12">
+          <v-btn
+            variant="flat"
+            :color="userMonthlyExpenses.isExist ? 'secondary' : 'success'"
+            @click="
+              userMonthlyExpenses.isExist
+                ? updateMonthlyExpensesItem()
+                : createMonthlyExpensesItem()
+            "
+          >
+            {{ userMonthlyExpenses.isExist ? "Update Data" : "Create Data" }}
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-container>
-    <!-- {{ monthlyExpenses }} -->
-    <v-snackbar
-      v-for="(bar, key) in snackBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
-      </div>
-    </v-snackbar>
   </div>
 </template>
 <script setup>
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
+import { inputRules } from "@/utils/constants";
 import {
   getMonthlyExpenses,
   createMonthlyExpenses,
@@ -148,44 +123,75 @@ import {
 const props = defineProps({
   patientId: Number,
 });
-onMounted(async () => {
-  await fetchMonthlyExpenses();
-});
 
-const snackBars = ref({
-  update: {
-    isActive: false,
-    text: ref("Successfully Updated Patient Data"),
-  },
-  create: {
-    isActive: false,
-    text: ref("Successfully Created Patient Data"),
-  },
-});
-const monthlyExpenses = ref({
-  isExist: false,
-  patient_light_source: {
-    electric: null,
-    kerosene: null,
-    candle: null,
-  },
-  patient_water_source: {
-    public_artesian_well: null,
-    private_artesian_well: null,
-    water_district: null,
-  },
-  patient_fuel_source: {
-    gas: null,
-    kerosene: null,
-    charcoal: null,
-  },
-});
 const isLoaded = ref(true);
-const monthlyExpensesData = ref({});
-const InputFields = {
-  comboFields: {
+const totalCost = computed(() => {
+  let total = 0;
+  for (let key in userMonthlyExpenses.value.number) {
+    total += Number(userMonthlyExpenses.value.number[key]);
+  }
+  return total;
+});
+const userMonthlyExpenses = ref({
+  isExist: false,
+  id: props.patientId,
+  number: {
+    house_lot_cost: "",
+    food_water_cost: "",
+    education_cost: "",
+    clothing_cost: "",
+    communication_cost: "",
+    others_cost: "",
+    house_help_cost: "",
+    medical_cost: "",
+    transportation_cost: "",
+    light_source_cost: "",
+    fuel_source_cost: "",
+    water_source_cost: "",
+  },
+  text: {},
+});
+const inputFields = ref({
+  row1: {
+    house_lot_cost: {
+      label: "House and Lot Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
+    },
+    food_water_cost: {
+      label: "Food and Water Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
+    },
+    education_cost: {
+      label: "Education Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
+    },
+    clothing_cost: {
+      label: "Clothing Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
+    },
+    communication_cost: {
+      label: "Communication Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
+    },
+    house_help_cost: {
+      label: "House Help Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
+    },
     transportation_type: {
       label: "Transportation Type",
+      type: "select",
       items: [
         "Jeep",
         "Bus",
@@ -197,117 +203,131 @@ const InputFields = {
         "Bicycle",
       ],
     },
-  },
-  textFields: {
-    house_lot_cost: {
-      label: "House and Lot Cost",
-      value: "",
+    transportation_cost: {
+      label: "Transportation Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
     },
-    food_water_cost: {
-      label: "Food and Water Cost",
-      value: "",
+    others_description: {
+      label: "Others. Please specify:",
+      type: "combobox",
     },
-    education_cost: {
-      label: "Education Cost",
-      value: "",
-    },
-    communication_cost: {
-      label: "Communication Cost",
-      value: "",
-    },
-    house_help_cost: {
-      label: "House Help Cost",
-      value: "",
+    others_cost: {
+      label: "Others Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
     },
     medical_cost: {
       label: "Medical Cost",
-      value: "",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
     },
   },
-  sourceFields: {
-    lightSource: {
-      electric: {
-        label: "Electricity Cost",
-      },
-      kerosene: {
-        label: "Kerosene Cost",
-      },
-      candle: {
-        label: "Candles Cost",
-      },
+  row2: {
+    light_source_type: {
+      label: "Light Sources",
+      type: "combobox",
+      items: ["Electricity", "Kerosene", "Candles", "Solar"],
     },
-    fuelSource: {
-      gas: {
-        label: "Gas Cost",
-      },
-      kerosene: {
-        label: "kerosene Cost",
-      },
-      charcoal: {
-        label: "Charcoal Cost",
-      },
+    light_source_cost: {
+      label: "Light Source Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
     },
-    waterSource: {
-      public_artesian_well: {
-        label: "Public Artesian Well Cost",
-      },
-      private_artesian_well: {
-        label: "Private Artesian Well Cost",
-      },
-      water_district: {
-        label: "Water District Cost",
-      },
+    fuel_source_type: {
+      label: "Fuel Sources",
+      type: "combobox",
+      items: ["Gas", "Kerosene", "Charcoal"],
+    },
+    fuel_source_cost: {
+      label: "Fuel Source Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
+    },
+    water_source_type: {
+      label: "Water Sources",
+      type: "combobox",
+      items: [
+        "Tap",
+        "Deep Well",
+        "Spring",
+        "River",
+        "Public Artisan Well",
+        "Private Artisan Well",
+        "Water District",
+      ],
+    },
+    water_source_cost: {
+      label: "Water Source Cost",
+      inputType: "Number",
+      rules: [inputRules.invalidNegative],
+      type: "text",
     },
   },
-  comboTextFields: {
-    transportation_cost: {
-      label: "Transportation Cost",
-      value: "",
-    },
+  totalCost: {
+    label: "Total Cost",
+    type: "text",
   },
+});
+
+// async functions
+
+const createMonthlyExpensesItem = async () => {
+  const total_cost = totalCost.value;
+  userMonthlyExpenses.value.total_cost = total_cost;
+  const response = await createMonthlyExpenses(userMonthlyExpenses.value);
+  if (response) {
+    userMonthlyExpenses.value.isExist = true;
+  }
 };
 
-const fetchMonthlyExpenses = async () => {
+const getMonthlyExpensesItem = async () => {
   const response = await getMonthlyExpenses(props.patientId);
-  if (!response) {
-    console.log("No Monthly Expenses");
-    return;
+  if (response) {
+    userMonthlyExpenses.value = {
+      isExist: true,
+      id: response.id,
+      number: {
+        house_lot_cost: response.house_lot_cost,
+        food_water_cost: response.food_water_cost,
+        education_cost: response.education_cost,
+        clothing_cost: response.clothing_cost,
+        communication_cost: response.communication_cost,
+        house_help_cost: response.house_help_cost,
+        transportation_cost: response.transportation_cost,
+        others_cost: response.others_cost,
+        medical_cost: response.medical_cost,
+        light_source_cost: response.light_source_cost,
+        fuel_source_cost: response.fuel_source_cost,
+        water_source_cost: response.water_source_cost,
+      },
+      text: {
+        transportation_type: response.transportation_type,
+        others_description: response.others_description,
+        light_source_type: response.light_source_type,
+        fuel_source_type: response.fuel_source_type,
+        water_source_type: response.water_source_type,
+      },
+    };
+    console.log(userMonthlyExpenses.value);
   }
-
-  monthlyExpenses.value = response;
-  monthlyExpenses.value.isExist = true;
-  if (monthlyExpenses.value.transportation_type === "") {
-    monthlyExpenses.value.transportation_type = null;
+};
+const updateMonthlyExpensesItem = async () => {
+  const total_cost = totalCost.value;
+  userMonthlyExpenses.value.total_cost = total_cost;
+  const response = await updateMonthlyExpenses(userMonthlyExpenses.value);
+  if (response) {
+    console.log("Updated");
   }
-  // returns an object inside of the returned array data
-  monthlyExpenses.value.patient_light_source = response.patient_light_source[0];
-  monthlyExpenses.value.patient_fuel_source = response.patient_fuel_source[0];
-  monthlyExpenses.value.patient_water_source = response.patient_water_source[0];
 };
 
-const handleButtonAction = async () => {
-  if (monthlyExpenses.value.isExist) {
-    await updateMonthlyExpensesData();
-    return;
-  }
-  await createMonthlyExpensesData();
-};
-
-const createMonthlyExpensesData = async () => {
-  monthlyExpenses.value.patient_id = props.patientId;
-  const response = await createMonthlyExpenses(monthlyExpenses.value);
-  if (response) toggleUpdate("create");
-};
-const updateMonthlyExpensesData = async () => {
-  const response = await updateMonthlyExpenses(monthlyExpenses.value);
-  if (response) toggleUpdate("update");
-};
-const toggleUpdate = (type) => {
-  monthlyExpenses.value.isExist = true;
-  snackBars.value[type].isActive = true;
-};
-
-
-
+onMounted(async () => {
+  await getMonthlyExpensesItem();
+});
 </script>
 <style lang=""></style>
