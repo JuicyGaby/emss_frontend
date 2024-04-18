@@ -102,7 +102,10 @@
                 </v-form>
               </v-row>
               <v-card-actions class="justify-end mt-5">
-                <v-btn color="secondary" @click="createDARItem(false)"
+                <v-btn
+                  prepend-icon="mdi-book-plus"
+                  color="secondary"
+                  @click="createDARItem(false)"
                   >Create Patient</v-btn
                 >
               </v-card-actions>
@@ -127,7 +130,7 @@
                   ></v-text-field>
                   <v-btn
                     prepend-icon="mdi-magnify"
-                    variant="tonal"
+                    variant="flat"
                     color="secondary"
                     :disabled="
                       !searchPatientInput.first_name &&
@@ -190,7 +193,10 @@
                     ></v-autocomplete>
                   </v-col>
                   <v-card-actions class="justify-end">
-                    <v-btn color="secondary" @click="createDARItem(true)"
+                    <v-btn
+                      color="secondary"
+                      prepend-icon="mdi-book-plus"
+                      @click="createDARItem(true)"
                       >Create Report</v-btn
                     >
                   </v-card-actions>
