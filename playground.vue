@@ -1,313 +1,174 @@
 <template lang="">
-  <div v-if="isLoaded">
-    <v-container style="width: 1000px">
-      <h1>Monthly Expenses:</h1>
-      <!-- input fields -->
-      <v-divider class="mb-5"></v-divider>
-      <v-row>
-        <v-col cols="12" class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(field, key) in InputFields.textFields"
-            :key="key"
-            prepend-inner-icon="mdi-currency-php"
-            :label="field.label"
-            v-model="monthlyExpenses[key]"
-            variant="outlined"
-            style="width: 400px"
-            class=""
-            type="number"
-            density="comfortable"
-          ></v-text-field>
-          <v-combobox
-            chips
-            multiple
-            closable-chips
-            :label="InputFields.comboFields.transportation_type.label"
-            :items="InputFields.comboFields.transportation_type.items"
-            v-model="monthlyExpenses.transportation_type"
-            variant="outlined"
-            style="width: 400px"
-            class=""
-            density="comfortable"
-          ></v-combobox>
-          <v-text-field
-            :label="InputFields.comboTextFields.transportation_cost.label"
-            prepend-inner-icon="mdi-currency-php"
-            variant="outlined"
-            v-model="monthlyExpenses.transportation_cost"
-            style="width: 400px"
-            class=""
-            type="number"
-            density="comfortable"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <!-- sources -->
-      <h3>Light Source:</h3>
-      <v-divider class="mb-5"></v-divider>
-      <v-row>
-        <v-col cols="12" class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(field, key) in InputFields.sourceFields.lightSource"
-            :key="key"
-            prepend-inner-icon="mdi-currency-php"
-            :label="field.label"
-            variant="outlined"
-            style="width: 200px"
-            v-model="monthlyExpenses.patient_light_source[key]"
-            type="number"
-            class=""
-            density="comfortable"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <h3>Fuel Source:</h3>
-      <v-divider class="mb-5"></v-divider>
-      <v-row>
-        <v-col cols="12" class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(field, key) in InputFields.sourceFields.fuelSource"
-            :key="key"
-            prepend-inner-icon="mdi-currency-php"
-            :label="field.label"
-            v-model="monthlyExpenses.patient_fuel_source[key]"
-            variant="outlined"
-            style="width: 200px"
-            type="number"
-            class=""
-            density="comfortable"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <h3>Water Source:</h3>
-      <v-divider class="mb-5"></v-divider>
-      <v-row>
-        <v-col cols="12" class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(field, key) in InputFields.sourceFields.waterSource"
-            :key="key"
-            prepend-inner-icon="mdi-currency-php"
-            :label="field.label"
-            v-model="monthlyExpenses.patient_water_source[key]"
-            variant="outlined"
-            style="width: 200px"
-            type="number"
-            class=""
-            density="comfortable"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <v-text-field
-            prepend-inner-icon="mdi-currency-php"
-            label="Total Cost"
-            variant="outlined"
-            density="comfortable"
-          ></v-text-field>
-          <v-textarea
-            label="Remarks"
-            variant="outlined"
-            class=""
-            v-model="monthlyExpenses['remarks']"
-            density="comfortable"
-          >
-          </v-textarea>
-          <v-btn color="secondary" @click="handleButtonAction">{{
-            monthlyExpenses.isExist ? "Update Patient" : "Create Data"
-          }}</v-btn>
-        </v-col>
-      </v-row>
-      {{ monthlyExpenses }}
-    </v-container>
-    <!-- {{ monthlyExpenses }} -->
-    <v-snackbar
-      v-for="(bar, key) in snackBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
-      </div>
-    </v-snackbar>
+  <div class="d-flex justify-center align-center">
+    <v-form ref="formValidation">
+      <v-container class="interview">
+        <h2>Initial Interview</h2>
+        <v-divider class="mb-5"></v-divider>
+        <v-row>
+          <v-col cols="12" class="d-flex ga-2 flex-wrap">
+            <v-text-field
+              v-for="(field, key) in inputField"
+              :key="key"
+              :label="field.label"
+              :type="field.type"
+              variant="outlined"
+              style="width: 300px"
+              density="compact"
+              v-model="interviewData[key]"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <h2>Remarks:</h2>
+        <v-divider class="mb-5"></v-divider>
+        <v-row>
+          <v-col cols="12" class="mb-2">
+            <v-textarea
+              v-model="interviewData.remarks"
+              label="Remarks"
+              rows="5"
+              auto-grow
+              style="min-width: 300px"
+              :rules="inputRules.remarks"
+              variant="outlined"
+              counter="255"
+            ></v-textarea>
+          </v-col>
+        </v-row>
+        <v-btn color="secondary" @click="updatePatientInterview"
+          >Update Interview</v-btn
+        >
+        <v-snackbar
+          color="green"
+          location="top"
+          v-model="snackBars.update.isActive"
+          :timeout="snackBars.update.timeout"
+        >
+          <div class="d-flex justify-center align-center ga-2">
+            <v-icon icon="mdi-check-bold"></v-icon>
+            <p>{{ snackBars.update.text }}</p>
+          </div>
+        </v-snackbar>
+      </v-container>
+    </v-form>
   </div>
 </template>
 <script setup>
-import { ref, onMounted, watchEffect } from "vue";
-import {
-  getMonthlyExpenses,
-  createMonthlyExpenses,
-  updateMonthlyExpenses,
-} from "@/api/assesment-tool";
-
+import { ref, onMounted } from "vue";
+import { getInterview, updateInterview } from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
 });
-onMounted(async () => {
-  await fetchMonthlyExpenses();
-});
 
+const formValidation = ref(null);
+let interviewData = ref({});
 const snackBars = ref({
   update: {
     isActive: false,
-    text: ref("Successfully Updated Patient Data"),
-  },
-  create: {
-    isActive: false,
-    text: ref("Successfully Created Patient Data"),
+    text: "Successfully updated patient's interview data",
+    timeout: 2500,
   },
 });
-const monthlyExpenses = ref({
-  isExist: false,
-  patient_light_source: {
-    electric: null,
-    kerosene: null,
-    candle: null,
+const inputRules = {
+  remarks: [
+    (v) =>
+      v == null ||
+      v.length <= 255 ||
+      "Remarks must be less than 255 characters",
+  ],
+};
+const inputField = ref({
+  interview_date: {
+    label: "Interview Date",
+    type: "text",
   },
-  patient_water_source: {
-    public_artesian_well: null,
-    private_artesian_well: null,
-    water_district: null,
+  interview_time: {
+    label: "Interview Time",
+    type: "text",
   },
-  patient_fuel_source: {
-    gas: null,
-    kerosene: null,
-    charcoal: null,
+  admission_date_and_time: {
+    label: "Admission Date-Time",
+    type: "text",
+  },
+  basic_ward: {
+    label: "Basic Ward",
+    type: "text",
+  },
+  nonbasic_ward: {
+    label: "Non-Basic Ward",
+    type: "text",
+  },
+  health_record_number: {
+    label: "Health Record Number",
+    type: "text",
+  },
+  mswd_number: {
+    label: "MSWD Number",
+    type: "text",
+  },
+  referring_party: {
+    label: "Referring Party",
+    type: "text",
+  },
+  source_of_referral: {
+    label: "Source of Referral",
+    type: "text",
+  },
+  address: {
+    label: "Referal Address",
+    type: "text",
+  },
+  contact_number: {
+    label: "Referal Contact Number",
+    type: "text",
+  },
+  informant: {
+    label: "Informant",
+    type: "text",
+  },
+  relationship_to_patient: {
+    label: "Informant relationship to Patient",
+    type: "text",
+  },
+  informant_contact_number: {
+    label: "Informant Contact Number",
+    type: "text",
+  },
+  informant_address: {
+    label: "Informant Address",
+    type: "text",
   },
 });
-const isLoaded = ref(true);
-const monthlyExpensesData = ref({});
-const InputFields = {
-  comboFields: {
-    transportation_type: {
-      label: "Transportation Type",
-      items: [
-        "Jeep",
-        "Bus",
-        "Tricycle",
-        "Taxi",
-        "Motorcycle",
-        "Boat",
-        "Habal-habal",
-        "Bicycle",
-      ],
-    },
-  },
-  textFields: {
-    house_lot_cost: {
-      label: "House and Lot Cost",
-      value: "",
-    },
-    food_water_cost: {
-      label: "Food and Water Cost",
-      value: "",
-    },
-    education_cost: {
-      label: "Education Cost",
-      value: "",
-    },
-    communication_cost: {
-      label: "Communication Cost",
-      value: "",
-    },
-    house_help_cost: {
-      label: "House Help Cost",
-      value: "",
-    },
-    medical_cost: {
-      label: "Medical Cost",
-      value: "",
-    },
-  },
-  sourceFields: {
-    lightSource: {
-      electric: {
-        label: "Electricity Cost",
-      },
-      kerosene: {
-        label: "Kerosene Cost",
-      },
-      candle: {
-        label: "Candles Cost",
-      },
-    },
-    fuelSource: {
-      gas: {
-        label: "Gas Cost",
-      },
-      kerosene: {
-        label: "kerosene Cost",
-      },
-      charcoal: {
-        label: "Charcoal Cost",
-      },
-    },
-    waterSource: {
-      public_artesian_well: {
-        label: "Public Artesian Well Cost",
-      },
-      private_artesian_well: {
-        label: "Private Artesian Well Cost",
-      },
-      water_district: {
-        label: "Water District Cost",
-      },
-    },
-  },
-  comboTextFields: {
-    transportation_cost: {
-      label: "Transportation Cost",
-      value: "",
-    },
-  },
+onMounted(async () => {
+  await getInterviewData();
+});
+const getInterviewData = async () => {
+  const response = await getInterview(props.patientId);
+  interviewData.value = response;
 };
-
-const fetchMonthlyExpenses = async () => {
-  const response = await getMonthlyExpenses(props.patientId);
-  if (!response) {
-    console.log("No Monthly Expenses");
-    return;
+const validateForm = async () => {
+  const form = await formValidation.value.validate();
+  if (!form.valid) return false;
+  return true;
+};
+const updatePatientInterview = async () => {
+  const isValid = await validateForm();
+  if (!isValid) return;
+  const response = await updateInterview(props.patientId, interviewData.value);
+  if (response) {
+    toggleSnackBar();
   }
-
-  monthlyExpenses.value = response;
-  monthlyExpenses.value.isExist = true;
-  if (monthlyExpenses.value.transportation_type === "") {
-    monthlyExpenses.value.transportation_type = null;
-  }
-  // returns an object inside of the returned array data
-  monthlyExpenses.value.patient_light_source = response.patient_light_source[0];
-  monthlyExpenses.value.patient_fuel_source = response.patient_fuel_source[0];
-  monthlyExpenses.value.patient_water_source = response.patient_water_source[0];
 };
 
-const handleButtonAction = async () => {
-  if (monthlyExpenses.value.isExist) {
-    await updateMonthlyExpensesData();
-    return;
-  }
-  await createMonthlyExpensesData();
+const toggleSnackBar = () => {
+  snackBars.value.update.isActive = true;
 };
-
-const createMonthlyExpensesData = async () => {
-  monthlyExpenses.value.patient_id = props.patientId;
-  const response = await createMonthlyExpenses(monthlyExpenses.value);
-  if (response) toggleUpdate("create");
-};
-const updateMonthlyExpensesData = async () => {
-  const response = await updateMonthlyExpenses(monthlyExpenses.value);
-  if (response) toggleUpdate("update");
-};
-const toggleUpdate = (type) => {
-  monthlyExpenses.value.isExist = true;
-  snackBars.value[type].isActive = true;
-};
-
-
-
 </script>
-<style lang=""></style>
+<style lang="css" scoped>
+.interview {
+  /* border: 1px dashed red; */
+  width: 1000px;
+}
+.rb {
+  border: 1px dashed red;
+}
+</style>

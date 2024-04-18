@@ -1,93 +1,87 @@
 <template lang="">
   <div class="d-flex justify-center align-center">
-    <v-form ref="formValidation">
-      <v-container class="interview">
-        <h2>Initial Interview</h2>
-        <v-divider class="mb-5"></v-divider>
-        <v-row>
+    <v-container style="width: 1000px">
+      <h1>Initial Interview</h1>
+      <v-divider class="mb-5"></v-divider>
+      <v-row>
+        <v-form ref="interviewForm">
           <v-col cols="12" class="d-flex ga-2 flex-wrap">
-            <v-text-field
-              v-for="(field, key) in inputField"
-              :key="key"
-              :label="field.label"
-              :type="field.type"
-              variant="outlined"
-              style="width: 300px"
-              density="compact"
-              v-model="interviewData[key]"
-            ></v-text-field>
+            <template v-for="(value, index) in inputFields">
+              <v-text-field
+                v-if="value.type === 'text'"
+                :key="'text-' + index"
+                :label="value.label"
+                :hide-spin-buttons="true"
+                variant="outlined"
+                :type="value.formType"
+                style="width: 400px"
+                :rules="value.rules"
+                v-model="interviewInputData[index]"
+                density="comfortable"
+              ></v-text-field>
+              <v-combobox
+                v-else-if="value.type === 'select'"
+                :key="'select-' + index"
+                :label="value.label"
+                :items="value.items"
+                variant="outlined"
+                style="width: 400px"
+                v-model="interviewInputData[index]"
+                density="comfortable"
+              ></v-combobox>
+            </template>
           </v-col>
-        </v-row>
-        <h2>Remarks:</h2>
-        <v-divider class="mb-5"></v-divider>
-        <v-row>
-          <v-col cols="12" class="mb-2">
-            <v-textarea
-              v-model="interviewData.remarks"
-              label="Remarks"
-              rows="5"
-              auto-grow
-              style="min-width: 300px"
-              :rules="inputRules.remarks"
-              variant="outlined"
-              counter="255"
-            ></v-textarea>
-          </v-col>
-        </v-row>
-        <v-btn color="secondary" @click="updatePatientInterview"
-          >Update Interview</v-btn
+        </v-form>
+      </v-row>
+      <v-card-actions class="pa-0">
+        <v-btn
+          variant="flat"
+          :color="interviewInputData.isExist ? 'secondary' : 'success'"
+          @click="
+            interviewInputData.isExist
+              ? updateInterviewData()
+              : createInterviewData()
+          "
+          >{{
+            interviewInputData.isExist ? "Update Interview" : "Create Interview"
+          }}</v-btn
         >
-        <v-snackbar
-          color="green"
-          location="top"
-          v-model="snackBars.update.isActive"
-          :timeout="snackBars.update.timeout"
-        >
-          <div class="d-flex justify-center align-center ga-2">
-            <v-icon icon="mdi-check-bold"></v-icon>
-            <p>{{ snackBars.update.text }}</p>
-          </div>
-        </v-snackbar>
-      </v-container>
-    </v-form>
+      </v-card-actions>
+      <!-- {{ interviewInputData }} -->
+    </v-container>
   </div>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import snackBars from "../dialogs/snackBars.vue";
+import { inputRules, validateForm, handleSnackBar } from "@/utils/constants";
 import { getInterview, updateInterview } from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
 });
 
-const formValidation = ref(null);
-let interviewData = ref({});
-const snackBars = ref({
-  update: {
-    isActive: false,
-    text: "Successfully updated patient's interview data",
-    timeout: 2500,
-  },
+const interviewForm = ref(null);
+const snackBarData = ref({});
+
+const interviewInputData = ref({
+  isExist: false,
 });
-const inputRules = {
-  remarks: [
-    (v) =>
-      v == null ||
-      v.length <= 255 ||
-      "Remarks must be less than 255 characters",
-  ],
-};
-const inputField = ref({
+const inputFields = ref({
   interview_date: {
     label: "Interview Date",
     type: "text",
+    formType: "date",
   },
   interview_time: {
     label: "Interview Time",
     type: "text",
+    formType: "time",
   },
   admission_date_and_time: {
     label: "Admission Date-Time",
     type: "text",
+    formType: "datetime-local",
   },
   basic_ward: {
     label: "Basic Ward",
@@ -100,10 +94,14 @@ const inputField = ref({
   health_record_number: {
     label: "Health Record Number",
     type: "text",
+    formType: "number",
+    rules: [inputRules.invalidNegative],
   },
   mswd_number: {
     label: "MSWD Number",
     type: "text",
+    formType: "number",
+    rules: [inputRules.invalidNegative],
   },
   referring_party: {
     label: "Referring Party",
@@ -111,7 +109,18 @@ const inputField = ref({
   },
   source_of_referral: {
     label: "Source of Referral",
-    type: "text",
+    type: "select",
+    items: [
+      "Government Hospital",
+      "Private Hospitals/Clinics",
+      "Politicians",
+      "Media",
+      "Health Care Team",
+      "NGO’s/Private Welfare Agencies",
+      "Government Agencies",
+      "Walk – in",
+      "Others",
+    ],
   },
   address: {
     label: "Referal Address",
@@ -120,6 +129,8 @@ const inputField = ref({
   contact_number: {
     label: "Referal Contact Number",
     type: "text",
+    formType: "number",
+    rules: [inputRules.invalidNegative],
   },
   informant: {
     label: "Informant",
@@ -127,48 +138,61 @@ const inputField = ref({
   },
   relationship_to_patient: {
     label: "Informant relationship to Patient",
-    type: "text",
+    type: "select",
+    items: [
+      "Friends",
+      "Workmates",
+      "Neighbors",
+      "Relatives",
+      "Spouse",
+      "Children",
+      "Parents",
+      "Siblings",
+      "Others",
+    ],
   },
   informant_contact_number: {
     label: "Informant Contact Number",
     type: "text",
+    formType: "number",
+    rules: [inputRules.invalidNegative],
   },
   informant_address: {
     label: "Informant Address",
     type: "text",
   },
 });
+
+// asyn functions
+const getInterviewData = async () => {
+  const response = await getInterview(props.patientId);
+  if (response) {
+    interviewInputData.value = response;
+    response.isExist = true;
+  }
+  console.log(interviewInputData.value);
+};
+const createInterviewData = async () => {
+  const isValid = await validateForm(interviewForm);
+  if (!isValid) return;
+  console.log("creating");
+};
+const updateInterviewData = async () => {
+  const isValid = await validateForm(interviewForm);
+  if (!isValid) return;
+  const response = await updateInterview(
+    props.patientId,
+    interviewInputData.value
+  );
+  if (response) {
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Interview Updated Successfully"
+    );
+  }
+};
 onMounted(async () => {
   await getInterviewData();
 });
-const getInterviewData = async () => {
-  const response = await getInterview(props.patientId);
-  interviewData.value = response;
-};
-const validateForm = async () => {
-  const form = await formValidation.value.validate();
-  if (!form.valid) return false;
-  return true;
-};
-const updatePatientInterview = async () => {
-  const isValid = await validateForm();
-  if (!isValid) return;
-  const response = await updateInterview(props.patientId, interviewData.value);
-  if (response) {
-    toggleSnackBar();
-  }
-};
-
-const toggleSnackBar = () => {
-  snackBars.value.update.isActive = true;
-};
 </script>
-<style lang="css" scoped>
-.interview {
-  /* border: 1px dashed red; */
-  width: 1000px;
-}
-.rb {
-  border: 1px dashed red;
-}
-</style>
+<style lang=""></style>
