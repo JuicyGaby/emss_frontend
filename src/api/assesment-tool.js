@@ -18,8 +18,18 @@ const getInterview = async (patient_id) => {
   const data = await response.json();
   return data;
 };
-
-
+const createInterview = async (body) => {
+  const API_URL = "http://localhost:3000/interview";
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
 const updateInterview = async (patient_id, body) => {
   const API_URL = `http://localhost:3000/interview/${patient_id}`;
   const response = await fetch(API_URL, {
@@ -137,7 +147,7 @@ const createPatientAddress = async (body) => {
   });
   const data = await response.json();
   return data;
-}
+};
 
 // * mswd classification
 const getMswdClassification = async (patient_id) => {
@@ -405,6 +415,7 @@ export {
   interview,
   getInterview,
   updateInterview,
+  createInterview,
   // address
   getRegions,
   getProvince,

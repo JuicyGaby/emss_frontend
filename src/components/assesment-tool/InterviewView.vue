@@ -35,6 +35,7 @@
       </v-row>
       <v-card-actions class="pa-0">
         <v-btn
+          prepend-icon="mdi-content-save"
           variant="flat"
           :color="interviewInputData.isExist ? 'secondary' : 'success'"
           @click="
@@ -47,7 +48,7 @@
           }}</v-btn
         >
       </v-card-actions>
-      <!-- {{ interviewInputData }} -->
+      {{ interviewInputData }}
     </v-container>
   </div>
   <snackBars :snackBarData="snackBarData" />
@@ -56,7 +57,7 @@
 import { ref, onMounted } from "vue";
 import snackBars from "../dialogs/snackBars.vue";
 import { inputRules, validateForm, handleSnackBar } from "@/utils/constants";
-import { getInterview, updateInterview } from "@/api/assesment-tool";
+import { getInterview, updateInterview, interview } from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
 });
@@ -66,6 +67,11 @@ const snackBarData = ref({});
 
 const interviewInputData = ref({
   isExist: false,
+  patientId: props.patientId,
+  health_record_number: "",
+  mswd_number: "",
+  contact_number: "",
+  informant_contact_number: "",
 });
 const inputFields = ref({
   interview_date: {
@@ -168,14 +174,21 @@ const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
   if (response) {
     interviewInputData.value = response;
-    response.isExist = true;
+    interviewInputData.value.isExist = true;
   }
   console.log(interviewInputData.value);
 };
 const createInterviewData = async () => {
   const isValid = await validateForm(interviewForm);
   if (!isValid) return;
-  console.log("creating");
+  const response = await interview(interviewInputData.value);
+  if (response) {
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Interview Created Successfully"
+    );
+    interviewInputData.value.isExist = true;
+  }
 };
 const updateInterviewData = async () => {
   const isValid = await validateForm(interviewForm);
