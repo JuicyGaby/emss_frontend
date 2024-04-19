@@ -181,7 +181,13 @@
   <!-- create family member dialog -->
   <v-dialog v-model="dialogs.addFamily" width="600px" persistent>
     <v-card>
-      <v-card-title primary-title> Family Composition </v-card-title>
+      <v-toolbar color="secondary" class="px-5">
+        <v-icon>mdi-account-plus</v-icon>
+        <v-toolbar-title class="">Add Family Member</v-toolbar-title>
+        <v-icon @click="dialogs.addFamily = !dialogs.addFamily"
+          >mdi-close</v-icon
+        >
+      </v-toolbar>
       <v-card-text>
         <v-form ref="familyForm">
           <div class="d-flex ga-2 flex-wrap">
@@ -215,9 +221,6 @@
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
         <v-btn color="primary" @click="createFamilyMemberData">Create</v-btn>
-        <v-btn color="error" @click="dialogs.addFamily = !dialogs.addFamily"
-          >Cancel</v-btn
-        >
       </v-card-actions>
       <!-- {{ inputFields.familyComposition }} -->
     </v-card>
@@ -225,9 +228,13 @@
   <!-- update family member dialog -->
   <v-dialog v-model="dialogs.editFamily" width="600px" persistent>
     <v-card>
-      <v-card-title primary-title>
-        <h3>Edit family member:</h3>
-      </v-card-title>
+      <v-toolbar color="secondary" class="px-5">
+        <v-icon>mdi-account-edit</v-icon>
+        <v-toolbar-title class="">Edit Family Member</v-toolbar-title>
+        <v-icon @click="dialogs.editFamily = !dialogs.editFamily"
+          >mdi-close</v-icon
+        >
+      </v-toolbar>
       <v-card-text>
         <v-form ref="familyForm">
           <div class="d-flex ga-2 flex-wrap">
@@ -260,7 +267,6 @@
         </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
-        <v-btn color="error" @click="dialogs.editFamily = false">Cancel</v-btn>
         <v-btn color="primary" @click="updateFamilyMemberData">Update</v-btn>
       </v-card-actions>
     </v-card>

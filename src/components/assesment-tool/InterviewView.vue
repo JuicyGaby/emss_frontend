@@ -48,7 +48,7 @@
           }}</v-btn
         >
       </v-card-actions>
-      {{ interviewInputData }}
+      <!-- {{ interviewInputData }} -->
     </v-container>
   </div>
   <snackBars :snackBarData="snackBarData" />
