@@ -1,7 +1,6 @@
 <template lang="">
-  <div v-if="isLoaded">
+  <div>
     <v-container style="width: 1000px">
-      {{ props.patientId }}
       <h1>Monthly Expenses:</h1>
       <v-divider class="mb-5"></v-divider>
       <v-row>
@@ -97,6 +96,9 @@
         <v-col cols="12">
           <v-btn
             variant="flat"
+            :prepend-icon="
+              userMonthlyExpenses.isExist ? 'mdi-update' : 'mdi-content-save'
+            "
             :color="userMonthlyExpenses.isExist ? 'secondary' : 'success'"
             @click="
               userMonthlyExpenses.isExist
@@ -104,14 +106,20 @@
                 : createMonthlyExpensesItem()
             "
           >
-            {{ userMonthlyExpenses.isExist ? "Update Data" : "Create Data" }}
+            {{
+              userMonthlyExpenses.isExist 
+                ? "Update Monthly Expenses"
+                : "Create Monthly Expenses"
+            }}
           </v-btn>
         </v-col>
       </v-row>
     </v-container>
   </div>
+  <snack-bars :snackBarData="snackBarData" />
 </template>
 <script setup>
+import snackBars from "../dialogs/snackBars.vue";
 import { ref, onMounted, computed, watch } from "vue";
 import { inputRules, handleSnackBar } from "@/utils/constants";
 import {
@@ -120,11 +128,11 @@ import {
   updateMonthlyExpenses,
 } from "@/api/assesment-tool";
 
+const snackBarData = ref({});
+
 const props = defineProps({
   patientId: Number,
 });
-
-const isLoaded = ref(true);
 const totalCost = computed(() => {
   let total = 0;
   for (let key in userMonthlyExpenses.value.number) {
@@ -282,6 +290,7 @@ const createMonthlyExpensesItem = async () => {
   userMonthlyExpenses.value.total_cost = total_cost;
   const response = await createMonthlyExpenses(userMonthlyExpenses.value);
   if (response) {
+    snackBarData.value = handleSnackBar("success", "Data Created Successfully");
     userMonthlyExpenses.value.isExist = true;
   }
 };
@@ -322,7 +331,7 @@ const updateMonthlyExpensesItem = async () => {
   userMonthlyExpenses.value.total_cost = total_cost;
   const response = await updateMonthlyExpenses(userMonthlyExpenses.value);
   if (response) {
-    console.log("Updated");
+    snackBarData.value = handleSnackBar("success", "Data Updated Successfully");
   }
 };
 

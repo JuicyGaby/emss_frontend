@@ -35,7 +35,9 @@
       </v-row>
       <v-card-actions class="pa-0">
         <v-btn
-          prepend-icon="mdi-content-save"
+          :prepend-icon="
+            interviewInputData.isExist ? 'mdi-update' : 'mdi-content-save'
+          "
           variant="flat"
           :color="interviewInputData.isExist ? 'secondary' : 'success'"
           @click="

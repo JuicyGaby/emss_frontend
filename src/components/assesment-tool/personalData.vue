@@ -66,8 +66,8 @@
             </v-row>
             <v-btn
               color="secondary"
+              prepend-icon="mdi-update"
               @click="updatePersonalData"
-              prepend-icon="mdi-content-save"
               class="my-5"
               >Update Personal Data</v-btn
             >

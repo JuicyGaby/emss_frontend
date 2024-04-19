@@ -43,11 +43,18 @@
           ></v-textarea>
         </v-col>
       </v-row>
-      <v-btn color="secondary" @click="handleButtonAction">{{
-        mswdClassification.isExisting
-          ? "Update Classification"
-          : "Create Classification"
-      }}</v-btn>
+      <v-btn
+        :prepend-icon="
+          mswdClassification.isExisting ? 'mdi-update' : 'mdi-pencil'
+        "
+        color="secondary"
+        @click="handleButtonAction"
+        >{{
+          mswdClassification.isExisting
+            ? "Update Classification"
+            : "Create Classification"
+        }}</v-btn
+      >
     </v-container>
   </div>
   <v-snackbar

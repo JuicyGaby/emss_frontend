@@ -18,9 +18,14 @@
           ></v-textarea>
         </v-col>
       </v-row>
-      <v-btn color="secondary" @click="handleButtonAction">{{
-        medicalData.isExist ? "Update Data" : "Create Data"
-      }}</v-btn>
+      <v-btn
+        :prepend-icon="medicalData.isExist ? 'mdi-update' : 'mdi-content-save'"
+        color="secondary"
+        @click="handleButtonAction"
+        >{{
+          medicalData.isExist ? "Update Medical Data" : "Create Medical Data"
+        }}</v-btn
+      >
     </v-container>
     <!-- {{ medicalData }} -->
     <v-snackbar

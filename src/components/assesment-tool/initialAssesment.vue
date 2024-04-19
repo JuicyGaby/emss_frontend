@@ -20,17 +20,17 @@
     </template>
     <!-- stepper 3 -->
     <template v-slot:[`item.3`]>
-      <h2>Patient Details</h2>
+      <h1>Patient Details</h1>
       <v-divider></v-divider>
       <v-container style="width: 1000px">
         <v-row>
-          <h4>Interview Data</h4>
+          <h3>Interview Data</h3>
           <v-cols>
             <v-table density="compact" style="width: 1000px">
               <thead>
                 <tr>
-                  <th>Field</th>
-                  <th>Data</th>
+                  <th class="text-center" style="width: 500px">Field</th>
+                  <th class="text-center" style="width: 500px">Data</th>
                 </tr>
               </thead>
               <tbody>
@@ -45,14 +45,14 @@
           </v-cols>
         </v-row>
         <v-row class="my-5">
-          <h4>Personal Data</h4>
+          <h3>Personal Data</h3>
           <v-divider></v-divider>
           <v-cols>
             <v-table density="compact" style="width: 1000px">
               <thead>
                 <tr>
-                  <th>Field</th>
-                  <th>Data</th>
+                  <th class="text-center" style="width: 500px">Field</th>
+                  <th class="text-center" style="width: 500px">Data</th>
                 </tr>
               </thead>
               <tbody>
@@ -68,9 +68,15 @@
         </v-row>
         <v-row>
           <v-col cols="12" class="justify-end">
-            <v-btn color="secondary" class="" @click="createPatientData"
-              >Create Patient</v-btn
-            >
+            <v-card-actions class="justify-end">
+              <v-btn
+                variant="flat"
+                color="secondary"
+                prepend-icon="mdi-account-plus"
+                @click="createPatientData"
+                >Create Patient</v-btn
+              >
+            </v-card-actions>
           </v-col>
         </v-row>
       </v-container>
