@@ -18,9 +18,9 @@
                     <v-toolbar-title>Services Notes</v-toolbar-title>
                     <v-btn
                       variant="outlined"
-                      prepend-icon="mdi-plus"
+                      prepend-icon="mdi-note-plus"
                       @click="dialogs.createNote.isVisible = true"
-                      >add note</v-btn
+                      >Create Note</v-btn
                     >
                   </v-toolbar>
                   <v-card-text>

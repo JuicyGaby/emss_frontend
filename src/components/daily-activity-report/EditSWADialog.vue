@@ -18,6 +18,7 @@
                   <v-toolbar-title>SWA Notes</v-toolbar-title>
                   <v-spacer></v-spacer>
                   <v-btn
+                    prepend-icon="mdi-note-plus"
                     variant="outlined"
                     @click="dialogs.createDialog.isVisible = true"
                     >Create Note</v-btn
@@ -44,7 +45,7 @@
                         >
                         <v-icon
                           v-if="item.creator_id === authentication.user.id"
-                          color="secondary"
+                          color="error"
                           @click="handleSwaNoteDialogs(item.id, 'deleteDialog')"
                           >mdi-delete</v-icon
                         >
@@ -68,6 +69,7 @@
               ></v-select>
               <v-card-actions class="justify-end">
                 <v-btn
+                  prepend-icon="mdi-plus"
                   color="primary"
                   @click="dialogs.addServicesDialog.isVisible = true"
                 >
@@ -85,7 +87,8 @@
     <!-- create -->
     <v-dialog v-model="dialogs.createDialog.isVisible" width="600">
       <v-card>
-        <v-toolbar color="secondary">
+        <v-toolbar color="secondary" class="pl-5">
+          <v-icon>mdi-book-plus</v-icon>
           <v-toolbar-title>Create Note</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon @click="dialogs.createDialog.isVisible = false">
