@@ -4,29 +4,32 @@
     <div class="pages" v-show="page == 1">
       <v-row>
         <v-col cols="12" class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(field, key) in inputFields.step1.textField"
-            :key="key"
-            :label="field.label"
-            :type="field.type"
-            variant="outlined"
-            style="width: 300px"
-            density="compact"
-            :hint="field.hint"
-            :persistent-hint="true"
-            v-model="personalDataInputs[key]"
-            :rules="field.rules"
-          ></v-text-field>
-          <v-select
-            v-for="(field, key) in inputFields.step1.selectField"
-            :key="key"
-            :label="field.label"
-            :items="field.items"
-            variant="outlined"
-            style="width: 300px"
-            density="compact"
-            v-model="personalDataInputs[key]"
-          ></v-select>
+          <template v-for="(value, index) in inputFields.step1">
+            <v-text-field
+              v-if="value.formType === 'text'"
+              :key="'text-' + index"
+              :label="value.label"
+              :hide-spin-buttons="true"
+              variant="outlined"
+              :type="value.type"
+              style="width: 400px"
+              :rules="value.rules"
+              density="compact"
+              :hint="value.hint"
+              :persistent-hint="true"
+              v-model="personalDataInputs[index]"
+            ></v-text-field>
+            <v-combobox
+              v-else-if="value.formType === 'select'"
+              :key="'select-' + index"
+              :label="value.label"
+              variant="outlined"
+              style="width: 400px"
+              density="compact"
+              :items="value.items"
+              v-model="personalDataInputs[index]"
+            ></v-combobox>
+          </template>
         </v-col>
       </v-row>
     </div>
@@ -34,26 +37,32 @@
     <div class="pages" v-show="page == 2">
       <v-row>
         <v-col cols="12" class="d-flex ga-2 flex-wrap">
-          <v-select
-            v-for="(field, key) in inputFields.step2.selectField"
-            :key="key"
-            :label="field.label"
-            :items="field.options"
-            variant="outlined"
-            style="width: 300px"
-            density="compact"
-            v-model="personalDataInputs[key]"
-          ></v-select>
-          <v-text-field
-            v-for="(field, key) in inputFields.step2.textField"
-            :key="key"
-            :label="field.label"
-            :type="field.type"
-            variant="outlined"
-            style="width: 300px"
-            density="compact"
-            v-model="personalDataInputs[key]"
-          ></v-text-field>
+          <template v-for="(value, index) in inputFields.step2">
+            <v-text-field
+              v-if="value.formType === 'text'"
+              :key="'text-' + index"
+              :label="value.label"
+              :hide-spin-buttons="true"
+              variant="outlined"
+              :type="value.type"
+              style="width: 400px"
+              :rules="value.rules"
+              density="compact"
+              :hint="value.hint"
+              :persistent-hint="true"
+              v-model="personalDataInputs[index]"
+            ></v-text-field>
+            <v-select
+              v-else-if="value.formType === 'select'"
+              :key="'select-' + index"
+              :label="value.label"
+              variant="outlined"
+              style="width: 400px"
+              density="compact"
+              :items="value.items"
+              v-model="personalDataInputs[index]"
+            ></v-select>
+          </template>
         </v-col>
       </v-row>
     </div>
@@ -85,128 +94,147 @@ watchEffect(() => {
   emit("personalData", personalDataInputsCopy);
 });
 
-const inputRules = {
-  required: [(v) => !!v || "required"],
-};
 const inputFields = {
   step1: {
-    textField: {
-      last_name: {
-        label: "Last Name",
-        type: "text",
-        rules: inputRules.required,
-      },
-      first_name: {
-        label: "First Name",
-        type: "text",
-        rules: inputRules.required,
-      },
-      middle_name: {
-        label: "Middle Name",
-        type: "text",
-      },
-      age: {
-        label: "Age",
-        type: "number",
-      },
-      contact_number: {
-        label: "Contact Number",
-        type: "number",
-      },
-      birth_date: {
-        label: "Date of Birth",
-        type: "date",
-      },
-      place_of_birth: {
-        label: "Place of Birth",
-        type: "text",
-      },
-      religion: {
-        label: "Religion",
-        type: "text",
-      },
-      nationality: {
-        label: "Nationality",
-        type: "text",
-      },
-      preferred_name: {
-        label: "Preferred Name",
-        type: "text",
-        hint: "For members of the LGBTQIA+ Community",
-      },
+    last_name: {
+      label: "Last Name",
+      formType: "text",
+      type: "text",
+      hint: "Field Required",
     },
-    selectField: {
-      sex: {
-        label: "Sex",
-        items: ["Male", "Female"],
-      },
-      gender: {
-        label: "Gender Identity",
-        items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
-      },
+    first_name: {
+      label: "First Name",
+      formType: "text",
+      type: "text",
+      hint: "Field Required",
+    },
+    middle_name: {
+      label: "Middle Name",
+      formType: "text",
+      type: "text",
+    },
+    preferred_name: {
+      label: "Preferred Name",
+      formType: "text",
+      type: "text",
+      hint: "For members of the LGBTQIA+ Community",
+    },
+    age: {
+      label: "Age",
+      formType: "text",
+      type: "number",
+    },
+    contact_number: {
+      label: "Contact Number",
+      formType: "text",
+      type: "number",
+    },
+    birth_date: {
+      label: "Date of Birth",
+      formType: "text",
+      type: "date",
+    },
+    place_of_birth: {
+      label: "Place of Birth",
+      formType: "text",
+      type: "text",
+    },
+    religion: {
+      label: "Religion",
+      formType: "select",
+      type: "text",
+      items: [
+        "Roman Catholic",
+        "Iglesia ni Cristo",
+        "Muslim",
+        "Born Again Christian",
+        "Others",
+      ],
+    },
+    nationality: {
+      label: "Nationality",
+      formType: "select",
+      type: "text",
+      items: ["Filipino", "Others"],
+    },
+
+    sex: {
+      label: "Sex",
+      items: ["Male", "Female"],
+      formType: "select",
+    },
+    gender: {
+      label: "Gender Identity",
+      items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
+      formType: "select",
     },
   },
+
   step2: {
-    selectField: {
-      civil_status: {
-        label: "Civil Status",
-        options: [
-          "Single",
-          "Married",
-          "Widowed",
-          "Divorced",
-          "Annulled",
-          "Common Law OS",
-          "Common Law SS",
-          "Separated Legally",
-          "Separated De Facto",
-        ],
-      },
-      living_arrangement: {
-        label: "Living Arrangement",
-        options: [
-          "owned",
-          "shared",
-          "rent",
-          "homeless",
-          "institutionalized",
-          "others",
-        ],
-      },
-      education: {
-        label: "Education",
-        options: [
-          "Early Childhood Education",
-          "Primary",
-          "Secondary",
-          "Tertiary",
-          "Vocational",
-          "Post Graduate",
-          "No Educational Attainment",
-        ],
-      },
-      educationStatus: {
-        label: "Education Status",
-        options: ["Level", "Graduated", "Ongoing"],
-      },
+    civil_status: {
+      label: "Civil Status",
+      formType: "select",
+      items: [
+        "Single",
+        "Married",
+        "Widowed",
+        "Divorced",
+        "Annulled",
+        "Common Law OS",
+        "Common Law SS",
+        "Separated Legally",
+        "Separated De Facto",
+      ],
     },
-    textField: {
-      occupation: {
-        label: "Occupation",
-        type: "text",
-      },
-      monthly_income: {
-        label: "Monthly Income",
-        type: "number",
-      },
-      ph_membership_number: {
-        label: "PhilHealth Membership Number",
-        type: "text",
-      },
-      ph_membership_type: {
-        label: "PhilHealth Membership",
-        options: ["Direct Contributor", "Indirect Contributor"],
-      },
+    living_arrangement: {
+      label: "Living Arrangement",
+      formType: "select",
+      items: [
+        "owned",
+        "shared",
+        "rent",
+        "homeless",
+        "institutionalized",
+        "others",
+      ],
+    },
+    education: {
+      label: "Education",
+      formType: "select",
+      items: [
+        "Early Childhood Education",
+        "Primary",
+        "Secondary",
+        "Tertiary",
+        "Vocational",
+        "Post Graduate",
+        "No Educational Attainment",
+      ],
+    },
+    educationStatus: {
+      label: "Education Status",
+      formType: "select",
+      items: ["Level", "Graduated", "Ongoing"],
+    },
+    occupation: {
+      label: "Occupation",
+      formType: "text",
+      type: "text",
+    },
+    monthly_income: {
+      label: "Monthly Income",
+      formType: "text",
+      type: "number",
+    },
+    ph_membership_number: {
+      label: "PhilHealth Membership Number",
+      formType: "text",
+      type: "text",
+    },
+    ph_membership_type: {
+      label: "PhilHealth Membership",
+      formType: "select",
+      items: ["Direct Contributor", "Indirect Contributor"],
     },
   },
 };

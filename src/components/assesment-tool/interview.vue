@@ -12,7 +12,7 @@
             :type="value.type"
             style="width: 400px"
             :rules="value.rules"
-            density="comfortable"
+            density="compact"
             v-model="interviewInputs[index]"
           ></v-text-field>
           <v-combobox
@@ -21,7 +21,7 @@
             :label="value.label"
             variant="outlined"
             style="width: 400px"
-            density="comfortable"
+            density="compact"
             :items="value.items"
             v-model="interviewInputs[index]"
           ></v-combobox>
