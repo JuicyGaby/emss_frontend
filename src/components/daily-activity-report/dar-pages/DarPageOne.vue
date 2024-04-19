@@ -118,8 +118,11 @@
                 ></v-textarea>
               </v-col>
               <v-col>
-                <v-btn color="primary" @click="updateDailyActivityReportItem"
-                  >Update Dar</v-btn
+                <v-btn
+                  prepend-icon="mdi-update"
+                  color="secondary"
+                  @click="updateDailyActivityReportItem"
+                  >Update Daily Activity Report</v-btn
                 >
               </v-col>
               <!-- {{ darData }} -->
@@ -139,7 +142,6 @@ import { inputRules, validateForm } from "@/utils/constants";
 import {
   getDailyActivityReportById,
   updateDailyActivityReport,
-  
 } from "@/api/daily-activity-report";
 const props = defineProps({
   dar_id: Number,

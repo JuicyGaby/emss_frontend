@@ -364,6 +364,7 @@ const problemsInEnvironment = ref({
     duration: "",
   },
 });
+
 const snackBars = ref({
   update: {
     isActive: false,
@@ -555,8 +556,9 @@ const updateProblemsInEnvironmentItem = async () => {
 const fetchProblemsInEnvironmentItem = async () => {
   const response = await getProblemsInEnvironment(props.patientId);
   if (response) {
-    console.log("response", response);
-    handlePatientData(response);
+    problemsInEnvironment.value = response;
+    problemsInEnvironment.value.isExist = true;
+    console.log("response", problemsInEnvironment.value);
   }
 };
 const handleButtonAction = async () => {
@@ -565,16 +567,6 @@ const handleButtonAction = async () => {
     return;
   }
   await createProblemsInEnvironmentItem();
-};
-const handlePatientData = (response) => {
-  problemsInEnvironment.value = response;
-  if (problemsInEnvironment.value.problems_presented === "") {
-    problemsInEnvironment.value.problems_presented = null;
-  }
-  if (problemsInEnvironment.value.reasons_psychosocial_counselling === "") {
-    problemsInEnvironment.value.reasons_psychosocial_counselling = null;
-  }
-  problemsInEnvironment.value.isExist = true;
 };
 </script>
 <style lang="css"></style>
