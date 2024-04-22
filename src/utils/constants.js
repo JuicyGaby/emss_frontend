@@ -33,3 +33,5 @@ export const handleSnackBar = (type, text) => {
     text: text,
   };
 };
+
+export const API_URL = "http://172.16.1.46:4000/emss";

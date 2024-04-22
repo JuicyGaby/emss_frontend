@@ -3,7 +3,7 @@ import IndexView from "../views/indexView.vue";
 import LoginView from "../views/LoginView.vue";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: "/",
@@ -39,7 +39,7 @@ const router = createRouter({
       component: () => import("../components/patient/EditPatient.vue"),
     },
     {
-      path: "/daily-activity-report",
+      path: "/dar",
       name: "dailyActivityReport",
       component: () => import("../views/DailyActivityReportView.vue"),
       meta: {
