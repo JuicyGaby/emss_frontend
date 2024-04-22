@@ -58,9 +58,18 @@
           </v-table>
         </v-col>
       </v-row>
-      <v-btn color="secondary" @click="handleButtonAction">{{
-        healthAndMentalHealth.isExist ? "Update Data" : "Create Data"
-      }}</v-btn>
+      <v-btn
+        :prepend-icon="
+          healthAndMentalHealth.isExist ? 'mdi-update' : 'mdi-pencil'
+        "
+        color="secondary"
+        @click="handleButtonAction"
+        >{{
+          healthAndMentalHealth.isExist
+            ? "Update Health and  Mental Health"
+            : "Create Health and Mental Health"
+        }}</v-btn
+      >
       <!-- {{ healthAndMentalHealth }} -->
     </v-container>
     <v-snackbar
@@ -141,7 +150,7 @@ const snackBars = ref({
 });
 const indexItems = {
   severity: [
-    { text: "No Problmen", value: 1 },
+    { text: "No Problem", value: 1 },
     { text: "Low", value: 2 },
     { text: "Moderate", value: 3 },
     { text: "High", value: 4 },

@@ -119,7 +119,7 @@
           <v-btn
             color="secondary"
             @click="handleAddressButton"
-            prepend-icon="mdi-content-save"
+            prepend-icon="mdi-update"
             class="mb-5"
             >{{
               patientData.addressExist ? "Update Address" : "Update Address"

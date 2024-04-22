@@ -45,7 +45,7 @@
       </v-row>
       <v-btn
         :prepend-icon="
-          mswdClassification.isExisting ? 'mdi-update' : 'mdi-pencil'
+          mswdClassification.isExisting ? 'mdi-update' : 'mdi-content-save'
         "
         color="secondary"
         @click="handleButtonAction"
@@ -153,12 +153,12 @@ const updateMswdClassificationData = async () => {
   console.log("updated", response);
   snackBars.value.update.isActive = true;
 };
-
 const createMswdClassificationData = async () => {
   mswdClassification.value.patient_id = props.patientId;
   const response = await createMswdClassification(mswdClassification.value);
   mswdClassification.value.haveClassification = true;
   snackBars.value.create.isActive = true;
+  mswdClassification.value.isExisting = true;
   console.log(response);
 };
 const handleButtonAction = async () => {

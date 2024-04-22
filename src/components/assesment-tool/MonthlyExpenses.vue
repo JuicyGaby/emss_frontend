@@ -99,7 +99,7 @@
             :prepend-icon="
               userMonthlyExpenses.isExist ? 'mdi-update' : 'mdi-content-save'
             "
-            :color="userMonthlyExpenses.isExist ? 'secondary' : 'success'"
+            :color="userMonthlyExpenses.isExist ? 'secondary' : 'secondary'"
             @click="
               userMonthlyExpenses.isExist
                 ? updateMonthlyExpensesItem()
@@ -107,7 +107,7 @@
             "
           >
             {{
-              userMonthlyExpenses.isExist 
+              userMonthlyExpenses.isExist
                 ? "Update Monthly Expenses"
                 : "Create Monthly Expenses"
             }}

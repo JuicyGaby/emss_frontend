@@ -61,9 +61,18 @@
           </v-table>
         </v-col>
       </v-row>
-      <v-btn color="secondary" @click="handleButtonAction">{{
-        discrimination.isExist ? "Update Data" : "Create Data"
-      }}</v-btn>
+      <v-btn
+        :prepend-icon="
+          discrimination.isExist ? 'mdi-update' : 'mdi-content-save'
+        "
+        color="secondary"
+        @click="handleButtonAction"
+        >{{
+          discrimination.isExist
+            ? "Update Discrimination Data"
+            : "Create Discrimination Data"
+        }}</v-btn
+      >
     </v-container>
     <v-snackbar
       v-for="(bar, key) in snackBars"
@@ -95,7 +104,6 @@ const props = defineProps({
 onMounted(async () => {
   await fetchDiscrimination();
 });
-
 
 const discrimination = ref({
   isExist: false,

@@ -57,9 +57,14 @@
           </tr>
         </tbody>
       </v-table>
-      <v-btn color="secondary" @click="handleButtonAction">{{
-        safetyData.isExist ? "Update" : "Create"
-      }}</v-btn>
+      <v-btn
+        :prepend-icon="safetyData.isExist ? 'mdi-update' : 'mdi-content-save'"
+        color="secondary"
+        @click="handleButtonAction"
+        >{{
+          safetyData.isExist ? "Update Safety Data" : "Create Safety Data"
+        }}</v-btn
+      >
     </v-container>
     <v-snackbar
       v-for="(bar, key) in snackBars"

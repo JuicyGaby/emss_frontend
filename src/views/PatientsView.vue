@@ -53,9 +53,9 @@
               <v-icon color="primary" @click="toggleEditBtn(item.id)"
                 >mdi-pencil</v-icon
               >
-              <v-icon color="secondary" @click="viewPatientAssessmentData(item)"
+              <!-- <v-icon color="secondary" @click="viewPatientAssessmentData(item)"
                 >mdi-eye</v-icon
-              >
+              > -->
             </div>
           </template>
         </v-data-table>
@@ -151,12 +151,13 @@
       </v-card>
     </v-dialog>
     <!-- view assessment dialog -->
-    <PatientAssesmentData
-      :modelValue="dialogs.viewAssessment.isVisibile"
-      :patientId="patientId"
-      @close="toggleViewAssessment"
-    ></PatientAssesmentData>
   </div>
+  <v-dialog
+    v-model="dialogs.viewAssessment.isVisibile"
+    transition="dialog-transition"
+  >
+    <PatientAssesmentData :patientId="patientId" />
+  </v-dialog>
   <snackBars :snackBarData="snackBarData"></snackBars>
 </template>
 
@@ -184,6 +185,7 @@ let patientData = ref([]);
 const isLoading = ref(false);
 const createDialog = ref(false);
 const editDialog = ref(false);
+const isReadOnly = ref(false);
 const tab = ref(0);
 const patientId = ref(0);
 const searchInput = ref({
