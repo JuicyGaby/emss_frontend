@@ -425,13 +425,13 @@ const editNoteItem = async () => {
   if (!isValid) return;
   const response = await updateDarNote(noteData.value);
   if (response) {
+    console.log("response", response);
     handleSnackBar("Note updated successfully", "success");
     dialogs.value.editNote.isVisible = false;
     const index = noteFetchData.value.findIndex(
       (note) => note.id === noteData.value.id
     );
-    noteFetchData.value[index] = noteData.value;
-
+    noteFetchData.value[index] = response;
     noteData.value = {
       dar_id: props.dar_id,
       created_by: `${authentication.user.fname} ${authentication.user.lname}`,
