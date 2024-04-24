@@ -371,7 +371,6 @@ const handleCloseDialog = (type) => {
 </script>
 <style lang="css">
 .rb {
-  border: 1px dashed red;
   width: 100%;
 }
 </style>

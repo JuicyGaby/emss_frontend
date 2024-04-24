@@ -54,7 +54,7 @@
 <script setup>
 import { ref, defineProps, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { userLogin, employeeRights } from "@/api/authentication";
+import { userLogin } from "@/api/authentication";
 import { userAuthentication } from "../stores/session";
 const authentication = userAuthentication();
 const router = useRouter();
@@ -118,7 +118,7 @@ const handleAuthentication = (data) => {
   authentication.setUserToken(data.user.login_token);
   authentication.toggleLogIn(true);
   authentication.setUser(data.user);
-  router.push("/");
+  router.push("/dar");
 };
 const validateForm = async () => {
   const form = await formLogin.value.validate();
