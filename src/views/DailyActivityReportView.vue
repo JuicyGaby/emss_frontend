@@ -234,7 +234,7 @@ const dataTable = {
     { title: "Number", value: "Number" },
     { title: "Admission Date-Time", value: "date_created" },
     { title: "Patient Name", value: "fullname" },
-    { title: "Created By", value: "created_by" },
+    { title: "Social Worker", value: "created_by" },
     { title: "Operation", value: "operation" },
   ],
   swa: {

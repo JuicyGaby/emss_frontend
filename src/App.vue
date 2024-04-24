@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main class="d-flex app-main">
+    <v-main class="d-flex" style="width: 100%">
       <sidebar v-if="authentication.isLoggedIn"></sidebar>
       <router-view />
     </v-main>
@@ -18,13 +18,6 @@ import Sidebar from "./components/Sidebar.vue";
 let user = ref({});
 const router = useRouter();
 const authentication = userAuthentication();
-const inputRules = {
-  required: (v) => !!v || "This field is required",
-  invalidNegative: (v) => v >= 0 || "Invalid input",
-  characters: (v) => v.length <= 20 || "Max 20 characters",
-  vselect: (v) => v.length > 0 || "This field is required",
-};
-
 watch(
   () => authentication.token,
   async (newToken) => {
@@ -39,8 +32,6 @@ watch(
   { immediate: true }
 );
 
-onMounted(checkUserSession);
-
 function checkUserSession() {
   const isLoggedIn = authentication.isLoggedIn;
   if (!isLoggedIn) {
@@ -48,27 +39,10 @@ function checkUserSession() {
   }
 }
 </script>
-
+onMounted(checkUserSession);
 <style scoped>
-/* debug style classes */
-
-.rb {
-  border: 1px dashed red;
-}
-.bb {
-  border: 1px dashed blue;
-}
-.gb {
-  border: 1px dashed green;
-}
-
-.app-main {
+/* .app-main {
   width: 100%;
-}
+} */
 /* create a class for sticky */
-.display {
-  /* position: absolute; */
-  /* padding-left: 21.5em; */
-  width: 100%;
-}
 </style>

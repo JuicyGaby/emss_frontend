@@ -38,7 +38,7 @@
                   v-model="patientData[key]"
                   :rules="[inputRules.required]"
                 ></v-text-field>
-                <v-select
+                <v-combobox
                   v-for="(field, key) in inputFields.part1.selectFields"
                   :key="key"
                   :label="field.label"
@@ -49,7 +49,7 @@
                   v-model="patientData[key]"
                   autocomplete
                   :rules="[inputRules.required]"
-                ></v-select>
+                ></v-combobox>
                 <!-- dar values -->
                 <v-select
                   v-for="(field, key) in inputFields.part1.darSelectFields"
@@ -212,6 +212,7 @@ const inputFields = {
           "Vocational",
           "College",
           "Post Graduate",
+          "None",
         ],
       },
     },

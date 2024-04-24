@@ -137,6 +137,7 @@
                       !searchPatientInput.last_name
                     "
                     @click="searchPatientData"
+                    
                     >Search</v-btn
                   >
                 </v-col>

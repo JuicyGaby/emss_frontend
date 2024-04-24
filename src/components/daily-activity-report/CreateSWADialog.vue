@@ -38,7 +38,10 @@
                 </v-autocomplete>
                 <!-- {{ swaInputs }} -->
                 <v-card-actions class="justify-end">
-                  <v-btn color="secondary" @click="createSWAItemData"
+                  <v-btn
+                    prepend-icon="mdi-book-plus"
+                    color="secondary"
+                    @click="createSWAItemData"
                     >Create</v-btn
                   >
                 </v-card-actions>

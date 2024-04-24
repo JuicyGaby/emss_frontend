@@ -2,7 +2,7 @@
   <div>
     <v-card height="100vh">
       <v-toolbar color="secondary">
-        <v-toolbar-title>Edit SWA</v-toolbar-title>
+        <v-toolbar-title>Edit Social Work Administration</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="emit('closeDialog')">
           <v-icon>mdi-close</v-icon>
@@ -119,7 +119,10 @@
                       v-model="inputData.note.note_body"
                     ></v-textarea>
                     <v-card-actions class="justify-end">
-                      <v-btn color="primary" @click="createDarSwaNotesItem"
+                      <v-btn
+                        prepend-icon="mdi-book-plus"
+                        color="primary"
+                        @click="createDarSwaNotesItem"
                         >Create Note</v-btn
                       >
                     </v-card-actions>
