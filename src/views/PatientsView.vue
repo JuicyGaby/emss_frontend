@@ -171,7 +171,10 @@
     transition="dialog-transition"
     width="50%"
   >
-    <AssesmentActivityLogs :patientId="patientId" />
+    <AssesmentActivityLogs
+      :patientId="patientId"
+      @closeDialog="dialogs.activityLogs.isVisibile = false"
+    />
   </v-dialog>
 
   <snackBars :snackBarData="snackBarData"></snackBars>
