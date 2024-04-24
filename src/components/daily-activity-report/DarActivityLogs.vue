@@ -3,7 +3,7 @@
     <v-card>
       <v-toolbar color="secondary" class="px-5">
         <v-icon size="x-large">mdi-note-text</v-icon>
-        <v-toolbar-title>Assesment Activity Logs</v-toolbar-title>
+        <v-toolbar-title>Daily Activity Report Logs</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-icon @click="$emit('closeDialog')">mdi-close</v-icon>
       </v-toolbar>
@@ -21,13 +21,13 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import moment from "moment";
-import { getActivityLogs } from "@/api/assesment-tool";
+import { getDarActivityLogs } from "@/api/daily-activity-report";
 
 const props = defineProps({
-  patientId: Number,
+  dar_id: Number,
 });
-const emit = defineEmits(["closeDialog"]);
 const activities = ref([]);
+const emit = defineEmits(["closeDialog"]);
 const dataTable = ref({
   tableHeaders: [
     { title: "Date", value: "created_at" },
@@ -35,16 +35,15 @@ const dataTable = ref({
     { title: "Social Worker", value: "created_by" },
   ],
 });
-
 // async function
-
-const getActivityLogsItems = async () => {
-  console.log(props.patientId);
-  const response = await getActivityLogs(props.patientId);
+const getDarActivityLogsItems = async () => {
+  const response = await getDarActivityLogs(props.dar_id);
+  console.log(response);
   activities.value = response;
 };
+
 onMounted(async () => {
-  await getActivityLogsItems();
+  await getDarActivityLogsItems();
 });
 </script>
 <style lang=""></style>

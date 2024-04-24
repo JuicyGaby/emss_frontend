@@ -132,6 +132,7 @@
       </v-card-text>
     </v-card>
   </div>
+  {{ darData }}
   <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
@@ -143,13 +144,19 @@ import {
   getDailyActivityReportById,
   updateDailyActivityReport,
 } from "@/api/daily-activity-report";
+import { userAuthentication } from "@/stores/session";
+
 const props = defineProps({
   dar_id: Number,
 });
 onMounted(async () => {
   await fetchDarData();
 });
+
+const authentication = userAuthentication();
+const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
 const darForm = ref(null);
+
 const darData = ref({});
 const patientData = ref({});
 const tabValue = ref(0);
@@ -340,6 +347,7 @@ const fetchDarData = async () => {
     darData.value.interview_start_time = moment().format("HH:mm");
   }
   patientData.value = darData.value.patients;
+  darData.value.created_by = userFullName;
 };
 const handleSnackBar = (type, text) => {
   snackBarData.value.isVisible = true;
