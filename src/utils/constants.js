@@ -1,4 +1,8 @@
 import { ref } from "vue";
+import { userAuthentication } from "@/stores/session";
+
+const authentication = userAuthentication();
+
 export const inputRules = {
   required: (v) => !!v || "This field is required",
   invalidNegative: (v) => v >= 0 || "Invalid negative inputs",
