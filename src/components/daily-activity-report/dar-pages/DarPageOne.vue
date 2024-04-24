@@ -132,7 +132,6 @@
       </v-card-text>
     </v-card>
   </div>
-  {{ darData }}
   <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>

@@ -206,7 +206,10 @@
       width="50%"
       transition="dialog-transition"
     >
-      <SwaActivityLogs @closeDialog="dialogs.swa.activity = false" />
+      <SwaActivityLogs
+        :swa_id="swa_id"
+        @closeDialog="dialogs.swa.activity = false"
+      />
     </v-dialog>
   </div>
   <snack-bars :snackBarData="snackBarData" />

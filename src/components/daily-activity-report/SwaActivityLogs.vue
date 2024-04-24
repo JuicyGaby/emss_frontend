@@ -3,7 +3,9 @@
     <v-card>
       <v-toolbar color="secondary" class="px-5">
         <v-icon size="x-large">mdi-note-text</v-icon>
-        <v-toolbar-title>Social Work Administration Activity Logs</v-toolbar-title>
+        <v-toolbar-title
+          >Social Work Administration Activity Logs
+        </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-icon @click="$emit('closeDialog')">mdi-close</v-icon>
       </v-toolbar>
@@ -21,9 +23,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import moment from "moment";
+import { getSwaActivityLogs } from "@/api/daily-activity-report";
 
 const props = defineProps({
-  swaId: Number,
+  swa_id: Number,
 });
 const activities = ref([]);
 const emit = defineEmits(["closeDialog"]);
@@ -35,7 +38,14 @@ const dataTable = ref({
   ],
 });
 // async function
+const getSwaActivityLogsItems = async () => {
+  const response = await getSwaActivityLogs(props.swa_id);
+  console.log(response);
+  activities.value = response;
+};
 
-onMounted(async () => {});
+onMounted(async () => {
+  await getSwaActivityLogsItems();
+});
 </script>
 <style lang=""></style>
