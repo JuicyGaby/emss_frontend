@@ -52,7 +52,7 @@ const navItems = {
   dailyActivityReport: {
     icon: "mdi-file-document",
     title: "Daily Activity Report",
-    to: "/daily-activity-report",
+    to: "/dar",
   },
   patients: {
     icon: "mdi-account-group",

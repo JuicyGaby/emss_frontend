@@ -18,9 +18,9 @@
                     <v-toolbar-title>Services Notes</v-toolbar-title>
                     <v-btn
                       variant="outlined"
-                      prepend-icon="mdi-plus"
+                      prepend-icon="mdi-note-plus"
                       @click="dialogs.createNote.isVisible = true"
-                      >add note</v-btn
+                      >Create Note</v-btn
                     >
                   </v-toolbar>
                   <v-card-text>
@@ -45,7 +45,7 @@
                           >
                           <v-icon
                             v-if="item.creator_id === authentication.user.id"
-                            color="secondary"
+                            color="error"
                             @click="handleNoteDialogs(item.id, 'deleteNote')"
                             >mdi-delete</v-icon
                           >
@@ -93,7 +93,8 @@
   <!-- create note dialog -->
   <v-dialog v-model="dialogs.createNote.isVisible" width="600px">
     <v-card>
-      <v-toolbar density="comfortable" color="secondary">
+      <v-toolbar density="comfortable" color="secondary" class="pl-5">
+        <v-icon>mdi-book-plus</v-icon>
         <v-toolbar-title> Add Note </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="dialogs.createNote.isVisible = false">
@@ -125,7 +126,12 @@
             :rules="field.rules"
           ></v-textarea>
           <v-card-actions class="justify-end">
-            <v-btn color="secondary" @click="createNoteItem">Create Note</v-btn>
+            <v-btn
+              prepend-icon="mdi-book-plus"
+              color="secondary"
+              @click="createNoteItem"
+              >Create Note</v-btn
+            >
           </v-card-actions>
 
           <!-- {{ noteCreateData }} -->
@@ -144,7 +150,8 @@
   <!-- edit note dialog -->
   <v-dialog v-model="dialogs.editNote.isVisible" width="600px">
     <v-card>
-      <v-toolbar density="comfortable" color="secondary">
+      <v-toolbar density="comfortable" color="secondary" class="pl-5">
+        <v-icon>mdi-pencil</v-icon>
         <v-toolbar-title> Edit Note </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="dialogs.editNote.isVisible = false">
@@ -224,7 +231,8 @@
   <!-- create service dialog -->
   <v-dialog v-model="dialogs.createService.isVisible" width="600px">
     <v-card>
-      <v-toolbar density="compact" color="secondary">
+      <v-toolbar density="compact" color="secondary" class="pl-5">
+        <v-icon> mdi-book-plus </v-icon>
         <v-toolbar-title> Add Service </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="dialogs.createService.isVisible = false">
@@ -248,7 +256,10 @@
           >
           </v-autocomplete>
           <v-card-actions class="justify-end">
-            <v-btn color="secondary" @click="createDarServices"
+            <v-btn
+              prepend-icon="mdi-book-plus"
+              color="secondary"
+              @click="createDarServices"
               >Add Service</v-btn
             >
           </v-card-actions>
@@ -414,13 +425,13 @@ const editNoteItem = async () => {
   if (!isValid) return;
   const response = await updateDarNote(noteData.value);
   if (response) {
+    console.log("response", response);
     handleSnackBar("Note updated successfully", "success");
     dialogs.value.editNote.isVisible = false;
     const index = noteFetchData.value.findIndex(
       (note) => note.id === noteData.value.id
     );
-    noteFetchData.value[index] = noteData.value;
-
+    noteFetchData.value[index] = response;
     noteData.value = {
       dar_id: props.dar_id,
       created_by: `${authentication.user.fname} ${authentication.user.lname}`,

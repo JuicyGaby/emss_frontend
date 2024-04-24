@@ -1,5 +1,7 @@
+import { BASE_URL } from "@/utils/constants";
+
 const createDailyActivityReport = async (body) => {
-  const API_URL = `http://localhost:3000/daily-activity-report`;
+  const API_URL = `${BASE_URL}/emss/daily-activity-report`;
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -11,7 +13,7 @@ const createDailyActivityReport = async (body) => {
   return data;
 };
 const darCreatePatient = async (body) => {
-  const API_URL = `http://localhost:3000/dar-create-patient`;
+  const API_URL = `${BASE_URL}/emss/dar-create-patient`;
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -24,25 +26,25 @@ const darCreatePatient = async (body) => {
 };
 
 const getDailyActivityReport = async () => {
-  const API_URL = `http://localhost:3000/daily-activity-report`;
+  const API_URL = `${BASE_URL}/emss/daily-activity-report`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const getDailyActivityReportById = async (id) => {
-  const API_URL = `http://localhost:3000/daily-activity-report/${id}`;
+  const API_URL = `${BASE_URL}/emss/daily-activity-report/${id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const getDailyActivityReportByDate = async (date) => {
-  const API_URL = `http://localhost:3000/daily-activity-report-by-date/${date}`;
+  const API_URL = `${BASE_URL}/emss/daily-activity-report-by-date/${date}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const updateDailyActivityReport = async (body) => {
-  const API_URL = `http://localhost:3000/daily-activity-report`;
+  const API_URL = `${BASE_URL}/emss/daily-activity-report`;
   const response = await fetch(API_URL, {
     method: "PUT",
     headers: {
@@ -53,10 +55,22 @@ const updateDailyActivityReport = async (body) => {
   const data = await response.json();
   return data;
 };
+
+const updateDarStatus = async (dar_id) => {
+  const API_URL = `${BASE_URL}/emss/update-dar-status/${dar_id}`;
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  return data;
+};
 //  DAR NOTES
 
 const createDarNote = async (body) => {
-  const API_URL = `http://localhost:3000/dar-notes`;
+  const API_URL = `${BASE_URL}/emss/dar-notes`;
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -68,19 +82,25 @@ const createDarNote = async (body) => {
   return data;
 };
 const getDarNotes = async (id) => {
-  const API_URL = `http://localhost:3000/user-dar-notes/${id}`;
+  const API_URL = `${BASE_URL}/emss/user-dar-notes/${id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const getDarNoteById = async (id) => {
-  const API_URL = `http://localhost:3000/dar-notes/${id}`;
+  const API_URL = `${BASE_URL}/emss/dar-notes/${id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
+const getDarByMonth = async (month) => {
+  const API_URL = `${BASE_URL}/emss/dar-by-month/${month}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const updateDarNote = async (body) => {
-  const API_URL = `http://localhost:3000/dar-notes`;
+  const API_URL = `${BASE_URL}/emss/dar-notes`;
   const response = await fetch(API_URL, {
     method: "PUT",
     headers: {
@@ -92,7 +112,7 @@ const updateDarNote = async (body) => {
   return data;
 };
 const deleteDarNote = async (id) => {
-  const API_URL = `http://localhost:3000/dar-notes/${id}`;
+  const API_URL = `${BASE_URL}/emss/dar-notes/${id}`;
   const response = await fetch(API_URL, {
     method: "DELETE",
   });
@@ -102,7 +122,7 @@ const deleteDarNote = async (id) => {
 
 // SWA
 const createSwaItem = async (body) => {
-  const API_URL = `http://localhost:3000/swa`;
+  const API_URL = `${BASE_URL}/emss/swa`;
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -114,26 +134,26 @@ const createSwaItem = async (body) => {
   return data;
 };
 const getSwaServices = async () => {
-  const API_URL = `http://localhost:3000/swa`;
+  const API_URL = `${BASE_URL}/emss/swa`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 
 const getDarSwa = async () => {
-  const API_URL = `http://localhost:3000/dar_swa`;
+  const API_URL = `${BASE_URL}/emss/dar_swa`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const getDarSwaId = async (id) => {
-  const API_URL = `http://localhost:3000/dar_swa/${id}`;
+  const API_URL = `${BASE_URL}/emss/dar_swa/${id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const getDarSwaByDate = async (date) => {
-  const API_URL = `http://localhost:3000/dar_swa_by_date/${date}`;
+  const API_URL = `${BASE_URL}/emss/dar_swa_by_date/${date}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
@@ -142,7 +162,7 @@ const getDarSwaByDate = async (date) => {
 // SWA NOTES
 
 const createSwaNote = async (body) => {
-  const API_URL = `http://localhost:3000/swa-notes`;
+  const API_URL = `${BASE_URL}/emss/swa-notes`;
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -154,19 +174,19 @@ const createSwaNote = async (body) => {
   return data;
 };
 const getSwaNotes = async (id) => {
-  const API_URL = `http://localhost:3000/swa-notes/${id}`;
+  const API_URL = `${BASE_URL}/emss/swa-notes/${id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const getSwaNoteById = async (id) => {
-  const API_URL = `http://localhost:3000/swa-note/${id}`;
+  const API_URL = `${BASE_URL}/emss/swa-note/${id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const updateSwaNote = async (body) => {
-  const API_URL = `http://localhost:3000/swa-note`;
+  const API_URL = `${BASE_URL}/emss/swa-note`;
   const response = await fetch(API_URL, {
     method: "PUT",
     headers: {
@@ -178,7 +198,7 @@ const updateSwaNote = async (body) => {
   return data;
 };
 const deleteSwaNote = async (id) => {
-  const API_URL = `http://localhost:3000/swa-note/${id}`;
+  const API_URL = `${BASE_URL}/emss/swa-note/${id}`;
   const response = await fetch(API_URL, {
     method: "DELETE",
   });
@@ -186,7 +206,7 @@ const deleteSwaNote = async (id) => {
   return data;
 };
 const createSwaServicesItem = async (body) => {
-  const API_URL = `http://localhost:3000/swa-services`;
+  const API_URL = `${BASE_URL}/emss/swa-services`;
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -200,19 +220,19 @@ const createSwaServicesItem = async (body) => {
 
 // DAR SERVICES
 const getDarServices = async () => {
-  const API_URL = `http://localhost:3000/dar-services`;
+  const API_URL = `${BASE_URL}/emss/dar-services`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const getDarServicesByDarId = async (id) => {
-  const API_URL = `http://localhost:3000/dar-services/${id}`;
+  const API_URL = `${BASE_URL}/emss/dar-services/${id}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
 };
 const createDarServicesItem = async (body) => {
-  const API_URL = `http://localhost:3000/dar-services`;
+  const API_URL = `${BASE_URL}/emss/dar-services`;
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -250,5 +270,6 @@ export {
   createSwaServicesItem,
   getDarSwaByDate,
   getDailyActivityReportByDate,
-  
+  getDarByMonth,
+  updateDarStatus,
 };

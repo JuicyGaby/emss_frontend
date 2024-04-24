@@ -14,7 +14,7 @@
                   variant="outlined"
                   density="compact"
                   type="time"
-                  style="width: 400px"
+                  style="width: 500px"
                   v-model="darData[key]"
                   :rules="[inputRules.required]"
                 ></v-text-field>
@@ -22,10 +22,9 @@
                   label="Admission Date"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
-                  type="date-time"
-                  v-model="darData.date_created"
-                  readonly
+                  style="width: 500px"
+                  type="datetime-local"
+                  v-model="darData.admission_date"
                   :rules="[inputRules.required]"
                 ></v-text-field>
                 <v-text-field
@@ -34,7 +33,7 @@
                   :label="field.label"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   :type="field.type"
                   v-model="patientData[key]"
                   :rules="[inputRules.required]"
@@ -46,7 +45,7 @@
                   :items="field.items"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   v-model="patientData[key]"
                   autocomplete
                   :rules="[inputRules.required]"
@@ -59,7 +58,7 @@
                   :items="field.items"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   autocomplete
                   v-model="darData[key]"
                   :rules="[inputRules.required]"
@@ -73,10 +72,10 @@
                   item-value="value"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   autocomplete
                   v-model="darData[key]"
-                  :rules="[inputRules.required]"
+                  readonly
                 ></v-select>
                 <v-select
                   v-for="(field, key) in inputFields.part2.selectFields"
@@ -85,7 +84,7 @@
                   :items="field.items"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   v-model="darData[key]"
                   autocomplete
                   :rules="[inputRules.required]"
@@ -96,23 +95,34 @@
                   :label="field.label"
                   variant="outlined"
                   density="compact"
-                  style="width: 400px"
+                  style="width: 500px"
                   :type="field.type"
                   v-model="darData[key]"
                   :rules="[inputRules.required]"
                 ></v-text-field>
                 <v-textarea
+                  label="Diagnosis"
+                  variant="outlined"
+                  style="width: 1000px"
+                  density="compact"
+                  :rules="[inputRules.required]"
+                  v-model="darData.diagnosis"
+                >
+                </v-textarea>
+                <v-textarea
                   label="Remarks"
                   variant="outlined"
-                  style="width: 400px"
+                  style="width: 1000px"
                   density="compact"
                   v-model="darData.remarks"
-                  :rules="[inputRules.required]"
                 ></v-textarea>
               </v-col>
               <v-col>
-                <v-btn color="primary" @click="updateDailyActivityReportItem"
-                  >Update Dar</v-btn
+                <v-btn
+                  prepend-icon="mdi-update"
+                  color="secondary"
+                  @click="updateDailyActivityReportItem"
+                  >Update Daily Activity Report</v-btn
                 >
               </v-col>
               <!-- {{ darData }} -->
@@ -230,24 +240,20 @@ const inputFields = {
       },
     },
     titleValueFields: {
-      phic_classification: {
-        label: "PHIC Classification",
+      is_phic_member: {
+        label: "PHIC Member",
         items: [
-          { title: "Financially Capable", value: "A" },
-          { title: "Financially Capacitated", value: "B" },
-          { title: "Financially Incapable", value: "C1" },
-          { title: "Financially Incapacitated", value: "C2" },
-          { title: "Indigent - C3", value: "C3" },
-          { title: "Indigent - D", value: "D" },
+          { title: "Yes", value: 1 },
+          { title: "No", value: 0 },
         ],
       },
-      non_phic_classification: {
-        label: "Non-PHIC Classification",
+      classification: {
+        label: "PHIC Classification",
         items: [
-          { title: "Financially Capable", value: "A" },
-          { title: "Financially Capacitated", value: "B" },
-          { title: "Financially Incapable", value: "C1" },
-          { title: "Financially Incapacitated", value: "C2" },
+          { title: "Financially Capable - A", value: "A" },
+          { title: "Financially Capacitated - B", value: "B" },
+          { title: "Financially Incapable - C1", value: "C1" },
+          { title: "Financially Incapacitated - C2", value: "C2" },
           { title: "Indigent - C3", value: "C3" },
           { title: "Indigent - D", value: "D" },
         ],
@@ -258,12 +264,6 @@ const inputFields = {
     textFields: {
       house_hold_size: {
         label: "Household Size",
-      },
-      source_of_referral: {
-        label: "Referral Source",
-      },
-      diagnosis: {
-        label: "Diagnosis",
       },
       informant: {
         label: "Informant Name",
@@ -295,6 +295,20 @@ const inputFields = {
           "Others",
         ],
       },
+      source_of_referral: {
+        label: "Source of Referral",
+        items: [
+          "Government Hospital",
+          "Private Hospitals/Clinics",
+          "Politicians",
+          "Media",
+          "Health Care Team",
+          "NGO’s/Private Welfare Agencies",
+          "Government Agencies",
+          "Walk – in",
+          "Others",
+        ],
+      },
     },
     timeFields: {
       interview_start_time: {
@@ -311,6 +325,7 @@ const inputFields = {
 const updateDailyActivityReportItem = async () => {
   const isValid = await validateForm(darForm);
   if (!isValid) return;
+  console.log("darData", darData.value);
   const response = await updateDailyActivityReport(darData.value);
   if (response) {
     console.log("update", response);

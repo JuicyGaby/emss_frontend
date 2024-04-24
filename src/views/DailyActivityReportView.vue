@@ -71,6 +71,11 @@
                     @click="viewDailyActivityReport(item)"
                     >mdi-eye</v-icon
                   >
+                  <v-icon
+                    color="error"
+                    @click="updateDarStatusItemDialog(item.id)"
+                    >mdi-delete</v-icon
+                  >
                 </div>
               </template>
             </v-data-table>
@@ -126,7 +131,7 @@
   <!-- dialogs -->
   <div>
     <!-- create dar dialog -->
-    <v-dialog v-model="dialogs.dar.create" width="600px">
+    <v-dialog v-model="dialogs.dar.create" width="600px" persistent>
       <CreateDARDialog
         @addDAR="handlePushItem"
         @closeDialog="handleCloseDialog"
@@ -150,7 +155,14 @@
     >
       <ViewDARDialog :dar_id="dar_id" />
     </v-dialog>
-
+    <!-- delete dar dialog -->
+    <v-dialog v-model="dialogs.dar.delete" width="600px">
+      <dynamicDialog
+        :dialogData="dialogData"
+        @closeDialog="() => (dialogs.dar.delete = false)"
+        @handleAction="updateDarStatusItem"
+      />
+    </v-dialog>
     <!-- create swa dialog -->
     <v-dialog v-model="dialogs.swa.create" transition="dialog-transition">
       <CreateSWADialog
@@ -180,10 +192,12 @@ import {
   getDarSwa,
   getDarSwaByDate,
   getDailyActivityReportByDate,
+  updateDarStatus,
 } from "@/api/daily-activity-report";
 import moment from "moment";
+import dynamicDialog from "@/components/dialogs/dialogs.vue";
 import { ref, onMounted, computed } from "vue";
-import { snackBarData } from "@/utils/constants";
+import { snackBarData, dialogData } from "@/utils/constants";
 import { userAuthentication } from "@/stores/session";
 // components
 import snackBars from "@/components/dialogs/snackBars.vue";
@@ -237,11 +251,13 @@ const dialogs = ref({
     create: false,
     edit: false,
     view: false,
+    delete: false,
   },
   swa: {
     create: false,
     edit: false,
     view: false,
+    delete: false,
   },
 });
 
@@ -307,6 +323,22 @@ const editSocialWorkAdministration = (item) => {
   dialogs.value.swa.edit = true;
 };
 
+const updateDarStatusItemDialog = async (id) => {
+  dialogs.value.dar.delete = true;
+  dialogData.value.text = "Are you sure you want to delete this item?";
+  dialogData.value.type = "warning";
+  dialogData.value.buttonText = "Delete";
+  dialogData.value.buttonColor = "error";
+  dialogData.value.itemId = id;
+};
+const updateDarStatusItem = async (dar_id) => {
+  const response = await updateDarStatus(dar_id);
+  if (response) {
+    dialogs.value.dar.delete = false;
+    handleSnackBar("Successfully deleted item", "success");
+    patients.value = patients.value.filter((item) => item.id !== dar_id);
+  }
+};
 const handleSnackBar = (message, color) => {
   snackBarData.value.text = message;
   snackBarData.value.type = color;
@@ -339,7 +371,6 @@ const handleCloseDialog = (type) => {
 </script>
 <style lang="css">
 .rb {
-  border: 1px dashed red;
   width: 100%;
 }
 </style>

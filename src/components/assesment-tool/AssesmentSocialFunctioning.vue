@@ -243,9 +243,18 @@
           </tr>
         </tbody>
       </v-table>
-      <v-btn color="secondary" @click="handleButtonAction">{{
-        socialFunctioning.isExist ? "Update Data" : "Create Data"
-      }}</v-btn>
+      <v-btn
+        :prepend-icon="
+          socialFunctioning.isExist ? 'mdi-update' : 'mdi-content-save'
+        "
+        color="secondary"
+        @click="handleButtonAction"
+        >{{
+          socialFunctioning.isExist
+            ? "Update Assesment Social Functioning Data"
+            : "Create Assesment Social Functioning Data"
+        }}</v-btn
+      >
     </v-container>
     <v-snackbar
       v-for="(bar, key) in snackBars"

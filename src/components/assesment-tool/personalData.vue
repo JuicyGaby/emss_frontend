@@ -61,14 +61,13 @@
                   style="min-width: 300px"
                   variant="outlined"
                   counter="255"
-                  :rules="inputRules.remarks"
                 ></v-textarea>
               </v-col>
             </v-row>
             <v-btn
               color="secondary"
+              prepend-icon="mdi-update"
               @click="updatePersonalData"
-              prepend-icon="mdi-content-save"
               class="my-5"
               >Update Personal Data</v-btn
             >
@@ -120,7 +119,7 @@
           <v-btn
             color="secondary"
             @click="handleAddressButton"
-            prepend-icon="mdi-content-save"
+            prepend-icon="mdi-update"
             class="mb-5"
             >{{
               patientData.addressExist ? "Update Address" : "Update Address"
@@ -182,51 +181,92 @@
   <!-- create family member dialog -->
   <v-dialog v-model="dialogs.addFamily" width="600px" persistent>
     <v-card>
-      <v-card-title primary-title> Family Composition </v-card-title>
+      <v-toolbar color="secondary" class="px-5">
+        <v-icon>mdi-account-plus</v-icon>
+        <v-toolbar-title class="">Add Family Member</v-toolbar-title>
+        <v-icon @click="dialogs.addFamily = !dialogs.addFamily"
+          >mdi-close</v-icon
+        >
+      </v-toolbar>
       <v-card-text>
-        <div class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(value, key) in inputFields.familyComposition"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            density="compact"
-            variant="outlined"
-            v-model="inputFields.familyComposition[key].data"
-            style="width: 250px"
-          ></v-text-field>
-        </div>
+        <v-form ref="familyForm">
+          <div class="d-flex ga-2 flex-wrap">
+            <template v-for="(value, key) in inputFields.familyComposition">
+              <v-text-field
+                v-if="value.type === 'text'"
+                :key="'text-' + key"
+                :label="value.label"
+                density="compact"
+                variant="outlined"
+                :type="value.inputType"
+                v-model="inputFields.familyComposition[key].data"
+                :rules="value.rules"
+                style="width: 250px"
+              ></v-text-field>
+              <v-select
+                v-else-if="value.type === 'select'"
+                :key="'select-' + key"
+                :label="value.label"
+                :items="value.items"
+                density="compact"
+                variant="outlined"
+                :type="value.inputType"
+                :rules="value.rules"
+                v-model="inputFields.familyComposition[key].data"
+                style="width: 250px"
+              ></v-select>
+            </template>
+          </div>
+        </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
-        <v-btn color="error" @click="dialogs.addFamily = !dialogs.addFamily"
-          >Cancel</v-btn
-        >
         <v-btn color="primary" @click="createFamilyMemberData">Create</v-btn>
       </v-card-actions>
+      <!-- {{ inputFields.familyComposition }} -->
     </v-card>
   </v-dialog>
   <!-- update family member dialog -->
   <v-dialog v-model="dialogs.editFamily" width="600px" persistent>
     <v-card>
-      <v-card-title primary-title>
-        <h3>Edit family member:</h3>
-      </v-card-title>
+      <v-toolbar color="secondary" class="px-5">
+        <v-icon>mdi-account-edit</v-icon>
+        <v-toolbar-title class="">Edit Family Member</v-toolbar-title>
+        <v-icon @click="dialogs.editFamily = !dialogs.editFamily"
+          >mdi-close</v-icon
+        >
+      </v-toolbar>
       <v-card-text>
-        <div class="d-flex ga-2 flex-wrap">
-          <v-text-field
-            v-for="(value, key) in inputFields.familyComposition"
-            :key="key"
-            :label="value.label"
-            :type="value.type"
-            density="compact"
-            variant="outlined"
-            v-model="toEditFamilyMember[key]"
-            style="width: 250px"
-          ></v-text-field>
-        </div>
+        <v-form ref="familyForm">
+          <div class="d-flex ga-2 flex-wrap">
+            <template v-for="(value, key) in inputFields.familyComposition">
+              <v-text-field
+                v-if="value.type === 'text'"
+                :key="'text-' + key"
+                :label="value.label"
+                density="compact"
+                variant="outlined"
+                :type="value.inputType"
+                v-model="toEditFamilyMember[key]"
+                :rules="value.rules"
+                style="width: 250px"
+              ></v-text-field>
+              <v-select
+                v-else-if="value.type === 'select'"
+                :key="'select-' + key"
+                :label="value.label"
+                :items="value.items"
+                density="compact"
+                variant="outlined"
+                :type="value.inputType"
+                :rules="value.rules"
+                v-model="toEditFamilyMember[key]"
+                style="width: 250px"
+              ></v-select>
+            </template>
+          </div>
+        </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
-        <v-btn color="error" @click="dialogs.editFamily = false">Cancel</v-btn>
         <v-btn color="primary" @click="updateFamilyMemberData">Update</v-btn>
       </v-card-actions>
     </v-card>
@@ -254,9 +294,11 @@
     </v-card>
   </v-dialog>
 </template>
+
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { getPatientByID, updatePatient } from "@/api/patients";
+import { inputRules } from "@/utils/constants";
 import {
   getFamilyComposition,
   createFamilyMember,
@@ -316,7 +358,6 @@ let provinces = ref([]);
 let municipalities = ref([]);
 let barangays = ref([]);
 
-
 let temporaryProvince = ref([]);
 let temporaryMunicipalities = ref([]);
 let temporaryBarangays = ref([]);
@@ -324,21 +365,11 @@ let temporaryBarangays = ref([]);
 // family composition
 let familyComposition = ref({});
 let familyInfo = ref({});
+const familyForm = ref(null);
 
 let toEditFamilyMember = ref({});
 const personalForm = ref(null);
 const tab = ref(0);
-
-const inputRules = {
-  first_name: [(v) => !!v || "First Name is required"],
-  last_name: [(v) => !!v || "Last Name is required"],
-  remarks: [
-    (v) =>
-      v == null ||
-      v.length <= 255 ||
-      "Remarks must be less than 255 characters",
-  ],
-};
 const tableHeaders = [
   { title: "Fullname", value: "full_name" },
   { title: "Age", value: "age" },
@@ -394,7 +425,7 @@ const inputFields = ref({
       first_name: {
         label: "First Name",
         type: "text",
-        rules: inputRules.first_name,
+        rules: [inputRules.required],
       },
       middle_name: {
         label: "Middle Name",
@@ -403,7 +434,7 @@ const inputFields = ref({
       last_name: {
         label: "Last Name",
         type: "text",
-        rules: inputRules.last_name,
+        rules: [inputRules.required],
       },
       age: {
         label: "Age",
@@ -499,41 +530,92 @@ const inputFields = ref({
       label: "FullName",
       type: "text",
       data: "",
+      rules: [inputRules.required],
     },
     age: {
       label: "Age",
       type: "text",
+      inputType: "number",
       data: "",
+      rules: [inputRules.required],
     },
     birth_date: {
       label: "Birth Date",
-      type: "date",
+      type: "text",
+      inputType: "date",
       data: "",
+      rules: [inputRules.required],
     },
     civil_status: {
       label: "Civil Status",
-      type: "text",
+      type: "select",
       data: "",
+      rules: [inputRules.required],
+      items: [
+        "Single",
+        "Married",
+        "Widowed",
+        "Divorced",
+        "Annulled",
+        "Common Law OS",
+        "Common Law SS",
+        "Separated Legally",
+        "Separated De Facto",
+      ],
     },
     relationship: {
       label: "Relationship",
-      type: "text",
+      type: "select",
       data: "",
+      rules: [inputRules.required],
+      items: [
+        "Father",
+        "Mother",
+        "Son",
+        "Daughter",
+        "Brother",
+        "Sister",
+        "Grandfather",
+        "Grandmother",
+        "Grandson",
+        "Granddaughter",
+        "Uncle",
+        "Aunt",
+        "Nephew",
+        "Niece",
+        "Cousin",
+        "Spouse",
+        "In-Law",
+        "Others",
+      ],
     },
     educational_attainment: {
       label: "Educational Attainment",
-      type: "text",
+      type: "select",
       data: "",
+      rules: [inputRules.required],
+      items: [
+        "Early Childhood Education",
+        "Primary",
+        "Secondary",
+        "Tertiary",
+        "Vocational",
+        "Post Graduate",
+        "No Educational Attainment",
+      ],
     },
     occupation: {
       label: "Occupation",
       type: "text",
       data: "",
+      rules: [inputRules.required],
     },
     monthly_income: {
       label: "Monthly Income",
       type: "text",
       data: "",
+      rules: [inputRules.required],
+      inputType: "number",
     },
   },
   address: {
@@ -619,6 +701,9 @@ const handleAddressButton = async () => {
 
 // * create section
 const createFamilyMemberData = async () => {
+  const isValid = await validateForm(familyForm);
+  console.log(isValid);
+  if (!isValid) return;
   let familyMember = {};
   for (const key in inputFields.value.familyComposition) {
     familyMember[key] = inputFields.value.familyComposition[key].data;
@@ -700,6 +785,8 @@ const updatePatientAddressData = async () => {
   }
 };
 const updateFamilyMemberData = async () => {
+  const isValid = await validateForm(familyForm);
+  if (!isValid) return;
   const response = await updateFamilyMember(toEditFamilyMember.value);
   if (response) {
     updateBars.value.updateFamilyMember.isActive = true;

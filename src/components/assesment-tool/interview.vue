@@ -1,53 +1,41 @@
 <template lang="">
-  <v-container
-    class="d-flex flex-column justify-center align-center"
-    style="width: 900px"
-  >
-    <!-- 1st page -->
-    <div class="input-field">
-      <v-row>
-        <v-col class="d-flex flex-wrap ga-2" cols="12">
+  <v-container style="width: 900px">
+    <v-row>
+      <v-col cols="12" class="d-flex ga-2 flex-wrap">
+        <template v-for="(value, index) in inputFields">
           <v-text-field
-            v-for="(field, key) in inputFields.step1"
-            :key="key"
-            :label="field.label"
-            :type="field.type"
+            v-if="value.formType === 'text'"
+            :key="'text-' + index"
+            :label="value.label"
+            :hide-spin-buttons="true"
             variant="outlined"
-            style="width: 300px"
-            v-model="interviewInputs[key]"
+            :type="value.type"
+            style="width: 400px"
+            :rules="value.rules"
             density="compact"
+            v-model="interviewInputs[index]"
           ></v-text-field>
-          <v-text-field
-            v-for="(field, key) in inputFields.step2"
-            :key="key"
-            :label="field.label"
-            :type="field.type"
+          <v-combobox
+            v-else-if="value.formType === 'select'"
+            :key="'select-' + index"
+            :label="value.label"
             variant="outlined"
-            style="width: 350px"
-            v-model="interviewInputs[key]"
+            style="width: 400px"
             density="compact"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-    </div>
-    <!-- {{interviewInputs}} -->
+            :items="value.items"
+            v-model="interviewInputs[index]"
+          ></v-combobox>
+        </template>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script setup>
 import moment from "moment";
-import { reactive, ref, watchEffect } from "vue";
-import { interview } from "../../api/assesment-tool";
-
-const props = defineProps({
-  interviewBody: Object,
-});
+import { ref, watchEffect } from "vue";
 
 const emit = defineEmits(["interviewData"]);
-
-const totalPages = ref(2);
-const page = ref(1);
-
-let interviewInputs = ref({
+const interviewInputs = ref({
   interview_date_time: moment().format("YYYY-MM-DDTHH:mm"),
   admission_date_time: moment().format("YYYY-MM-DDTHH:mm"),
 });
@@ -62,77 +50,101 @@ watchEffect(() => {
   );
   emit("interviewData", interviewInputsCopy);
 });
-
 const inputFields = {
-  step1: {
-    interview_date_time: {
-      label: "Interview Date and Time",
-      type: "datetime-local",
-    },
-    admission_date_time: {
-      label: "admission Date and Time",
-      type: "datetime-local",
-    },
-    basic_ward: {
-      label: "Basic Ward",
-      type: "text",
-    },
-    nonbasic_ward: {
-      label: "Nonbasic Ward",
-      type: "text",
-    },
-    health_record_number: {
-      label: "Health Record Number",
-      type: "text",
-    },
-    mswd_number: {
-      label: "MSWD number",
-      type: "text",
-    },
+  interview_date_time: {
+    label: "Interview Date and Time",
+    type: "datetime-local",
+    formType: "text",
   },
-  step2: {
-    source_of_referral: {
-      label: "Source of Referral",
-      type: "text",
-    },
-    referring_party: {
-      label: "Referring Party",
-      type: "text",
-    },
-    address: {
-      label: "Address",
-      type: "text",
-    },
-    contact_number: {
-      label: "Contact Number",
-      type: "number",
-    },
-    informant: {
-      label: "Informant",
-      type: "text",
-    },
-    relationship_to_patient: {
-      label: "Patient Relationship",
-      type: "text",
-    },
-    informant_contact_number: {
-      label: "Informant Contact Number",
-      type: "number",
-    },
-    informant_address: {
-      label: "Informant Address",
-      type: "text",
-    },
+  admission_date_time: {
+    label: "Admission Date Time",
+    type: "datetime-local",
+    formType: "text",
+  },
+  basic_ward: {
+    label: "Basic Ward",
+    type: "text",
+    formType: "text",
+  },
+  nonbasic_ward: {
+    label: "Non-Basic Ward",
+    type: "text",
+    formType: "text",
+  },
+  health_record_number: {
+    label: "Health Record Number",
+    type: "number",
+    formType: "text",
+  },
+  mswd_number: {
+    label: "MSWD Number",
+    type: "number",
+    formType: "text",
+  },
+  source_of_referral: {
+    label: "Source of Referral",
+    formType: "select",
+    items: [
+      "Government Hospital",
+      "Private Hospitals/Clinics",
+      "Politicians",
+      "Media",
+      "Health Care Team",
+      "NGO’s/Private Welfare Agencies",
+      "Government Agencies",
+      "Walk – in",
+      "Others",
+    ],
+  },
+  referring_party: {
+    label: "Referring Party",
+    type: "text",
+    formType: "text",
+  },
+  address: {
+    label: "Address",
+    type: "text",
+    formType: "text",
+  },
+  contact_number: {
+    label: "Contact Number",
+    type: "number",
+    formType: "text",
+  },
+  informant: {
+    label: "Informant",
+    type: "text",
+    formType: "text",
+  },
+  relationship_to_patient: {
+    label: "Relationship to Patient",
+    formType: "select",
+    items: [
+      "Friends",
+      "Workmates",
+      "Neighbors",
+      "Relatives",
+      "Spouse",
+      "Children",
+      "Parents",
+      "Siblings",
+      "Others",
+    ],
+  },
+  informant_contact_number: {
+    label: "Informant Contact Number",
+    type: "number",
+    formType: "text",
+  },
+  informant_address: {
+    label: "Informant Address",
+    type: "text",
+    formType: "text",
   },
 };
 </script>
 <style lang="css">
 .reb {
   border: 1px solid red;
-}
-
-.input-field {
-  min-width: 300px;
-  min-height: 350px;
 }
 </style>

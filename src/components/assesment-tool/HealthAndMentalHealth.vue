@@ -19,7 +19,6 @@
                 <th>{{ field.label }}</th>
                 <th>
                   <v-select
-                    label="----"
                     outlined
                     density="compact"
                     variant="outlined"
@@ -32,7 +31,6 @@
                 </th>
                 <th>
                   <v-select
-                    label="----"
                     outlined
                     density="compact"
                     variant="outlined"
@@ -45,7 +43,6 @@
                 </th>
                 <th>
                   <v-select
-                    label="----"
                     outlined
                     density="compact"
                     variant="outlined"
@@ -61,9 +58,18 @@
           </v-table>
         </v-col>
       </v-row>
-      <v-btn color="secondary" @click="handleButtonAction">{{
-        healthAndMentalHealth.isExist ? "Update Data" : "Create Data"
-      }}</v-btn>
+      <v-btn
+        :prepend-icon="
+          healthAndMentalHealth.isExist ? 'mdi-update' : 'mdi-pencil'
+        "
+        color="secondary"
+        @click="handleButtonAction"
+        >{{
+          healthAndMentalHealth.isExist
+            ? "Update Health and  Mental Health"
+            : "Create Health and Mental Health"
+        }}</v-btn
+      >
       <!-- {{ healthAndMentalHealth }} -->
     </v-container>
     <v-snackbar
@@ -89,6 +95,7 @@ import {
   createHealthAndMentalHealth,
   updateHealthAndMentalHealth,
 } from "@/api/assesment-tool";
+import { SubTitle } from "chart.js";
 const props = defineProps({
   patientId: Number,
 });

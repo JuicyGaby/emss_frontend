@@ -43,11 +43,18 @@
           ></v-textarea>
         </v-col>
       </v-row>
-      <v-btn color="secondary" @click="handleButtonAction">{{
-        mswdClassification.isExisting
-          ? "Update Classification"
-          : "Create Classification"
-      }}</v-btn>
+      <v-btn
+        :prepend-icon="
+          mswdClassification.isExisting ? 'mdi-update' : 'mdi-content-save'
+        "
+        color="secondary"
+        @click="handleButtonAction"
+        >{{
+          mswdClassification.isExisting
+            ? "Update Classification"
+            : "Create Classification"
+        }}</v-btn
+      >
     </v-container>
   </div>
   <v-snackbar
@@ -146,12 +153,12 @@ const updateMswdClassificationData = async () => {
   console.log("updated", response);
   snackBars.value.update.isActive = true;
 };
-
 const createMswdClassificationData = async () => {
   mswdClassification.value.patient_id = props.patientId;
   const response = await createMswdClassification(mswdClassification.value);
   mswdClassification.value.haveClassification = true;
   snackBars.value.create.isActive = true;
+  mswdClassification.value.isExisting = true;
   console.log(response);
 };
 const handleButtonAction = async () => {

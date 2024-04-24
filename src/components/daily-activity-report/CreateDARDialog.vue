@@ -64,7 +64,26 @@
                       "
                       v-model="patientCreationData.highest_education_level"
                     ></v-select>
-
+                    <v-select
+                      :label="inputFields.creation.phic_member.label"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      :items="inputFields.creation.phic_member.items"
+                      :rules="inputFields.creation.phic_member.rules"
+                      v-model="patientCreationData.phic_member"
+                    ></v-select>
+                    <v-select
+                      :label="inputFields.creation.phic_classification.label"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      :items="inputFields.creation.phic_classification.items"
+                      item-title="title"
+                      item-value="value"
+                      :rules="inputFields.creation.phic_classification.rules"
+                      v-model="patientCreationData.phic_classification"
+                    ></v-select>
                     <v-autocomplete
                       chips
                       multiple
@@ -83,11 +102,14 @@
                 </v-form>
               </v-row>
               <v-card-actions class="justify-end mt-5">
-                <v-btn color="secondary" @click="createDARItem(false)"
+                <v-btn
+                  prepend-icon="mdi-book-plus"
+                  color="secondary"
+                  @click="createDARItem(false)"
                   >Create Patient</v-btn
                 >
               </v-card-actions>
-              {{ patientCreationData }}
+              <!-- {{ patientCreationData }} -->
             </v-container>
           </v-card-text>
         </v-window-item>
@@ -108,8 +130,12 @@
                   ></v-text-field>
                   <v-btn
                     prepend-icon="mdi-magnify"
-                    variant="tonal"
+                    variant="flat"
                     color="secondary"
+                    :disabled="
+                      !searchPatientInput.first_name &&
+                      !searchPatientInput.last_name
+                    "
                     @click="searchPatientData"
                     >Search</v-btn
                   >
@@ -129,6 +155,28 @@
                       v-model="darData.patient_id"
                       :rules="[inputRules.required]"
                     ></v-select>
+                    <v-select
+                      :label="inputFields.creation.phic_member.label"
+                      :items="inputFields.creation.phic_member.items"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      v-model="darData.phic_member"
+                      :rules="[inputRules.required]"
+                    >
+                    </v-select>
+                    <v-select
+                      :label="inputFields.creation.phic_classification.label"
+                      :items="inputFields.creation.phic_classification.items"
+                      item-title="title"
+                      item-value="value"
+                      variant="outlined"
+                      density="compact"
+                      style="width: 200px"
+                      v-model="darData.phic_classification"
+                      :rules="[inputRules.required]"
+                    >
+                    </v-select>
                     <v-autocomplete
                       chips
                       multiple
@@ -145,7 +193,10 @@
                     ></v-autocomplete>
                   </v-col>
                   <v-card-actions class="justify-end">
-                    <v-btn color="secondary" @click="createDARItem(true)"
+                    <v-btn
+                      color="secondary"
+                      prepend-icon="mdi-book-plus"
+                      @click="createDARItem(true)"
                       >Create Report</v-btn
                     >
                   </v-card-actions>
@@ -294,6 +345,23 @@ const inputFields = {
         "College",
         "Vocational",
         "Post Graduate",
+      ],
+      rules: [inputRules.required],
+    },
+    phic_member: {
+      label: "PHIC Member",
+      items: ["Yes", "No"],
+      rules: [inputRules.required],
+    },
+    phic_classification: {
+      label: "PHIC Classification",
+      items: [
+        { title: "Financially Capable - A", value: "A" },
+        { title: "Financially Capacitated - B", value: "B" },
+        { title: "Financially Incapable - C1", value: "C1" },
+        { title: "Financially Incapacitated - C2", value: "C2" },
+        { title: "Indigent - C3", value: "C3" },
+        { title: "Indigent - D", value: "D" },
       ],
       rules: [inputRules.required],
     },

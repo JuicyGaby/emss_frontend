@@ -1,5 +1,7 @@
+import { BASE_URL } from "@/utils/constants";
+
 const getPatients = async () => {
-  const API_URL = "http://localhost:3000/patients";
+  const API_URL = `${BASE_URL}/emss/patients`;
   const response = await fetch(API_URL, {
     method: "GET",
     headers: {
@@ -14,7 +16,7 @@ const getPatients = async () => {
 };
 
 const getPatientByID = async (patient_id) => {
-  const API_URL = `http://localhost:3000/patients/${patient_id}`;
+  const API_URL = `${BASE_URL}/emss/patients/${patient_id}`;
   const response = await fetch(API_URL, {
     method: "GET",
     headers: {
@@ -29,7 +31,7 @@ const getPatientByID = async (patient_id) => {
 };
 
 const createPatient = async (req) => {
-  const API_URL = "http://localhost:3000/patients";
+  const API_URL = `${BASE_URL}/emss/patients`;
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -46,7 +48,7 @@ const createPatient = async (req) => {
 };
 
 const updatePatient = async (body) => {
-  const API_URL = `http://localhost:3000/patients`;
+  const API_URL = `${BASE_URL}/emss/patients`;
   const response = await fetch(API_URL, {
     method: "PUT",
     headers: {
@@ -64,13 +66,13 @@ const updatePatient = async (body) => {
 
 const searchPatient = async (body) => {
   const params = new URLSearchParams(body).toString();
-  const API_URL = `http://localhost:3000/search-patient/${params}`;
+  const API_URL = `${BASE_URL}/emss/search-patient/${params}`;
   const response = await fetch(API_URL, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  }); 
+  });
   const data = await response.json();
   if (data.error) {
     console.log(data.error);
