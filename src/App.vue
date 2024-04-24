@@ -41,8 +41,8 @@ function checkUserSession() {
 </script>
 onMounted(checkUserSession);
 <style scoped>
-/* .app-main {
+.app-main {
   width: 100%;
-} */
+}
 /* create a class for sticky */
 </style>
