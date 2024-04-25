@@ -114,7 +114,7 @@
           </v-btn>
         </v-col>
       </v-row>
-      {{ userMonthlyExpenses }}
+      <!-- {{ userMonthlyExpenses }} -->
     </v-container>
   </div>
   <snack-bars :snackBarData="snackBarData" />

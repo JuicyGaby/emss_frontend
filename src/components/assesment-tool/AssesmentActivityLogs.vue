@@ -39,7 +39,6 @@ const dataTable = ref({
 // async function
 
 const getActivityLogsItems = async () => {
-  console.log(props.patientId);
   const response = await getActivityLogs(props.patientId);
   activities.value = response;
 };
