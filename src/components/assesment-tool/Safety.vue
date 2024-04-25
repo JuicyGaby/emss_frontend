@@ -60,43 +60,32 @@
       <v-btn
         :prepend-icon="safetyData.isExist ? 'mdi-update' : 'mdi-content-save'"
         color="secondary"
-        @click="handleButtonAction"
+        @click="safetyData.isExist ? updateSafetyItem() : createSafetyItem()"
         >{{
           safetyData.isExist ? "Update Safety Data" : "Create Safety Data"
         }}</v-btn
       >
     </v-container>
-    <v-snackbar
-      v-for="(bar, key) in snackBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
-      </div>
-    </v-snackbar>
     <!-- {{ safetyData }} -->
   </div>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import { handleSnackBar } from "@/utils/constants";
+import { userAuthentication } from "@/stores/session";
+import snackBars from "../dialogs/snackBars.vue";
 import { getSafety, createSafety, updateSafety } from "@/api/assesment-tool";
 const props = defineProps({
   patientId: Number,
 });
 
-onMounted(async () => {
-  await fetchSafetyData();
-});
-
+const snackBarData = ref({});
+const authentication = userAuthentication();
 const safetyData = ref({
   isExist: false,
   patient_id: props.patientId,
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
   voice_crime_in_community: {
     severity: "",
     duration: "",
@@ -126,16 +115,6 @@ const safetyData = ref({
     severity: "",
     duration: "",
     coping: "",
-  },
-});
-const snackBars = ref({
-  update: {
-    isActive: false,
-    text: "Safety Data Updated",
-  },
-  create: {
-    isActive: false,
-    text: "Safety Data Created",
   },
 });
 const tableheaders = [
@@ -193,40 +172,39 @@ const particulars = {
 };
 
 const createSafetyItem = async () => {
+  safetyData.value.activity = "Safety Data Created";
   const response = await createSafety(safetyData.value);
   if (response) {
+    safetyData.value = response;
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Safety Data Created Successfully"
+    );
     safetyData.value.isExist = true;
-    handleSnackBar("create");
+    safetyData.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
   }
 };
 const updateSafetyItem = async () => {
-  console.log("update safety item");
+  safetyData.value.activity = "Safety Data Updated";
   const response = await updateSafety(safetyData.value);
   if (response) {
-    handleSnackBar("update");
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Safety Data Updated Successfully"
+    );
   }
 };
 const fetchSafetyData = async () => {
   const response = await getSafety(props.patientId);
   if (response) {
-    console.log("response", response);
-    handlePatientData(response);
+    safetyData.value = response;
+    safetyData.value.isExist = true;
+    safetyData.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
   }
 };
 
-const handleSnackBar = (type) => {
-  snackBars.value[type].isActive = true;
-};
-const handlePatientData = (response) => {
-  safetyData.value = response;
-  safetyData.value.isExist = true;
-};
-const handleButtonAction = async () => {
-  if (safetyData.value.isExist) {
-    await updateSafetyItem();
-    return;
-  }
-  await createSafetyItem();
-};
+onMounted(async () => {
+  await fetchSafetyData();
+});
 </script>
 <style lang="css"></style>
