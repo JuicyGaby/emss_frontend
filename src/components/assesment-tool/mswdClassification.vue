@@ -56,7 +56,6 @@
         }}</v-btn
       >
     </v-container>
-    {{ mswdClassification }}
   </div>
   <v-snackbar
     v-for="(bar, key) in snackBars"
