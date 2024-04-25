@@ -172,7 +172,7 @@ const particulars = {
 };
 
 const createSafetyItem = async () => {
-  safetyData.value.activity = "Safety Data Created";
+  safetyData.value.activity = "Created Safety Data";
   const response = await createSafety(safetyData.value);
   if (response) {
     safetyData.value = response;
@@ -185,13 +185,10 @@ const createSafetyItem = async () => {
   }
 };
 const updateSafetyItem = async () => {
-  safetyData.value.activity = "Safety Data Updated";
+  safetyData.value.activity = "Updated Safety Data";
   const response = await updateSafety(safetyData.value);
   if (response) {
-    snackBarData.value = handleSnackBar(
-      "success",
-      "Safety Data Updated Successfully"
-    );
+    snackBarData.value = handleSnackBar("success", "Updated Safety Data");
   }
 };
 const fetchSafetyData = async () => {
