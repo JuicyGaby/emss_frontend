@@ -63,14 +63,18 @@
           healthAndMentalHealth.isExist ? 'mdi-update' : 'mdi-pencil'
         "
         color="secondary"
-        @click="handleButtonAction"
+        @click="
+          healthAndMentalHealth.isExist
+            ? updateHealthAndMentalHealthItem()
+            : createHealthAndMentalHealthItem()
+        "
         >{{
           healthAndMentalHealth.isExist
             ? "Update Health and  Mental Health"
             : "Create Health and Mental Health"
         }}</v-btn
       >
-      <!-- {{ healthAndMentalHealth }} -->
+      {{ healthAndMentalHealth }}
     </v-container>
     <v-snackbar
       v-for="(bar, key) in snackBars"
@@ -90,6 +94,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import { userAuthentication } from "@/stores/session";
 import {
   getHealthAndMentalHealth,
   createHealthAndMentalHealth,
@@ -99,14 +104,12 @@ import { SubTitle } from "chart.js";
 const props = defineProps({
   patientId: Number,
 });
-
-onMounted(async () => {
-  await fetchHealthAndMentalHealth();
-});
+const authentication = userAuthentication();
 
 const healthAndMentalHealth = ref({
   isExist: false,
   patient_id: props.patientId,
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
   abscence_of_adequate_health_services: {
     severity: "",
     duration: "",
@@ -221,25 +224,17 @@ const updateHealthAndMentalHealthItem = async () => {
 const fetchHealthAndMentalHealth = async () => {
   const response = await getHealthAndMentalHealth(props.patientId);
   if (response) {
-    // console.log("response", response);
-    handlePatientData(response);
+    healthAndMentalHealth.value = response;
+    healthAndMentalHealth.value.isExist = true;
+    healthAndMentalHealth.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
   }
 };
-
 const handleSnackBar = (type) => {
   snackBars.value[type].isActive = true;
 };
-const handlePatientData = (response) => {
-  healthAndMentalHealth.value = response;
-  healthAndMentalHealth.value.isExist = true;
-};
 
-const handleButtonAction = async () => {
-  if (healthAndMentalHealth.value.isExist) {
-    await updateHealthAndMentalHealthItem();
-  } else {
-    await createHealthAndMentalHealthItem();
-  }
-};
+onMounted(async () => {
+  await fetchHealthAndMentalHealth();
+});
 </script>
 <style lang=""></style>
