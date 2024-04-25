@@ -248,7 +248,11 @@
           socialFunctioning.isExist ? 'mdi-update' : 'mdi-content-save'
         "
         color="secondary"
-        @click="handleButtonAction"
+        @click="
+          socialFunctioning.isExist
+            ? updateSocialFunctioningItem()
+            : createSocialFunctioningItem()
+        "
         >{{
           socialFunctioning.isExist
             ? "Update Assesment Social Functioning Data"
@@ -256,25 +260,15 @@
         }}</v-btn
       >
     </v-container>
-    <v-snackbar
-      v-for="(bar, key) in snackBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
-      </div>
-    </v-snackbar>
     <!-- {{ socialFunctioning }} -->
   </div>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import snackBars from "../dialogs/snackBars.vue";
+import { handleSnackBar } from "@/utils/constants";
+import { userAuthentication } from "@/stores/session";
 import {
   getSocialFunctioning,
   createSocialFunctioning,
@@ -284,9 +278,12 @@ const props = defineProps({
   patientId: Number,
 });
 
+const authentication = userAuthentication();
+
 const socialFunctioning = ref({
   isExist: false,
   patient_id: props.patientId,
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
   parent: {
     interaction: "",
     severity: "",
@@ -420,57 +417,6 @@ const socialFunctioning = ref({
     coping: "",
   },
 });
-
-onMounted(async () => {
-  await fetchSocialFunctioningItem();
-});
-
-const createSocialFunctioningItem = async () => {
-  const response = await createSocialFunctioning(socialFunctioning.value);
-  console.log("response", response);
-  if (response) {
-    socialFunctioning.value.isExist = true;
-    handleSnackBar("create");
-  }
-};
-const updateSocialFunctioningItem = async () => {
-  const response = await updateSocialFunctioning(socialFunctioning.value);
-  if (response) {
-    handleSnackBar("update");
-  }
-};
-const fetchSocialFunctioningItem = async () => {
-  const response = await getSocialFunctioning(props.patientId);
-  if (response) {
-    // console.log("response", response);
-    handlePatientData(response);
-  }
-};
-
-const handleSnackBar = (type) => {
-  snackBars.value[type].isActive = true;
-};
-const handlePatientData = (response) => {
-  socialFunctioning.value = response;
-  socialFunctioning.value.isExist = true;
-};
-const handleButtonAction = async () => {
-  if (socialFunctioning.value.isExist) {
-    await updateSocialFunctioningItem();
-    return;
-  }
-  await createSocialFunctioningItem();
-};
-const snackBars = ref({
-  update: {
-    isActive: false,
-    text: "Data Updated",
-  },
-  create: {
-    isActive: false,
-    text: "Data Created",
-  },
-});
 const tableheaders = [
   "Particulars",
   "Social Interaction Problem",
@@ -590,5 +536,44 @@ const particulars = {
     },
   },
 };
+
+const snackBarData = ref({});
+
+const createSocialFunctioningItem = async () => {
+  socialFunctioning.value.activity = "Created Social Functioning Data";
+  const response = await createSocialFunctioning(socialFunctioning.value);
+  console.log("response", response);
+  if (response) {
+    socialFunctioning.value = response;
+    socialFunctioning.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
+    socialFunctioning.value.isExist = true;
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Social Functioning Created"
+    );
+  }
+};
+const updateSocialFunctioningItem = async () => {
+  socialFunctioning.value.activity = "Updated Social Functioning Data";
+  const response = await updateSocialFunctioning(socialFunctioning.value);
+  if (response) {
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Social Functioning Updated"
+    );
+  }
+};
+const fetchSocialFunctioningItem = async () => {
+  const response = await getSocialFunctioning(props.patientId);
+  if (response) {
+    socialFunctioning.value = response;
+    socialFunctioning.value.isExist = true;
+    socialFunctioning.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
+  }
+};
+
+onMounted(async () => {
+  await fetchSocialFunctioningItem();
+});
 </script>
 <style lang=""></style>
