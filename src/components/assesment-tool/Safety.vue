@@ -122,7 +122,7 @@ const tableheaders = [
   "Severity Index",
   "Duration Index",
   "Coping Index",
-];
+];  
 const indexItems = {
   severity: [
     { text: "No Problem", value: 1 },

@@ -17,6 +17,7 @@
               density="compact"
               :hint="value.hint"
               :persistent-hint="true"
+              :readonly="value.isReadOnly"
               v-model="personalDataInputs[index]"
             ></v-text-field>
             <v-combobox
@@ -62,16 +63,27 @@
               :items="value.items"
               v-model="personalDataInputs[index]"
             ></v-select>
+            <v-combobox
+              v-else-if="value.formType === 'combo'"
+              :key="'select-' + index"
+              :label="value.label"
+              variant="outlined"
+              style="width: 400px"
+              density="compact"
+              :items="value.items"
+              v-model="personalDataInputs[index]"
+            ></v-combobox>
           </template>
         </v-col>
       </v-row>
     </div>
-    <!-- {{ personalDataInputs }} -->
+    {{ personalDataInputs }}
   </v-container>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, watch } from "vue";
+import moment from "moment";
 import {
   getRegions,
   getProvince,
@@ -81,7 +93,10 @@ import {
 const emit = defineEmits(["personalData"]);
 const totalPages = ref(2);
 const page = ref(1);
-const personalDataInputs = ref({});
+const personalDataInputs = ref({
+  birth_date: "",
+  age: "",
+});
 
 watchEffect(() => {
   const personalDataInputsCopy = Object.keys(personalDataInputs.value).reduce(
@@ -93,6 +108,16 @@ watchEffect(() => {
   );
   emit("personalData", personalDataInputsCopy);
 });
+watch(
+  () => personalDataInputs.value.birth_date,
+  (newBirthDate) => {
+    if (newBirthDate) {
+      const birthDate = moment(newBirthDate);
+      const age = moment().diff(birthDate, "years");
+      personalDataInputs.value.age = age;
+    }
+  }
+);
 
 const inputFields = {
   step1: {
@@ -119,20 +144,21 @@ const inputFields = {
       type: "text",
       hint: "For members of the LGBTQIA+ Community",
     },
+    birth_date: {
+      label: "Date of Birth",
+      formType: "text",
+      type: "date",
+    },
     age: {
       label: "Age",
       formType: "text",
       type: "number",
+      isReadOnly: true,
     },
     contact_number: {
       label: "Contact Number",
       formType: "text",
       type: "number",
-    },
-    birth_date: {
-      label: "Date of Birth",
-      formType: "text",
-      type: "date",
     },
     place_of_birth: {
       label: "Place of Birth",
@@ -200,7 +226,7 @@ const inputFields = {
     },
     education: {
       label: "Education",
-      formType: "select",
+      formType: "combo",
       items: [
         "Early Childhood Education",
         "Primary",
