@@ -83,19 +83,16 @@
 </template>
 <script setup>
 import { ref, watchEffect, watch } from "vue";
+import { userAuthentication } from "@/stores/session";
 import moment from "moment";
-import {
-  getRegions,
-  getProvince,
-  getMunicipality,
-  getBarangay,
-} from "@/api/assesment-tool";
 const emit = defineEmits(["personalData"]);
+const authentication = userAuthentication();
 const totalPages = ref(2);
 const page = ref(1);
 const personalDataInputs = ref({
   birth_date: "",
   age: "",
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
 });
 
 watchEffect(() => {

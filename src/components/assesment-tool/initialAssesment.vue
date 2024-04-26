@@ -203,8 +203,6 @@ const addPatient = () => {
 
 const createPatientData = async () => {
   if (!validateInput()) return;
-  console.log(dataReceived.demographicData);
-  console.log(dataReceived.interview);
   const user_id = authentication.user.id;
   dataReceived.demographicData.created_by = user_id;
   const response = await createPatient(dataReceived);
