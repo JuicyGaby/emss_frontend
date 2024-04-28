@@ -53,6 +53,9 @@
               <v-icon color="primary" @click="toggleEditBtn(item.id)"
                 >mdi-pencil</v-icon
               >
+              <v-icon color="warning" @click="viewActivityLogs(item.id)"
+                >mdi-note-text</v-icon
+              >
               <!-- <v-icon color="secondary" @click="viewPatientAssessmentData(item)"
                 >mdi-eye</v-icon
               > -->
@@ -162,6 +165,18 @@
   >
     <PatientAssesmentData :patientId="patientId" />
   </v-dialog>
+  <!-- view activity logs -->
+  <v-dialog
+    v-model="dialogs.activityLogs.isVisibile"
+    transition="dialog-transition"
+    width="50%"
+  >
+    <AssesmentActivityLogs
+      :patientId="patientId"
+      @closeDialog="dialogs.activityLogs.isVisibile = false"
+    />
+  </v-dialog>
+
   <snackBars :snackBarData="snackBarData"></snackBars>
 </template>
 
@@ -183,6 +198,7 @@ import Safety from "@/components/assesment-tool/Safety.vue";
 import AssesmentSocialFunctioning from "@/components/assesment-tool/AssesmentSocialFunctioning.vue";
 import ProblemsInEnvironment from "@/components/assesment-tool/ProblemsInEnvironment.vue";
 import PatientAssesmentData from "@/components/assesment-tool/PatientAssesmentData.vue";
+import AssesmentActivityLogs from "@/components/assesment-tool/AssesmentActivityLogs.vue";
 
 let patientData = ref([]);
 const isLoading = ref(false);
@@ -199,6 +215,9 @@ const searchForm = ref(null);
 const snackBarData = ref({});
 const dialogs = ref({
   viewAssessment: {
+    isVisibile: false,
+  },
+  activityLogs: {
     isVisibile: false,
   },
 });
@@ -279,11 +298,15 @@ const toggleCreateDialog = () => {
 const viewPatient = (patientId) => {
   toggleEditBtn(patientId);
 };
+const viewActivityLogs = (id) => {
+  console.log("View Activity Logs:", patientId);
+  patientId.value = id;
+  dialogs.value.activityLogs.isVisibile = true;
+};
 const appendCreatedPatient = (patient) => {
   patientData.value.push(patient.value);
   console.log("successfuly added", patientData.value);
 };
-
 onMounted(async () => {
   await fetchPatients();
 });

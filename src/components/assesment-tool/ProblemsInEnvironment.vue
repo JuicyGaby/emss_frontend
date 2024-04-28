@@ -273,7 +273,11 @@
               problemsInEnvironment.isExist ? 'mdi-update' : 'mdi-content-save'
             "
             color="secondary"
-            @click="handleButtonAction"
+            @click="
+              problemsInEnvironment.isExist
+                ? updateProblemsInEnvironmentItem()
+                : createProblemsInEnvironmentItem()
+            "
             >{{
               problemsInEnvironment.isExist ? "Update Data" : "Create Data"
             }}</v-btn
@@ -281,39 +285,29 @@
         </v-container>
       </v-window-item>
     </v-window>
-    <v-snackbar
-      v-for="(bar, key) in snackBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
-      </div>
-    </v-snackbar>
   </div>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import snackBars from "../dialogs/snackBars.vue";
+import { handleSnackBar } from "@/utils/constants";
 import {
   getProblemsInEnvironment,
   createProblemsInEnvironment,
   updateProblemsInEnvironment,
 } from "@/api/assesment-tool";
+import { userAuthentication } from "@/stores/session";
 const props = defineProps({
   patientId: Number,
 });
-onMounted(async () => {
-  await fetchProblemsInEnvironmentItem();
-});
 
+const authentication = userAuthentication();
+const snackBarData = ref({});
 const problemsInEnvironment = ref({
   isExist: false,
   patient_id: props.patientId,
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
   lack_regular_food: {
     severity: "",
     duration: "",
@@ -372,19 +366,6 @@ const problemsInEnvironment = ref({
   },
 });
 
-const snackBars = ref({
-  update: {
-    isActive: false,
-    text: "Data Updated",
-  },
-  create: {
-    isActive: false,
-    text: "Data Created",
-  },
-});
-const handleSnackBar = (type) => {
-  snackBars.value[type].isActive = true;
-};
 const tab = ref(0);
 const tabHeaders = [
   { title: "slide1", value: 1 },
@@ -542,22 +523,30 @@ const inputFields = {
   },
 };
 const createProblemsInEnvironmentItem = async () => {
+  problemsInEnvironment.value.activity = "Problems in Environment Data Created";
   const response = await createProblemsInEnvironment(
     problemsInEnvironment.value
   );
   if (response) {
-    console.log("created", response);
+    problemsInEnvironment.value = response;
     problemsInEnvironment.value.isExist = true;
-    handleSnackBar("create");
+    problemsInEnvironment.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Problems in Environment Created"
+    );
   }
 };
 const updateProblemsInEnvironmentItem = async () => {
+  problemsInEnvironment.value.activity = "Updated Problems in Environment Data";
   const response = await updateProblemsInEnvironment(
     problemsInEnvironment.value
   );
   if (response) {
-    console.log("updated", response);
-    handleSnackBar("update");
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Updated Problems in Environment"
+    );
   }
 };
 const fetchProblemsInEnvironmentItem = async () => {
@@ -565,15 +554,12 @@ const fetchProblemsInEnvironmentItem = async () => {
   if (response) {
     problemsInEnvironment.value = response;
     problemsInEnvironment.value.isExist = true;
-    console.log("response", problemsInEnvironment.value);
+    problemsInEnvironment.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
   }
 };
-const handleButtonAction = async () => {
-  if (problemsInEnvironment.value.isExist) {
-    await updateProblemsInEnvironmentItem();
-    return;
-  }
-  await createProblemsInEnvironmentItem();
-};
+
+onMounted(async () => {
+  await fetchProblemsInEnvironmentItem();
+});
 </script>
 <style lang="css"></style>

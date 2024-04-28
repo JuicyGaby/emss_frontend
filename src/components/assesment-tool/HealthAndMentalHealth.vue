@@ -63,7 +63,11 @@
           healthAndMentalHealth.isExist ? 'mdi-update' : 'mdi-pencil'
         "
         color="secondary"
-        @click="handleButtonAction"
+        @click="
+          healthAndMentalHealth.isExist
+            ? updateHealthAndMentalHealthItem()
+            : createHealthAndMentalHealthItem()
+        "
         >{{
           healthAndMentalHealth.isExist
             ? "Update Health and  Mental Health"
@@ -72,41 +76,29 @@
       >
       <!-- {{ healthAndMentalHealth }} -->
     </v-container>
-    <v-snackbar
-      v-for="(bar, key) in snackBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
-      </div>
-    </v-snackbar>
   </div>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import snackBars from "../dialogs/snackBars.vue";
+import { handleSnackBar } from "@/utils/constants";
+import { userAuthentication } from "@/stores/session";
 import {
   getHealthAndMentalHealth,
   createHealthAndMentalHealth,
   updateHealthAndMentalHealth,
 } from "@/api/assesment-tool";
-import { SubTitle } from "chart.js";
 const props = defineProps({
   patientId: Number,
 });
-
-onMounted(async () => {
-  await fetchHealthAndMentalHealth();
-});
+const authentication = userAuthentication();
+const snackBarData = ref({});
 
 const healthAndMentalHealth = ref({
   isExist: false,
   patient_id: props.patientId,
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
   abscence_of_adequate_health_services: {
     severity: "",
     duration: "",
@@ -136,16 +128,6 @@ const healthAndMentalHealth = ref({
     severity: "",
     duration: "",
     coping: "",
-  },
-});
-const snackBars = ref({
-  update: {
-    isActive: false,
-    text: "Health and Mental Health Updated",
-  },
-  create: {
-    isActive: false,
-    text: "Health and Mental Health Created",
   },
 });
 const indexItems = {
@@ -199,14 +181,16 @@ const inputFields = {
 };
 
 const createHealthAndMentalHealthItem = async () => {
-  console.log("asdfsad");
-  console.log("createHealthAndMentalHealthItem");
   const response = await createHealthAndMentalHealth(
     healthAndMentalHealth.value
   );
   if (response) {
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Health and Mental Health Created"
+    );
+    healthAndMentalHealth.value = response;
     healthAndMentalHealth.value.isExist = true;
-    handleSnackBar("create");
   }
 };
 const updateHealthAndMentalHealthItem = async () => {
@@ -215,31 +199,23 @@ const updateHealthAndMentalHealthItem = async () => {
     healthAndMentalHealth.value
   );
   if (response) {
-    handleSnackBar("update");
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Health and Mental Health Updated"
+    );
   }
 };
 const fetchHealthAndMentalHealth = async () => {
   const response = await getHealthAndMentalHealth(props.patientId);
   if (response) {
-    // console.log("response", response);
-    handlePatientData(response);
+    healthAndMentalHealth.value = response;
+    healthAndMentalHealth.value.isExist = true;
+    healthAndMentalHealth.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
   }
 };
 
-const handleSnackBar = (type) => {
-  snackBars.value[type].isActive = true;
-};
-const handlePatientData = (response) => {
-  healthAndMentalHealth.value = response;
-  healthAndMentalHealth.value.isExist = true;
-};
-
-const handleButtonAction = async () => {
-  if (healthAndMentalHealth.value.isExist) {
-    await updateHealthAndMentalHealthItem();
-  } else {
-    await createHealthAndMentalHealthItem();
-  }
-};
+onMounted(async () => {
+  await fetchHealthAndMentalHealth();
+});
 </script>
 <style lang=""></style>

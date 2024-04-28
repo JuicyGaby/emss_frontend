@@ -1,5 +1,13 @@
 import { BASE_URL } from "@/utils/constants";
 
+// * activity logs
+const getActivityLogs = async (patient_id) => {
+  const API_URL = `${BASE_URL}/emss/activity-logs/${patient_id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
+
 const interview = async (body) => {
   const API_URL = `${BASE_URL}/emss/interview`;
   const response = await fetch(API_URL, {
@@ -412,6 +420,7 @@ const updateProblemsInEnvironment = async (body) => {
   return data;
 };
 export {
+  getActivityLogs,
   // interview
   interview,
   getInterview,

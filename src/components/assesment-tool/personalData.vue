@@ -135,10 +135,9 @@
           <v-divider class="mb-5"></v-divider>
           <div class="d-flex justify-end">
             <v-btn
-              color="grey"
+              color="secondary"
               @click="dialogs.addFamily = !dialogs.addFamily"
               prepend-icon="mdi-account-plus"
-              size="small"
               class="mb-5"
               >Add family member</v-btn
             >
@@ -219,8 +218,14 @@
           </div>
         </v-form>
       </v-card-text>
-      <v-card-actions class="d-flex justify-end">
-        <v-btn color="primary" @click="createFamilyMemberData">Create</v-btn>
+      <v-card-actions class="d-flex justify-end pa-5">
+        <v-btn
+          prepend-icon="mdi-account-plus"
+          color="primary"
+          @click="createFamilyMemberData"
+        >
+          Create Family Member
+        </v-btn>
       </v-card-actions>
       <!-- {{ inputFields.familyComposition }} -->
     </v-card>
@@ -230,7 +235,7 @@
     <v-card>
       <v-toolbar color="secondary" class="px-5">
         <v-icon>mdi-account-edit</v-icon>
-        <v-toolbar-title class="">Edit Family Member</v-toolbar-title>
+        <v-toolbar-title class="">Update Family Member</v-toolbar-title>
         <v-icon @click="dialogs.editFamily = !dialogs.editFamily"
           >mdi-close</v-icon
         >
@@ -267,7 +272,14 @@
         </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
-        <v-btn color="primary" @click="updateFamilyMemberData">Update</v-btn>
+        <v-btn
+          prepend-icon="mdi-account-edit"
+          color="primary"
+          @click="updateFamilyMemberData"
+          class="pa-5 mb-5"
+        >
+          Update Family Member
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

@@ -38,7 +38,7 @@
                   v-model="patientData[key]"
                   :rules="[inputRules.required]"
                 ></v-text-field>
-                <v-select
+                <v-combobox
                   v-for="(field, key) in inputFields.part1.selectFields"
                   :key="key"
                   :label="field.label"
@@ -49,7 +49,7 @@
                   v-model="patientData[key]"
                   autocomplete
                   :rules="[inputRules.required]"
-                ></v-select>
+                ></v-combobox>
                 <!-- dar values -->
                 <v-select
                   v-for="(field, key) in inputFields.part1.darSelectFields"
@@ -143,13 +143,19 @@ import {
   getDailyActivityReportById,
   updateDailyActivityReport,
 } from "@/api/daily-activity-report";
+import { userAuthentication } from "@/stores/session";
+
 const props = defineProps({
   dar_id: Number,
 });
 onMounted(async () => {
   await fetchDarData();
 });
+
+const authentication = userAuthentication();
+const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
 const darForm = ref(null);
+
 const darData = ref({});
 const patientData = ref({});
 const tabValue = ref(0);
@@ -212,6 +218,7 @@ const inputFields = {
           "Vocational",
           "College",
           "Post Graduate",
+          "None",
         ],
       },
     },
@@ -339,6 +346,7 @@ const fetchDarData = async () => {
     darData.value.interview_start_time = moment().format("HH:mm");
   }
   patientData.value = darData.value.patients;
+  darData.value.created_by = userFullName;
 };
 const handleSnackBar = (type, text) => {
   snackBarData.value.isVisible = true;

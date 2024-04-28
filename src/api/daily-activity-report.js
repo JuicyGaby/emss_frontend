@@ -244,6 +244,20 @@ const createDarServicesItem = async (body) => {
   return data;
 };
 
+// activity logs
+
+const getDarActivityLogs = async (id) => {
+  const API_URL = `${BASE_URL}/emss/dar-activity-logs/${id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
+const getSwaActivityLogs = async (id) => {
+  const API_URL = `${BASE_URL}/emss/swa-activity-logs/${id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
 export {
   createDailyActivityReport,
   getDailyActivityReport,
@@ -272,4 +286,6 @@ export {
   getDailyActivityReportByDate,
   getDarByMonth,
   updateDarStatus,
+  getDarActivityLogs,
+  getSwaActivityLogs,
 };

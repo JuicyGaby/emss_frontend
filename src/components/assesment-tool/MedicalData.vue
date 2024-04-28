@@ -3,75 +3,63 @@
     <v-container style="width: 1500px">
       <h1>Medical Data</h1>
       <v-divider class="mb-5"></v-divider>
-      <v-row>
-        <v-col cols="12" class="d-flex flex-wrap ga-2">
-          <v-textarea
-            v-for="(field, key) in inputFields"
-            :key="key"
-            :label="field.label"
-            variant="outlined"
-            v-model="medicalData[key]"
-            style="width: 500px"
-            class=""
-            type="number"
-            density="comfortable"
-          ></v-textarea>
-        </v-col>
-      </v-row>
+      <v-form ref="medicalDataForm">
+        <v-row>
+          <v-col cols="12" class="d-flex flex-wrap ga-2">
+            <v-textarea
+              v-for="(field, key) in inputFields"
+              :key="key"
+              :label="field.label"
+              variant="outlined"
+              v-model="medicalData[key]"
+              counter="500"
+              :rules="[inputRules.textArea]"
+              style="width: 500px"
+              density="comfortable"
+            ></v-textarea>
+          </v-col>
+        </v-row>
+      </v-form>
       <v-btn
         :prepend-icon="medicalData.isExist ? 'mdi-update' : 'mdi-content-save'"
         color="secondary"
-        @click="handleButtonAction"
+        @click="
+          medicalData.isExist
+            ? updateMedicalDataItem()
+            : createMedicalDataItem()
+        "
         >{{
           medicalData.isExist ? "Update Medical Data" : "Create Medical Data"
         }}</v-btn
       >
     </v-container>
     <!-- {{ medicalData }} -->
-    <v-snackbar
-      v-for="(bar, key) in snackBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
-      </div>
-    </v-snackbar>
+    <snackBars :snackBarData="snackBarData" />
   </div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import { inputRules, validateForm, handleSnackBar } from "@/utils/constants";
+import snackBars from "../dialogs/snackBars.vue";
+import { userAuthentication } from "@/stores/session";
 import {
   getMedicalData,
   createMedicalData,
   updateMedicalData,
 } from "@/api/assesment-tool";
 
+const medicalDataForm = ref(null);
+const snackBarData = ref({});
 const props = defineProps({
   patientId: Number,
 });
-onMounted(async () => {
-  await fetchMedicalData();
-});
 
-const snackBars = ref({
-  update: {
-    isActive: false,
-    text: "Medical Data Updated",
-  },
-  create: {
-    isActive: false,
-    text: "Medical Data Created",
-  },
-});
+const authentication = userAuthentication();
+
 const medicalData = ref({
   isExist: false,
   patient_id: props.patientId,
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
 });
 const inputFields = {
   admitting_diagnosis: {
@@ -93,20 +81,17 @@ const inputFields = {
     label: "Health Accessibility Problem",
   },
 };
-
 const fetchMedicalData = async () => {
   const response = await getMedicalData(props.patientId);
   if (response) {
-    handlePatientData(response);
+    medicalData.value = response;
+    medicalData.value.isExist = true;
+    medicalData.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
   }
 };
-const handlePatientData = (response) => {
-  medicalData.value = response;
-  medicalData.value.isExist = true;
-};
-
 const createMedicalDataItem = async () => {
-  console.log("createMedicalDataItem");
+  const isValid = await validateForm(medicalDataForm);
+  if (!isValid) return;
   const response = await createMedicalData(medicalData.value);
   if (response) {
     medicalData.value.isExist = true;
@@ -114,22 +99,17 @@ const createMedicalDataItem = async () => {
   }
 };
 const updateMedicalDataItem = async () => {
-  console.log("updateMedicalDataItem");
+  const isValid = await validateForm(medicalDataForm);
+  if (!isValid) return;
   const response = await updateMedicalData(medicalData.value);
   if (response) {
-    handleSnackBar("update");
+    // handleSnackBar("update");
+    snackBarData.value = handleSnackBar("success", "Medical Data Updated");
   }
-};
-const handleSnackBar = (type) => {
-  snackBars.value[type].isActive = true;
 };
 
-const handleButtonAction = async () => {
-  if (medicalData.value.isExist) {
-    await updateMedicalDataItem();
-    return;
-  }
-  await createMedicalDataItem();
-};
+onMounted(async () => {
+  await fetchMedicalData();
+});
 </script>
 <style lang=""></style>

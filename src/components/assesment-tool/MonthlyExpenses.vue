@@ -114,6 +114,7 @@
           </v-btn>
         </v-col>
       </v-row>
+      <!-- {{ userMonthlyExpenses }} -->
     </v-container>
   </div>
   <snack-bars :snackBarData="snackBarData" />
@@ -122,6 +123,7 @@
 import snackBars from "../dialogs/snackBars.vue";
 import { ref, onMounted, computed, watch } from "vue";
 import { inputRules, handleSnackBar } from "@/utils/constants";
+import { userAuthentication } from "@/stores/session";
 import {
   getMonthlyExpenses,
   createMonthlyExpenses,
@@ -129,6 +131,7 @@ import {
 } from "@/api/assesment-tool";
 
 const snackBarData = ref({});
+const authentication = userAuthentication();
 
 const props = defineProps({
   patientId: Number,
@@ -143,6 +146,7 @@ const totalCost = computed(() => {
 const userMonthlyExpenses = ref({
   isExist: false,
   id: props.patientId,
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
   number: {
     house_lot_cost: "",
     food_water_cost: "",
@@ -298,6 +302,7 @@ const createMonthlyExpensesItem = async () => {
 const getMonthlyExpensesItem = async () => {
   const response = await getMonthlyExpenses(props.patientId);
   if (response) {
+    console.log(response);
     userMonthlyExpenses.value = {
       isExist: true,
       id: response.id,
@@ -322,6 +327,7 @@ const getMonthlyExpensesItem = async () => {
         fuel_source_type: response.fuel_source_type,
         water_source_type: response.water_source_type,
       },
+      social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
     };
     console.log(userMonthlyExpenses.value);
   }

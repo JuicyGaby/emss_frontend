@@ -74,17 +74,22 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import { userAuthentication } from "@/stores/session";
+
 import {
   getMswdClassification,
   createMswdClassification,
   updateMswdClassification,
 } from "@/api/assesment-tool";
+
 const props = defineProps({
   patientId: Number,
 });
 onMounted(async () => {
   await fetchMswdClassification();
 });
+const authentication = userAuthentication();
+
 const classficationEmpty = ref(false);
 
 const snackBars = ref({
@@ -98,8 +103,9 @@ const snackBars = ref({
   },
 });
 
-let mswdClassification = ref({
+const mswdClassification = ref({
   patient_id: props.patientId,
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
   isExisting: false,
 });
 
@@ -179,6 +185,7 @@ const fetchMswdClassification = async () => {
     mswdClassification.value.membership_to_marginalized_sector = null;
   }
   mswdClassification.value.isExisting = true;
+  mswdClassification.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
 };
 </script>
 <style lang=""></style>

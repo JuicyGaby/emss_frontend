@@ -66,7 +66,11 @@
           discrimination.isExist ? 'mdi-update' : 'mdi-content-save'
         "
         color="secondary"
-        @click="handleButtonAction"
+        @click="
+          discrimination.isExist
+            ? updateDiscriminationItem()
+            : createDiscriinationItem()
+        "
         >{{
           discrimination.isExist
             ? "Update Discrimination Data"
@@ -74,25 +78,15 @@
         }}</v-btn
       >
     </v-container>
-    <v-snackbar
-      v-for="(bar, key) in snackBars"
-      :key="key"
-      color="green"
-      location="top"
-      :timeout="2500"
-      min-width="250px"
-      v-model="bar.isActive"
-    >
-      <div class="d-flex justify-center align-center ga-2">
-        <v-icon icon="mdi-check-bold"></v-icon>
-        <p class="text-subtitle-1">{{ bar.text }}</p>
-      </div>
-    </v-snackbar>
   </div>
   <!-- {{ discrimination }} -->
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import { handleSnackBar } from "@/utils/constants";
+import snackBars from "../dialogs/snackBars.vue";
+import { userAuthentication } from "@/stores/session";
 import {
   getDiscrimination,
   createDiscrimination,
@@ -101,13 +95,14 @@ import {
 const props = defineProps({
   patientId: Number,
 });
-onMounted(async () => {
-  await fetchDiscrimination();
-});
+
+const authentication = userAuthentication();
+const snackBarData = ref({});
 
 const discrimination = ref({
   isExist: false,
   patient_id: props.patientId,
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
   Age: {
     severity: "",
     duration: "",
@@ -162,16 +157,6 @@ const discrimination = ref({
     severity: "",
     duration: "",
     coping: "",
-  },
-});
-const snackBars = ref({
-  update: {
-    isActive: false,
-    text: "Discrimination Updated",
-  },
-  create: {
-    isActive: false,
-    text: "Discrimination Health Created",
   },
 });
 const tableheaders = [
@@ -243,43 +228,33 @@ const particulars = {
 };
 
 const createDiscriinationItem = async () => {
+  discrimination.value.activity = "Created Discrimination Data";
   const response = await createDiscrimination(discrimination.value);
   console.log("response", response);
   if (response) {
     discrimination.value.isExist = true;
-    handleSnackBar("create");
+    snackBarData.value = handleSnackBar("success", "Discrimination Created");
   }
 };
 const updateDiscriminationItem = async () => {
-  console.log("Update Discrimination");
+  discrimination.value.activity = "Updated Discrimination Data";
   const response = await updateDiscrimination(discrimination.value);
   if (response) {
-    handleSnackBar("update");
+    snackBarData.value = handleSnackBar("success", "Discrimination Updated");
   }
 };
 
 const fetchDiscrimination = async () => {
-  // console.log("Fetch Discrimination");
   const response = await getDiscrimination(props.patientId);
   if (response) {
-    // console.log("response", response);
-    handlePatientData(response);
+    discrimination.value = response;
+    discrimination.value.isExist = true;
+    discrimination.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
   }
 };
 
-const handleSnackBar = (type) => {
-  snackBars.value[type].isActive = true;
-};
-const handlePatientData = (response) => {
-  discrimination.value = response;
-  discrimination.value.isExist = true;
-};
-const handleButtonAction = async () => {
-  if (discrimination.value.isExist) {
-    await updateDiscriminationItem();
-  } else {
-    await createDiscriinationItem();
-  }
-};
+onMounted(async () => {
+  await fetchDiscrimination();
+});
 </script>
 <style lang=""></style>

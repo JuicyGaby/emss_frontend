@@ -51,6 +51,7 @@
         >
       </v-card-actions>
       <!-- {{ interviewInputData }} -->
+      <!-- {{ userFullName }} -->
     </v-container>
   </div>
   <snackBars :snackBarData="snackBarData" />
@@ -60,6 +61,9 @@ import { ref, onMounted } from "vue";
 import snackBars from "../dialogs/snackBars.vue";
 import { inputRules, validateForm, handleSnackBar } from "@/utils/constants";
 import { getInterview, updateInterview, interview } from "@/api/assesment-tool";
+import { userAuthentication } from "@/stores/session";
+
+const authentication = userAuthentication();
 const props = defineProps({
   patientId: Number,
 });
@@ -74,6 +78,7 @@ const interviewInputData = ref({
   mswd_number: "",
   contact_number: "",
   informant_contact_number: "",
+  social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
 });
 const inputFields = ref({
   interview_date: {
@@ -177,6 +182,7 @@ const getInterviewData = async () => {
   if (response) {
     interviewInputData.value = response;
     interviewInputData.value.isExist = true;
+    interviewInputData.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
   }
   console.log(interviewInputData.value);
 };

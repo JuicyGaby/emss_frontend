@@ -66,10 +66,13 @@
                     @click="editDailyActivityReport(item.id)"
                     >mdi-pencil</v-icon
                   >
-                  <v-icon
+                  <!-- <v-icon
                     color="secondary"
                     @click="viewDailyActivityReport(item)"
                     >mdi-eye</v-icon
+                  > -->
+                  <v-icon color="warning" @click="viewDarActivityLogs(item.id)"
+                    >mdi-note-text</v-icon
                   >
                   <v-icon
                     color="error"
@@ -119,7 +122,10 @@
                     @click="editSocialWorkAdministration(item.id)"
                     >mdi-pencil</v-icon
                   >
-                  <v-icon color="secondary">mdi-eye</v-icon>
+                  <v-icon color="warning" @click="viewSwaActivityLogs(item.id)"
+                    >mdi-note-text</v-icon
+                  >
+                  <v-icon color="error">mdi-delete</v-icon>
                 </div>
               </template>
             </v-data-table>
@@ -155,6 +161,18 @@
     >
       <ViewDARDialog :dar_id="dar_id" />
     </v-dialog>
+    <!-- view dar activities -->
+    <v-dialog
+      v-model="dialogs.dar.activity"
+      width="50%"
+      transition="dialog-transition"
+    >
+      <DarActivityLogs
+        :dar_id="dar_id"
+        @closeDialog="dialogs.dar.activity = false"
+      />
+      " />
+    </v-dialog>
     <!-- delete dar dialog -->
     <v-dialog v-model="dialogs.dar.delete" width="600px">
       <dynamicDialog
@@ -182,7 +200,17 @@
       <EditSWADialog :swa_id="swa_id" @closeDialog="dialogs.swa.edit = false" />
       />
     </v-dialog>
-    <!-- view swa dialog -->
+    <!-- view swa activities -->
+    <v-dialog
+      v-model="dialogs.swa.activity"
+      width="50%"
+      transition="dialog-transition"
+    >
+      <SwaActivityLogs
+        :swa_id="swa_id"
+        @closeDialog="dialogs.swa.activity = false"
+      />
+    </v-dialog>
   </div>
   <snack-bars :snackBarData="snackBarData" />
 </template>
@@ -205,10 +233,12 @@ import snackBars from "@/components/dialogs/snackBars.vue";
 import CreateDARDialog from "@/components/daily-activity-report/CreateDARDialog.vue";
 import EditDARDialog from "@/components/daily-activity-report/EditDARDialog.vue";
 import ViewDARDialog from "@/components/daily-activity-report/ViewDARDialog.vue";
+import DarActivityLogs from "@/components/daily-activity-report/DarActivityLogs.vue";
 // SWA Components
 import CreateSWADialog from "@/components/daily-activity-report/CreateSWADialog.vue";
 import EditSWADialog from "@/components/daily-activity-report/EditSWADialog.vue";
 import ViewSWADialog from "@/components/daily-activity-report/ViewSWADialog.vue";
+import SwaActivityLogs from "@/components/daily-activity-report/SwaActivityLogs.vue";
 onMounted(async () => {
   await getDarItems();
   await getSwaItems();
@@ -229,12 +259,13 @@ const dateInputs = ref({
   // make a current date that makes the month name visible using moment
   current_date: moment().format("MMMM Do YYYY"),
 });
+
 const dataTable = {
   headers: [
     { title: "Number", value: "Number" },
     { title: "Admission Date-Time", value: "date_created" },
     { title: "Patient Name", value: "fullname" },
-    { title: "Created By", value: "created_by" },
+    { title: "Social Worker", value: "created_by" },
     { title: "Operation", value: "operation" },
   ],
   swa: {
@@ -251,12 +282,14 @@ const dialogs = ref({
     create: false,
     edit: false,
     view: false,
+    activity: false,
     delete: false,
   },
   swa: {
     create: false,
     edit: false,
     view: false,
+    activity: false,
     delete: false,
   },
 });
@@ -310,6 +343,17 @@ const swaItemsWithNumbers = computed(() => {
     };
   });
 });
+
+// activity logs
+
+const viewDarActivityLogs = (id) => {
+  dar_id.value = id;
+  dialogs.value.dar.activity = true;
+};
+const viewSwaActivityLogs = (id) => {
+  swa_id.value = id;
+  dialogs.value.swa.activity = true;
+};
 
 const editDailyActivityReport = (item) => {
   dialogs.value.dar.edit = true;
