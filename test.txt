@@ -1,10 +1,11 @@
-questions
+cards
 
-unique remarks
+monthly dar counts
+monthly swa counts
 
-iscreated by - put details to pinia 
-confirmation prompt - assessment tool
-confirmation propt - dar
+user dar counts
+user swa counts
 
 
-who creates who edit
+applied features :
+
