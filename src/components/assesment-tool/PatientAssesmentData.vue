@@ -29,7 +29,7 @@
           <!-- personal data -->
           <v-row>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <h2>II Personal Data</h2>
+              <h2>II. Personal Data</h2>
               <v-divider></v-divider>
               <v-text-field
                 v-for="(item, index) in inputFields.demographicData
@@ -45,54 +45,35 @@
             </v-col>
           </v-row>
           <!-- permanent address -->
-          <v-row>
+          <v-row v-if="patientAssesmentData.address.isExisting">
             <v-col cols="12" class="d-flex flex-wrap ga-2">
               <h2>Permanent Address</h2>
-              <h3></h3>
               <v-divider></v-divider>
               <v-text-field
-                v-for="(item, index) in inputFields.demographicData.address
-                  .permanent"
+                v-for="(item, index) in inputFields.demographicData.address"
                 :key="index"
                 :label="item.label"
                 readonly
                 density="comfortable"
                 variant="outlined"
-                style="width: 400px"
+                style="width: 500px"
+                v-model="patientAssesmentData.address[0][index]"
               ></v-text-field>
             </v-col>
-          </v-row>
-          <!-- temporary address -->
-          <v-row>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
               <h2>Temporary Address</h2>
-              <h3></h3>
               <v-divider></v-divider>
               <v-text-field
-                v-for="(item, index) in inputFields.demographicData.address
-                  .temporary"
+                v-for="(item, index) in inputFields.demographicData.address"
                 :key="index"
                 :label="item.label"
                 readonly
                 density="comfortable"
                 variant="outlined"
-                style="width: 400px"
+                style="width: 500px"
+                v-model="patientAssesmentData.address[1][index]"
               ></v-text-field>
             </v-col>
-          </v-row>
-          <!-- family composition -->
-          <v-row>
-            <v-col cols="12">
-              <v-data-table
-                :headers="inputFields.demographicData.tableHeaders"
-                :items="patientAssesmentData.familyComposition"
-                items-per-page="5"
-                density="compact"
-                :items-per-page-options="[5, 10, 15]"
-              >
-              </v-data-table>
-            </v-col>
-            {{ patientAssesmentData.familyComposition }}
           </v-row>
         </v-container>
       </v-card>
@@ -279,45 +260,23 @@ const inputFields = ref({
       },
     },
     address: {
-      permanent: {
-        region: {
-          label: "Region",
-        },
-        province: {
-          label: "Province",
-        },
-        district: {
-          label: "District",
-        },
-        municipality: {
-          label: "Municipality",
-        },
-        barangay: {
-          label: "Barangay",
-        },
-        purok: {
-          label: "Purok",
-        },
+      region: {
+        label: "Region",
       },
-      temporary: {
-        region: {
-          label: "Region",
-        },
-        province: {
-          label: "Province",
-        },
-        district: {
-          label: "District",
-        },
-        municipality: {
-          label: "Municipality",
-        },
-        barangay: {
-          label: "Barangay",
-        },
-        purok: {
-          label: "Purok",
-        },
+      province: {
+        label: "Province",
+      },
+      district: {
+        label: "District",
+      },
+      municipality: {
+        label: "Municipality",
+      },
+      barangay: {
+        label: "Barangay",
+      },
+      purok: {
+        label: "Purok",
       },
     },
     tableHeaders: [
@@ -345,6 +304,9 @@ const inputFields = ref({
 const patientAssesmentData = ref({
   interview: {},
   personalData: {},
+  address: {
+    isExisting: false,
+  },
   mswdClassification: {},
   familyComposition: {},
   monthlyExpenses: {},
@@ -361,9 +323,18 @@ const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
   patientAssesmentData.value.interview = response;
 };
+
 const getPatientPersonalData = async () => {
   const response = await getPatientByID(props.patientId);
   patientAssesmentData.value.personalData = response;
+};
+const getPatientAddressData = async () => {
+  const response = await getPatientAddress(props.patientId);
+  console.log(response);
+  if (response.length > 0) {
+    patientAssesmentData.value.address = response;
+    patientAssesmentData.value.address.isExisting = true;
+  }
 };
 const getMswdClassificationData = async () => {
   const response = await getMswdClassification(props.patientId);
@@ -405,6 +376,7 @@ const getProblemsInEnvironmentData = async () => {
 const getAsessmentData = async () => {
   await getInterviewData();
   await getPatientPersonalData();
+  await getPatientAddressData();
   await getMswdClassificationData();
   await getFamilyCompositionData();
   await getMonthlyExpensesData();

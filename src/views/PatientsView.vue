@@ -56,9 +56,9 @@
               <v-icon color="warning" @click="viewActivityLogs(item.id)"
                 >mdi-note-text</v-icon
               >
-              <!-- <v-icon color="secondary" @click="viewPatientAssessmentData(item)"
+              <v-icon color="secondary" @click="viewPatientAssessmentData(item)"
                 >mdi-eye</v-icon
-              > -->
+              >
             </div>
           </template>
         </v-data-table>
