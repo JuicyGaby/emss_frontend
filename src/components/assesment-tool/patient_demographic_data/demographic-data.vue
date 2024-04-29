@@ -82,7 +82,7 @@
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
 <script setup>
-import { ref, watchEffect, watch } from "vue";
+import { ref, watchEffect, watch, onMounted } from "vue";
 import { userAuthentication } from "@/stores/session";
 import moment from "moment";
 const emit = defineEmits(["personalData"]);
@@ -93,6 +93,7 @@ const personalDataInputs = ref({
   birth_date: "",
   age: "",
   social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
+  social_worker_id: authentication.user.id,
 });
 
 watchEffect(() => {
@@ -115,7 +116,6 @@ watch(
     }
   }
 );
-
 const inputFields = {
   step1: {
     last_name: {
