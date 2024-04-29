@@ -90,6 +90,23 @@
               </v-data-table>
             </v-col>
           </v-row>
+          <!-- mswd classification -->
+          <v-row v-if="patientAssesmentData.mswdClassification.isExisting">
+            <v-col cols="12" class="d-flex flex-wrap ga-2">
+              <h2>MSWD Classification</h2>
+              <v-divider></v-divider>
+              <v-text-field
+                v-for="(item, index) in inputFields.mswdClassification"
+                :key="index"
+                :label="item.label"
+                readonly
+                density="comfortable"
+                variant="outlined"
+                style="width: 300px"
+                v-model="patientAssesmentData.mswdClassification[index]"
+              ></v-text-field>
+            </v-col>
+          </v-row>
         </v-container>
       </v-card>
     </v-dialog>
@@ -305,7 +322,17 @@ const inputFields = ref({
       { title: "Monthly Income", value: "monthly_income" },
     ],
   },
-  mswdClassification: {},
+  mswdClassification: {
+    main_classification_type: {
+      label: "Main Classification",
+    },
+    sub_classification_type: {
+      label: "Sub Classification",
+    },
+    membership_to_marginalized_sector: {
+      label: "Sectors",
+    },
+  },
   familyComposition: {},
   monthlyExpenses: {},
   medicalData: {},
@@ -349,7 +376,6 @@ const getPatientPersonalData = async () => {
 };
 const getPatientAddressData = async () => {
   const response = await getPatientAddress(props.patientId);
-  console.log(response);
   if (response.length > 0) {
     patientAssesmentData.value.address = response;
     patientAssesmentData.value.address.isExisting = true;
@@ -357,7 +383,9 @@ const getPatientAddressData = async () => {
 };
 const getMswdClassificationData = async () => {
   const response = await getMswdClassification(props.patientId);
+  console.log(response);
   patientAssesmentData.value.mswdClassification = response;
+  patientAssesmentData.value.mswdClassification.isExisting = true;
 };
 const getFamilyCompositionData = async () => {
   const response = await getFamilyComposition(props.patientId);
