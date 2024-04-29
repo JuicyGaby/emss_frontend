@@ -12,7 +12,7 @@
           <!-- interview -->
           <v-row>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <h2>I. Initial Interview</h2>
+              <h2>Initial Interview</h2>
               <v-divider></v-divider>
               <v-text-field
                 v-for="(item, index) in inputFields.interview"
@@ -29,7 +29,7 @@
           <!-- personal data -->
           <v-row>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <h2>II. Personal Data</h2>
+              <h2>I. Personal Data</h2>
               <v-divider></v-divider>
               <v-text-field
                 v-for="(item, index) in inputFields.demographicData
@@ -93,7 +93,7 @@
           <!-- mswd classification -->
           <v-row v-if="patientAssesmentData.mswdClassification.isExisting">
             <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <h2>MSWD Classification</h2>
+              <h2>II. MSWD Classification</h2>
               <v-divider></v-divider>
               <v-template
                 v-for="(item, index) in inputFields.mswdClassification"
@@ -120,6 +120,24 @@
                   v-model="patientAssesmentData.mswdClassification[index]"
                 ></v-combobox>
               </v-template>
+            </v-col>
+          </v-row>
+          <!-- monthly expenses -->
+          <!-- medical data -->
+          <v-row v-if="patientAssesmentData.medicalData.isExisting">
+            <v-col cols="12" class="d-flex flex-wrap ga-2">
+              <h2>IV. Medical Data</h2>
+              <v-divider></v-divider>
+              <v-textarea
+                v-for="(item, index) in inputFields.medicalData"
+                :key="index"
+                :label="item.label"
+                readonly
+                density="comfortable"
+                variant="outlined"
+                style="width: 500px"
+                v-model="patientAssesmentData.medicalData[index]"
+              ></v-textarea>
             </v-col>
           </v-row>
         </v-container>
@@ -351,9 +369,27 @@ const inputFields = ref({
       label: "Sectors",
     },
   },
-  familyComposition: {},
   monthlyExpenses: {},
-  medicalData: {},
+  medicalData: {
+    admitting_diagnosis: {
+      label: "Admitting Diagnosis",
+    },
+    final_diagnosis: {
+      label: "Final Diagnosis",
+    },
+    duration_of_problems: {
+      label: "Duration of Problems",
+    },
+    previous_treatment: {
+      label: "Previous Treatment",
+    },
+    present_treatment_plan: {
+      label: "Present Treatment Plan",
+    },
+    health_accessibility_problem: {
+      label: "Health Accessibility Problem",
+    },
+  },
   healthAndMentalHealth: {},
   discrimination: {},
   safety: {},
@@ -373,8 +409,12 @@ const patientAssesmentData = ref({
   mswdClassification: {
     isExisting: false,
   },
-  monthlyExpenses: {},
-  medicalData: {},
+  monthlyExpenses: {
+    isExisting: false,
+  },
+  medicalData: {
+    isExisting: false,
+  },
   healthAndMentalHealth: {},
   discrimination: {},
   safety: {},
@@ -417,6 +457,7 @@ const getMonthlyExpensesData = async () => {
 const getMedicalDataItem = async () => {
   const response = await getMedicalData(props.patientId);
   patientAssesmentData.value.medicalData = response;
+  patientAssesmentData.value.medicalData.isExisting = true;
 };
 const getHealthAndMentalHealthData = async () => {
   const response = await getHealthAndMentalHealth(props.patientId);
