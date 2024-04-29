@@ -95,16 +95,31 @@
             <v-col cols="12" class="d-flex flex-wrap ga-2">
               <h2>MSWD Classification</h2>
               <v-divider></v-divider>
-              <v-text-field
+              <v-template
                 v-for="(item, index) in inputFields.mswdClassification"
-                :key="index"
-                :label="item.label"
-                readonly
-                density="comfortable"
-                variant="outlined"
-                style="width: 300px"
-                v-model="patientAssesmentData.mswdClassification[index]"
-              ></v-text-field>
+                style="width: 550px"
+              >
+                <v-text-field
+                  v-if="item.formType === 'text'"
+                  :key="index"
+                  :label="item.label"
+                  readonly
+                  density="comfortable"
+                  variant="outlined"
+                  v-model="patientAssesmentData.mswdClassification[index]"
+                ></v-text-field>
+                <v-combobox
+                  v-else-if="item.formType === 'select'"
+                  multiple
+                  chips
+                  readonly
+                  :key="'select-' + index"
+                  :label="item.label"
+                  variant="outlined"
+                  density="comfortable"
+                  v-model="patientAssesmentData.mswdClassification[index]"
+                ></v-combobox>
+              </v-template>
             </v-col>
           </v-row>
         </v-container>
@@ -324,12 +339,15 @@ const inputFields = ref({
   },
   mswdClassification: {
     main_classification_type: {
+      formType: "text",
       label: "Main Classification",
     },
     sub_classification_type: {
+      formType: "text",
       label: "Sub Classification",
     },
     membership_to_marginalized_sector: {
+      formType: "select",
       label: "Sectors",
     },
   },
