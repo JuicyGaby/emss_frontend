@@ -6,7 +6,7 @@
           <v-toolbar-title>
             Patient Assesment Data {{ props.patientId }}</v-toolbar-title
           >
-          <v-icon>mdi-close</v-icon>
+          <v-icon @click="emit('closeDialog')">mdi-close</v-icon>
         </v-toolbar>
         <v-container>
           <!-- interview -->
@@ -203,6 +203,64 @@
                 style="width: 500px"
                 v-model="patientAssesmentData.medicalData[index]"
               ></v-textarea>
+            </v-col>
+          </v-row>
+          <!-- problems in environment -->
+          <v-row v-if="patientAssesmentData.problemsInEnvironment.isExisting">
+            <v-col cols="12" class="d-flex flex-wrap">
+              <h2>V. Problems in Environment</h2>
+              <v-divider></v-divider>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" class="d-flex flex-wrap ga-2">
+                    <v-combobox
+                      v-for="(item, index) in inputFields.problemsInEnvironment
+                        .combo"
+                      :key="index"
+                      :label="item.label"
+                      readonly
+                      chips
+                      multiple
+                      density="comfortable"
+                      variant="outlined"
+                      style="width: 500px"
+                      v-model="
+                        patientAssesmentData.problemsInEnvironment[index]
+                      "
+                    ></v-combobox>
+                  </v-col>
+                  <v-col cols="12" class="d-flex flex-wrap ga-2">
+                    <v-textarea
+                      v-for="(item, index) in inputFields.problemsInEnvironment
+                        .textareas"
+                      :key="index"
+                      :label="item.label"
+                      readonly
+                      density="comfortable"
+                      variant="outlined"
+                      style="width: 500px"
+                      v-model="
+                        patientAssesmentData.problemsInEnvironment[index]
+                      "
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="12" class="d-flex flex-wrap ga-2">
+                    <v-text-field
+                      v-for="(item, index) in inputFields.problemsInEnvironment
+                        .text"
+                      :key="index"
+                      :label="item.label"
+                      readonly
+                      density="comfortable"
+                      variant="outlined"
+                      style="width: 700px"
+                      v-model="
+                        patientAssesmentData.problemsInEnvironment[index]
+                      "
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
             </v-col>
           </v-row>
         </v-container>
@@ -537,7 +595,54 @@ const inputFields = ref({
   discrimination: {},
   safety: {},
   socialFunctioning: {},
-  problemsInEnvironment: {},
+  problemsInEnvironment: {
+    combo: {
+      problems_presented: {
+        label: "Problems Presented",
+        formType: "combobox",
+      },
+      reasons_psychosocial_counselling: {
+        label: "Reasons for Psychosocial Counselling",
+        formType: "combobox",
+      },
+    },
+    textareas: {
+      assesment_findings: {
+        label: "Assesment Findings",
+        formType: "textarea",
+      },
+      recommended_intervention: {
+        label: "Recommended Intervention",
+        formType: "textarea",
+      },
+      action_taken: {
+        label: "Action Taken",
+        formType: "textarea",
+      },
+    },
+    text: {
+      person_emergency: {
+        label: "Person to be notified in case of emergency",
+        formType: "text",
+      },
+      relationship_to_patient: {
+        label: "Relation to the patient",
+        formType: "text",
+      },
+      address: {
+        label: "Address",
+        formType: "text",
+      },
+      contact_number: {
+        label: "Contact Number",
+        formType: "text",
+      },
+      interviewed_by: {
+        label: "Interviewer",
+        formType: "text",
+      },
+    },
+  },
 });
 
 const patientAssesmentData = ref({
@@ -562,7 +667,9 @@ const patientAssesmentData = ref({
   discrimination: {},
   safety: {},
   socialFunctioning: {},
-  problemsInEnvironment: {},
+  problemsInEnvironment: {
+    isExisting: false,
+  },
 });
 // async functions
 
@@ -621,7 +728,11 @@ const getSocialFunctioningData = async () => {
 };
 const getProblemsInEnvironmentData = async () => {
   const response = await getProblemsInEnvironment(props.patientId);
-  patientAssesmentData.value.problemsInEnvironment = response;
+  if (response) {
+    patientAssesmentData.value.problemsInEnvironment = response;
+    patientAssesmentData.value.problemsInEnvironment.isExisting = true;
+    console.log(patientAssesmentData.value.problemsInEnvironment);
+  }
 };
 
 const getAsessmentData = async () => {

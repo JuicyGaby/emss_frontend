@@ -163,7 +163,10 @@
     v-model="dialogs.viewAssessment.isVisibile"
     transition="dialog-transition"
   >
-    <PatientAssesmentData :patientId="patientId" />
+    <PatientAssesmentData
+      :patientId="patientId"
+      @closeDialog="dialogs.viewAssessment.isVisibile = false"
+    />
   </v-dialog>
   <!-- view activity logs -->
   <v-dialog
