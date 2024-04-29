@@ -448,6 +448,10 @@ const inputFields = ref({
         type: "text",
         rules: [inputRules.required],
       },
+      preferred_name: {
+        label: "Preferred Name",
+        type: "text",
+      },
       age: {
         label: "Age",
         type: "text",
