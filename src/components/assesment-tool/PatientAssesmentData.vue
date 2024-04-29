@@ -77,7 +77,7 @@
             </v-col>
           </v-row>
           <!-- family composition -->
-          <v-row>
+          <v-row v-if="patientAssesmentData.familyComposition.isExisting">
             <v-col cols="12">
               <h2>Family Composition</h2>
               <v-data-table
@@ -322,8 +322,12 @@ const patientAssesmentData = ref({
   address: {
     isExisting: false,
   },
-  familyComposition: {},
-  mswdClassification: {},
+  familyComposition: {
+    isExisting: false,
+  },
+  mswdClassification: {
+    isExisting: false,
+  },
   monthlyExpenses: {},
   medicalData: {},
   healthAndMentalHealth: {},
@@ -358,6 +362,7 @@ const getMswdClassificationData = async () => {
 const getFamilyCompositionData = async () => {
   const response = await getFamilyComposition(props.patientId);
   patientAssesmentData.value.familyComposition = response;
+  patientAssesmentData.value.familyComposition.isExisting = true;
 };
 const getMonthlyExpensesData = async () => {
   const response = await getMonthlyExpenses(props.patientId);
