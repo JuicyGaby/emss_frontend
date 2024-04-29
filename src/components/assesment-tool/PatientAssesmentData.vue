@@ -123,6 +123,71 @@
             </v-col>
           </v-row>
           <!-- monthly expenses -->
+          <v-row
+            class=""
+            v-if="patientAssesmentData.monthlyExpenses.isExisting"
+          >
+            <v-col cols="12" class="d-flex flex-wrap ga-2">
+              <h2>III. Monthly Expenses</h2>
+              <v-divider></v-divider>
+            </v-col>
+            <v-template
+              v-for="(item, index) in inputFields.monthlyExpenses.row1"
+            >
+              <v-col cols="12" class="d-flex flex-wrap">
+                <v-text-field
+                  v-if="item.formType === 'text'"
+                  :key="`text-${index}`"
+                  :label="item.label"
+                  readonly
+                  density="comfortable"
+                  variant="outlined"
+                  style="width: 550px"
+                  v-model="patientAssesmentData.monthlyExpenses[index]"
+                ></v-text-field>
+                <v-combobox
+                  v-else-if="item.formType === 'combobox'"
+                  multiple
+                  chips
+                  :key="`combobox-${index}`"
+                  :label="item.label"
+                  readonly
+                  v-model="patientAssesmentData.monthlyExpenses[index]"
+                  style="width: 550px"
+                  density="comfortable"
+                  variant="outlined"
+                ></v-combobox>
+              </v-col>
+            </v-template>
+            <v-template
+              v-for="(item, index) in inputFields.monthlyExpenses.row2"
+            >
+              <v-col cols="12" class="d-flex flex-wrap">
+                <v-text-field
+                  v-if="item.formType === 'text'"
+                  :key="`text-${index}`"
+                  :label="item.label"
+                  readonly
+                  density="comfortable"
+                  variant="outlined"
+                  style="width: 550px"
+                  v-model="patientAssesmentData.monthlyExpenses[index]"
+                ></v-text-field>
+                <v-combobox
+                  v-else-if="item.formType === 'combobox'"
+                  multiple
+                  chips
+                  :key="`combobox-${index}`"
+                  :label="item.label"
+                  readonly
+                  v-model="patientAssesmentData.monthlyExpenses[index]"
+                  style="width: 550px"
+                  density="comfortable"
+                  variant="outlined"
+                ></v-combobox>
+              </v-col>
+            </v-template>
+          </v-row>
           <!-- medical data -->
           <v-row v-if="patientAssesmentData.medicalData.isExisting">
             <v-col cols="12" class="d-flex flex-wrap ga-2">
@@ -235,7 +300,6 @@ const inputFields = ref({
       label: "Referal Contact Number",
       type: "text",
       formType: "number",
-      rules: [inputRules.invalidNegative],
     },
     informant: {
       label: "Informant",
@@ -260,7 +324,6 @@ const inputFields = ref({
       label: "Informant Contact Number",
       type: "text",
       formType: "number",
-      rules: [inputRules.invalidNegative],
     },
     informant_address: {
       label: "Informant Address",
@@ -369,7 +432,87 @@ const inputFields = ref({
       label: "Sectors",
     },
   },
-  monthlyExpenses: {},
+  monthlyExpenses: {
+    row1: {
+      house_lot_cost: {
+        label: "House and Lot Cost",
+        formType: "text",
+      },
+      food_water_cost: {
+        label: "Food and Water Cost",
+        formType: "text",
+      },
+      education_cost: {
+        label: "Education Cost",
+        formType: "text",
+      },
+      clothing_cost: {
+        label: "Clothing Cost",
+        formType: "text",
+      },
+      communication_cost: {
+        label: "Communication Cost",
+        formType: "text",
+      },
+      house_help_cost: {
+        label: "House Help Cost",
+        formType: "text",
+      },
+      transportation_type: {
+        label: "Transportation Type",
+        formType: "combobox",
+      },
+      transportation_cost: {
+        label: "Transportation Cost",
+        formType: "text",
+      },
+      others_description: {
+        label: "Others. Please specify:",
+        formType: "combobox",
+      },
+      others_cost: {
+        label: "Others Cost",
+        formType: "text",
+      },
+      medical_cost: {
+        label: "Medical Cost",
+        formType: "text",
+      },
+    },
+    row2: {
+      light_source_type: {
+        label: "Light Sources",
+        formType: "combobox",
+      },
+      light_source_cost: {
+        label: "Light Source Cost",
+        inputType: "Number",
+        formType: "text",
+      },
+      fuel_source_type: {
+        label: "Fuel Sources",
+        formType: "combobox",
+      },
+      fuel_source_cost: {
+        label: "Fuel Source Cost",
+        inputType: "Number",
+        formType: "text",
+      },
+      water_source_type: {
+        label: "Water Sources",
+        formType: "combobox",
+      },
+      water_source_cost: {
+        label: "Water Source Cost",
+        inputType: "Number",
+        formType: "text",
+      },
+      total_cost: {
+        label: "Total Cost",
+        formType: "text",
+      },
+    },
+  },
   medicalData: {
     admitting_diagnosis: {
       label: "Admitting Diagnosis",
@@ -453,6 +596,7 @@ const getFamilyCompositionData = async () => {
 const getMonthlyExpensesData = async () => {
   const response = await getMonthlyExpenses(props.patientId);
   patientAssesmentData.value.monthlyExpenses = response;
+  patientAssesmentData.value.monthlyExpenses.isExisting = true;
 };
 const getMedicalDataItem = async () => {
   const response = await getMedicalData(props.patientId);
@@ -498,4 +642,8 @@ onMounted(async () => {
   await getAsessmentData();
 });
 </script>
-<style lang=""></style>
+<style lang="css">
+.rb {
+  border: 1px dashed red;
+}
+</style>
