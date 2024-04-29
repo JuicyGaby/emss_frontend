@@ -60,6 +60,7 @@
                 v-model="patientAssesmentData.address[0][index]"
               ></v-text-field>
             </v-col>
+            <!-- temporary address -->
             <v-col cols="12" class="d-flex flex-wrap ga-2">
               <h2>Temporary Address</h2>
               <v-divider></v-divider>
@@ -73,6 +74,20 @@
                 style="width: 500px"
                 v-model="patientAssesmentData.address[1][index]"
               ></v-text-field>
+            </v-col>
+          </v-row>
+          <!-- family composition -->
+          <v-row>
+            <v-col cols="12">
+              <h2>Family Composition</h2>
+              <v-data-table
+                :headers="inputFields.demographicData.tableHeaders"
+                :items="patientAssesmentData.familyComposition"
+                items-per-page="5"
+                density="compact"
+                :items-per-page-options="[5, 10, 15]"
+              >
+              </v-data-table>
             </v-col>
           </v-row>
         </v-container>
@@ -307,8 +322,8 @@ const patientAssesmentData = ref({
   address: {
     isExisting: false,
   },
-  mswdClassification: {},
   familyComposition: {},
+  mswdClassification: {},
   monthlyExpenses: {},
   medicalData: {},
   healthAndMentalHealth: {},
