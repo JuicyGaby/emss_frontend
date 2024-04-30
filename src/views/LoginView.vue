@@ -50,8 +50,11 @@
       </div>
     </div>
   </div>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
+import snackBars from "@/components/dialogs/snackBars.vue";
+import { handleSnackBar } from "@/utils/constants";
 import { ref, defineProps, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { userLogin } from "@/api/authentication";
@@ -59,10 +62,7 @@ import { userAuthentication } from "../stores/session";
 const authentication = userAuthentication();
 const router = useRouter();
 
-onMounted(() => {
-  checkUserSession();
-});
-
+const snackBarData = ref({});
 const userInput = ref({
   system_id: 20,
 });
@@ -97,8 +97,9 @@ const signIn = async () => {
   const validated = await validateForm();
   if (!validated) return;
   const response = await userLogin(userInput.value);
-  console.log(response);
-  await validateUserData(response);
+  if (response) {
+    await validateUserData(response);
+  }
 };
 const validateUserData = async (data) => {
   const validated = handleAlert(data);
@@ -107,13 +108,15 @@ const validateUserData = async (data) => {
     return;
   }
 };
-
 const handleAlert = (data) => {
   if (data.error) {
     toggleAlert.value = true;
     isError.value = true;
     return false;
   }
+  const canAccess = checkUserAccess(data);
+  if (!canAccess) return false;
+
   toggleAlert.value = true;
   isError.value = false;
   return true;
@@ -135,6 +138,20 @@ const checkUserSession = () => {
     router.push("/");
   }
 };
+const checkUserAccess = (data) => {
+  const accessRightsLength = data.user.access.length;
+  if (accessRightsLength !== 0) {
+    return true;
+  }
+  snackBarData.value = handleSnackBar(
+    "error",
+    "You do not have access to this system. Please contact the administrator."
+  );
+  return false;
+};
+onMounted(() => {
+  checkUserSession();
+});
 </script>
 
 <style lang="css" scoped>
