@@ -94,59 +94,79 @@ const toggleAlert = ref(false);
 const isError = ref(false);
 
 const signIn = async () => {
-  const validated = await validateForm(formLogin);
-  if (!validated) return;
-  const response = await userLogin(userInput.value);
-  if (response) {
-    await validateUserData(response);
+  const formDataValid = await validateForm(formLogin);
+  if (!formDataValid) return;
+
+  const userResponse = await userLogin(userInput.value);
+  if (userResponse) {
+    await handleUserData(userResponse);
   }
 };
-const validateUserData = async (data) => {
-  const validated = handleAlert(data);
-  if (validated) {
-    handleAuthentication(data);
-    return;
+
+const handleUserData = async (userData) => {
+  const alertValid = await handleAlert(userData);
+  if (alertValid) {
+    handleAuthentication(userData);
   }
 };
-const handleAlert = (data) => {
-  if (data.error) {
-    toggleAlert.value = true;
-    isError.value = true;
+
+const handleAlert = async (userData) => {
+  if (userData.error) {
+    showErrorMessage();
     return false;
   }
-  const canAccess = checkUserAccess(data);
+
+  const canAccess = await checkUserAccess(userData);
   if (!canAccess) return false;
 
-  toggleAlert.value = true;
-  isError.value = false;
+  showSuccessMessage();
   return true;
 };
-const handleAuthentication = (data) => {
-  authentication.setUserToken(data.user.login_token);
+
+const handleAuthentication = (userData) => {
+  const { user } = userData;
+  authentication.setUserToken(user.login_token);
   authentication.toggleLogIn(true);
-  authentication.setUser(data.user);
+  authentication.setUser(user);
   router.push("/dar");
 };
+
 const checkUserSession = () => {
-  const isLoggedIn = authentication.isLoggedIn;
-  if (isLoggedIn) {
+  if (authentication.isLoggedIn) {
     router.push("/");
   }
 };
-const checkUserAccess = async (data) => {
-  const accessRightsLength = data.user.access.length;
-  const accessRightId = data.user.access[0].access_right;
-  if (accessRightsLength !== 0) {
+
+const checkUserAccess = async (userData) => {
+  const { user } = userData;
+  if (user.access.length !== 0) {
+    const accessRightId = user.access[0].access_right;
     const accessRights = await getUserAccessRightsById(accessRightId);
     authentication.setAccessRights(accessRights);
     return true;
   }
+
+  showNoAccessMessage();
+  return false;
+};
+
+const showErrorMessage = () => {
+  toggleAlert.value = true;
+  isError.value = true;
+};
+
+const showSuccessMessage = () => {
+  toggleAlert.value = true;
+  isError.value = false;
+};
+
+const showNoAccessMessage = () => {
   snackBarData.value = handleSnackBar(
     "error",
     "You do not have access to this system. Please contact the administrator."
   );
-  return false;
 };
+
 onMounted(() => {
   checkUserSession();
 });

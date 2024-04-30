@@ -81,6 +81,7 @@ import snackBars from "@/components/dialogs/snackBars.vue";
 import SocialWorkerDashboardVue from "@/components/dashboard/SocialWorkerDashboard.vue";
 import { generateMonthlyReport } from "../api/statistical-report";
 const authentication = userAuthentication();
+const accessRights = authentication.access_rights;
 const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
 const currentDate = moment().format("MMMM Do YYYY");
 const currentMonth = moment().format("MMMM");
