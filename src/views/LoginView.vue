@@ -54,7 +54,7 @@
 </template>
 <script setup>
 import snackBars from "@/components/dialogs/snackBars.vue";
-import { handleSnackBar } from "@/utils/constants";
+import { handleSnackBar, validateForm } from "@/utils/constants";
 import { ref, defineProps, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { userLogin } from "@/api/authentication";
@@ -94,7 +94,7 @@ const toggleAlert = ref(false);
 const isError = ref(false);
 
 const signIn = async () => {
-  const validated = await validateForm();
+  const validated = await validateForm(formLogin);
   if (!validated) return;
   const response = await userLogin(userInput.value);
   if (response) {
@@ -126,11 +126,6 @@ const handleAuthentication = (data) => {
   authentication.toggleLogIn(true);
   authentication.setUser(data.user);
   router.push("/dar");
-};
-const validateForm = async () => {
-  const form = await formLogin.value.validate();
-  if (!form.valid) return false;
-  return true;
 };
 const checkUserSession = () => {
   const isLoggedIn = authentication.isLoggedIn;
