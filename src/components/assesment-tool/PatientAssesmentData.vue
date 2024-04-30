@@ -1,12 +1,12 @@
 <template lang="">
   <div>
-    <v-dialog v-model="dialog">
+    <v-dialog persistent v-model="dialog">
       <v-card>
         <v-toolbar color="secondary" class="pr-4">
           <v-toolbar-title>
             Patient Assesment Data {{ props.patientId }}</v-toolbar-title
           >
-          <v-icon @click="emit('closeDialog')">mdi-close</v-icon>
+          <v-icon @click="closeDialog">mdi-close</v-icon>
         </v-toolbar>
         <v-container>
           <!-- interview -->
@@ -671,13 +671,17 @@ const patientAssesmentData = ref({
     isExisting: false,
   },
 });
-// async functions
+// emit function
+const closeDialog = () => {
+  dialog.value = false;
+  emit("closeDialog");
+};
 
+// async functions
 const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
   patientAssesmentData.value.interview = response;
 };
-
 const getPatientPersonalData = async () => {
   const response = await getPatientByID(props.patientId);
   patientAssesmentData.value.personalData = response;
@@ -734,7 +738,6 @@ const getProblemsInEnvironmentData = async () => {
     console.log(patientAssesmentData.value.problemsInEnvironment);
   }
 };
-
 const getAsessmentData = async () => {
   await getInterviewData();
   await getPatientPersonalData();
