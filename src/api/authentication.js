@@ -1,3 +1,5 @@
+import { BASE_URL } from "@/utils/constants";
+
 const getUserByToken = async (token) => {
   const API_URL = "http://172.16.1.39:3014/api/get_user";
   const response = await fetch(API_URL, {
@@ -21,4 +23,12 @@ const userLogin = async (reqBody) => {
   const data = await response.json();
   return data;
 };
-export { getUserByToken, userLogin };
+const getUserAccessRightsById = async (id) => {
+  const API_URL = `${BASE_URL}/emss/getUserAccessRightsById/${id}`;
+  const response = await fetch(API_URL, {
+    method: "GET",
+  });
+  const data = await response.json();
+  return data;
+};
+export { getUserByToken, userLogin, getUserAccessRightsById };

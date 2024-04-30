@@ -57,7 +57,7 @@ import snackBars from "@/components/dialogs/snackBars.vue";
 import { handleSnackBar, validateForm } from "@/utils/constants";
 import { ref, defineProps, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { userLogin } from "@/api/authentication";
+import { userLogin, getUserAccessRightsById } from "@/api/authentication";
 import { userAuthentication } from "../stores/session";
 const authentication = userAuthentication();
 const router = useRouter();
@@ -133,9 +133,12 @@ const checkUserSession = () => {
     router.push("/");
   }
 };
-const checkUserAccess = (data) => {
+const checkUserAccess = async (data) => {
   const accessRightsLength = data.user.access.length;
+  const accessRightId = data.user.access[0].access_right;
   if (accessRightsLength !== 0) {
+    const accessRights = await getUserAccessRightsById(accessRightId);
+    authentication.setAccessRights(accessRights);
     return true;
   }
   snackBarData.value = handleSnackBar(
