@@ -63,7 +63,9 @@ onMounted(() => {
   checkUserSession();
 });
 
-const userInput = ref({});
+const userInput = ref({
+  system_id: 20,
+});
 const inputFields = ref({
   username: {
     label: "Usename",
@@ -95,6 +97,7 @@ const signIn = async () => {
   const validated = await validateForm();
   if (!validated) return;
   const response = await userLogin(userInput.value);
+  console.log(response);
   await validateUserData(response);
 };
 const validateUserData = async (data) => {
@@ -104,6 +107,7 @@ const validateUserData = async (data) => {
     return;
   }
 };
+
 const handleAlert = (data) => {
   if (data.error) {
     toggleAlert.value = true;

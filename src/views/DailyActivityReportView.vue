@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="rb">
+  <div style="width: 100%">
     <v-card width="100%">
       <v-toolbar color="secondary" class="d-flex align-center ga-5 px-5">
         <v-icon size="x-large">mdi-book-edit</v-icon>
