@@ -128,7 +128,7 @@ const handleAuthentication = (userData) => {
   authentication.setUserToken(user.login_token);
   authentication.toggleLogIn(true);
   authentication.setUser(user);
-  router.push("/dar");
+  router.push("/");
 };
 
 const checkUserSession = () => {

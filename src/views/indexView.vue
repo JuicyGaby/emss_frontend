@@ -7,7 +7,6 @@
       </v-toolbar>
       <v-card-text>
         <v-container>
-          {{ authentication.access_rights }}
           <v-row>
             <v-col cols="12">
               <h1 class="text-h4">

@@ -31,15 +31,17 @@ watch(
   },
   { immediate: true }
 );
-
 function checkUserSession() {
+  console.log("mounter");
   const isLoggedIn = authentication.isLoggedIn;
   if (!isLoggedIn) {
     router.push("/login");
   }
 }
+onMounted(() => {
+  checkUserSession();
+});
 </script>
-onMounted(checkUserSession);
 <style scoped>
 .app-main {
   width: 100%;
