@@ -19,13 +19,18 @@
                 {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
               </h1>
               <div class="d-flex justify-space-between align-center">
-                <v-btn
-                  color="secondary"
-                  prepend-icon="mdi-folder-plus"
-                  @click="dialogs.dar.create = true"
-                  class="mb-6"
-                  >Create Entry</v-btn
-                >
+                <div class="d-flex ga-5">
+                  <v-btn
+                    color="secondary"
+                    prepend-icon="mdi-folder-plus"
+                    @click="dialogs.dar.create = true"
+                    class="mb-6"
+                    >Create DAR Entry</v-btn
+                  >
+                  <v-btn prepend-icon="mdi-filter" color="primary" class="mb-6">
+                    Filter Social Worker
+                  </v-btn>
+                </div>
                 <div class="d-flex align-center ga-2">
                   <v-text-field
                     type="date"
@@ -92,7 +97,7 @@
                 color="secondary"
                 @click="dialogs.swa.create = true"
                 prepend-icon="mdi-folder-plus"
-                >Create Entry</v-btn
+                >Create SWA Entry</v-btn
               >
               <div class="d-flex align-center ga-2 justify-center">
                 <v-text-field
@@ -222,6 +227,7 @@ import {
   getDailyActivityReportByDate,
   updateDarStatus,
 } from "@/api/daily-activity-report";
+import { getUsersBySystemId } from "@/api/authentication";
 import moment from "moment";
 import dynamicDialog from "@/components/dialogs/dialogs.vue";
 import { ref, onMounted, computed } from "vue";

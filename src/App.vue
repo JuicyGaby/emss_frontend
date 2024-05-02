@@ -32,7 +32,6 @@ watch(
   { immediate: true }
 );
 function checkUserSession() {
-  console.log("mounter");
   const isLoggedIn = authentication.isLoggedIn;
   if (!isLoggedIn) {
     router.push("/login");
