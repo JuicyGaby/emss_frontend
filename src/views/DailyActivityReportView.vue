@@ -19,51 +19,62 @@
               <h1 class="mb-5">
                 {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
               </h1>
-              <div class="d-flex justify-space-between align-center">
-                <div class="d-flex ga-5">
-                  <v-btn
-                    color="secondary"
-                    prepend-icon="mdi-folder-plus"
-                    @click="dialogs.dar.create = true"
-                    class="mb-6"
-                    >Create DAR Entry</v-btn
-                  >
-                  <v-btn
-                    v-if="authentication.access_rights.can_manage_social_worker"
-                    prepend-icon="mdi-filter"
-                    color="primary"
-                    class="mb-6"
-                    @click="dialogs.socialWorker.view = true"
-                  >
-                    Filter Social Worker
-                  </v-btn>
-                </div>
-                <div class="d-flex align-center ga-2">
+              <div class="d-flex justify-space-between">
+                <div class="d-flex flex-column">
+                  <div class="d-flex ga-1">
+                    <v-btn
+                      color="secondary"
+                      prepend-icon="mdi-folder-plus"
+                      @click="dialogs.dar.create = true"
+                      class="mb-6"
+                      style="width: 200px"
+                      >Create DAR Entry</v-btn
+                    >
+                    <v-btn
+                      v-if="
+                        authentication.access_rights.can_manage_social_worker
+                      "
+                      prepend-icon="mdi-filter"
+                      color="primary"
+                      class="mb-6"
+                      style="width: 200px"
+                      @click="dialogs.socialWorker.view = true"
+                    >
+                      Social Worker
+                    </v-btn>
+                  </div>
                   <v-text-field
-                    type="date"
+                    prepend-inner-icon="mdi-magnify"
+                    label="Search Patient"
+                    single-line
+                    hide-details
                     variant="outlined"
-                    density="compact"
-                    v-model="dateInputs.dar"
+                    density="comfortable"
+                    v-model="search"
+                    style="max-width: 400px"
                   ></v-text-field>
-                  <v-btn
-                    color="grey"
-                    class="mb-6"
-                    @click="getDarItemByDate()"
-                    prepend-icon="mdi-calendar-range"
-                    >Filter Date</v-btn
-                  >
+                </div>
+                <div class="d-flex flex-column align-center">
+                  <div class="d-flex align-center ga-1">
+                    <v-text-field
+                      label="Date"
+                      style="width: 200px"
+                      type="date"
+                      variant="outlined"
+                      density="compact"
+                      v-model="dateInputs.dar"
+                    ></v-text-field>
+                    <v-btn
+                      color="grey"
+                      class="mb-6"
+                      @click="getDarItemByDate()"
+                      style="width: 200px"
+                      prepend-icon="mdi-calendar-range"
+                      >Filter By Day</v-btn
+                    >
+                  </div>
                 </div>
               </div>
-              <v-text-field
-                prepend-inner-icon="mdi-magnify"
-                label="Search Patient"
-                single-line
-                hide-details
-                variant="outlined"
-                density="comfortable"
-                v-model="search"
-                style="max-width: 400px"
-              ></v-text-field>
             </div>
             <v-data-table
               :search="search"

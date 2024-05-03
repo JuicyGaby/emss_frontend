@@ -14,8 +14,8 @@
           "
         ></v-alert>
       </div>
-      <div class="w-100 d-flex flex-column align-center my-10 ga-5">
-        <img src="/src/assets/vsmmc-logo.png" class="vsmmc-logo" />
+      <div class="w-100 d-flex flex-column align-center ga-5">
+        <img src="/src/assets/images/logo-css.png" class="vsmmc-logo my-10" />
         <div class="input-field w-100">
           <v-form ref="formLogin" class="d-flex flex-column ga-3">
             <v-text-field
@@ -179,8 +179,8 @@ onMounted(() => {
   background-position: center bottom 5%;
 }
 .vsmmc-logo {
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
 }
 .alert {
   visibility: hidden;

@@ -757,7 +757,4 @@ onMounted(async () => {
 });
 </script>
 <style lang="css">
-.rb {
-  border: 1px dashed red;
-}
 </style>
