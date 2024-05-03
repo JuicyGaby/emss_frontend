@@ -3,7 +3,7 @@
     <v-card>
       <v-toolbar color="secondary" class="d-flex align-center px-5">
         <v-icon size="x-large" icon="mdi-account-group" class="mr-5"></v-icon>
-        <h1 class="">Patient List</h1>
+        <h1 class="">Assessment Tool</h1>
       </v-toolbar>
       <div class="ma-3 d-flex justify-space-between align-center">
         <div class="">

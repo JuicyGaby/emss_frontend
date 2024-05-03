@@ -33,6 +33,7 @@
                     prepend-icon="mdi-filter"
                     color="primary"
                     class="mb-6"
+                    @click="dialogs.socialWorker.view = true"
                   >
                     Filter Social Worker
                   </v-btn>
@@ -222,6 +223,10 @@
         @closeDialog="dialogs.swa.activity = false"
       />
     </v-dialog>
+    <!-- view social worker dialog -->
+    <v-dialog persistent v-model="dialogs.socialWorker.view" width="800px">
+      <ViewSocialWorker @closeDialog="dialogs.socialWorker.view = false" />
+    </v-dialog>
   </div>
   <snack-bars :snackBarData="snackBarData" />
 </template>
@@ -251,6 +256,8 @@ import CreateSWADialog from "@/components/daily-activity-report/CreateSWADialog.
 import EditSWADialog from "@/components/daily-activity-report/EditSWADialog.vue";
 import ViewSWADialog from "@/components/daily-activity-report/ViewSWADialog.vue";
 import SwaActivityLogs from "@/components/daily-activity-report/SwaActivityLogs.vue";
+// Social Worker Components
+import ViewSocialWorker from "@/components/dashboard/ViewSocialWorker.vue";
 onMounted(async () => {
   await getDarItems();
   await getSwaItems();
@@ -426,6 +433,8 @@ const handleCloseDialog = (type) => {
   dialogs.value[type].create = false;
   dialogs.value[type].edit = false;
 };
+
+// view social worker
 </script>
 <style lang="css">
 .rb {

@@ -77,7 +77,6 @@ import { ref, onMounted } from "vue";
 import { handleSnackBar } from "@/utils/constants";
 // components
 import snackBars from "@/components/dialogs/snackBars.vue";
-import SocialWorkerDashboardVue from "@/components/dashboard/SocialWorkerDashboard.vue";
 import { generateMonthlyReport } from "../api/statistical-report";
 const authentication = userAuthentication();
 const accessRights = authentication.access_rights;
