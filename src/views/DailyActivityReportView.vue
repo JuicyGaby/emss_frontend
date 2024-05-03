@@ -15,6 +15,7 @@
           <v-window-item :value="1">
             <div class="ma-3">
               <!-- Display current date using moment and the day -->
+              <!-- {{ authentication.access_rights.can_manage_social_worker}} -->
               <h1 class="mb-5">
                 {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
               </h1>
@@ -27,7 +28,12 @@
                     class="mb-6"
                     >Create DAR Entry</v-btn
                   >
-                  <v-btn prepend-icon="mdi-filter" color="primary" class="mb-6">
+                  <v-btn
+                    v-if="authentication.access_rights.can_manage_social_worker"
+                    prepend-icon="mdi-filter"
+                    color="primary"
+                    class="mb-6"
+                  >
                     Filter Social Worker
                   </v-btn>
                 </div>
@@ -256,7 +262,6 @@ let dar_id = ref(0);
 let swa_id = ref(0);
 const search = ref("");
 const authentication = userAuthentication();
-const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
 
 // objects
 const dateInputs = ref({
@@ -297,6 +302,9 @@ const dialogs = ref({
     view: false,
     activity: false,
     delete: false,
+  },
+  socialWorker: {
+    view: false,
   },
 });
 
