@@ -1,11 +1,7 @@
-cards
-
-monthly dar counts
-monthly swa counts
-
-user dar counts
-user swa counts
-
-
-applied features :
-
+Features :
+    Notes
+        - dar
+        - swa
+        - patients
+    Asses patient
+        - Calculation of age

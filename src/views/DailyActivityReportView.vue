@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="rb">
+  <div style="width: 100%">
     <v-card width="100%">
       <v-toolbar color="secondary" class="d-flex align-center ga-5 px-5">
         <v-icon size="x-large">mdi-book-edit</v-icon>
@@ -15,43 +15,66 @@
           <v-window-item :value="1">
             <div class="ma-3">
               <!-- Display current date using moment and the day -->
+              <!-- {{ authentication.access_rights.can_manage_social_worker}} -->
               <h1 class="mb-5">
                 {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
               </h1>
-              <div class="d-flex justify-space-between align-center">
-                <v-btn
-                  color="secondary"
-                  prepend-icon="mdi-folder-plus"
-                  @click="dialogs.dar.create = true"
-                  class="mb-6"
-                  >Create Entry</v-btn
-                >
-                <div class="d-flex align-center ga-2">
+              <div class="d-flex justify-space-between">
+                <div class="d-flex flex-column">
+                  <div class="d-flex ga-1">
+                    <v-btn
+                      color="secondary"
+                      prepend-icon="mdi-folder-plus"
+                      @click="dialogs.dar.create = true"
+                      class="mb-6"
+                      style="width: 200px"
+                      >Create DAR Entry</v-btn
+                    >
+                    <v-btn
+                      v-if="
+                        authentication.access_rights.can_manage_social_worker
+                      "
+                      prepend-icon="mdi-filter"
+                      color="primary"
+                      class="mb-6"
+                      style="width: 200px"
+                      @click="dialogs.socialWorker.view = true"
+                    >
+                      Social Worker
+                    </v-btn>
+                  </div>
                   <v-text-field
-                    type="date"
+                    prepend-inner-icon="mdi-magnify"
+                    label="Search Patient"
+                    single-line
+                    hide-details
                     variant="outlined"
-                    density="compact"
-                    v-model="dateInputs.dar"
+                    density="comfortable"
+                    v-model="search"
+                    style="max-width: 400px"
                   ></v-text-field>
-                  <v-btn
-                    color="grey"
-                    class="mb-6"
-                    @click="getDarItemByDate()"
-                    prepend-icon="mdi-calendar-range"
-                    >Filter Date</v-btn
-                  >
+                </div>
+                <div class="d-flex flex-column align-center">
+                  <div class="d-flex align-center ga-1">
+                    <v-text-field
+                      label="Date"
+                      style="width: 200px"
+                      type="date"
+                      variant="outlined"
+                      density="compact"
+                      v-model="dateInputs.dar"
+                    ></v-text-field>
+                    <v-btn
+                      color="grey"
+                      class="mb-6"
+                      @click="getDarItemByDate()"
+                      style="width: 200px"
+                      prepend-icon="mdi-calendar-range"
+                      >Filter By Day</v-btn
+                    >
+                  </div>
                 </div>
               </div>
-              <v-text-field
-                prepend-inner-icon="mdi-magnify"
-                label="Search Patient"
-                single-line
-                hide-details
-                variant="outlined"
-                density="comfortable"
-                v-model="search"
-                style="max-width: 400px"
-              ></v-text-field>
             </div>
             <v-data-table
               :search="search"
@@ -92,7 +115,7 @@
                 color="secondary"
                 @click="dialogs.swa.create = true"
                 prepend-icon="mdi-folder-plus"
-                >Create Entry</v-btn
+                >Create SWA Entry</v-btn
               >
               <div class="d-flex align-center ga-2 justify-center">
                 <v-text-field
@@ -211,6 +234,10 @@
         @closeDialog="dialogs.swa.activity = false"
       />
     </v-dialog>
+    <!-- view social worker dialog -->
+    <v-dialog persistent v-model="dialogs.socialWorker.view" width="800px">
+      <ViewSocialWorker @closeDialog="dialogs.socialWorker.view = false" />
+    </v-dialog>
   </div>
   <snack-bars :snackBarData="snackBarData" />
 </template>
@@ -222,6 +249,7 @@ import {
   getDailyActivityReportByDate,
   updateDarStatus,
 } from "@/api/daily-activity-report";
+import { getUsersBySystemId } from "@/api/authentication";
 import moment from "moment";
 import dynamicDialog from "@/components/dialogs/dialogs.vue";
 import { ref, onMounted, computed } from "vue";
@@ -239,6 +267,8 @@ import CreateSWADialog from "@/components/daily-activity-report/CreateSWADialog.
 import EditSWADialog from "@/components/daily-activity-report/EditSWADialog.vue";
 import ViewSWADialog from "@/components/daily-activity-report/ViewSWADialog.vue";
 import SwaActivityLogs from "@/components/daily-activity-report/SwaActivityLogs.vue";
+// Social Worker Components
+import ViewSocialWorker from "@/components/dashboard/ViewSocialWorker.vue";
 onMounted(async () => {
   await getDarItems();
   await getSwaItems();
@@ -250,7 +280,6 @@ let dar_id = ref(0);
 let swa_id = ref(0);
 const search = ref("");
 const authentication = userAuthentication();
-const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
 
 // objects
 const dateInputs = ref({
@@ -291,6 +320,9 @@ const dialogs = ref({
     view: false,
     activity: false,
     delete: false,
+  },
+  socialWorker: {
+    view: false,
   },
 });
 
@@ -412,6 +444,8 @@ const handleCloseDialog = (type) => {
   dialogs.value[type].create = false;
   dialogs.value[type].edit = false;
 };
+
+// view social worker
 </script>
 <style lang="css">
 .rb {

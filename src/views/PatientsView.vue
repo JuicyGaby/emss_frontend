@@ -3,7 +3,7 @@
     <v-card>
       <v-toolbar color="secondary" class="d-flex align-center px-5">
         <v-icon size="x-large" icon="mdi-account-group" class="mr-5"></v-icon>
-        <h1 class="">Patient List</h1>
+        <h1 class="">Assessment Tool</h1>
       </v-toolbar>
       <div class="ma-3 d-flex justify-space-between align-center">
         <div class="">
@@ -56,9 +56,9 @@
               <v-icon color="warning" @click="viewActivityLogs(item.id)"
                 >mdi-note-text</v-icon
               >
-              <!-- <v-icon color="secondary" @click="viewPatientAssessmentData(item)"
+              <v-icon color="secondary" @click="viewPatientAssessmentData(item)"
                 >mdi-eye</v-icon
-              > -->
+              >
             </div>
           </template>
         </v-data-table>
@@ -163,7 +163,10 @@
     v-model="dialogs.viewAssessment.isVisibile"
     transition="dialog-transition"
   >
-    <PatientAssesmentData :patientId="patientId" />
+    <PatientAssesmentData
+      :patientId="patientId"
+      @closeDialog="dialogs.viewAssessment.isVisibile = false"
+    />
   </v-dialog>
   <!-- view activity logs -->
   <v-dialog

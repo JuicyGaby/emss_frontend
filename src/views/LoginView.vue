@@ -14,8 +14,8 @@
           "
         ></v-alert>
       </div>
-      <div class="w-100 d-flex flex-column align-center my-10 ga-5">
-        <img src="/src/assets/vsmmc-logo.png" class="vsmmc-logo" />
+      <div class="w-100 d-flex flex-column align-center ga-5">
+        <img src="/src/assets/images/logo-css.png" class="vsmmc-logo my-10" />
         <div class="input-field w-100">
           <v-form ref="formLogin" class="d-flex flex-column ga-3">
             <v-text-field
@@ -50,20 +50,22 @@
       </div>
     </div>
   </div>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
+import snackBars from "@/components/dialogs/snackBars.vue";
+import { handleSnackBar, validateForm } from "@/utils/constants";
 import { ref, defineProps, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { userLogin } from "@/api/authentication";
+import { userLogin, getUserAccessRightsById } from "@/api/authentication";
 import { userAuthentication } from "../stores/session";
 const authentication = userAuthentication();
 const router = useRouter();
 
-onMounted(() => {
-  checkUserSession();
+const snackBarData = ref({});
+const userInput = ref({
+  system_id: 20,
 });
-
-const userInput = ref({});
 const inputFields = ref({
   username: {
     label: "Usename",
@@ -92,45 +94,82 @@ const toggleAlert = ref(false);
 const isError = ref(false);
 
 const signIn = async () => {
-  const validated = await validateForm();
-  if (!validated) return;
-  const response = await userLogin(userInput.value);
-  await validateUserData(response);
-};
-const validateUserData = async (data) => {
-  const validated = handleAlert(data);
-  if (validated) {
-    handleAuthentication(data);
-    return;
+  const formDataValid = await validateForm(formLogin);
+  if (!formDataValid) return;
+
+  const userResponse = await userLogin(userInput.value);
+  if (userResponse) {
+    await handleUserData(userResponse);
   }
 };
-const handleAlert = (data) => {
-  if (data.error) {
-    toggleAlert.value = true;
-    isError.value = true;
+
+const handleUserData = async (userData) => {
+  const alertValid = await handleAlert(userData);
+  if (alertValid) {
+    handleAuthentication(userData);
+  }
+};
+
+const handleAlert = async (userData) => {
+  if (userData.error) {
+    showErrorMessage();
     return false;
   }
-  toggleAlert.value = true;
-  isError.value = false;
+
+  const canAccess = await checkUserAccess(userData);
+  if (!canAccess) return false;
+
+  showSuccessMessage();
   return true;
 };
-const handleAuthentication = (data) => {
-  authentication.setUserToken(data.user.login_token);
+
+const handleAuthentication = (userData) => {
+  const { user } = userData;
+  authentication.setUserToken(user.login_token);
   authentication.toggleLogIn(true);
-  authentication.setUser(data.user);
-  router.push("/dar");
+  authentication.setUser(user);
+  router.push("/");
 };
-const validateForm = async () => {
-  const form = await formLogin.value.validate();
-  if (!form.valid) return false;
-  return true;
-};
+
 const checkUserSession = () => {
-  const isLoggedIn = authentication.isLoggedIn;
-  if (isLoggedIn) {
+  if (authentication.isLoggedIn) {
     router.push("/");
   }
 };
+
+const checkUserAccess = async (userData) => {
+  const { user } = userData;
+  if (user.access.length !== 0) {
+    const accessRightId = user.access[0].access_right;
+    const accessRights = await getUserAccessRightsById(accessRightId);
+    authentication.setAccessRights(accessRights);
+    return true;
+  }
+
+  showNoAccessMessage();
+  return false;
+};
+
+const showErrorMessage = () => {
+  toggleAlert.value = true;
+  isError.value = true;
+};
+
+const showSuccessMessage = () => {
+  toggleAlert.value = true;
+  isError.value = false;
+};
+
+const showNoAccessMessage = () => {
+  snackBarData.value = handleSnackBar(
+    "error",
+    "You do not have access to this system. Please contact the administrator."
+  );
+};
+
+onMounted(() => {
+  checkUserSession();
+});
 </script>
 
 <style lang="css" scoped>
@@ -140,8 +179,8 @@ const checkUserSession = () => {
   background-position: center bottom 5%;
 }
 .vsmmc-logo {
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
 }
 .alert {
   visibility: hidden;

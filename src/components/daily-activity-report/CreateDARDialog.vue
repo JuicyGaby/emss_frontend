@@ -64,40 +64,6 @@
                       "
                       v-model="patientCreationData.highest_education_level"
                     ></v-select>
-                    <v-select
-                      :label="inputFields.creation.phic_member.label"
-                      variant="outlined"
-                      density="compact"
-                      style="width: 200px"
-                      :items="inputFields.creation.phic_member.items"
-                      :rules="inputFields.creation.phic_member.rules"
-                      v-model="patientCreationData.phic_member"
-                    ></v-select>
-                    <v-select
-                      :label="inputFields.creation.phic_classification.label"
-                      variant="outlined"
-                      density="compact"
-                      style="width: 200px"
-                      :items="inputFields.creation.phic_classification.items"
-                      item-title="title"
-                      item-value="value"
-                      :rules="inputFields.creation.phic_classification.rules"
-                      v-model="patientCreationData.phic_classification"
-                    ></v-select>
-                    <v-autocomplete
-                      chips
-                      multiple
-                      closable-chips
-                      label="Services"
-                      :items="darServices"
-                      item-title="service_name"
-                      item-value="id"
-                      variant="outlined"
-                      density="compact"
-                      style="width: 200px"
-                      v-model="patientCreationData.services"
-                      :rules="[inputRules.required, inputRules.vselect]"
-                    ></v-autocomplete>
                   </v-col>
                 </v-form>
               </v-row>
@@ -137,7 +103,6 @@
                       !searchPatientInput.last_name
                     "
                     @click="searchPatientData"
-                    
                     >Search</v-btn
                   >
                 </v-col>
@@ -156,42 +121,6 @@
                       v-model="darData.patient_id"
                       :rules="[inputRules.required]"
                     ></v-select>
-                    <v-select
-                      :label="inputFields.creation.phic_member.label"
-                      :items="inputFields.creation.phic_member.items"
-                      variant="outlined"
-                      density="compact"
-                      style="width: 200px"
-                      v-model="darData.phic_member"
-                      :rules="[inputRules.required]"
-                    >
-                    </v-select>
-                    <v-select
-                      :label="inputFields.creation.phic_classification.label"
-                      :items="inputFields.creation.phic_classification.items"
-                      item-title="title"
-                      item-value="value"
-                      variant="outlined"
-                      density="compact"
-                      style="width: 200px"
-                      v-model="darData.phic_classification"
-                      :rules="[inputRules.required]"
-                    >
-                    </v-select>
-                    <v-autocomplete
-                      chips
-                      multiple
-                      closable-chips
-                      label="Services"
-                      :items="darServices"
-                      item-title="service_name"
-                      item-value="id"
-                      variant="outlined"
-                      density="compact"
-                      style="width: 500px"
-                      v-model="darData.services"
-                      :rules="[inputRules.required, inputRules.vselect]"
-                    ></v-autocomplete>
                   </v-col>
                   <v-card-actions class="justify-end">
                     <v-btn
@@ -317,6 +246,11 @@ const inputFields = {
         type: "text",
         rules: [inputRules.required, inputRules.characters],
       },
+      birth_date: {
+        label: "Birth Date",
+        type: "date",
+        rules: [inputRules.required],
+      },
       age: {
         label: "Age",
         type: "number",
@@ -355,12 +289,12 @@ const inputFields = {
       rules: [inputRules.required],
     },
     phic_classification: {
-      label: "PHIC Classification",
+      label: "MSS Classification",
       items: [
-        { title: "Financially Capable - A", value: "A" },
-        { title: "Financially Capacitated - B", value: "B" },
-        { title: "Financially Incapable - C1", value: "C1" },
-        { title: "Financially Incapacitated - C2", value: "C2" },
+        { title: "Financially Capable / Capacitated - A", value: "A" },
+        { title: "Financially Capable / Capacitated - B", value: "B" },
+        { title: "Financially Incapable / Incapacitated - C1", value: "C1" },
+        { title: "Financially Incapable / Incapacitated - C2", value: "C2" },
         { title: "Indigent - C3", value: "C3" },
         { title: "Indigent - D", value: "D" },
       ],
