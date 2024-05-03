@@ -2,8 +2,8 @@
   <div class="" style="width: 100%">
     <v-card width="100%" height="100vh">
       <v-toolbar color="secondary" class="d-flex align-center ga-5 px-5">
-        <v-icon size="x-large">mdi-book-edit</v-icon>
-        <h1>Electronic Malasakit Social Service System</h1>
+        <v-icon size="x-large">mdi-medical-bag</v-icon>
+        <h1>Electronic Medical Social Service System</h1>
       </v-toolbar>
       <v-card-text>
         <v-container>

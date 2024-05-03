@@ -56,7 +56,7 @@ const navItems = {
   },
   patients: {
     icon: "mdi-account-group",
-    title: "Patients",
+    title: "Assessment Tool",
     to: "/patients",
   },
 };
