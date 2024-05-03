@@ -5,117 +5,43 @@
         <v-container>
           <v-form ref="darForm">
             <v-row class="">
-              <v-col cols="12" class="d-flex flex-wrap ga-2">
+              <v-col
+                cols="12"
+                class="d-flex flex-wrap ga-5 align-center redborder"
+              >
                 <!-- time fields -->
-                <v-text-field
-                  v-for="(field, key) in inputFields.part2.timeFields"
-                  :key="key"
-                  :label="field.label"
-                  variant="outlined"
-                  density="compact"
-                  type="time"
-                  style="width: 500px"
-                  v-model="darData[key]"
-                  :rules="[inputRules.required]"
-                ></v-text-field>
-                <v-text-field
-                  label="Admission Date"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  type="datetime-local"
-                  v-model="darData.admission_date"
-                  :rules="[inputRules.required]"
-                ></v-text-field>
-                <v-text-field
-                  v-for="(field, key) in inputFields.part1.textFields"
-                  :key="key"
-                  :label="field.label"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  :type="field.type"
-                  v-model="patientData[key]"
-                  :rules="[inputRules.required]"
-                ></v-text-field>
-                <v-combobox
-                  v-for="(field, key) in inputFields.part1.selectFields"
-                  :key="key"
-                  :label="field.label"
-                  :items="field.items"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  v-model="patientData[key]"
-                  autocomplete
-                  :rules="[inputRules.required]"
-                ></v-combobox>
-                <!-- dar values -->
-                <v-select
-                  v-for="(field, key) in inputFields.part1.darSelectFields"
-                  :key="key"
-                  :label="field.label"
-                  :items="field.items"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  autocomplete
-                  v-model="darData[key]"
-                  :rules="[inputRules.required]"
-                ></v-select>
-                <v-select
-                  v-for="(field, key) in inputFields.part1.titleValueFields"
-                  :key="key"
-                  :label="field.label"
-                  :items="field.items"
-                  item-title="title"
-                  item-value="value"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  autocomplete
-                  v-model="darData[key]"
-                  readonly
-                ></v-select>
-                <v-select
-                  v-for="(field, key) in inputFields.part2.selectFields"
-                  :key="key"
-                  :label="field.label"
-                  :items="field.items"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  v-model="darData[key]"
-                  autocomplete
-                  :rules="[inputRules.required]"
-                ></v-select>
-                <v-text-field
-                  v-for="(field, key) in inputFields.part2.textFields"
-                  :key="key"
-                  :label="field.label"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  :type="field.type"
-                  v-model="darData[key]"
-                  :rules="[inputRules.required]"
-                ></v-text-field>
-                <v-textarea
-                  label="Diagnosis"
-                  variant="outlined"
-                  style="width: 1000px"
-                  density="compact"
-                  :rules="[inputRules.required]"
-                  v-model="darData.diagnosis"
-                >
-                </v-textarea>
-                <v-textarea
-                  label="Remarks"
-                  variant="outlined"
-                  style="width: 1000px"
-                  density="compact"
-                  v-model="darData.remarks"
-                ></v-textarea>
+                <v-template v-for="(item, index) in inputFields.part1" class="">
+                  <v-text-field
+                    v-if="item.formType === 'text'"
+                    :key="'text-' + index"
+                    :label="item.label"
+                    variant="outlined"
+                    density="compact"
+                    :type="item.type"
+                    :hide-spin-buttons="true"
+                    style="width: 550px"
+                  ></v-text-field>
+                  <v-autocomplete
+                    v-else-if="item.formType === 'select'"
+                    :key="'select-' + index"
+                    :label="item.label"
+                    :items="item.items"
+                    variant="outlined"
+                    density="compact"
+                    style="width: 550px"
+                  ></v-autocomplete>
+                  <v-autocomplete
+                    v-else-if="item.formType === 'autocomplete'"
+                    :key="'autocomplete-' + index"
+                    :label="item.label"
+                    :items="item.items"
+                    item-title="title"
+                    item-value="value"
+                    variant="outlined"
+                    density="compact"
+                    style="width: 550px"
+                  ></v-autocomplete>
+                </v-template>
               </v-col>
               <v-col>
                 <v-btn
@@ -166,166 +92,232 @@ const snackBarData = ref({
 });
 const inputFields = {
   part1: {
-    textFields: {
-      first_name: {
-        label: "First Name",
-      },
-      middle_name: {
-        label: "Middle Name",
-      },
-      last_name: {
-        label: "Last Name",
-      },
-      age: {
-        label: "Age",
-        type: "number",
-      },
-      occupation: {
-        label: "Occupation",
-      },
-      monthly_income: {
-        label: "Monthly Income",
-        type: "number",
-      },
-      religion: {
-        label: "Religion",
-      },
+    first_name: {
+      label: "First Name",
+      formType: "text",
+      type: "text",
     },
-    selectFields: {
-      sex: {
-        label: "Sex",
-        items: ["Male", "Female"],
-      },
-      civil_status: {
-        label: "Civil Status",
-        items: [
-          "Child",
-          "Single",
-          "Married",
-          "Widowed",
-          "Sep - In-Fact",
-          "Sep - Legal",
-          "CLP - Opposite Sex",
-          "CLP - Same Sex",
-        ],
-      },
-      highest_education_level: {
-        label: " Educational Attainment",
-        items: [
-          "Undergraduate",
-          "Elementary",
-          "High School",
-          "Vocational",
-          "College",
-          "Post Graduate",
-          "None",
-        ],
-      },
+    middle_name: {
+      label: "Middle Name",
+      formType: "text",
+      type: "text",
     },
-    darSelectFields: {
-      area: {
-        label: "Area",
-        items: ["Basic Ward", "Non-Basic Ward", "OP", "ER/ED"],
-      },
-      case_type: {
-        label: "Case Type",
-        items: ["New Case", "Old Case", "Case Closed"],
-      },
-      indirect_contributor: {
-        label: "Contributor type",
-        items: [
-          "Indirect - POS",
-          "Indirect - Sponsored",
-          "Indirect - 4PS",
-          "Indirect - PWD",
-          "Indirect - SC",
-          "Direct - Lifetime",
-          "Direct - Employed",
-          "Direct - Voluntary",
-          "Direct - OFW",
-        ],
-      },
+    last_name: {
+      label: "Last Name",
+      formType: "text",
+      type: "text",
     },
-    titleValueFields: {
-      is_phic_member: {
-        label: "PHIC Member",
-        items: [
-          { title: "Yes", value: 1 },
-          { title: "No", value: 0 },
-        ],
-      },
-      classification: {
-        label: "PHIC Classification",
-        items: [
-          { title: "Financially Capable - A", value: "A" },
-          { title: "Financially Capacitated - B", value: "B" },
-          { title: "Financially Incapable - C1", value: "C1" },
-          { title: "Financially Incapacitated - C2", value: "C2" },
-          { title: "Indigent - C3", value: "C3" },
-          { title: "Indigent - D", value: "D" },
-        ],
-      },
+    birth_date: {
+      label: "Birth Date",
+      formType: "text",
+      type: "date",
+    },
+    age: {
+      label: "Age",
+      formType: "text",
+      type: "number",
+    },
+    occupation: {
+      label: "Occupation",
+      formType: "text",
+      type: "text",
+    },
+    monthly_income: {
+      label: "Monthly Income",
+      formType: "text",
+      type: "number",
+    },
+    religion: {
+      label: "Religion",
+      formType: "text",
+      type: "text",
+    },
+    sex: {
+      label: "Sex",
+      formType: "select",
+      items: ["Male", "Female"],
+    },
+    civil_status: {
+      label: "Civil Status",
+      formType: "select",
+      items: [
+        "Child",
+        "Single",
+        "Married",
+        "Widowed",
+        "Sep - In-Fact",
+        "Sep - Legal",
+        "CLP - Opposite Sex",
+        "CLP - Same Sex",
+      ],
+    },
+    highest_education_level: {
+      label: " Educational Attainment",
+      formType: "select",
+      items: [
+        "Undergraduate",
+        "Elementary",
+        "High School",
+        "Vocational",
+        "College",
+        "Post Graduate",
+        "None",
+      ],
+    },
+    area: {
+      label: "Area",
+      formType: "select",
+      items: ["Basic Ward", "Non-Basic Ward", "OP", "ER/ED"],
+    },
+    deparment: {
+      label: "Department",
+      formType: "select",
+      items: [
+        "Center for Behavioral Sciences",
+        "Women and Child Protection Unit",
+        "Internal Medicine",
+        "Male Surgery",
+        "Female Surgery",
+        "Gynecology",
+        "Pedia Surgery",
+        "EENT",
+        "Opthalmology",
+        "Pedia Non-Communicable",
+        "Pedia Communicable",
+        "Adult Communicable",
+        "Obstetrics",
+        "Neo-Intensive Care Unit",
+        "Newborn",
+        "Orthopedic",
+        "Renal/PDU",
+        "Acute Respiratory Infection Department",
+        "Family Medicine",
+        "Primary Care",
+        "Wellness",
+        "Cardiology",
+        "Urology",
+        "Plastic Surgery",
+        "Oncology",
+        "Cervical Cancer Prevention",
+        "Program for Young Parents",
+        "Rehabilitation Center",
+        "Neurosurgery (Brain & Spine Center)",
+        "Intensive Care Unit",
+        "Critical Care Unit",
+        "Others",
+      ],
+    },
+    case_type: {
+      label: "Case Type",
+      formType: "autocomplete",
+      items: [
+        { title: "New Case", value: 1 },
+        { title: "Old Case", value: 2 },
+        { title: "Case Closed", value: 3 },
+      ],
+    },
+    indirect_contributor: {
+      label: "Contributor type",
+      formType: "select",
+      items: [
+        "Indirect - POS",
+        "Indirect - Sponsored",
+        "Indirect - 4PS",
+        "Indirect - PWD",
+        "Indirect - SC",
+        "Direct - Lifetime",
+        "Direct - Employed",
+        "Direct - Voluntary",
+        "Direct - OFW",
+      ],
+    },
+    is_phic_member: {
+      label: "PHIC Member",
+      formType: "autocomplete",
+      items: [
+        { title: "Yes", value: 1 },
+        { title: "No", value: 0 },
+      ],
+    },
+    referring_party: {
+      label: "Referring Party",
+      formType: "text",
+      type: "text",
+    },
+    classification: {
+      label: "PHIC Classification",
+      formType: "autocomplete",
+      items: [
+        { title: "Financially Capable / Capacitated - A", value: "A" },
+        { title: "Financially Capable / Capacitated - B", value: "B" },
+        { title: "Financially Incapable / Incapacitated - C1", value: "C1" },
+        { title: "Financially Incapable / Incapacitated - C2", value: "C2" },
+        { title: "Indigent - C3", value: "C3" },
+        { title: "Indigent - D", value: "D" },
+      ],
+    },
+    house_hold_size: {
+      label: "Household Size",
+      formType: "text",
+      type: "number",
+    },
+    informant: {
+      label: "Informant Name",
+      formType: "text",
+      type: "text",
+    },
+    relationship_to_patient: {
+      label: "Relationship to Patient",
+      formType: "text",
+      type: "text",
+    },
+    sectoral_grouping: {
+      label: "Sectoral Grouping",
+      formType: "select",
+      items: [
+        "SC",
+        "PWD",
+        "Solo Parent",
+        "IP",
+        "BHW",
+        "Brgy. Officials",
+        "Veterans",
+        "Health Worker",
+        "Government Worker",
+        "Custodial",
+        "Artisanal Fisherfolk",
+        "Farmer and Landless Rural Worker",
+        "Urban Poor",
+        "Formal Labor & Migrant Workers",
+        "Workers in Informal Sectors",
+        "Victims of Disaster & Calamity",
+        "Others",
+      ],
+    },
+    source_of_referral: {
+      label: "Source of Referral",
+      formType: "select",
+      items: [
+        "Government Hospital",
+        "Private Hospitals/Clinics",
+        "Politicians",
+        "Media",
+        "Health Care Team",
+        "NGO’s/Private Welfare Agencies",
+        "Government Agencies",
+        "Walk – in",
+        "Others",
+      ],
     },
   },
-  part2: {
-    textFields: {
-      house_hold_size: {
-        label: "Household Size",
-      },
-      informant: {
-        label: "Informant Name",
-      },
-      relationship_to_patient: {
-        label: "Relationship to Patient",
-      },
+  timeFields: {
+    interview_start_time: {
+      label: "Interview Start Time",
+      type: "time",
     },
-    selectFields: {
-      sectoral_grouping: {
-        label: "Sectoral Grouping",
-        items: [
-          "SC",
-          "PWD",
-          "Solo Parent",
-          "IP",
-          "BHW",
-          "Brgy. Officials",
-          "Veterans",
-          "Health Worker",
-          "Government Worker",
-          "Custodial",
-          "Artisanal Fisherfolk",
-          "Farmer and Landless Rural Worker",
-          "Urban Poor",
-          "Formal Labor & Migrant Workers",
-          "Workers in Informal Sectors",
-          "Victims of Disaster & Calamity",
-          "Others",
-        ],
-      },
-      source_of_referral: {
-        label: "Source of Referral",
-        items: [
-          "Government Hospital",
-          "Private Hospitals/Clinics",
-          "Politicians",
-          "Media",
-          "Health Care Team",
-          "NGO’s/Private Welfare Agencies",
-          "Government Agencies",
-          "Walk – in",
-          "Others",
-        ],
-      },
-    },
-    timeFields: {
-      interview_start_time: {
-        label: "Interview Start Time",
-        type: "time",
-      },
-      interview_end_time: {
-        label: "Interview End Time",
-        type: "time",
-      },
+    interview_end_time: {
+      label: "Interview End Time",
+      type: "time",
     },
   },
 };
@@ -354,4 +346,8 @@ const handleSnackBar = (type, text) => {
   snackBarData.value.text = text;
 };
 </script>
-<style lang=""></style>
+<style lang="css">
+.redborder {
+  border: 1px dashed red;
+}
+</style>

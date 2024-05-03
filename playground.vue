@@ -1,228 +1,172 @@
 <template lang="">
   <div>
-    <v-dialog v-model="dialog">
-      <v-card>
-        <v-toolbar color="secondary" class="pr-4">
-          <v-toolbar-title>
-            Patient Assesment Data {{ props.patientId }}</v-toolbar-title
-          >
-          <v-icon>mdi-close</v-icon>
-        </v-toolbar>
+    <v-card>
+      <v-card-text>
         <v-container>
-          <!-- interview -->
-          <v-row>
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <h2>I. Initial Interview</h2>
-              <v-divider></v-divider>
-              <v-text-field
-                v-for="(item, index) in inputFields.interview"
-                :key="index"
-                :label="item.label"
-                readonly
-                density="comfortable"
-                variant="outlined"
-                style="width: 300px"
-                v-model="patientAssesmentData.interview[index]"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <!-- personal data -->
-          <v-row>
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <h2>II Personal Data</h2>
-              <v-divider></v-divider>
-              <v-text-field
-                v-for="(item, index) in inputFields.demographicData
-                  .personalData"
-                :key="index"
-                :label="item.label"
-                readonly
-                density="comfortable"
-                variant="outlined"
-                style="width: 400px"
-                v-model="patientAssesmentData.personalData[index]"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <!-- permanent address -->
-          <v-row>
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <h2>Permanent Address</h2>
-              <h3></h3>
-              <v-divider></v-divider>
-              <v-text-field
-                v-for="(item, index) in inputFields.demographicData.address
-                  .permanent"
-                :key="index"
-                :label="item.label"
-                readonly
-                density="comfortable"
-                variant="outlined"
-                style="width: 400px"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <!-- temporary address -->
-          <v-row>
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <h2>Temporary Address</h2>
-              <h3></h3>
-              <v-divider></v-divider>
-              <v-text-field
-                v-for="(item, index) in inputFields.demographicData.address
-                  .temporary"
-                :key="index"
-                :label="item.label"
-                readonly
-                density="comfortable"
-                variant="outlined"
-                style="width: 400px"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <!-- family composition -->
-          <v-row>
-            <v-col cols="12">
-              <v-data-table
-                :headers="inputFields.demographicData.tableHeaders"
-                :items="patientAssesmentData.familyComposition"
-                items-per-page="5"
-                density="compact"
-                :items-per-page-options="[5, 10, 15]"
-              >
-              </v-data-table>
-            </v-col>
-            {{ patientAssesmentData.familyComposition }}
-          </v-row>
+          <v-form ref="darForm">
+            <v-row class="">
+              <v-col cols="12" class="d-flex flex-wrap ga-2">
+                <!-- time fields -->
+                <v-text-field
+                  v-for="(field, key) in inputFields.part2.timeFields"
+                  :key="key"
+                  :label="field.label"
+                  variant="outlined"
+                  density="compact"
+                  type="time"
+                  style="width: 500px"
+                  v-model="darData[key]"
+                  :rules="[inputRules.required]"
+                ></v-text-field>
+                <v-text-field
+                  label="Admission Date"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 500px"
+                  type="datetime-local"
+                  v-model="darData.admission_date"
+                  :rules="[inputRules.required]"
+                ></v-text-field>
+                <v-text-field
+                  v-for="(field, key) in inputFields.part1.textFields"
+                  :key="key"
+                  :label="field.label"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 500px"
+                  :type="field.type"
+                  v-model="patientData[key]"
+                  :rules="[inputRules.required]"
+                ></v-text-field>
+                <v-combobox
+                  v-for="(field, key) in inputFields.part1.selectFields"
+                  :key="key"
+                  :label="field.label"
+                  :items="field.items"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 500px"
+                  v-model="patientData[key]"
+                  autocomplete
+                  :rules="[inputRules.required]"
+                ></v-combobox>
+                <!-- dar values -->
+                <v-select
+                  v-for="(field, key) in inputFields.part1.darSelectFields"
+                  :key="key"
+                  :label="field.label"
+                  :items="field.items"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 500px"
+                  autocomplete
+                  v-model="darData[key]"
+                  :rules="[inputRules.required]"
+                ></v-select>
+                <v-select
+                  v-for="(field, key) in inputFields.part1.titleValueFields"
+                  :key="key"
+                  :label="field.label"
+                  :items="field.items"
+                  item-title="title"
+                  item-value="value"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 500px"
+                  autocomplete
+                  v-model="darData[key]"
+                  readonly
+                ></v-select>
+                <v-select
+                  v-for="(field, key) in inputFields.part2.selectFields"
+                  :key="key"
+                  :label="field.label"
+                  :items="field.items"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 500px"
+                  v-model="darData[key]"
+                  autocomplete
+                  :rules="[inputRules.required]"
+                ></v-select>
+                <v-text-field
+                  v-for="(field, key) in inputFields.part2.textFields"
+                  :key="key"
+                  :label="field.label"
+                  variant="outlined"
+                  density="compact"
+                  style="width: 500px"
+                  :type="field.type"
+                  v-model="darData[key]"
+                  :rules="[inputRules.required]"
+                ></v-text-field>
+                <v-textarea
+                  label="Diagnosis"
+                  variant="outlined"
+                  style="width: 1000px"
+                  density="compact"
+                  :rules="[inputRules.required]"
+                  v-model="darData.diagnosis"
+                >
+                </v-textarea>
+                <v-textarea
+                  label="Remarks"
+                  variant="outlined"
+                  style="width: 1000px"
+                  density="compact"
+                  v-model="darData.remarks"
+                ></v-textarea>
+              </v-col>
+              <v-col>
+                <v-btn
+                  prepend-icon="mdi-update"
+                  color="secondary"
+                  @click="updateDailyActivityReportItem"
+                  >Update Daily Activity Report</v-btn
+                >
+              </v-col>
+              <!-- {{ darData }} -->
+            </v-row>
+          </v-form>
         </v-container>
-      </v-card>
-    </v-dialog>
+      </v-card-text>
+    </v-card>
   </div>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
-import { getPatientByID } from "@/api/patients";
-import { inputRules } from "@/utils/constants";
+import moment from "moment";
+import snackBars from "@/components/dialogs/snackBars.vue";
+import { ref, onMounted, watch } from "vue";
+import { inputRules, validateForm } from "@/utils/constants";
 import {
-  getInterview,
-  getPatientAddress,
-  getMswdClassification,
-  getFamilyComposition,
-  getMonthlyExpenses,
-  getMedicalData,
-  getHealthAndMentalHealth,
-  getDiscrimination,
-  getSafety,
-  getSocialFunctioning,
-  getProblemsInEnvironment,
-  interview,
-} from "@/api/assesment-tool";
-
-import InterviewView from "./InterviewView.vue";
+  getDailyActivityReportById,
+  updateDailyActivityReport,
+} from "@/api/daily-activity-report";
+import { userAuthentication } from "@/stores/session";
 
 const props = defineProps({
-  patientId: Number,
+  dar_id: Number,
+});
+onMounted(async () => {
+  await fetchDarData();
 });
 
-const emit = defineEmits(["closeDialog"]);
+const authentication = userAuthentication();
+const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
+const darForm = ref(null);
 
-const dialog = ref(true);
-const inputFields = ref({
-  interview: {
-    interview_date: {
-      label: "Interview Date",
-      type: "text",
-      formType: "date",
-    },
-    interview_time: {
-      label: "Interview Time",
-      type: "text",
-      formType: "time",
-    },
-    admission_date_and_time: {
-      label: "Admission Date-Time",
-      type: "text",
-      formType: "datetime-local",
-    },
-    basic_ward: {
-      label: "Basic Ward",
-      type: "text",
-    },
-    nonbasic_ward: {
-      label: "Non-Basic Ward",
-      type: "text",
-    },
-    health_record_number: {
-      label: "Health Record Number",
-      type: "text",
-      formType: "number",
-    },
-    mswd_number: {
-      label: "MSWD Number",
-      type: "text",
-      formType: "number",
-    },
-    referring_party: {
-      label: "Referring Party",
-      type: "text",
-    },
-    source_of_referral: {
-      label: "Source of Referral",
-      type: "select",
-      items: [
-        "Government Hospital",
-        "Private Hospitals/Clinics",
-        "Politicians",
-        "Media",
-        "Health Care Team",
-        "NGO’s/Private Welfare Agencies",
-        "Government Agencies",
-        "Walk – in",
-        "Others",
-      ],
-    },
-    address: {
-      label: "Referal Address",
-      type: "text",
-    },
-    contact_number: {
-      label: "Referal Contact Number",
-      type: "text",
-      formType: "number",
-      rules: [inputRules.invalidNegative],
-    },
-    informant: {
-      label: "Informant",
-      type: "text",
-    },
-    relationship_to_patient: {
-      label: "Informant relationship to Patient",
-      type: "select",
-      items: [
-        "Friends",
-        "Workmates",
-        "Neighbors",
-        "Relatives",
-        "Spouse",
-        "Children",
-        "Parents",
-        "Siblings",
-        "Others",
-      ],
-    },
-    informant_contact_number: {
-      label: "Informant Contact Number",
-      type: "text",
-      formType: "number",
-      rules: [inputRules.invalidNegative],
-    },
-    informant_address: {
-      label: "Informant Address",
-      type: "text",
-    },
-  },
-  demographicData: {
-    personalData: {
+const darData = ref({});
+const patientData = ref({});
+const tabValue = ref(0);
+const snackBarData = ref({
+  isVisible: false,
+  type: "",
+  text: "",
+});
+const inputFields = {
+  part1: {
+    textFields: {
       first_name: {
         label: "First Name",
       },
@@ -234,189 +178,180 @@ const inputFields = ref({
       },
       age: {
         label: "Age",
-      },
-      birth_date: {
-        label: "Birth Date",
-      },
-      religion: {
-        label: "Religion",
-      },
-      contact_number: {
-        label: "Contact Number",
+        type: "number",
       },
       occupation: {
         label: "Occupation",
       },
       monthly_income: {
         label: "Monthly Income",
+        type: "number",
       },
-      ph_membership_number: {
-        label: "PH Membership Number",
+      religion: {
+        label: "Religion",
       },
-      ph_membership_type: {
-        label: "PH Membership",
-      },
-      gender: {
-        label: "Gender Identity",
-      },
+    },
+    selectFields: {
       sex: {
         label: "Sex",
-      },
-      nationality: {
-        label: "Nationality",
+        items: ["Male", "Female"],
       },
       civil_status: {
         label: "Civil Status",
-      },
-      living_arrangement: {
-        label: "Living Arrangement",
+        items: [
+          "Child",
+          "Single",
+          "Married",
+          "Widowed",
+          "Sep - In-Fact",
+          "Sep - Legal",
+          "CLP - Opposite Sex",
+          "CLP - Same Sex",
+        ],
       },
       highest_education_level: {
-        label: "Education",
-      },
-      education_status: {
-        label: "Education Status",
-      },
-    },
-    address: {
-      permanent: {
-        region: {
-          label: "Region",
-        },
-        province: {
-          label: "Province",
-        },
-        district: {
-          label: "District",
-        },
-        municipality: {
-          label: "Municipality",
-        },
-        barangay: {
-          label: "Barangay",
-        },
-        purok: {
-          label: "Purok",
-        },
-      },
-      temporary: {
-        region: {
-          label: "Region",
-        },
-        province: {
-          label: "Province",
-        },
-        district: {
-          label: "District",
-        },
-        municipality: {
-          label: "Municipality",
-        },
-        barangay: {
-          label: "Barangay",
-        },
-        purok: {
-          label: "Purok",
-        },
+        label: " Educational Attainment",
+        items: [
+          "Undergraduate",
+          "Elementary",
+          "High School",
+          "Vocational",
+          "College",
+          "Post Graduate",
+          "None",
+        ],
       },
     },
-    tableHeaders: [
-      { title: "Fullname", value: "full_name" },
-      { title: "Age", value: "age" },
-      { title: "Birth Date", value: "birth_date" },
-      { title: "Civil Status", value: "civil_status" },
-      { title: "Relationship", value: "relationship" },
-      { title: "Educational Attainment", value: "educational_attainment" },
-      { title: "Occupation", value: "occupation" },
-      { title: "Monthly Income", value: "monthly_income" },
-    ],
+    darSelectFields: {
+      area: {
+        label: "Area",
+        items: ["Basic Ward", "Non-Basic Ward", "OP", "ER/ED"],
+      },
+      case_type: {
+        label: "Case Type",
+        items: ["New Case", "Old Case", "Case Closed"],
+      },
+      indirect_contributor: {
+        label: "Contributor type",
+        items: [
+          "Indirect - POS",
+          "Indirect - Sponsored",
+          "Indirect - 4PS",
+          "Indirect - PWD",
+          "Indirect - SC",
+          "Direct - Lifetime",
+          "Direct - Employed",
+          "Direct - Voluntary",
+          "Direct - OFW",
+        ],
+      },
+    },
+    titleValueFields: {
+      is_phic_member: {
+        label: "PHIC Member",
+        items: [
+          { title: "Yes", value: 1 },
+          { title: "No", value: 0 },
+        ],
+      },
+      classification: {
+        label: "PHIC Classification",
+        items: [
+          { title: "Financially Capable - A", value: "A" },
+          { title: "Financially Capacitated - B", value: "B" },
+          { title: "Financially Incapable - C1", value: "C1" },
+          { title: "Financially Incapacitated - C2", value: "C2" },
+          { title: "Indigent - C3", value: "C3" },
+          { title: "Indigent - D", value: "D" },
+        ],
+      },
+    },
   },
-  mswdClassification: {},
-  familyComposition: {},
-  monthlyExpenses: {},
-  medicalData: {},
-  healthAndMentalHealth: {},
-  discrimination: {},
-  safety: {},
-  socialFunctioning: {},
-  problemsInEnvironment: {},
-});
-
-const patientAssesmentData = ref({
-  interview: {},
-  personalData: {},
-  mswdClassification: {},
-  familyComposition: {},
-  monthlyExpenses: {},
-  medicalData: {},
-  healthAndMentalHealth: {},
-  discrimination: {},
-  safety: {},
-  socialFunctioning: {},
-  problemsInEnvironment: {},
-});
-// async functions
-
-const getInterviewData = async () => {
-  const response = await getInterview(props.patientId);
-  patientAssesmentData.value.interview = response;
+  part2: {
+    textFields: {
+      house_hold_size: {
+        label: "Household Size",
+      },
+      informant: {
+        label: "Informant Name",
+      },
+      relationship_to_patient: {
+        label: "Relationship to Patient",
+      },
+    },
+    selectFields: {
+      sectoral_grouping: {
+        label: "Sectoral Grouping",
+        items: [
+          "SC",
+          "PWD",
+          "Solo Parent",
+          "IP",
+          "BHW",
+          "Brgy. Officials",
+          "Veterans",
+          "Health Worker",
+          "Government Worker",
+          "Custodial",
+          "Artisanal Fisherfolk",
+          "Farmer and Landless Rural Worker",
+          "Urban Poor",
+          "Formal Labor & Migrant Workers",
+          "Workers in Informal Sectors",
+          "Victims of Disaster & Calamity",
+          "Others",
+        ],
+      },
+      source_of_referral: {
+        label: "Source of Referral",
+        items: [
+          "Government Hospital",
+          "Private Hospitals/Clinics",
+          "Politicians",
+          "Media",
+          "Health Care Team",
+          "NGO’s/Private Welfare Agencies",
+          "Government Agencies",
+          "Walk – in",
+          "Others",
+        ],
+      },
+    },
+    timeFields: {
+      interview_start_time: {
+        label: "Interview Start Time",
+        type: "time",
+      },
+      interview_end_time: {
+        label: "Interview End Time",
+        type: "time",
+      },
+    },
+  },
 };
-const getPatientPersonalData = async () => {
-  const response = await getPatientByID(props.patientId);
-  patientAssesmentData.value.personalData = response;
+const updateDailyActivityReportItem = async () => {
+  const isValid = await validateForm(darForm);
+  if (!isValid) return;
+  console.log("darData", darData.value);
+  const response = await updateDailyActivityReport(darData.value);
+  if (response) {
+    console.log("update", response);
+    handleSnackBar("success", "Daily Activity Report Updated");
+  }
 };
-const getMswdClassificationData = async () => {
-  const response = await getMswdClassification(props.patientId);
-  patientAssesmentData.value.mswdClassification = response;
+const fetchDarData = async () => {
+  const response = await getDailyActivityReportById(props.dar_id);
+  darData.value = response;
+  if (!response.interview_start_time) {
+    darData.value.interview_start_time = moment().format("HH:mm");
+  }
+  patientData.value = darData.value.patients;
+  darData.value.created_by = userFullName;
 };
-const getFamilyCompositionData = async () => {
-  const response = await getFamilyComposition(props.patientId);
-  patientAssesmentData.value.familyComposition = response;
+const handleSnackBar = (type, text) => {
+  snackBarData.value.isVisible = true;
+  snackBarData.value.type = type;
+  snackBarData.value.text = text;
 };
-const getMonthlyExpensesData = async () => {
-  const response = await getMonthlyExpenses(props.patientId);
-  patientAssesmentData.value.monthlyExpenses = response;
-};
-const getMedicalDataItem = async () => {
-  const response = await getMedicalData(props.patientId);
-  patientAssesmentData.value.medicalData = response;
-};
-const getHealthAndMentalHealthData = async () => {
-  const response = await getHealthAndMentalHealth(props.patientId);
-  patientAssesmentData.value.healthAndMentalHealth = response;
-};
-const getDiscriminationData = async () => {
-  const response = await getDiscrimination(props.patientId);
-  patientAssesmentData.value.discrimination = response;
-};
-const getSafetyData = async () => {
-  const response = await getSafety(props.patientId);
-  patientAssesmentData.value.safety = response;
-};
-const getSocialFunctioningData = async () => {
-  const response = await getSocialFunctioning(props.patientId);
-  patientAssesmentData.value.socialFunctioning = response;
-};
-const getProblemsInEnvironmentData = async () => {
-  const response = await getProblemsInEnvironment(props.patientId);
-  patientAssesmentData.value.problemsInEnvironment = response;
-};
-
-const getAsessmentData = async () => {
-  await getInterviewData();
-  await getPatientPersonalData();
-  await getMswdClassificationData();
-  await getFamilyCompositionData();
-  await getMonthlyExpensesData();
-  await getMedicalDataItem();
-  await getHealthAndMentalHealthData();
-  await getDiscriminationData();
-  await getSafetyData();
-  await getSocialFunctioningData();
-  await getProblemsInEnvironmentData();
-};
-onMounted(async () => {
-  await getAsessmentData();
-});
 </script>
 <style lang=""></style>
