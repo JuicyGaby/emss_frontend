@@ -7,6 +7,7 @@ export const inputRules = {
   vselect: (v) => v.length > 0 || "This field is required",
 };
 
+// arrays
 export const departments = [
   "Center for Behavioral Sciences",
   "Women and Child Protection Unit",
@@ -51,6 +52,13 @@ export const educationalAttainment = [
   "None",
   "Not Applicable",
 ];
+export const educationStatus = [
+  "Level",
+  "Graduated",
+  "Ongoing",
+  "Stopped",
+  "Not Applicable",
+];
 export const civilStatus = [
   "Child",
   "Single",
@@ -86,6 +94,7 @@ export const religion = [
   "Atheist",
   "Agnostic",
 ];
+export const sex = ["Male", "Female"];
 
 export const snackBarData = ref({
   isVisible: false,

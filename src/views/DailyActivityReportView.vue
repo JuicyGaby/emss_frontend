@@ -160,7 +160,7 @@
   <!-- dialogs -->
   <div>
     <!-- create dar dialog -->
-    <v-dialog v-model="dialogs.dar.create" width="600px" persistent>
+    <v-dialog v-model="dialogs.dar.create" width="650px" persistent>
       <CreateDARDialog
         @addDAR="handlePushItem"
         @closeDialog="handleCloseDialog"
