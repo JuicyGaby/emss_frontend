@@ -5,14 +5,27 @@
         <v-container>
           <v-form ref="darForm">
             <v-row class="">
-              <v-col
-                cols="12"
-                class="d-flex flex-wrap ga-5 align-center"
-              >
+              <v-col cols="12" class="d-flex flex-wrap ga-5 align-center">
                 <!-- time fields -->
                 <v-template v-for="(item, index) in inputFields.part1" class="">
                   <v-text-field
-                    v-if="item.formType === 'text'"
+                    v-if="
+                      item.formType === 'text' && item.object === 'patients'
+                    "
+                    v-model="patientData[index]"
+                    :key="'text-' + index"
+                    :label="item.label"
+                    variant="outlined"
+                    density="compact"
+                    :type="item.type"
+                    :hide-spin-buttons="true"
+                    style="width: 550px"
+                  ></v-text-field>
+                  <v-text-field
+                    v-else-if="
+                      item.formType === 'text' && item.object === 'darData'
+                    "
+                    v-model="darData[index]"
                     :key="'text-' + index"
                     :label="item.label"
                     variant="outlined"
@@ -22,7 +35,10 @@
                     style="width: 550px"
                   ></v-text-field>
                   <v-autocomplete
-                    v-else-if="item.formType === 'select'"
+                    v-else-if="
+                      item.formType === 'select' && item.object === 'patients'
+                    "
+                    v-model="patientData[index]"
                     :key="'select-' + index"
                     :label="item.label"
                     :items="item.items"
@@ -31,8 +47,24 @@
                     style="width: 550px"
                   ></v-autocomplete>
                   <v-autocomplete
-                    v-else-if="item.formType === 'autocomplete'"
+                    v-else-if="
+                      item.formType === 'select' && item.object === 'darData'
+                    "
+                    v-model="darData[index]"
+                    :key="'select-' + index"
+                    :label="item.label"
+                    :items="item.items"
+                    variant="outlined"
+                    density="compact"
+                    style="width: 550px"
+                  ></v-autocomplete>
+                  <v-autocomplete
+                    v-else-if="
+                      item.formType === 'autocomplete' &&
+                      item.object === 'darData'
+                    "
                     :key="'autocomplete-' + index"
+                    v-model="darData[index]"
                     :label="item.label"
                     :items="item.items"
                     item-title="title"
@@ -51,7 +83,7 @@
                   >Update Daily Activity Report</v-btn
                 >
               </v-col>
-              <!-- {{ darData }} -->
+              {{ darData }}
             </v-row>
           </v-form>
         </v-container>
@@ -66,6 +98,7 @@ import snackBars from "@/components/dialogs/snackBars.vue";
 import { ref, onMounted, watch } from "vue";
 import {
   inputRules,
+  religion,
   validateForm,
   civilStatus,
   educationalAttainment,
@@ -87,15 +120,14 @@ import { userAuthentication } from "@/stores/session";
 const props = defineProps({
   dar_id: Number,
 });
-onMounted(async () => {
-  await fetchDarData();
-});
 
 const authentication = userAuthentication();
 const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
 const darForm = ref(null);
 
-const darData = ref({});
+const darData = ref({
+  patients: {},
+});
 const patientData = ref({});
 const tabValue = ref(0);
 const snackBarData = ref({
@@ -103,82 +135,98 @@ const snackBarData = ref({
   type: "",
   text: "",
 });
+
 const inputFields = {
   part1: {
     first_name: {
       label: "First Name",
       formType: "text",
       type: "text",
+      object: "patients",
     },
     middle_name: {
       label: "Middle Name",
       formType: "text",
       type: "text",
+      object: "patients",
     },
     last_name: {
       label: "Last Name",
       formType: "text",
       type: "text",
+      object: "patients",
     },
     birth_date: {
       label: "Birth Date",
       formType: "text",
       type: "date",
+      object: "patients",
     },
     age: {
       label: "Age",
       formType: "text",
       type: "number",
+      object: "patients",
     },
     occupation: {
       label: "Occupation",
       formType: "text",
       type: "text",
+      object: "patients",
     },
     monthly_income: {
       label: "Monthly Income",
       formType: "text",
       type: "number",
+      object: "patients",
     },
     religion: {
       label: "Religion",
-      formType: "text",
-      type: "text",
+      formType: "select",
+      items: religion,
+      object: "patients",
     },
     sex: {
       label: "Sex",
       formType: "select",
       items: sex,
+      object: "patients",
     },
     civil_status: {
       label: "Civil Status",
       formType: "select",
       items: civilStatus,
+      object: "patients",
     },
     highest_education_level: {
       label: " Educational Attainment",
       formType: "select",
       items: educationalAttainment,
+      object: "patients",
     },
     area: {
       label: "Area",
       formType: "select",
       items: area,
+      object: "darData",
     },
     deparment: {
       label: "Department",
       formType: "select",
       items: departments,
+      object: "darData",
     },
     case_type: {
       label: "Case Type",
       formType: "autocomplete",
       items: caseType,
+      object: "darData",
     },
     indirect_contributor: {
       label: "Contributor type",
       formType: "select",
       items: contributor_type,
+      object: "darData",
     },
     is_phic_member: {
       label: "PHIC Member",
@@ -192,37 +240,44 @@ const inputFields = {
       label: "MSS Classification",
       formType: "autocomplete",
       items: mssClassification,
+      object: "darData",
     },
     referring_party: {
       label: "Referring Party",
       formType: "text",
       type: "text",
+      object: "darData",
     },
 
     house_hold_size: {
       label: "Household Size",
       formType: "text",
       type: "number",
+      object: "darData",
     },
     informant: {
       label: "Informant Name",
       formType: "text",
       type: "text",
+      object: "darData",
     },
     relationship_to_patient: {
       label: "Relationship to Patient",
       formType: "text",
       type: "text",
+      object: "darData",
     },
     sectoral_grouping: {
       label: "Sectoral Grouping",
       formType: "select",
       items: sectoralGroupingList,
+      object: "darData",
     },
     source_of_referral: {
       label: "Source of Referral",
       formType: "select",
       items: sourceOfReferral,
+      object: "darData",
     },
   },
   timeFields: {
@@ -254,13 +309,17 @@ const fetchDarData = async () => {
   }
   patientData.value = darData.value.patients;
   darData.value.created_by = userFullName;
+  console.log("darData", darData.value);
+  console.log("patientData", patientData.value);
 };
 const handleSnackBar = (type, text) => {
   snackBarData.value.isVisible = true;
   snackBarData.value.type = type;
   snackBarData.value.text = text;
 };
-</script>
-<style lang="css">
 
-</style>
+onMounted(async () => {
+  await fetchDarData();
+});
+</script>
+<style lang="css"></style>
