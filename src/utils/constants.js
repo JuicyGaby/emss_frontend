@@ -110,7 +110,7 @@ export const contributor_type = [
   "Direct - Voluntary",
   "Direct - OFW",
 ];
-export const phiClassification = [
+export const mssClassification = [
   { title: "Financially Capable / Capacitated - A", value: "A" },
   { title: "Financially Capable / Capacitated - B", value: "B" },
   { title: "Financially Incapable / Incapacitated - C1", value: "C1" },

@@ -7,7 +7,7 @@
             <v-row class="">
               <v-col
                 cols="12"
-                class="d-flex flex-wrap ga-5 align-center redborder"
+                class="d-flex flex-wrap ga-5 align-center"
               >
                 <!-- time fields -->
                 <v-template v-for="(item, index) in inputFields.part1" class="">
@@ -64,7 +64,20 @@
 import moment from "moment";
 import snackBars from "@/components/dialogs/snackBars.vue";
 import { ref, onMounted, watch } from "vue";
-import { inputRules, validateForm } from "@/utils/constants";
+import {
+  inputRules,
+  validateForm,
+  civilStatus,
+  educationalAttainment,
+  area,
+  departments,
+  caseType,
+  contributor_type,
+  mssClassification,
+  sourceOfReferral,
+  sectoralGroupingList,
+  sex,
+} from "@/utils/constants";
 import {
   getDailyActivityReportById,
   updateDailyActivityReport,
@@ -135,101 +148,37 @@ const inputFields = {
     sex: {
       label: "Sex",
       formType: "select",
-      items: ["Male", "Female"],
+      items: sex,
     },
     civil_status: {
       label: "Civil Status",
       formType: "select",
-      items: [
-        "Child",
-        "Single",
-        "Married",
-        "Widowed",
-        "Sep - In-Fact",
-        "Sep - Legal",
-        "CLP - Opposite Sex",
-        "CLP - Same Sex",
-      ],
+      items: civilStatus,
     },
     highest_education_level: {
       label: " Educational Attainment",
       formType: "select",
-      items: [
-        "Undergraduate",
-        "Elementary",
-        "High School",
-        "Vocational",
-        "College",
-        "Post Graduate",
-        "None",
-      ],
+      items: educationalAttainment,
     },
     area: {
       label: "Area",
       formType: "select",
-      items: ["Basic Ward", "Non-Basic Ward", "OP", "ER/ED"],
+      items: area,
     },
     deparment: {
       label: "Department",
       formType: "select",
-      items: [
-        "Center for Behavioral Sciences",
-        "Women and Child Protection Unit",
-        "Internal Medicine",
-        "Male Surgery",
-        "Female Surgery",
-        "Gynecology",
-        "Pedia Surgery",
-        "EENT",
-        "Opthalmology",
-        "Pedia Non-Communicable",
-        "Pedia Communicable",
-        "Adult Communicable",
-        "Obstetrics",
-        "Neo-Intensive Care Unit",
-        "Newborn",
-        "Orthopedic",
-        "Renal/PDU",
-        "Acute Respiratory Infection Department",
-        "Family Medicine",
-        "Primary Care",
-        "Wellness",
-        "Cardiology",
-        "Urology",
-        "Plastic Surgery",
-        "Oncology",
-        "Cervical Cancer Prevention",
-        "Program for Young Parents",
-        "Rehabilitation Center",
-        "Neurosurgery (Brain & Spine Center)",
-        "Intensive Care Unit",
-        "Critical Care Unit",
-        "Others",
-      ],
+      items: departments,
     },
     case_type: {
       label: "Case Type",
       formType: "autocomplete",
-      items: [
-        { title: "New Case", value: 1 },
-        { title: "Old Case", value: 2 },
-        { title: "Case Closed", value: 3 },
-      ],
+      items: caseType,
     },
     indirect_contributor: {
       label: "Contributor type",
       formType: "select",
-      items: [
-        "Indirect - POS",
-        "Indirect - Sponsored",
-        "Indirect - 4PS",
-        "Indirect - PWD",
-        "Indirect - SC",
-        "Direct - Lifetime",
-        "Direct - Employed",
-        "Direct - Voluntary",
-        "Direct - OFW",
-      ],
+      items: contributor_type,
     },
     is_phic_member: {
       label: "PHIC Member",
@@ -239,23 +188,17 @@ const inputFields = {
         { title: "No", value: 0 },
       ],
     },
+    classification: {
+      label: "MSS Classification",
+      formType: "autocomplete",
+      items: mssClassification,
+    },
     referring_party: {
       label: "Referring Party",
       formType: "text",
       type: "text",
     },
-    classification: {
-      label: "PHIC Classification",
-      formType: "autocomplete",
-      items: [
-        { title: "Financially Capable / Capacitated - A", value: "A" },
-        { title: "Financially Capable / Capacitated - B", value: "B" },
-        { title: "Financially Incapable / Incapacitated - C1", value: "C1" },
-        { title: "Financially Incapable / Incapacitated - C2", value: "C2" },
-        { title: "Indigent - C3", value: "C3" },
-        { title: "Indigent - D", value: "D" },
-      ],
-    },
+
     house_hold_size: {
       label: "Household Size",
       formType: "text",
@@ -274,40 +217,12 @@ const inputFields = {
     sectoral_grouping: {
       label: "Sectoral Grouping",
       formType: "select",
-      items: [
-        "SC",
-        "PWD",
-        "Solo Parent",
-        "IP",
-        "BHW",
-        "Brgy. Officials",
-        "Veterans",
-        "Health Worker",
-        "Government Worker",
-        "Custodial",
-        "Artisanal Fisherfolk",
-        "Farmer and Landless Rural Worker",
-        "Urban Poor",
-        "Formal Labor & Migrant Workers",
-        "Workers in Informal Sectors",
-        "Victims of Disaster & Calamity",
-        "Others",
-      ],
+      items: sectoralGroupingList,
     },
     source_of_referral: {
       label: "Source of Referral",
       formType: "select",
-      items: [
-        "Government Hospital",
-        "Private Hospitals/Clinics",
-        "Politicians",
-        "Media",
-        "Health Care Team",
-        "NGO’s/Private Welfare Agencies",
-        "Government Agencies",
-        "Walk – in",
-        "Others",
-      ],
+      items: sourceOfReferral,
     },
   },
   timeFields: {
@@ -347,7 +262,5 @@ const handleSnackBar = (type, text) => {
 };
 </script>
 <style lang="css">
-.redborder {
-  border: 1px dashed red;
-}
+
 </style>
