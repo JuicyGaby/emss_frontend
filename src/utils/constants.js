@@ -150,6 +150,7 @@ export const sectoralGroupingList = [
 ];
 export const sex = ["Male", "Female"];
 
+// end of arrays
 export const snackBarData = ref({
   isVisible: false,
   text: "",

@@ -32,6 +32,7 @@
 </template>
 <script setup>
 import moment from "moment";
+import { area, sourceOfReferral, departments } from "@/utils/constants";
 import { ref, watchEffect } from "vue";
 
 const emit = defineEmits(["interviewData"]);
@@ -61,15 +62,15 @@ const inputFields = {
     type: "datetime-local",
     formType: "text",
   },
-  basic_ward: {
-    label: "Basic Ward",
-    type: "text",
-    formType: "text",
+  area: {
+    label: "Area",
+    formType: "select",
+    items: area,
   },
-  nonbasic_ward: {
-    label: "Non-Basic Ward",
-    type: "text",
-    formType: "text",
+  departments: {
+    label: "Department",
+    formType: "select",
+    items: departments,
   },
   health_record_number: {
     label: "Health Record Number",
@@ -84,20 +85,10 @@ const inputFields = {
   source_of_referral: {
     label: "Source of Referral",
     formType: "select",
-    items: [
-      "Government Hospital",
-      "Private Hospitals/Clinics",
-      "Politicians",
-      "Media",
-      "Health Care Team",
-      "NGO’s/Private Welfare Agencies",
-      "Government Agencies",
-      "Walk – in",
-      "Others",
-    ],
+    items: sourceOfReferral,
   },
   referring_party: {
-    label: "Referring Party",
+    label: "Name Of Referring Party",
     type: "text",
     formType: "text",
   },
