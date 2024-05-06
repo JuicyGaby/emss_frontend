@@ -5,8 +5,22 @@
         <v-container>
           <v-form ref="darForm">
             <v-row class="">
-              <v-col cols="12" class="d-flex flex-wrap ga-5 align-center">
+              <v-col cols="12" class="d-flex flex-wrap ga-2 align-center">
                 <!-- time fields -->
+                <v-template v-for="(item, index) in inputFields.timeFields">
+                  <v-text-field
+                    v-if="item.type === 'time'"
+                    v-model="darData[index]"
+                    :key="'time-' + index"
+                    :label="item.label"
+                    variant="outlined"
+                    density="compact"
+                    :type="item.type"
+                    :hide-spin-buttons="true"
+                    style="width: 550px"
+                    :rules="[inputRules.required]"
+                  ></v-text-field>
+                </v-template>
                 <v-template v-for="(item, index) in inputFields.part1" class="">
                   <v-text-field
                     v-if="
@@ -20,6 +34,7 @@
                     :type="item.type"
                     :hide-spin-buttons="true"
                     style="width: 550px"
+                    :rules="[inputRules.required]"
                   ></v-text-field>
                   <v-text-field
                     v-else-if="
@@ -33,6 +48,7 @@
                     :type="item.type"
                     :hide-spin-buttons="true"
                     style="width: 550px"
+                    :rules="[inputRules.required]"
                   ></v-text-field>
                   <v-autocomplete
                     v-else-if="
@@ -45,6 +61,7 @@
                     variant="outlined"
                     density="compact"
                     style="width: 550px"
+                    :rules="[inputRules.required]"
                   ></v-autocomplete>
                   <v-autocomplete
                     v-else-if="
@@ -57,12 +74,10 @@
                     variant="outlined"
                     density="compact"
                     style="width: 550px"
+                    :rules="[inputRules.required]"
                   ></v-autocomplete>
                   <v-autocomplete
-                    v-else-if="
-                      item.formType === 'autocomplete' &&
-                      item.object === 'darData'
-                    "
+                    v-else-if="item.formType === 'autocomplete'"
                     :key="'autocomplete-' + index"
                     v-model="darData[index]"
                     :label="item.label"
@@ -72,7 +87,19 @@
                     variant="outlined"
                     density="compact"
                     style="width: 550px"
+                    :rules="[inputRules.required]"
                   ></v-autocomplete>
+                </v-template>
+                <v-template v-for="(item, index) in inputFields.textAreas">
+                  <v-textarea
+                    v-model="darData[index]"
+                    :key="'textArea-' + index"
+                    :label="item.label"
+                    variant="outlined"
+                    density="compact"
+                    style="width: 1500px"
+                    :rules="[inputRules.required]"
+                  ></v-textarea>
                 </v-template>
               </v-col>
               <v-col>
@@ -83,7 +110,7 @@
                   >Update Daily Activity Report</v-btn
                 >
               </v-col>
-              {{ darData }}
+              <!-- {{ darData }} -->
             </v-row>
           </v-form>
         </v-container>
@@ -98,6 +125,7 @@ import snackBars from "@/components/dialogs/snackBars.vue";
 import { ref, onMounted, watch } from "vue";
 import {
   inputRules,
+  handleSnackBar,
   religion,
   validateForm,
   civilStatus,
@@ -130,14 +158,16 @@ const darData = ref({
 });
 const patientData = ref({});
 const tabValue = ref(0);
-const snackBarData = ref({
-  isVisible: false,
-  type: "",
-  text: "",
-});
+const snackBarData = ref({});
 
 const inputFields = {
   part1: {
+    admission_date: {
+      label: "Admission Date",
+      formType: "text",
+      type: "date",
+      object: "darData",
+    },
     first_name: {
       label: "First Name",
       formType: "text",
@@ -210,7 +240,7 @@ const inputFields = {
       items: area,
       object: "darData",
     },
-    deparment: {
+    department: {
       label: "Department",
       formType: "select",
       items: departments,
@@ -236,16 +266,10 @@ const inputFields = {
         { title: "No", value: 0 },
       ],
     },
-    classification: {
+    phic_classification: {
       label: "MSS Classification",
       formType: "autocomplete",
       items: mssClassification,
-      object: "darData",
-    },
-    referring_party: {
-      label: "Referring Party",
-      formType: "text",
-      type: "text",
       object: "darData",
     },
 
@@ -279,6 +303,12 @@ const inputFields = {
       items: sourceOfReferral,
       object: "darData",
     },
+    referring_party: {
+      label: "Name of Referring Party",
+      formType: "text",
+      type: "text",
+      object: "darData",
+    },
   },
   timeFields: {
     interview_start_time: {
@@ -290,6 +320,16 @@ const inputFields = {
       type: "time",
     },
   },
+  textAreas: {
+    diagnosis: {
+      label: "Diagnosis",
+      formType: "textArea",
+    },
+    remarks: {
+      label: "Remarks",
+      formType: "textArea",
+    },
+  },
 };
 const updateDailyActivityReportItem = async () => {
   const isValid = await validateForm(darForm);
@@ -298,7 +338,10 @@ const updateDailyActivityReportItem = async () => {
   const response = await updateDailyActivityReport(darData.value);
   if (response) {
     console.log("update", response);
-    handleSnackBar("success", "Daily Activity Report Updated");
+    snackBarData.value = handleSnackBar(
+      "success",
+      "Daily Activity Report Updated"
+    );
   }
 };
 const fetchDarData = async () => {
@@ -311,11 +354,6 @@ const fetchDarData = async () => {
   darData.value.created_by = userFullName;
   console.log("darData", darData.value);
   console.log("patientData", patientData.value);
-};
-const handleSnackBar = (type, text) => {
-  snackBarData.value.isVisible = true;
-  snackBarData.value.type = type;
-  snackBarData.value.text = text;
 };
 
 onMounted(async () => {

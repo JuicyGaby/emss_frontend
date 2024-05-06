@@ -21,7 +21,7 @@
                   v-model="swaInputs.creator_fullname"
                 ></v-text-field>
                 <v-autocomplete
-                  label="SWA Services"
+                  label="Social Work Administration"
                   chips
                   clearable
                   multiple
