@@ -461,6 +461,7 @@ const createDarSwaNotesItem = async () => {
   dialogs.value.createDialog.isVisible = false;
   inputData.value.note = {
     dar_swa_id: props.swa_id,
+    note_time_started: moment().format("HH:mm"),
     created_by: `${authentication.user.fname} ${authentication.user.lname}`,
     creator_id: authentication.user.id,
   };
