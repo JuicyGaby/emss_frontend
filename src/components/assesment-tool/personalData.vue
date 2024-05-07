@@ -104,7 +104,7 @@
               <v-combobox
                 v-for="(value, key) in inputFields.address.temporary"
                 :key="key"
-                :label="key"
+                :label="value.label"
                 variant="outlined"
                 :items="value.items"
                 :item-title="value.title"
@@ -320,6 +320,7 @@ import {
   // address
   getRegions,
   getProvince,
+  getDistrict,
   getMunicipality,
   getBarangay,
   getPatientAddress,
@@ -368,6 +369,7 @@ let patientAddress = ref([
 // address
 let provinces = ref([]);
 let municipalities = ref([]);
+let districts = ref([]);
 let barangays = ref([]);
 
 let temporaryProvince = ref([]);
@@ -648,6 +650,8 @@ const inputFields = ref({
       },
       district: {
         label: "District",
+        items: districts,
+        title: "disDesc",
       },
       municipality: {
         label: "Municipality",
@@ -660,7 +664,7 @@ const inputFields = ref({
         title: "brgyDesc",
       },
       purok: {
-        label: "Purok",
+        label: "House No/Subdivision/Village/Sitio ",
       },
     },
     temporary: {
@@ -676,6 +680,8 @@ const inputFields = ref({
       },
       district: {
         label: "District",
+        items: districts,
+        title: "disDesc",
       },
       municipality: {
         label: "Municipality",
@@ -688,7 +694,7 @@ const inputFields = ref({
         title: "brgyDesc",
       },
       purok: {
-        label: "Purok",
+        label: "House No/Subdivision/Village/Sitio ",
       },
     },
   },
@@ -777,9 +783,11 @@ const watchAddressChange = (addressType, key, apiCall, optionKey) => {
 };
 watchAddressChange(0, "region", getProvince, provinces);
 watchAddressChange(0, "province", getMunicipality, municipalities);
+watchAddressChange(0, "province", getDistrict, districts);
 watchAddressChange(0, "municipality", getBarangay, barangays);
 watchAddressChange(1, "region", getProvince, temporaryProvince);
 watchAddressChange(1, "province", getMunicipality, temporaryMunicipalities);
+watchAddressChange(1, "province", getDistrict, districts);
 watchAddressChange(1, "municipality", getBarangay, temporaryBarangays);
 
 // * Update Section
