@@ -9,7 +9,7 @@
             label="Main Classification"
             v-model="mswdClassification.main_classification_type"
             :items="inputFields.mainClassification.items"
-            item-title="text"
+            item-title="title"
             item-value="value"
             variant="outlined"
             density="comfortable"
@@ -75,6 +75,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { userAuthentication } from "@/stores/session";
+import { mssClassification } from "@/utils/constants";
 
 import {
   getMswdClassification,
@@ -111,14 +112,8 @@ const mswdClassification = ref({
 
 const inputFields = ref({
   mainClassification: {
-    label: "Main Classification",
-    items: [
-      { text: "Financially Capable", value: "A" },
-      { text: "Financially Capacitated", value: "B" },
-      { text: "Financially Incapable", value: "C1" },
-      { text: "Financially Incapacitated", value: "C2" },
-      { text: "Indigent", value: "C3" },
-    ],
+    label: "MSS Classification",
+    items: mssClassification,
   },
   subClassification: {
     label: "Sub Classification",
