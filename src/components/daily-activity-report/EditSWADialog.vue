@@ -15,7 +15,9 @@
               <h2 class="my-5">I. Social Work Administration</h2>
               <v-card>
                 <v-toolbar color="secondary">
-                  <v-toolbar-title>SWA Notes</v-toolbar-title>
+                  <v-toolbar-title
+                    >Social Work Case Management Notes</v-toolbar-title
+                  >
                   <v-spacer></v-spacer>
                   <v-btn
                     prepend-icon="mdi-note-plus"
@@ -54,7 +56,7 @@
                   </v-data-table>
                 </v-card-text>
               </v-card>
-              <h2 class="my-5">II. Services</h2>
+              <h2 class="my-5">II. Social Work Case Management Services</h2>
               <v-select
                 chips
                 multiple
@@ -378,6 +380,8 @@ const dataTable = ref({
     { title: "Number", value: "number" },
     { title: "Date Created", value: "date_created" },
     { title: "Title", value: "note_title" },
+    { title: "Time Started", value: "note_time_started" },
+    { title: "Time ended", value: "note_time_ended" },
     { title: "Created By", value: "created_by" },
     { title: "Operation", value: "operation" },
   ],
