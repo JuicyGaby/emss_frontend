@@ -386,6 +386,7 @@ const getDarServicesByDarIdItems = async (dar_id) => {
   servicesInput.value.services = servicesData.value.map(
     (service) => service.id
   );
+  console.log(servicesData.value);
 };
 const getDarNotesItems = async (dar_id) => {
   const response = await getDarNotes(dar_id);
