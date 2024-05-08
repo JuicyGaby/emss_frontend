@@ -57,7 +57,8 @@
   <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
+import moment from "moment";
 import snackBars from "../dialogs/snackBars.vue";
 import { inputRules, validateForm, handleSnackBar } from "@/utils/constants";
 import { getInterview, updateInterview, interview } from "@/api/assesment-tool";
@@ -72,6 +73,9 @@ const interviewForm = ref(null);
 const snackBarData = ref({});
 
 const interviewInputData = ref({
+  interview_time: "",
+  interview_end_time: "",
+  interview_time_duration: "",
   isExist: false,
   patientId: props.patientId,
   health_record_number: "",
@@ -80,21 +84,32 @@ const interviewInputData = ref({
   informant_contact_number: "",
   social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
 });
+
 const inputFields = ref({
   interview_date: {
     label: "Interview Date",
     type: "text",
     formType: "date",
   },
-  interview_time: {
-    label: "Interview Time",
-    type: "text",
-    formType: "time",
-  },
   admission_date_and_time: {
     label: "Admission Date-Time",
     type: "text",
     formType: "datetime-local",
+  },
+  interview_time: {
+    label: "Interview Start Time",
+    type: "text",
+    formType: "time",
+  },
+  interview_end_time: {
+    label: "Interview End Time",
+    type: "text",
+    formType: "time",
+  },
+  interview_time_duration: {
+    label: "Interview Time Duration",
+    type: "text",
+    formType: "text",
   },
   basic_ward: {
     label: "Basic Ward",
@@ -176,6 +191,33 @@ const inputFields = ref({
   },
 });
 
+watch(
+  () => [
+    interviewInputData.value.interview_time,
+    interviewInputData.value.interview_end_time,
+  ],
+  ([newInterviewTime, newInterviewEndTime]) => {
+    const duration = calculateInterviewDuration(
+      newInterviewTime,
+      newInterviewEndTime
+    );
+    if (duration) {
+      interviewInputData.value.interview_time_duration = duration;
+    }
+  }
+);
+
+const calculateInterviewDuration = (newInterviewTime, newInterviewEndTime) => {
+  if (newInterviewTime && newInterviewEndTime) {
+    const start = moment(newInterviewTime, "HH:mm");
+    const end = moment(newInterviewEndTime, "HH:mm");
+    const duration = moment.duration(end.diff(start));
+    const hours = Math.floor(duration.asHours());
+    const minutes = Math.floor(duration.asMinutes()) - hours * 60;
+    return `${hours}:${minutes}`;
+  }
+  return null;
+};
 // asyn functions
 const getInterviewData = async () => {
   const response = await getInterview(props.patientId);
