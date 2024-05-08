@@ -56,7 +56,7 @@ export const educationStatus = [
   "Level",
   "Graduated",
   "Ongoing",
-  "Stopped",
+  "Undergraduate",
   "Not Applicable",
 ];
 export const civilStatus = [

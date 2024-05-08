@@ -37,7 +37,6 @@
                       density="compact"
                       style="width: 200px"
                       :items="inputFields.creation.sex.items"
-                      :rules="[inputRules.required]"
                       v-model="patientCreationData.sex"
                     ></v-select>
                     <v-select
@@ -46,7 +45,6 @@
                       density="compact"
                       style="width: 200px"
                       :items="inputFields.creation.civil_status.items"
-                      :rules="[inputRules.required]"
                       v-model="patientCreationData.civil_status"
                     ></v-select>
                     <v-select

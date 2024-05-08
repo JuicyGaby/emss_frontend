@@ -309,6 +309,13 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import {
+  educationStatus,
+  educationalAttainment,
+  civilStatus,
+  religion,
+  sex,
+} from "@/utils/constants";
 import { getPatientByID, updatePatient } from "@/api/patients";
 import { inputRules } from "@/utils/constants";
 import {
@@ -479,11 +486,11 @@ const inputFields = ref({
         type: "text",
       },
       ph_membership_number: {
-        label: "PH Membership Number",
+        label: "PHIC Membership Number",
         type: "text",
       },
       ph_membership_type: {
-        label: "PH Membership",
+        label: "PHIC Membership Category",
         type: "text",
       },
     },
@@ -494,7 +501,7 @@ const inputFields = ref({
       },
       sex: {
         label: "Sex",
-        items: ["Male", "Female"],
+        items: sex,
       },
       nationality: {
         label: "Nationality",
@@ -502,17 +509,7 @@ const inputFields = ref({
       },
       civil_status: {
         label: "Civil Status",
-        items: [
-          "Single",
-          "Married",
-          "Widowed",
-          "Divorced",
-          "Annulled",
-          "Common Law OS",
-          "Common Law SS",
-          "Separated Legally",
-          "Separated De Facto",
-        ],
+        items: civilStatus,
       },
       living_arrangement: {
         label: "Living Arrangement",
@@ -527,19 +524,11 @@ const inputFields = ref({
       },
       highest_education_level: {
         label: "Education",
-        items: [
-          "Early Childhood Education",
-          "Primary",
-          "Secondary",
-          "Tertiary",
-          "Vocational",
-          "Post Graduate",
-          "No Educational Attainment",
-        ],
+        items: educationalAttainment,
       },
       education_status: {
         label: "Education Status",
-        items: ["OnGoing", "Graduated", "Stopped", "Others"],
+        items: educationStatus,
       },
     },
   },
