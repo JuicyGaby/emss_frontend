@@ -1,13 +1,13 @@
 <template lang="">
   <div class="" style="width: 100%">
-    <v-card width="100%" height="100vh">
+    <v-card width="100%" height="" elevation="0">
       <v-toolbar color="secondary" class="d-flex align-center ga-5 px-5">
         <v-icon size="x-large">mdi-medical-bag</v-icon>
         <h1>Electronic Medical Social Service System</h1>
       </v-toolbar>
       <v-card-text>
         <v-container>
-          <v-row>
+          <v-row :no-gutters="true">
             <v-col cols="12">
               <h1 class="text-h4">
                 {{ currentDate }} - {{ moment().format("dddd") }}
@@ -64,6 +64,11 @@
               </v-card>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col cols="12">
+              <DarTable :isDar="false" />
+            </v-col>
+          </v-row>
         </v-container>
       </v-card-text>
     </v-card>
@@ -74,9 +79,10 @@
 import moment from "moment";
 import { userAuthentication } from "@/stores/session";
 import { ref, onMounted } from "vue";
-import { handleSnackBar } from "@/utils/constants";
+import { handleSnackBar, monthsOfYear } from "@/utils/constants";
 // components
 import snackBars from "@/components/dialogs/snackBars.vue";
+import DarTable from "@/components/daily-activity-report/DarTable.vue";
 import { generateMonthlyReport } from "../api/statistical-report";
 const authentication = userAuthentication();
 const accessRights = authentication.access_rights;
@@ -133,20 +139,7 @@ const userCards = ref({
 const inputFields = ref({
   month: {
     label: "Selected Month",
-    items: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
+    items: monthsOfYear,
   },
 });
 
