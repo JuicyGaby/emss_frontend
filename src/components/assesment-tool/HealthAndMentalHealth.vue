@@ -146,6 +146,7 @@ const indexItems = {
     { text: "1 to 6 months", value: 4 },
     { text: "2 weeks to 1 month", value: 5 },
     { text: "less than 2 weeks", value: 6 },
+    { text: "Not Applicable", value: 7 },
   ],
   coping: [
     { text: "Outstanding", value: 1 },
@@ -154,6 +155,7 @@ const indexItems = {
     { text: "Somewhat Inadequate", value: 4 },
     { text: "Inadequate", value: 5 },
     { text: "No Coping Skills", value: 6 },
+    { text: "Not Applicable", value: 7 },
   ],
 };
 const inputFields = {
@@ -164,19 +166,19 @@ const inputFields = {
     coping: "",
   },
   abscence_of_support_health_services: {
-    label: "Abscence of Support Health Services",
+    label: "Absence of Support Services Needed to Use Health",
   },
   absence_of_adequate_mental_services: {
-    label: "Abscence of Adequate Mental Services",
+    label: "AAbsence of Adequate Mental Health Services",
   },
   absence_of_support_mental_services: {
-    label: "Abscence of Support Mental Services",
+    label: "Absence of Support Services Needed To Use Mental Health Services",
   },
   inaccessibility_of_health_services: {
     label: "Inaccessibility of Health Services",
   },
   inaccessibility_of_mental_services: {
-    label: "Inaccessibility of Mental Services",
+    label: "Inaccessibility of Mental Health Services   ",
   },
 };
 

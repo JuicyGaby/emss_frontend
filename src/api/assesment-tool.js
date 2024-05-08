@@ -115,6 +115,12 @@ const getProvince = async (regionCode) => {
   const data = await response.json();
   return data;
 };
+const getDistrict = async (provinceCode) => {
+  const API_URL = `${BASE_URL}/emss/district/${provinceCode}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
 const getMunicipality = async (provinceCode) => {
   const API_URL = `${BASE_URL}/emss/municipality/${provinceCode}`;
   const response = await fetch(API_URL);
@@ -429,6 +435,7 @@ export {
   // address
   getRegions,
   getProvince,
+  getDistrict,
   getMunicipality,
   getBarangay,
   getPatientAddress,

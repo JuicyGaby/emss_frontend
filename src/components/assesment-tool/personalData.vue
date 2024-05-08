@@ -104,7 +104,7 @@
               <v-combobox
                 v-for="(value, key) in inputFields.address.temporary"
                 :key="key"
-                :label="key"
+                :label="value.label"
                 variant="outlined"
                 :items="value.items"
                 :item-title="value.title"
@@ -309,8 +309,16 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import moment from "moment";
+import {
+  educationStatus,
+  educationalAttainment,
+  civilStatus,
+  religion,
+  inputRules,
+  sex,
+} from "@/utils/constants";
 import { getPatientByID, updatePatient } from "@/api/patients";
-import { inputRules } from "@/utils/constants";
 import {
   getFamilyComposition,
   createFamilyMember,
@@ -320,6 +328,7 @@ import {
   // address
   getRegions,
   getProvince,
+  getDistrict,
   getMunicipality,
   getBarangay,
   getPatientAddress,
@@ -368,6 +377,7 @@ let patientAddress = ref([
 // address
 let provinces = ref([]);
 let municipalities = ref([]);
+let districts = ref([]);
 let barangays = ref([]);
 
 let temporaryProvince = ref([]);
@@ -477,11 +487,11 @@ const inputFields = ref({
         type: "text",
       },
       ph_membership_number: {
-        label: "PH Membership Number",
+        label: "PHIC Membership Number",
         type: "text",
       },
       ph_membership_type: {
-        label: "PH Membership",
+        label: "PHIC Membership Category",
         type: "text",
       },
     },
@@ -492,7 +502,7 @@ const inputFields = ref({
       },
       sex: {
         label: "Sex",
-        items: ["Male", "Female"],
+        items: sex,
       },
       nationality: {
         label: "Nationality",
@@ -500,44 +510,15 @@ const inputFields = ref({
       },
       civil_status: {
         label: "Civil Status",
-        items: [
-          "Single",
-          "Married",
-          "Widowed",
-          "Divorced",
-          "Annulled",
-          "Common Law OS",
-          "Common Law SS",
-          "Separated Legally",
-          "Separated De Facto",
-        ],
-      },
-      living_arrangement: {
-        label: "Living Arrangement",
-        items: [
-          "owned",
-          "shared",
-          "rent",
-          "homeless",
-          "institutionalized",
-          "others",
-        ],
+        items: civilStatus,
       },
       highest_education_level: {
         label: "Education",
-        items: [
-          "Early Childhood Education",
-          "Primary",
-          "Secondary",
-          "Tertiary",
-          "Vocational",
-          "Post Graduate",
-          "No Educational Attainment",
-        ],
+        items: educationalAttainment,
       },
       education_status: {
         label: "Education Status",
-        items: ["OnGoing", "Graduated", "Stopped", "Others"],
+        items: educationStatus,
       },
     },
   },
@@ -545,44 +526,32 @@ const inputFields = ref({
     full_name: {
       label: "FullName",
       type: "text",
-      data: "",
+      data: null,
       rules: [inputRules.required],
     },
     age: {
       label: "Age",
       type: "text",
       inputType: "number",
-      data: "",
-      rules: [inputRules.required],
+      data: null,
     },
     birth_date: {
       label: "Birth Date",
       type: "text",
       inputType: "date",
-      data: "",
-      rules: [inputRules.required],
+      data: null,
     },
     civil_status: {
       label: "Civil Status",
       type: "select",
-      data: "",
+      data: null,
       rules: [inputRules.required],
-      items: [
-        "Single",
-        "Married",
-        "Widowed",
-        "Divorced",
-        "Annulled",
-        "Common Law OS",
-        "Common Law SS",
-        "Separated Legally",
-        "Separated De Facto",
-      ],
+      items: civilStatus,
     },
     relationship: {
       label: "Relationship",
       type: "select",
-      data: "",
+      data: null,
       rules: [inputRules.required],
       items: [
         "Father",
@@ -608,7 +577,7 @@ const inputFields = ref({
     educational_attainment: {
       label: "Educational Attainment",
       type: "select",
-      data: "",
+      data: null,
       rules: [inputRules.required],
       items: [
         "Early Childhood Education",
@@ -623,13 +592,13 @@ const inputFields = ref({
     occupation: {
       label: "Occupation",
       type: "text",
-      data: "",
+      data: null,
       rules: [inputRules.required],
     },
     monthly_income: {
       label: "Monthly Income",
       type: "text",
-      data: "",
+      data: null,
       rules: [inputRules.required],
       inputType: "number",
     },
@@ -648,6 +617,8 @@ const inputFields = ref({
       },
       district: {
         label: "District",
+        items: districts,
+        title: "disDesc",
       },
       municipality: {
         label: "Municipality",
@@ -660,7 +631,7 @@ const inputFields = ref({
         title: "brgyDesc",
       },
       purok: {
-        label: "Purok",
+        label: "House No/Subdivision/Village/Sitio ",
       },
     },
     temporary: {
@@ -676,6 +647,8 @@ const inputFields = ref({
       },
       district: {
         label: "District",
+        items: districts,
+        title: "disDesc",
       },
       municipality: {
         label: "Municipality",
@@ -688,11 +661,23 @@ const inputFields = ref({
         title: "brgyDesc",
       },
       purok: {
-        label: "Purok",
+        label: "House No/Subdivision/Village/Sitio ",
       },
     },
   },
 });
+
+watch(
+  () => inputFields.value.familyComposition.birth_date.data,
+  (newBirthDate) => {
+    if (newBirthDate) {
+      const birthDate = moment(newBirthDate);
+      const age = moment().diff(birthDate, "years");
+      inputFields.value.familyComposition.age.data = age;
+    }
+  }
+);
+
 const validateForm = async (formType) => {
   const form = await formType.value.validate();
   if (!form.valid) return false;
@@ -714,23 +699,21 @@ const handleAddressButton = async () => {
   }
   await updatePatientAddressData();
 };
-
 // * create section
 const createFamilyMemberData = async () => {
   const isValid = await validateForm(familyForm);
-  console.log(isValid);
   if (!isValid) return;
   let familyMember = {};
   for (const key in inputFields.value.familyComposition) {
     familyMember[key] = inputFields.value.familyComposition[key].data;
   }
   familyMember.patient_id = props.patientId;
-  console.log(familyMember);
   const response = await createFamilyMember(familyMember);
   if (response) {
     updateBars.value.createFamilyMember.isActive = true;
     familyComposition.value.push(response);
     dialogs.value.addFamily = false;
+    console.log(response);
   }
 };
 const createPatientAddressData = async () => {
@@ -777,9 +760,11 @@ const watchAddressChange = (addressType, key, apiCall, optionKey) => {
 };
 watchAddressChange(0, "region", getProvince, provinces);
 watchAddressChange(0, "province", getMunicipality, municipalities);
+watchAddressChange(0, "province", getDistrict, districts);
 watchAddressChange(0, "municipality", getBarangay, barangays);
 watchAddressChange(1, "region", getProvince, temporaryProvince);
 watchAddressChange(1, "province", getMunicipality, temporaryMunicipalities);
+watchAddressChange(1, "province", getDistrict, districts);
 watchAddressChange(1, "municipality", getBarangay, temporaryBarangays);
 
 // * Update Section

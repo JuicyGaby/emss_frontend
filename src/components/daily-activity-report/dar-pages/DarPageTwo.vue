@@ -57,16 +57,16 @@
               </div>
             </v-col>
           </v-row>
-          <h2>II. Availed Services</h2>
+          <h2>II. Social Work Case Management</h2>
           <v-row>
             <v-col cols="12" class="">
               <div class="px-5 mt-5">
                 <v-autocomplete
                   chips
                   multiple
-                  label="Services"
+                  label="Social Work Case Management"
                   variant="outlined"
-                  density="compact"
+                  density="comfortable"
                   :items="servicesData"
                   item-title="service_name"
                   v-model="servicesData"
@@ -386,6 +386,7 @@ const getDarServicesByDarIdItems = async (dar_id) => {
   servicesInput.value.services = servicesData.value.map(
     (service) => service.id
   );
+  console.log(servicesData.value);
 };
 const getDarNotesItems = async (dar_id) => {
   const response = await getDarNotes(dar_id);

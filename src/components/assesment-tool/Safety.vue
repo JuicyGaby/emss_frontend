@@ -122,7 +122,7 @@ const tableheaders = [
   "Severity Index",
   "Duration Index",
   "Coping Index",
-];  
+];
 const indexItems = {
   severity: [
     { text: "No Problem", value: 1 },
@@ -139,6 +139,7 @@ const indexItems = {
     { text: "1 to 6 months", value: 4 },
     { text: "2 weeks to 1 month", value: 5 },
     { text: "less than 2 weeks", value: 6 },
+    { text: "Not Applicable", value: 7 },
   ],
   coping: [
     { text: "Outstanding", value: 1 },
@@ -147,17 +148,18 @@ const indexItems = {
     { text: "Somewhat Inadequate", value: 4 },
     { text: "Inadequate", value: 5 },
     { text: "No Coping Skills", value: 6 },
+    { text: "Not Applicable", value: 7 },
   ],
 };
 const particulars = {
   voice_crime_in_community: {
-    label: "Voice Crime in Community",
+    label: "Violence or Crime in Community",
   },
   unsafe_working_conditions: {
     label: "Unsafe Working Conditions",
   },
   unsafe_codition_home: {
-    label: "Unsafe Condition at Home",
+    label: "Unsafe Condition in Home",
   },
 
   absence_of_adequate_safety_services: {

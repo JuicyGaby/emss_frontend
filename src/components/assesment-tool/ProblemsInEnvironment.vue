@@ -183,7 +183,7 @@
                   ></v-select>
                 </td>
               </tr>
-              <th>Affectional Support System</th>
+              <th>Excessively involved support system</th>
               <tr
                 v-for="(
                   particular, index
@@ -394,13 +394,13 @@ const particulars = {
   },
   employment: {
     unemployment: {
-      label: "Unemployment",
+      label: "Employment is not available in the community",
     },
     underemployment: {
-      label: "Underemployment",
+      label: "Employment, adequate employment not available in the community",
     },
     inappropiate_employment: {
-      label: "Inappropriate employment",
+      label: "Lack of Socially/Legally acceptable employment in the community",
     },
   },
   economicResource: {
@@ -429,6 +429,7 @@ const particulars = {
     },
   },
 };
+
 const indexItems = {
   severity: [
     { text: "No Problem", value: 1 },
@@ -445,6 +446,7 @@ const indexItems = {
     { text: "1 to 6 months", value: 4 },
     { text: "2 weeks to 1 month", value: 5 },
     { text: "less than 2 weeks", value: 6 },
+    { text: "Not Applicable", value: 7 },
   ],
 };
 const inputFields = {
@@ -461,6 +463,7 @@ const inputFields = {
         "Economic Resources",
         "No immediate family members to assist the patient",
         "Health Condition of the Patient",
+        "Others",
       ],
     },
     reasons_psychosocial_counselling: {
@@ -490,6 +493,7 @@ const inputFields = {
         "Advocacy for patient’s rights on work-related and medico-legal issues",
         "Suicide and self-inflected injuries",
         "Alcohol, cigarette and other substance abuse",
+        "Others",
       ],
     },
   },
@@ -515,7 +519,13 @@ const inputFields = {
       label: "Address",
     },
     contact_number: {
-      label: "Contact Number",
+      label: "Contact Number 1",
+    },
+    contact_number_2: {
+      label: "Contact Number 2",
+    },
+    contact_number_3: {
+      label: "Contact Number 3",
     },
     interviewed_by: {
       label: "Interviewer",

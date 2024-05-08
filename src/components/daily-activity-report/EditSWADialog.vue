@@ -15,7 +15,9 @@
               <h2 class="my-5">I. Social Work Administration</h2>
               <v-card>
                 <v-toolbar color="secondary">
-                  <v-toolbar-title>SWA Notes</v-toolbar-title>
+                  <v-toolbar-title
+                    >Social Work Case Management Notes</v-toolbar-title
+                  >
                   <v-spacer></v-spacer>
                   <v-btn
                     prepend-icon="mdi-note-plus"
@@ -54,7 +56,7 @@
                   </v-data-table>
                 </v-card-text>
               </v-card>
-              <h2 class="my-5">II. Services</h2>
+              <h2 class="my-5">II. Social Work Case Management Services</h2>
               <v-select
                 chips
                 multiple
@@ -99,7 +101,22 @@
           <v-form>
             <v-container>
               <v-form ref="swaForm">
-                <v-row>
+                <v-row :no-gutters="true">
+                  <v-col cols="12" class="d-flex ga-2">
+                    <v-text-field
+                      type="time"
+                      label="Time Started"
+                      variant="outlined"
+                      density="compact"
+                      v-model="inputData.note.note_time_started"
+                    ></v-text-field>
+                    <v-text-field
+                      type="time"
+                      label="Time Ended"
+                      variant="outlined"
+                      density="compact"
+                    ></v-text-field>
+                  </v-col>
                   <v-col cols="12">
                     <v-combobox
                       label="Note Title"
@@ -148,7 +165,23 @@
         <v-card-text>
           <v-container>
             <v-form ref="swaForm">
-              <v-row>
+              <v-row :no-gutters="true">
+                <v-col cols="12" class="d-flex ga-2">
+                  <v-text-field
+                    type="time"
+                    label="Time Started"
+                    variant="outlined"
+                    density="compact"
+                    v-model="inputData.dynamicInput.note_time_started"
+                  ></v-text-field>
+                  <v-text-field
+                    type="time"
+                    label="Time Ended"
+                    variant="outlined"
+                    density="compact"
+                    v-model="inputData.dynamicInput.note_time_ended"
+                  ></v-text-field>
+                </v-col>
                 <v-col cols="12">
                   <v-combobox
                     :items="userServicesAvailed"
@@ -192,7 +225,25 @@
         </v-toolbar>
         <v-card-text>
           <v-container>
-            <v-row>
+            <v-row :no-gutters="true">
+              <v-col cols="12" class="d-flex ga-2">
+                <v-text-field
+                  type="time"
+                  label="Time Started"
+                  variant="outlined"
+                  density="compact"
+                  v-model="inputData.dynamicInput.note_time_started"
+                  readonly
+                ></v-text-field>
+                <v-text-field
+                  type="time"
+                  label="Time Ended"
+                  variant="outlined"
+                  density="compact"
+                  v-model="inputData.dynamicInput.note_time_ended"
+                  readonly
+                ></v-text-field>
+              </v-col>
               <v-col cols="12">
                 <v-combobox
                   :items="userServicesAvailed"
@@ -267,10 +318,7 @@
       </v-card>
     </v-dialog>
   </div>
-  <!-- snackbars -->
   <snackBars :snackBarData="snackBarData" />
-  <!-- dynamic dialogs -->
-  <!-- <dynamicDialogs /> -->
 </template>
 <script setup>
 import { ref, onMounted, computed } from "vue";
@@ -286,6 +334,7 @@ import {
   createSwaServicesItem,
 } from "@/api/daily-activity-report";
 import { inputRules } from "@/utils/constants";
+import moment from "moment";
 import snackBars from "../dialogs/snackBars.vue";
 import dynamicDialogs from "../dialogs/dialogs.vue";
 const props = defineProps({
@@ -314,6 +363,8 @@ const dialogData = ref({
 });
 const inputData = ref({
   note: {
+    note_time_started: moment().format("HH:mm"),
+    note_time_ended: null,
     dar_swa_id: props.swa_id,
     created_by: `${authentication.user.fname} ${authentication.user.lname}`,
     creator_id: authentication.user.id,
@@ -329,6 +380,8 @@ const dataTable = ref({
     { title: "Number", value: "number" },
     { title: "Date Created", value: "date_created" },
     { title: "Title", value: "note_title" },
+    { title: "Time Started", value: "note_time_started" },
+    { title: "Time ended", value: "note_time_ended" },
     { title: "Created By", value: "created_by" },
     { title: "Operation", value: "operation" },
   ],
@@ -412,6 +465,7 @@ const createDarSwaNotesItem = async () => {
   dialogs.value.createDialog.isVisible = false;
   inputData.value.note = {
     dar_swa_id: props.swa_id,
+    note_time_started: moment().format("HH:mm"),
     created_by: `${authentication.user.fname} ${authentication.user.lname}`,
     creator_id: authentication.user.id,
   };

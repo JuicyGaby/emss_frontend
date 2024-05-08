@@ -28,7 +28,7 @@
                       density="compact"
                       style="width: 200px"
                       :type="item.type"
-                      :rules="item.rules"
+                      :rules="[inputRules.required]"
                       v-model="patientCreationData[index]"
                     ></v-text-field>
                     <v-select
@@ -37,7 +37,6 @@
                       density="compact"
                       style="width: 200px"
                       :items="inputFields.creation.sex.items"
-                      :rules="inputFields.creation.sex.rules"
                       v-model="patientCreationData.sex"
                     ></v-select>
                     <v-select
@@ -46,7 +45,6 @@
                       density="compact"
                       style="width: 200px"
                       :items="inputFields.creation.civil_status.items"
-                      :rules="inputFields.creation.civil_status.rules"
                       v-model="patientCreationData.civil_status"
                     ></v-select>
                     <v-select
@@ -59,9 +57,7 @@
                       :items="
                         inputFields.creation.highest_education_level.items
                       "
-                      :rules="
-                        inputFields.creation.highest_education_level.rules
-                      "
+                      :rules="[inputRules.required]"
                       v-model="patientCreationData.highest_education_level"
                     ></v-select>
                   </v-col>
@@ -75,7 +71,7 @@
                   >Create Patient</v-btn
                 >
               </v-card-actions>
-              <!-- {{ patientCreationData }} -->
+              {{ patientCreationData }}
             </v-container>
           </v-card-text>
         </v-window-item>
@@ -117,7 +113,7 @@
                       item-value="id"
                       variant="outlined"
                       density="compact"
-                      style="width: 500px"
+                      style="width: 530px"
                       v-model="darData.patient_id"
                       :rules="[inputRules.required]"
                     ></v-select>
@@ -163,7 +159,13 @@ import {
   darCreatePatient,
 } from "@/api/daily-activity-report";
 import { searchPatient } from "@/api/patients";
-import { ref, onMounted } from "vue";
+import {
+  sex,
+  civilStatus,
+  educationalAttainment,
+  inputRules,
+} from "@/utils/constants";
+import { ref, onMounted, watch } from "vue";
 import moment from "moment";
 const emit = defineEmits(["addDAR", "closeDialog", "editDAR"]);
 
@@ -198,19 +200,27 @@ const darData = ref({
 });
 const patientCreationData = ref({
   isExisting: false,
+  birth_date: "",
+  age: "",
   creatorFullName: `${authentication.user.fname} ${authentication.user.lname}`,
   creatorId: authentication.user.id,
 });
-let createdPatient = ref({});
-let darServices = ref([]);
-let patients = ref([]);
+const createdPatient = ref({});
+const darServices = ref([]);
+const patients = ref([]);
 
-const inputRules = {
-  required: (v) => !!v || "This field is required",
-  invalidNegative: (v) => v >= 0 || "Invalid input",
-  characters: (v) => v.length <= 20 || "Max 20 characters",
-  vselect: (v) => v.length > 0 || "This field is required",
-};
+// Determine patient's age based on birth date
+watch(
+  () => patientCreationData.value.birth_date,
+  (newBirthDate) => {
+    if (newBirthDate) {
+      const birthDate = moment(newBirthDate);
+      const age = moment().diff(birthDate, "years");
+      patientCreationData.value.age = age;
+    }
+  }
+);
+
 const inputFields = {
   search: {
     first_name: {
@@ -222,83 +232,44 @@ const inputFields = {
       type: "text",
     },
   },
-  selectField: {
-    patient_name: {
-      label: "Patient Name",
-      type: "text",
-      rules: [inputRules.required, inputRules.characters],
-    },
-  },
   creation: {
     textFields: {
       first_name: {
         label: "First Name",
         type: "text",
-        rules: [inputRules.required, inputRules.characters],
       },
       middle_name: {
         label: "Middle Name",
         type: "text",
-        rules: [inputRules.required, inputRules.characters],
       },
       last_name: {
         label: "Last Name",
         type: "text",
-        rules: [inputRules.required, inputRules.characters],
       },
       birth_date: {
         label: "Birth Date",
         type: "date",
-        rules: [inputRules.required],
       },
       age: {
         label: "Age",
         type: "number",
-        rules: [inputRules.required, inputRules.invalidNegative],
       },
       occupation: {
         label: "Occupation",
         type: "text",
-        rules: [inputRules.required, inputRules.characters],
       },
     },
     sex: {
       label: "Sex",
-      items: ["Male", "Female"],
-      rules: [inputRules.required],
+      items: sex,
     },
     civil_status: {
       label: "Civil Status",
-      items: ["Child", "Single", "Married", "Widowed", "Separated"],
-      rules: [inputRules.required],
+      items: civilStatus,
     },
     highest_education_level: {
       label: "Education Attainment",
-      items: [
-        "Elementary",
-        "High School",
-        "College",
-        "Vocational",
-        "Post Graduate",
-      ],
-      rules: [inputRules.required],
-    },
-    phic_member: {
-      label: "PHIC Member",
-      items: ["Yes", "No"],
-      rules: [inputRules.required],
-    },
-    phic_classification: {
-      label: "MSS Classification",
-      items: [
-        { title: "Financially Capable / Capacitated - A", value: "A" },
-        { title: "Financially Capable / Capacitated - B", value: "B" },
-        { title: "Financially Incapable / Incapacitated - C1", value: "C1" },
-        { title: "Financially Incapable / Incapacitated - C2", value: "C2" },
-        { title: "Indigent - C3", value: "C3" },
-        { title: "Indigent - D", value: "D" },
-      ],
-      rules: [inputRules.required],
+      items: educationalAttainment,
     },
   },
 };

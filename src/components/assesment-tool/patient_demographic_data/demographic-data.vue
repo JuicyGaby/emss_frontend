@@ -77,7 +77,7 @@
         </v-col>
       </v-row>
     </div>
-    {{ personalDataInputs }}
+    <!-- {{ personalDataInputs }} -->
   </v-container>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
@@ -85,6 +85,12 @@
 import { ref, watchEffect, watch, onMounted } from "vue";
 import { userAuthentication } from "@/stores/session";
 import moment from "moment";
+import {
+  educationalAttainment,
+  educationStatus,
+  religion,
+  civilStatus,
+} from "@/utils/constants";
 const emit = defineEmits(["personalData"]);
 const authentication = userAuthentication();
 const totalPages = ref(2);
@@ -166,13 +172,7 @@ const inputFields = {
       label: "Religion",
       formType: "select",
       type: "text",
-      items: [
-        "Roman Catholic",
-        "Iglesia ni Cristo",
-        "Muslim",
-        "Born Again Christian",
-        "Others",
-      ],
+      items: religion,
     },
     nationality: {
       label: "Nationality",
@@ -197,47 +197,17 @@ const inputFields = {
     civil_status: {
       label: "Civil Status",
       formType: "select",
-      items: [
-        "Single",
-        "Married",
-        "Widowed",
-        "Divorced",
-        "Annulled",
-        "Common Law OS",
-        "Common Law SS",
-        "Separated Legally",
-        "Separated De Facto",
-      ],
-    },
-    living_arrangement: {
-      label: "Living Arrangement",
-      formType: "select",
-      items: [
-        "owned",
-        "shared",
-        "rent",
-        "homeless",
-        "institutionalized",
-        "others",
-      ],
+      items: civilStatus,
     },
     education: {
       label: "Education",
       formType: "combo",
-      items: [
-        "Early Childhood Education",
-        "Primary",
-        "Secondary",
-        "Tertiary",
-        "Vocational",
-        "Post Graduate",
-        "No Educational Attainment",
-      ],
+      items: educationalAttainment,
     },
     educationStatus: {
       label: "Education Status",
       formType: "select",
-      items: ["Level", "Graduated", "Ongoing"],
+      items: educationStatus,
     },
     occupation: {
       label: "Occupation",
