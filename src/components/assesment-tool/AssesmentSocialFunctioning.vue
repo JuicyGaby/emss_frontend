@@ -434,6 +434,7 @@ const indexItems = {
     { text: "Isolation", value: 6 },
     { text: "Victimization", value: 7 },
     { text: "Mixed Others", value: 8 },
+    { text: "Not Applicable", value: 9 },
   ],
   severity: [
     { text: "No Problem", value: 1 },
@@ -450,6 +451,7 @@ const indexItems = {
     { text: "1 to 6 months", value: 4 },
     { text: "2 weeks to 1 month", value: 5 },
     { text: "less than 2 weeks", value: 6 },
+    { text: "Not Applicable", value: 9 },
   ],
   coping: [
     { text: "Outstanding", value: 1 },
@@ -458,6 +460,7 @@ const indexItems = {
     { text: "Somewhat Inadequate", value: 4 },
     { text: "Inadequate", value: 5 },
     { text: "No Coping Skills", value: 6 },
+    { text: "Not Applicable", value: 9 },
   ],
 };
 const particulars = {
