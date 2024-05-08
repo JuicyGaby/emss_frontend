@@ -85,7 +85,7 @@
                       variant="outlined"
                       density="compact"
                       :items="monthsOfYear"
-                      v-model="dateInputs.month"
+                      v-model="dateInputs.dar_month"
                     ></v-select>
                     <v-btn
                       color="grey"
@@ -158,6 +158,26 @@
                   prepend-icon="mdi-calendar-range"
                   >Filter Date</v-btn
                 >
+              </div>
+              <div v-else>
+                <div class="d-flex align-center ga-1">
+                  <v-select
+                    label="Month"
+                    style="width: 200px"
+                    variant="outlined"
+                    density="compact"
+                    :items="monthsOfYear"
+                    v-model="dateInputs.swa_month"
+                  ></v-select>
+                  <v-btn
+                    color="grey"
+                    class="mb-6"
+                    style="width: 200px"
+                    prepend-icon="mdi-calendar-range"
+                    @click="getSwaItemsByMonth()"
+                    >Filter By Month</v-btn
+                  >
+                </div>
               </div>
             </div>
             <v-data-table
@@ -276,7 +296,10 @@ import {
   getDailyActivityReportByDate,
   updateDarStatus,
 } from "@/api/daily-activity-report";
-import { getMonthlyDarEntries } from "@/api/statistical-report";
+import {
+  getMonthlyDarEntries,
+  getMonthlySwaEntries,
+} from "@/api/statistical-report";
 import { getUsersBySystemId } from "@/api/authentication";
 import moment from "moment";
 import dynamicDialog from "@/components/dialogs/dialogs.vue";
@@ -313,7 +336,8 @@ const dateInputs = ref({
   swa: moment().format("YYYY-MM-DD"),
   // make a current date that makes the month name visible using moment
   current_date: moment().format("MMMM Do YYYY"),
-  month: moment().format("MMMM"),
+  dar_month: moment().format("MMMM"),
+  swa_month: moment().format("MMMM"),
 });
 const dataTable = {
   headers: [
@@ -389,6 +413,13 @@ const getDarItemsByMonth = async () => {
   handleSnackBar(`Successfully  fetched ${response.length} Items`, "primary");
   if (response) {
     patients.value = response;
+  }
+};
+const getSwaItemsByMonth = async () => {
+  const response = await getMonthlySwaEntries(dateInputs.value);
+  handleSnackBar(`Successfully  fetched ${response.length} Items`, "primary");
+  if (response) {
+    swaItems.value = response;
   }
 };
 
