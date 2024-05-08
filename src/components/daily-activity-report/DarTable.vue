@@ -85,13 +85,14 @@
                       variant="outlined"
                       density="compact"
                       :items="monthsOfYear"
-                      v-model="dateInputs.current_month"
+                      v-model="dateInputs.month"
                     ></v-select>
                     <v-btn
                       color="grey"
                       class="mb-6"
                       style="width: 200px"
                       prepend-icon="mdi-calendar-range"
+                      @click="getDarItemsByMonth()"
                       >Filter By Month</v-btn
                     >
                   </div>
@@ -275,6 +276,7 @@ import {
   getDailyActivityReportByDate,
   updateDarStatus,
 } from "@/api/daily-activity-report";
+import { getMonthlyDarEntries } from "@/api/statistical-report";
 import { getUsersBySystemId } from "@/api/authentication";
 import moment from "moment";
 import dynamicDialog from "@/components/dialogs/dialogs.vue";
@@ -311,7 +313,7 @@ const dateInputs = ref({
   swa: moment().format("YYYY-MM-DD"),
   // make a current date that makes the month name visible using moment
   current_date: moment().format("MMMM Do YYYY"),
-  current_month: moment().format("MMMM"),
+  month: moment().format("MMMM"),
 });
 const dataTable = {
   headers: [
@@ -381,6 +383,13 @@ const getDarItemByDate = async () => {
     return;
   }
   patients.value = [];
+};
+const getDarItemsByMonth = async () => {
+  const response = await getMonthlyDarEntries(dateInputs.value);
+  handleSnackBar(`Successfully  fetched ${response.length} Items`, "primary");
+  if (response) {
+    patients.value = response;
+  }
 };
 
 const patientsWithNumbers = computed(() => {
