@@ -77,7 +77,7 @@
         </v-col>
       </v-row>
     </div>
-    {{ personalDataInputs }}
+    <!-- {{ personalDataInputs }} -->
   </v-container>
   <v-pagination :length="totalPages" v-model="page"></v-pagination>
 </template>
@@ -198,18 +198,6 @@ const inputFields = {
       label: "Civil Status",
       formType: "select",
       items: civilStatus,
-    },
-    living_arrangement: {
-      label: "Living Arrangement",
-      formType: "select",
-      items: [
-        "owned",
-        "shared",
-        "rent",
-        "homeless",
-        "institutionalized",
-        "others",
-      ],
     },
     education: {
       label: "Education",
