@@ -309,15 +309,16 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import moment from "moment";
 import {
   educationStatus,
   educationalAttainment,
   civilStatus,
   religion,
+  inputRules,
   sex,
 } from "@/utils/constants";
 import { getPatientByID, updatePatient } from "@/api/patients";
-import { inputRules } from "@/utils/constants";
 import {
   getFamilyComposition,
   createFamilyMember,
@@ -525,44 +526,32 @@ const inputFields = ref({
     full_name: {
       label: "FullName",
       type: "text",
-      data: "",
+      data: null,
       rules: [inputRules.required],
     },
     age: {
       label: "Age",
       type: "text",
       inputType: "number",
-      data: "",
-      rules: [inputRules.required],
+      data: null,
     },
     birth_date: {
       label: "Birth Date",
       type: "text",
       inputType: "date",
-      data: "",
-      rules: [inputRules.required],
+      data: null,
     },
     civil_status: {
       label: "Civil Status",
       type: "select",
-      data: "",
+      data: null,
       rules: [inputRules.required],
-      items: [
-        "Single",
-        "Married",
-        "Widowed",
-        "Divorced",
-        "Annulled",
-        "Common Law OS",
-        "Common Law SS",
-        "Separated Legally",
-        "Separated De Facto",
-      ],
+      items: civilStatus,
     },
     relationship: {
       label: "Relationship",
       type: "select",
-      data: "",
+      data: null,
       rules: [inputRules.required],
       items: [
         "Father",
@@ -588,7 +577,7 @@ const inputFields = ref({
     educational_attainment: {
       label: "Educational Attainment",
       type: "select",
-      data: "",
+      data: null,
       rules: [inputRules.required],
       items: [
         "Early Childhood Education",
@@ -603,13 +592,13 @@ const inputFields = ref({
     occupation: {
       label: "Occupation",
       type: "text",
-      data: "",
+      data: null,
       rules: [inputRules.required],
     },
     monthly_income: {
       label: "Monthly Income",
       type: "text",
-      data: "",
+      data: null,
       rules: [inputRules.required],
       inputType: "number",
     },
@@ -677,6 +666,18 @@ const inputFields = ref({
     },
   },
 });
+
+watch(
+  () => inputFields.value.familyComposition.birth_date.data,
+  (newBirthDate) => {
+    if (newBirthDate) {
+      const birthDate = moment(newBirthDate);
+      const age = moment().diff(birthDate, "years");
+      inputFields.value.familyComposition.age.data = age;
+    }
+  }
+);
+
 const validateForm = async (formType) => {
   const form = await formType.value.validate();
   if (!form.valid) return false;
@@ -698,23 +699,21 @@ const handleAddressButton = async () => {
   }
   await updatePatientAddressData();
 };
-
 // * create section
 const createFamilyMemberData = async () => {
   const isValid = await validateForm(familyForm);
-  console.log(isValid);
   if (!isValid) return;
   let familyMember = {};
   for (const key in inputFields.value.familyComposition) {
     familyMember[key] = inputFields.value.familyComposition[key].data;
   }
   familyMember.patient_id = props.patientId;
-  console.log(familyMember);
   const response = await createFamilyMember(familyMember);
   if (response) {
     updateBars.value.createFamilyMember.isActive = true;
     familyComposition.value.push(response);
     dialogs.value.addFamily = false;
+    console.log(response);
   }
 };
 const createPatientAddressData = async () => {
