@@ -21,9 +21,6 @@
             ></v-text-field>
             <v-select
               v-else-if="value.type === 'select'"
-              multiple
-              chips
-              closable-chips
               :key="'select-' + key"
               :label="value.label"
               :items="value.items"
@@ -122,7 +119,11 @@
 <script setup>
 import snackBars from "../dialogs/snackBars.vue";
 import { ref, onMounted, computed, watch } from "vue";
-import { inputRules, handleSnackBar } from "@/utils/constants";
+import {
+  inputRules,
+  handleSnackBar,
+  livingArrangement,
+} from "@/utils/constants";
 import { userAuthentication } from "@/stores/session";
 import {
   getMonthlyExpenses,
@@ -165,6 +166,11 @@ const userMonthlyExpenses = ref({
 });
 const inputFields = ref({
   row1: {
+    living_arrangement: {
+      label: "Living Arrangement",
+      type: "select",
+      items: livingArrangement,
+    },
     house_lot_cost: {
       label: "House and Lot Cost",
       inputType: "Number",
@@ -321,6 +327,7 @@ const getMonthlyExpensesItem = async () => {
         water_source_cost: response.water_source_cost,
       },
       text: {
+        living_arrangement: response.living_arrangement,
         transportation_type: response.transportation_type,
         others_description: response.others_description,
         light_source_type: response.light_source_type,

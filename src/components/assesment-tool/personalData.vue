@@ -511,17 +511,6 @@ const inputFields = ref({
         label: "Civil Status",
         items: civilStatus,
       },
-      living_arrangement: {
-        label: "Living Arrangement",
-        items: [
-          "owned",
-          "shared",
-          "rent",
-          "homeless",
-          "institutionalized",
-          "others",
-        ],
-      },
       highest_education_level: {
         label: "Education",
         items: educationalAttainment,

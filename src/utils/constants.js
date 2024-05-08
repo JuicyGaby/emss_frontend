@@ -148,6 +148,14 @@ export const sectoralGroupingList = [
   "Victims of Disaster & Calamity",
   "Others",
 ];
+export const livingArrangement = [
+  "owned",
+  "shared",
+  "rent",
+  "homeless",
+  "institutionalized",
+  "others",
+];
 export const sex = ["Male", "Female"];
 
 // end of arrays
