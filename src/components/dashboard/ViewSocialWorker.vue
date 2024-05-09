@@ -18,6 +18,7 @@
                 item-value="employee_id"
                 :label="inputFields.social_worker.label"
                 variant="outlined"
+                :rules="[inputRules.required]"
                 density="comfortable"
                 style="width: 200px"
               ></v-autocomplete>
@@ -36,8 +37,17 @@
                   prepend-icon="mdi-calendar"
                   variant="flat"
                   color="secondary"
-                  @click="getSocialWorkerMonthlyDarItems"
-                  >Generate Social Worker Report
+                  @click="
+                    props.isDar
+                      ? getSocialWorkerMonthlyDarItems()
+                      : getSocialWorkerMonthlySwaItems()
+                  "
+                >
+                  {{
+                    props.isDar
+                      ? "Generate Social Worker DAR"
+                      : "Generate Social Worker SWA"
+                  }}
                 </v-btn>
               </v-card-actions>
             </v-col>
@@ -52,16 +62,23 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import snackBars from "../dialogs/snackBars.vue";
-import { getSocialWorkerMonthlyDarEntries } from "@/api/statistical-report";
-import { handleSnackBar } from "@/utils/constants";
+import {
+  getSocialWorkerMonthlyDarEntries,
+  getSocialWorkerMonthlySwaEntries,
+} from "@/api/statistical-report";
+import { handleSnackBar, inputRules, validateForm } from "@/utils/constants";
 import { monthsOfYear } from "@/utils/constants";
 import moment from "moment";
 import { getUsersBySystemId } from "@/api/authentication";
 
+const props = defineProps({
+  isDar: Boolean,
+});
 const emit = defineEmits(["closeDialog", "generateData"]);
 
 const snackBarData = ref({});
 const socialWorkerMonthlyDarItems = ref([]);
+const socialWorkerMonthlySwaItems = ref([]);
 
 const userInputs = ref({
   creator_id: null,
@@ -88,9 +105,22 @@ const getSocialWorkerMonthlyDarItems = async () => {
       `fetched ${response.length} items`
     );
 
-    emit("generateData", socialWorkerMonthlyDarItems.value);
+    emit("generateData", socialWorkerMonthlyDarItems.value, true);
   }
 };
+const getSocialWorkerMonthlySwaItems = async () => {
+  const response = await getSocialWorkerMonthlySwaEntries(userInputs.value);
+  if (response) {
+    socialWorkerMonthlySwaItems.value = response;
+    snackBarData.value = handleSnackBar(
+      "primary",
+      `fetched ${response.length} items`
+    );
+
+    emit("generateData", socialWorkerMonthlySwaItems.value, false);
+  }
+};
+
 const getSocialWorkers = async () => {
   const response = await getUsersBySystemId();
   if (response) {
@@ -100,6 +130,7 @@ const getSocialWorkers = async () => {
 
 onMounted(async () => {
   await getSocialWorkers();
+  console.log("swa?", props.isDar);
 });
 </script>
 <style lang=""></style>

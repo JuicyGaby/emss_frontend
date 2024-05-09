@@ -42,7 +42,7 @@
                     prepend-icon="mdi-filter"
                     color="primary"
                     class="mb-6"
-                    @click="dialogs.socialWorker.view = true"
+                    @click="toggleSocialWorkerDialog(false)"
                   >
                     Social Worker
                   </v-btn>
@@ -141,6 +141,18 @@
                 prepend-icon="mdi-folder-plus"
                 >Create SWA Entry</v-btn
               >
+              <v-btn
+                v-if="
+                  authentication.access_rights.can_manage_social_worker &&
+                  !props.isDar
+                "
+                prepend-icon="mdi-filter"
+                color="primary"
+                class="mb-6"
+                @click="toggleSocialWorkerDialog(true)"
+              >
+                Social Worker
+              </v-btn>
               <div
                 v-if="props.isDar"
                 class="d-flex align-center ga-2 justify-center"
@@ -284,6 +296,7 @@
     <!-- view social worker dialog -->
     <v-dialog persistent v-model="dialogs.socialWorker.view" width="800px">
       <ViewSocialWorker
+        :isDar="isDar"
         @closeDialog="dialogs.socialWorker.view = false"
         @generateData="getSocialWorkerDarItemsByMonth"
       />
@@ -332,6 +345,7 @@ const tabValue = ref(1);
 const dar_id = ref(0);
 const swa_id = ref(0);
 const search = ref("");
+const isDar = ref(true);
 const authentication = userAuthentication();
 // objects
 const dateInputs = ref({
@@ -425,11 +439,18 @@ const getSwaItemsByMonth = async () => {
     swaItems.value = response;
   }
 };
-const getSocialWorkerDarItemsByMonth = async (data) => {
+const getSocialWorkerDarItemsByMonth = async (data, isDar) => {
   // make a two seconds interval to fetch the data
+  if (isDar) {
+    setTimeout(() => {
+      dialogs.value.socialWorker.view = false;
+      patients.value = data;
+    }, 500);
+    return;
+  }
   setTimeout(() => {
     dialogs.value.socialWorker.view = false;
-    patients.value = data;
+    swaItems.value = data;
   }, 500);
 };
 
@@ -519,10 +540,18 @@ const handleCloseDialog = (type) => {
   dialogs.value[type].edit = false;
 };
 
+const toggleSocialWorkerDialog = (isSwa) => {
+  if (isSwa) {
+    isDar.value = false;
+    dialogs.value.socialWorker.view = true;
+    return;
+  }
+  isDar.value = true;
+  dialogs.value.socialWorker.view = true;
+};
 onMounted(async () => {
   await getDarItems();
   await getSwaItems();
-  console.log(props.isDar);
 });
 // view social worker
 </script>
