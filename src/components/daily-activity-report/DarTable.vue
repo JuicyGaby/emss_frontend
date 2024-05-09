@@ -283,7 +283,10 @@
     </v-dialog>
     <!-- view social worker dialog -->
     <v-dialog persistent v-model="dialogs.socialWorker.view" width="800px">
-      <ViewSocialWorker @closeDialog="dialogs.socialWorker.view = false" />
+      <ViewSocialWorker
+        @closeDialog="dialogs.socialWorker.view = false"
+        @generateData="getSocialWorkerDarItemsByMonth"
+      />
     </v-dialog>
   </div>
   <snack-bars :snackBarData="snackBarData" />
@@ -421,6 +424,13 @@ const getSwaItemsByMonth = async () => {
   if (response) {
     swaItems.value = response;
   }
+};
+const getSocialWorkerDarItemsByMonth = async (data) => {
+  // make a two seconds interval to fetch the data
+  setTimeout(() => {
+    dialogs.value.socialWorker.view = false;
+    patients.value = data;
+  }, 500);
 };
 
 const patientsWithNumbers = computed(() => {

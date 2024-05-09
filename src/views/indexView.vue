@@ -38,7 +38,7 @@
             <v-col cols="4" v-for="(item, index) in userCards" :key="index">
               <v-card height="auto">
                 <v-toolbar rounded :color="item.toolBarColor" class="px-5">
-                  <v-icon size="x-large" class="mr-4">{{ item.icon }}</v-icon>
+                  <v-icon size="x-large" class="mr-2">{{ item.icon }}</v-icon>
                   <h2>{{ item.label }}</h2>
                 </v-toolbar>
                 <v-card-text class="d-flex justify-center align-center">

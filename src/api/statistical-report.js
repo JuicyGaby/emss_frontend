@@ -39,3 +39,16 @@ export const getMonthlySwaEntries = async (body) => {
   const data = await response.json();
   return data;
 };
+
+export const getSocialWorkerMonthlyDarEntries = async (body) => {
+  const API_URL = `${BASE_URL}/emss/get-social-worker-monthly-dar-entries`;
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
