@@ -52,8 +52,8 @@
                     single-line
                     hide-details
                     variant="outlined"
-                    density="comfortable"
-                    v-model="search"
+                    density="dense"
+                    v-model="darSearch"
                     style="max-width: 400px"
                   ></v-text-field>
                 </div>
@@ -100,7 +100,7 @@
               </div>
             </div>
             <v-data-table
-              :search="search"
+              :search="darSearch"
               :headers="dataTable.headers"
               :items="patientsWithNumbers"
               :items-per-page="5"
@@ -153,6 +153,16 @@
               >
                 Social Worker
               </v-btn>
+              <v-text-field
+                prepend-inner-icon="mdi-magnify"
+                label="Search Patient"
+                single-line
+                hide-details
+                variant="outlined"
+                density="compact"
+                v-model="swaSearch"
+                style="max-width: 400px"
+              ></v-text-field>
               <div
                 v-if="props.isDar"
                 class="d-flex align-center ga-2 justify-center"
@@ -193,6 +203,7 @@
               </div>
             </div>
             <v-data-table
+              :search="swaSearch"
               :headers="dataTable.swa.headers"
               :items-per-page="5"
               :items="swaItemsWithNumbers"
@@ -344,7 +355,8 @@ const swaItems = ref([]);
 const tabValue = ref(1);
 const dar_id = ref(0);
 const swa_id = ref(0);
-const search = ref("");
+const darSearch = ref("");
+const swaSearch = ref("");
 const isDar = ref(true);
 const authentication = userAuthentication();
 // objects
