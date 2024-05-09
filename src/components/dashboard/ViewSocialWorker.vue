@@ -9,51 +9,53 @@
       </v-toolbar>
       <v-card-text>
         <v-container>
-          <v-row>
-            <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <v-autocomplete
-                v-model="userInputs.creator_id"
-                :items="inputFields.social_worker.items"
-                item-title="name"
-                item-value="employee_id"
-                :label="inputFields.social_worker.label"
-                variant="outlined"
-                :rules="[inputRules.required]"
-                density="comfortable"
-                style="width: 200px"
-              ></v-autocomplete>
-              <v-autocomplete
-                v-model="userInputs.month"
-                :items="inputFields.month.items"
-                :label="inputFields.month.label"
-                variant="outlined"
-                density="comfortable"
-                style="width: 200px"
-              ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="px-0 d-flex justify-end">
-              <v-card-actions>
-                <v-btn
-                  prepend-icon="mdi-calendar"
-                  variant="flat"
-                  color="secondary"
-                  @click="
-                    props.isDar
-                      ? getSocialWorkerMonthlyDarItems()
-                      : getSocialWorkerMonthlySwaItems()
-                  "
-                >
-                  {{
-                    props.isDar
-                      ? "Generate Social Worker DAR"
-                      : "Generate Social Worker SWA"
-                  }}
-                </v-btn>
-              </v-card-actions>
-            </v-col>
-          </v-row>
+          <v-form ref="form">
+            <v-row>
+              <v-col cols="12" class="d-flex flex-wrap ga-2">
+                <v-autocomplete
+                  v-model="userInputs.creator_id"
+                  :items="inputFields.social_worker.items"
+                  item-title="name"
+                  item-value="employee_id"
+                  :label="inputFields.social_worker.label"
+                  variant="outlined"
+                  :rules="[inputRules.required]"
+                  density="comfortable"
+                  style="width: 200px"
+                ></v-autocomplete>
+                <v-autocomplete
+                  v-model="userInputs.month"
+                  :items="inputFields.month.items"
+                  :label="inputFields.month.label"
+                  variant="outlined"
+                  density="comfortable"
+                  style="width: 200px"
+                ></v-autocomplete>
+              </v-col>
+              <v-col cols="12" class="px-0 d-flex justify-end">
+                <v-card-actions>
+                  <v-btn
+                    prepend-icon="mdi-calendar"
+                    variant="flat"
+                    color="secondary"
+                    @click="
+                      props.isDar
+                        ? getSocialWorkerMonthlyDarItems()
+                        : getSocialWorkerMonthlySwaItems()
+                    "
+                  >
+                    {{
+                      props.isDar
+                        ? "Generate Social Worker DAR"
+                        : "Generate Social Worker SWA"
+                    }}
+                  </v-btn>
+                </v-card-actions>
+              </v-col>
+            </v-row>
+          </v-form>
         </v-container>
-        {{ userInputs }}
+        <!-- {{ userInputs }} -->
       </v-card-text>
     </v-card>
     <snackBars :snackBarData="snackBarData" />
@@ -75,7 +77,7 @@ const props = defineProps({
   isDar: Boolean,
 });
 const emit = defineEmits(["closeDialog", "generateData"]);
-
+const form = ref(null);
 const snackBarData = ref({});
 const socialWorkerMonthlyDarItems = ref([]);
 const socialWorkerMonthlySwaItems = ref([]);
@@ -97,6 +99,8 @@ const inputFields = reactive({
 
 // async functions
 const getSocialWorkerMonthlyDarItems = async () => {
+  const isValid = await validateForm(form);
+  if (!isValid) return;
   const response = await getSocialWorkerMonthlyDarEntries(userInputs.value);
   if (response) {
     socialWorkerMonthlyDarItems.value = response;
@@ -109,6 +113,8 @@ const getSocialWorkerMonthlyDarItems = async () => {
   }
 };
 const getSocialWorkerMonthlySwaItems = async () => {
+  const isValid = await validateForm(form);
+  if (!isValid) return;
   const response = await getSocialWorkerMonthlySwaEntries(userInputs.value);
   if (response) {
     socialWorkerMonthlySwaItems.value = response;
@@ -120,7 +126,6 @@ const getSocialWorkerMonthlySwaItems = async () => {
     emit("generateData", socialWorkerMonthlySwaItems.value, false);
   }
 };
-
 const getSocialWorkers = async () => {
   const response = await getUsersBySystemId();
   if (response) {
