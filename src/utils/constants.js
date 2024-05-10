@@ -118,6 +118,18 @@ export const mssClassification = [
   { title: "Indigent - C3", value: "C3" },
   { title: "Indigent - D", value: "D" },
 ];
+
+export const sourceOfReferral2 = [
+  { title: "Government Hospital", value: 1 },
+  { title: "Private Hospitals/Clinics", value: 2 },
+  { title: "Politicians", value: 3 },
+  { title: "Media", value: 4 },
+  { title: "Health Care Team", value: 5 },
+  { title: "NGO’s/Private Welfare Agencies", value: 6 },
+  { title: "Government Agencies", value: 7 },
+  { title: "Walk – in", value: 8 },
+  { title: "Others", value: 9 },
+];
 export const sourceOfReferral = [
   "Government Hospital",
   "Private Hospitals/Clinics",

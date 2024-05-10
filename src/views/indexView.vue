@@ -38,7 +38,7 @@
             <v-col cols="4" v-for="(item, index) in userCards" :key="index">
               <v-card height="auto">
                 <v-toolbar rounded :color="item.toolBarColor" class="px-5">
-                  <v-icon size="x-large" class="mr-4">{{ item.icon }}</v-icon>
+                  <v-icon size="x-large" class="mr-2">{{ item.icon }}</v-icon>
                   <h2>{{ item.label }}</h2>
                 </v-toolbar>
                 <v-card-text class="d-flex justify-center align-center">
@@ -66,6 +66,13 @@
           </v-row>
           <v-row>
             <v-col cols="12">
+              <v-btn
+                color="secondary"
+                @click="dialogs.statisticalReportActive = true"
+                >Generate Statistical Report</v-btn
+              >
+            </v-col>
+            <v-col cols="12">
               <DarTable :isDar="false" />
             </v-col>
           </v-row>
@@ -73,6 +80,16 @@
       </v-card-text>
     </v-card>
   </div>
+  <!-- statistical report dialog -->
+  <v-dialog
+    v-model="dialogs.statisticalReportActive"
+    scrollable
+    fullscreen
+    persistent
+    transition="dialog-transition"
+  >
+    <StatisticalReport @closeDialog="toggleDialog" />
+  </v-dialog>
   <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
@@ -83,6 +100,7 @@ import { handleSnackBar, monthsOfYear } from "@/utils/constants";
 // components
 import snackBars from "@/components/dialogs/snackBars.vue";
 import DarTable from "@/components/daily-activity-report/DarTable.vue";
+import StatisticalReport from "@/components/dashboard/StatisticalReport.vue";
 import { generateMonthlyReport } from "../api/statistical-report";
 const authentication = userAuthentication();
 const accessRights = authentication.access_rights;
@@ -94,6 +112,9 @@ const monthlyReportData = ref({});
 const userInputs = ref({
   creator_id: authentication.user.id,
   month: currentMonth,
+});
+const dialogs = ref({
+  statisticalReportActive: false,
 });
 const cards = ref({
   monthlyDarCount: {
@@ -143,6 +164,10 @@ const inputFields = ref({
   },
 });
 
+const toggleDialog = (type) => {
+  dialogs.value[type] = false;
+};
+
 const generateMonthlyReportData = async () => {
   const response = await generateMonthlyReport(userInputs.value);
   if (response) {
@@ -177,6 +202,7 @@ const generateCurrentMonthReportData = async () => {
       response.social_worker.patientAssessedCount;
   }
 };
+
 onMounted(async () => {
   await generateCurrentMonthReportData(userInputs.value);
 });

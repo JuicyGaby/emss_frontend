@@ -42,9 +42,9 @@
                     prepend-icon="mdi-filter"
                     color="primary"
                     class="mb-6"
-                    @click="dialogs.socialWorker.view = true"
+                    @click="toggleSocialWorkerDialog(false)"
                   >
-                    Social Worker
+                    Generate Social Worker DAR
                   </v-btn>
                   <v-text-field
                     prepend-inner-icon="mdi-magnify"
@@ -52,8 +52,8 @@
                     single-line
                     hide-details
                     variant="outlined"
-                    density="comfortable"
-                    v-model="search"
+                    density="compact"
+                    v-model="darSearch"
                     style="max-width: 400px"
                   ></v-text-field>
                 </div>
@@ -100,7 +100,7 @@
               </div>
             </div>
             <v-data-table
-              :search="search"
+              :search="darSearch"
               :headers="dataTable.headers"
               :items="patientsWithNumbers"
               :items-per-page="5"
@@ -134,13 +134,38 @@
               {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
             </h1>
             <div class="ma-3 d-flex justify-space-between align-center">
-              <v-btn
-                v-if="props.isDar"
-                color="secondary"
-                @click="dialogs.swa.create = true"
-                prepend-icon="mdi-folder-plus"
-                >Create SWA Entry</v-btn
-              >
+              <div style="width: 400px">
+                <v-btn
+                  v-if="props.isDar"
+                  color="secondary"
+                  @click="dialogs.swa.create = true"
+                  prepend-icon="mdi-folder-plus"
+                  >Create SWA Entry</v-btn
+                >
+                <v-btn
+                  v-if="
+                    authentication.access_rights.can_manage_social_worker &&
+                    !props.isDar
+                  "
+                  prepend-icon="mdi-filter"
+                  color="primary"
+                  class="mb-6"
+                  @click="toggleSocialWorkerDialog(true)"
+                >
+                  Generate Social Worker SWA
+                </v-btn>
+                <v-text-field
+                  prepend-inner-icon="mdi-magnify"
+                  label="Search Patient"
+                  single-line
+                  hide-details
+                  variant="outlined"
+                  density="compact"
+                  v-model="swaSearch"
+                  style="max-width: 400px"
+                ></v-text-field>
+              </div>
+
               <div
                 v-if="props.isDar"
                 class="d-flex align-center ga-2 justify-center"
@@ -181,6 +206,7 @@
               </div>
             </div>
             <v-data-table
+              :search="swaSearch"
               :headers="dataTable.swa.headers"
               :items-per-page="5"
               :items="swaItemsWithNumbers"
@@ -283,7 +309,11 @@
     </v-dialog>
     <!-- view social worker dialog -->
     <v-dialog persistent v-model="dialogs.socialWorker.view" width="800px">
-      <ViewSocialWorker @closeDialog="dialogs.socialWorker.view = false" />
+      <ViewSocialWorker
+        :isDar="isDar"
+        @closeDialog="dialogs.socialWorker.view = false"
+        @generateData="getSocialWorkerDarItemsByMonth"
+      />
     </v-dialog>
   </div>
   <snack-bars :snackBarData="snackBarData" />
@@ -328,7 +358,9 @@ const swaItems = ref([]);
 const tabValue = ref(1);
 const dar_id = ref(0);
 const swa_id = ref(0);
-const search = ref("");
+const darSearch = ref("");
+const swaSearch = ref("");
+const isDar = ref(true);
 const authentication = userAuthentication();
 // objects
 const dateInputs = ref({
@@ -422,6 +454,20 @@ const getSwaItemsByMonth = async () => {
     swaItems.value = response;
   }
 };
+const getSocialWorkerDarItemsByMonth = async (data, isDar) => {
+  // make a two seconds interval to fetch the data
+  if (isDar) {
+    setTimeout(() => {
+      dialogs.value.socialWorker.view = false;
+      patients.value = data;
+    }, 500);
+    return;
+  }
+  setTimeout(() => {
+    dialogs.value.socialWorker.view = false;
+    swaItems.value = data;
+  }, 500);
+};
 
 const patientsWithNumbers = computed(() => {
   return patients.value.map((patient, index) => {
@@ -509,10 +555,18 @@ const handleCloseDialog = (type) => {
   dialogs.value[type].edit = false;
 };
 
+const toggleSocialWorkerDialog = (isSwa) => {
+  if (isSwa) {
+    isDar.value = false;
+    dialogs.value.socialWorker.view = true;
+    return;
+  }
+  isDar.value = true;
+  dialogs.value.socialWorker.view = true;
+};
 onMounted(async () => {
   await getDarItems();
   await getSwaItems();
-  console.log(props.isDar);
 });
 // view social worker
 </script>
