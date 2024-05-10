@@ -134,7 +134,7 @@
               {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
             </h1>
             <div class="ma-3 d-flex justify-space-between align-center">
-              <div>
+              <div style="width: 400px">
                 <v-btn
                   v-if="props.isDar"
                   color="secondary"
