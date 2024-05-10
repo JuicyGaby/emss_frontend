@@ -44,7 +44,7 @@
                     class="mb-6"
                     @click="toggleSocialWorkerDialog(false)"
                   >
-                    Social Worker
+                    Generate Social Worker DAR
                   </v-btn>
                   <v-text-field
                     prepend-inner-icon="mdi-magnify"
@@ -52,7 +52,7 @@
                     single-line
                     hide-details
                     variant="outlined"
-                    density="dense"
+                    density="compact"
                     v-model="darSearch"
                     style="max-width: 400px"
                   ></v-text-field>
@@ -134,35 +134,38 @@
               {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
             </h1>
             <div class="ma-3 d-flex justify-space-between align-center">
-              <v-btn
-                v-if="props.isDar"
-                color="secondary"
-                @click="dialogs.swa.create = true"
-                prepend-icon="mdi-folder-plus"
-                >Create SWA Entry</v-btn
-              >
-              <v-btn
-                v-if="
-                  authentication.access_rights.can_manage_social_worker &&
-                  !props.isDar
-                "
-                prepend-icon="mdi-filter"
-                color="primary"
-                class="mb-6"
-                @click="toggleSocialWorkerDialog(true)"
-              >
-                Social Worker
-              </v-btn>
-              <v-text-field
-                prepend-inner-icon="mdi-magnify"
-                label="Search Patient"
-                single-line
-                hide-details
-                variant="outlined"
-                density="compact"
-                v-model="swaSearch"
-                style="max-width: 400px"
-              ></v-text-field>
+              <div>
+                <v-btn
+                  v-if="props.isDar"
+                  color="secondary"
+                  @click="dialogs.swa.create = true"
+                  prepend-icon="mdi-folder-plus"
+                  >Create SWA Entry</v-btn
+                >
+                <v-btn
+                  v-if="
+                    authentication.access_rights.can_manage_social_worker &&
+                    !props.isDar
+                  "
+                  prepend-icon="mdi-filter"
+                  color="primary"
+                  class="mb-6"
+                  @click="toggleSocialWorkerDialog(true)"
+                >
+                  Generate Social Worker SWA
+                </v-btn>
+                <v-text-field
+                  prepend-inner-icon="mdi-magnify"
+                  label="Search Patient"
+                  single-line
+                  hide-details
+                  variant="outlined"
+                  density="compact"
+                  v-model="swaSearch"
+                  style="max-width: 400px"
+                ></v-text-field>
+              </div>
+
               <div
                 v-if="props.isDar"
                 class="d-flex align-center ga-2 justify-center"

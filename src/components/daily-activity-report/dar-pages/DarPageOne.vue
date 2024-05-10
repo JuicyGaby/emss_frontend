@@ -110,7 +110,7 @@
                   >Update Daily Activity Report</v-btn
                 >
               </v-col>
-              <!-- {{ darData }} -->
+              {{ darData }}
             </v-row>
           </v-form>
         </v-container>
@@ -135,7 +135,7 @@ import {
   caseType,
   contributor_type,
   mssClassification,
-  sourceOfReferral,
+  sourceOfReferral2,
   sectoralGroupingList,
   sex,
 } from "@/utils/constants";
@@ -234,7 +234,7 @@ const inputFields = {
       items: educationalAttainment,
       object: "patients",
     },
-    area: {
+    area_id: {
       label: "Area",
       formType: "select",
       items: area,
@@ -246,7 +246,7 @@ const inputFields = {
       items: departments,
       object: "darData",
     },
-    case_type: {
+    case_type_id: {
       label: "Case Type",
       formType: "autocomplete",
       items: caseType,
@@ -297,10 +297,10 @@ const inputFields = {
       items: sectoralGroupingList,
       object: "darData",
     },
-    source_of_referral: {
+    source_of_referral_id: {
       label: "Source of Referral",
       formType: "select",
-      items: sourceOfReferral,
+      items: sourceOfReferral2,
       object: "darData",
     },
     referring_party: {
