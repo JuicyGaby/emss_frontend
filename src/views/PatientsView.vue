@@ -93,7 +93,8 @@
     >
       <v-card class="">
         <v-card-text class="pa-0">
-          <v-toolbar color="secondary">
+          <v-toolbar color="secondary" class="px-5">
+            <v-icon>mdi-pencil</v-icon>
             <v-toolbar-title> Edit Patient Assesment </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon="mdi-close" @click="editDialog = !editDialog"></v-btn>
