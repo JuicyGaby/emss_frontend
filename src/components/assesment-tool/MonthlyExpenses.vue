@@ -178,7 +178,7 @@ const inputFields = ref({
       type: "text",
     },
     food_water_cost: {
-      label: "Food and Water Cost",
+      label: "Food Cost",
       inputType: "Number",
       rules: [inputRules.invalidNegative],
       type: "text",

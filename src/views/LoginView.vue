@@ -193,9 +193,16 @@ onMounted(() => {
 .system-title {
   font-size: 4em;
   font-weight: 600;
+  padding: 0.5em;
   color: white;
   /* add text stroke */
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.8px);
+  -webkit-backdrop-filter: blur(3.8px);
 }
 .sign-in-container {
   background-image: url("/src/assets/facade-perspective.jpg");
