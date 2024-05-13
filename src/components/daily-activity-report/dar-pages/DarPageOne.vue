@@ -251,7 +251,7 @@ const inputFields = {
       items: caseType,
       object: "darData",
     },
-    indirect_contributor: {
+    contributor_type: {
       label: "Contributor type",
       formType: "select",
       items: contributor_type,
