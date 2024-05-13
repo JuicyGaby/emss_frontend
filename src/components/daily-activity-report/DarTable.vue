@@ -30,7 +30,7 @@
                       prepend-icon="mdi-folder-plus"
                       @click="dialogs.dar.create = true"
                       class="mb-6"
-                      style="width: 200px"
+                      style="width: 400px"
                       >Create DAR Entry</v-btn
                     >
                   </div>
@@ -134,7 +134,7 @@
               {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
             </h1>
             <div class="ma-3 d-flex justify-space-between align-center">
-              <div style="width: 400px">
+              <div style="width: 400px" class="d-flex flex-column ga-5">
                 <v-btn
                   v-if="props.isDar"
                   color="secondary"
@@ -162,7 +162,6 @@
                   variant="outlined"
                   density="compact"
                   v-model="swaSearch"
-                  style="max-width: 400px"
                 ></v-text-field>
               </div>
 
