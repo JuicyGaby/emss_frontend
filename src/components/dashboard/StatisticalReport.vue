@@ -37,7 +37,9 @@
               </v-row>
             </v-container>
           </v-window-item>
-          <v-window-item :value="2"> Two </v-window-item>
+          <v-window-item :value="2">
+            
+          </v-window-item>
           <v-window-item :value="3"> Three </v-window-item>
           <v-window-item :value="4"> Four </v-window-item>
           <v-window-item :value="5"> Five </v-window-item>

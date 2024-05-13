@@ -15,21 +15,27 @@
             </v-col>
           </v-row>
           <v-row class="">
-            <v-col cols="12" class="d-flex justify-end">
+            <v-col cols="6">
+              <v-btn
+                color="secondary"
+                @click="dialogs.statisticalReportActive = true"
+                >Generate Statistical Report</v-btn
+              >
+            </v-col>
+            <v-col cols="6" class="d-flex justify-end">
               <div class="d-flex justify-center ga-2">
                 <v-select
                   v-model="userInputs.month"
                   :items="inputFields.month.items"
                   :label="inputFields.month.label"
                   variant="outlined"
-                  density="comfortable"
+                  density="compact"
                   style="width: 200px"
                   class="mb-2"
                 ></v-select>
                 <v-btn
                   prepend-icon="mdi-calendar"
                   color="grey"
-                  size="large"
                   @click="generateMonthlyReportData"
                   >Select Month</v-btn
                 >
@@ -65,13 +71,6 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12">
-              <v-btn
-                color="secondary"
-                @click="dialogs.statisticalReportActive = true"
-                >Generate Statistical Report</v-btn
-              >
-            </v-col>
             <v-col cols="12">
               <DarTable :isDar="false" />
             </v-col>

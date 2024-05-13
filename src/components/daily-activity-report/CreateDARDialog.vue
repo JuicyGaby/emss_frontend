@@ -71,7 +71,7 @@
                   >Create Patient</v-btn
                 >
               </v-card-actions>
-              {{ patientCreationData }}
+              <!-- {{ patientCreationData }} -->
             </v-container>
           </v-card-text>
         </v-window-item>
@@ -103,8 +103,8 @@
                   >
                 </v-col>
               </v-row>
-              <v-row v-if="patients && patients.length > 0" class="ma-0">
-                <v-form ref="createDARForm">
+              <v-form ref="createDARForm">
+                <v-row v-if="patients && patients.length > 0" class="ma-0">
                   <v-col cols="12" class="ma-0 pa-0 d-flex flex-wrap ga-1">
                     <v-select
                       label="Patient Name"
@@ -113,21 +113,23 @@
                       item-value="id"
                       variant="outlined"
                       density="compact"
-                      style="width: 530px"
+                      style="width: 550px"
                       v-model="darData.patient_id"
                       :rules="[inputRules.required]"
                     ></v-select>
                   </v-col>
-                  <v-card-actions class="justify-end">
-                    <v-btn
-                      color="secondary"
-                      prepend-icon="mdi-book-plus"
-                      @click="createDARItem(true)"
-                      >Create Report</v-btn
-                    >
-                  </v-card-actions>
-                </v-form>
-              </v-row>
+                  <v-col cols="12">
+                    <v-card-actions class="justify-end">
+                      <v-btn
+                        color="secondary"
+                        prepend-icon="mdi-book-plus"
+                        @click="createDARItem(true)"
+                        >Create Report</v-btn
+                      >
+                    </v-card-actions>
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-container>
           </v-card-text>
         </v-window-item>
