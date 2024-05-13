@@ -45,5 +45,8 @@ onMounted(() => {
 .app-main {
   width: 100%;
 }
+.red-border {
+  border: 1px solid red;
+}
 /* create a class for sticky */
 </style>
