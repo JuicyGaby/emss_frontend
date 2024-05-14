@@ -9,13 +9,16 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: IndexView,
+      meta: {
+        title: "EMSS Dashboard",
+      },
     },
     {
       path: "/login",
       name: "login",
       component: LoginView,
       meta: {
-        title: "Login",
+        title: "EMSS Login",
       },
     },
     {
@@ -32,6 +35,9 @@ const router = createRouter({
       path: "/patients",
       name: "patients",
       component: () => import("../views/PatientsView.vue"),
+      meta: {
+        title: "Assessment Tool",
+      },
     },
     {
       path: "/EditPatient/:id",
