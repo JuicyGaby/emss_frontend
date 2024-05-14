@@ -60,7 +60,7 @@
               <v-card height="auto">
                 <v-toolbar rounded :color="item.toolBarColor" class="px-5">
                   <v-icon size="x-large" class="mr-4">{{ item.icon }}</v-icon>
-                  <h2>{{ userInputs.month }}'s {{ item.title }}</h2>
+                  <h2>Month of {{ userInputs.month }} {{ item.title }}</h2>
                 </v-toolbar>
                 <v-card-text class="d-flex justify-center align-center">
                   <h1 class="text-h3">
