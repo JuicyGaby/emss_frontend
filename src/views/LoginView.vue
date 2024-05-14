@@ -218,27 +218,4 @@ onMounted(() => {
 .alert {
   visibility: hidden;
 }
-.visible {
-  visibility: visible;
-}
-.sign-in-container {
-  height: 100vh;
-  width: 100%;
-  padding: 1.5em;
-}
-.login-box {
-  margin-right: 2em;
-  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
-  background-color: white;
-  padding: 1em;
-  height: 80%;
-  width: 30%;
-  border-radius: 15px;
-  /* border: 1px solid blue; */
-}
-.display {
-  margin-left: 0em;
-  width: 100%;
-  padding: 1em;
-}
 </style>
