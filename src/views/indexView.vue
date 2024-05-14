@@ -33,12 +33,6 @@
                   style="width: 200px"
                   class="mb-2"
                 ></v-select>
-                <v-btn
-                  prepend-icon="mdi-calendar"
-                  color="grey"
-                  @click="generateMonthlyReportData"
-                  >Select Month</v-btn
-                >
               </div>
             </v-col>
             <v-col cols="4" v-for="(item, index) in userCards" :key="index">
@@ -87,14 +81,15 @@
     persistent
     transition="dialog-transition"
   >
-    <StatisticalReport @closeDialog="toggleDialog" />
+    <StatisticalReport @closeDialog="toggleDialog"></StatisticalReport>
   </v-dialog>
   <snackBars :snackBarData="snackBarData" />
 </template>
+
 <script setup>
 import moment from "moment";
 import { userAuthentication } from "@/stores/session";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { handleSnackBar, monthsOfYear } from "@/utils/constants";
 // components
 import snackBars from "@/components/dialogs/snackBars.vue";
@@ -102,7 +97,6 @@ import DarTable from "@/components/daily-activity-report/DarTable.vue";
 import StatisticalReport from "@/components/dashboard/StatisticalReport.vue";
 import { generateMonthlyReport } from "../api/statistical-report";
 const authentication = userAuthentication();
-const accessRights = authentication.access_rights;
 const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
 const currentDate = moment().format("MMMM Do YYYY");
 const currentMonth = moment().format("MMMM");
@@ -112,6 +106,14 @@ const userInputs = ref({
   creator_id: authentication.user.id,
   month: currentMonth,
 });
+
+// triggers when dashboard month changes
+watch(
+  () => userInputs.value.month,
+  async () => {
+    await generateMonthlyReportData();
+  }
+);
 const dialogs = ref({
   statisticalReportActive: false,
 });
