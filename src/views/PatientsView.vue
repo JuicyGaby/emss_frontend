@@ -65,7 +65,7 @@
     <v-dialog persistent v-model="createDialog" width="auto">
       <v-card>
         <v-toolbar color="secondary">
-          <v-toolbar-title> Initial Assesment </v-toolbar-title>
+          <v-toolbar-title> Initial Assessment </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon @click="toggleCreateDialog">
             <v-icon>mdi-close</v-icon>
