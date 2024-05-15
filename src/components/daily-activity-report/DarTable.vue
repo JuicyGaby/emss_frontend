@@ -455,7 +455,6 @@ const getSocialWorkerDarItemsByMonth = async (data, isDar) => {
     return;
   }
   setTimeout(() => {
-    dialogs.value.socialWorker.view = false;
     swaItems.value = data;
   }, 500);
 };

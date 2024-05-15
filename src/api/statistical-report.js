@@ -62,8 +62,8 @@ export const getSocialWorkerMonthlySwaEntries = async (body) => {
     },
     body: JSON.stringify(body),
   });
-  const data = await response.json();
-  return data;
+  const { swaEntries, report } = await response.json();
+  return { swaEntries, report };
 };
 export const getMonthlyStatisticalReport = async (body) => {
   const API_URL = `${BASE_URL}/emss/get-monthly-statistical-report`;

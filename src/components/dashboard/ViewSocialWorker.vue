@@ -49,9 +49,10 @@
                     density="compact"
                     :color="item.color"
                   >
-                    <v-toolbar-title class="mx-0 px-5">{{
-                      item.label
-                    }}</v-toolbar-title>
+                    <v-toolbar-title class="mx-0 px-5">
+                      <v-icon>{{ item.icon }}</v-icon>
+                      {{ item.label }}</v-toolbar-title
+                    >
                   </v-toolbar>
                   <v-card-text class="d-flex justify-center align-center">
                     <h1 class="text-h3">{{ item.value }}</h1>
@@ -165,21 +166,23 @@ const getSocialWorkerMonthlyDarItems = async () => {
 const getSocialWorkerMonthlySwaItems = async () => {
   const isValid = await validateForm(form);
   if (!isValid) return;
-  const response = await getSocialWorkerMonthlySwaEntries(userInputs.value);
-  if (response) {
-    socialWorkerMonthlySwaItems.value = response;
+  const { swaEntries, report } = await getSocialWorkerMonthlySwaEntries(
+    userInputs.value
+  );
+  if (swaEntries) {
+    socialWorkerMonthlySwaItems.value = swaEntries;
     snackBarData.value = handleSnackBar(
       "primary",
-      `fetched ${response.length} items`
+      `fetched ${swaEntries.length} items`
     );
-
+    getSocialWorkerStatistics(report);
+    isSocialWorkerGenerated.value = true;
     emit("generateData", socialWorkerMonthlySwaItems.value, false);
   }
 };
 const getSocialWorkers = async () => {
   const response = await getUsersBySystemId();
   if (response) {
-    console.log("response", response);
     inputFields.social_worker.items = response;
   }
 };
@@ -193,7 +196,6 @@ const getSocialWorkerStatistics = (data) => {
 
 onMounted(async () => {
   await getSocialWorkers();
-  console.log("swa?", props.isDar);
 });
 </script>
 <style lang=""></style>
