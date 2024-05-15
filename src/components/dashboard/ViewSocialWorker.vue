@@ -32,7 +32,11 @@
                   style="width: 200px"
                 ></v-autocomplete>
               </v-col>
-              <v-col cols="12" class="d-flex align-center justify-center">
+              <v-col
+                v-if="isSocialWorkerGenerated"
+                cols="12"
+                class="d-flex align-center justify-center"
+              >
                 <v-card
                   v-for="(item, index) in userStatistics"
                   class="mx-10"
@@ -45,7 +49,6 @@
                     density="compact"
                     :color="item.color"
                   >
-                    
                     <v-toolbar-title class="mx-0 px-5">{{
                       item.label
                     }}</v-toolbar-title>
@@ -104,6 +107,7 @@ const form = ref(null);
 const snackBarData = ref({});
 const socialWorkerMonthlyDarItems = ref([]);
 const socialWorkerMonthlySwaItems = ref([]);
+const isSocialWorkerGenerated = ref(false);
 
 const userInputs = ref({
   creator_id: null,
@@ -144,14 +148,17 @@ const userStatistics = ref({
 const getSocialWorkerMonthlyDarItems = async () => {
   const isValid = await validateForm(form);
   if (!isValid) return;
-  const response = await getSocialWorkerMonthlyDarEntries(userInputs.value);
-  if (response) {
-    socialWorkerMonthlyDarItems.value = response;
+  const { darEntries, report } = await getSocialWorkerMonthlyDarEntries(
+    userInputs.value
+  );
+  if (darEntries) {
+    socialWorkerMonthlyDarItems.value = darEntries;
     snackBarData.value = handleSnackBar(
       "primary",
-      `fetched ${response.length} items`
+      `fetched ${darEntries.length} item/s`
     );
-
+    getSocialWorkerStatistics(report);
+    isSocialWorkerGenerated.value = true;
     emit("generateData", socialWorkerMonthlyDarItems.value, true);
   }
 };
@@ -175,6 +182,13 @@ const getSocialWorkers = async () => {
     console.log("response", response);
     inputFields.social_worker.items = response;
   }
+};
+const getSocialWorkerStatistics = (data) => {
+  const { social_worker } = data;
+  userStatistics.value.dar.value = social_worker.darCount;
+  userStatistics.value.swa.value = social_worker.swaCount;
+  userStatistics.value.assessedPatient.value =
+    social_worker.patientAssessedCount;
 };
 
 onMounted(async () => {

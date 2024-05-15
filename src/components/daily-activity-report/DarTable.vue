@@ -450,7 +450,6 @@ const getSocialWorkerDarItemsByMonth = async (data, isDar) => {
   // make a two seconds interval to fetch the data
   if (isDar) {
     setTimeout(() => {
-      dialogs.value.socialWorker.view = false;
       patients.value = data;
     }, 500);
     return;
