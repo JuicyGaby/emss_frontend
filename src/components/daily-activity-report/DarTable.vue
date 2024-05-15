@@ -275,7 +275,7 @@
       />
     </v-dialog>
     <!-- view social worker dialog -->
-    <v-dialog persistent v-model="dialogs.socialWorker.view" width="800px">
+    <v-dialog persistent v-model="dialogs.socialWorker.view" width="1300px">
       <ViewSocialWorker
         :isDar="isDar"
         @closeDialog="dialogs.socialWorker.view = false"

@@ -32,6 +32,29 @@
                   style="width: 200px"
                 ></v-autocomplete>
               </v-col>
+              <v-col cols="12" class="d-flex align-center justify-center">
+                <v-card
+                  v-for="(item, index) in userStatistics"
+                  class="mx-10"
+                  :key="index"
+                  height="auto"
+                  width="auto"
+                >
+                  <v-toolbar
+                    class="pa-0 mx-0"
+                    density="compact"
+                    :color="item.color"
+                  >
+                    
+                    <v-toolbar-title class="mx-0 px-5">{{
+                      item.label
+                    }}</v-toolbar-title>
+                  </v-toolbar>
+                  <v-card-text class="d-flex justify-center align-center">
+                    <h1 class="text-h3">{{ item.value }}</h1>
+                  </v-card-text>
+                </v-card>
+              </v-col>
               <v-col cols="12" class="px-0 d-flex justify-end">
                 <v-card-actions>
                   <v-btn
@@ -96,6 +119,26 @@ const inputFields = reactive({
     items: monthsOfYear,
   },
 });
+const userStatistics = ref({
+  dar: {
+    label: "Daily Activity Report Entries Count",
+    color: "green",
+    icon: "mdi-notebook-check",
+    value: 0,
+  },
+  swa: {
+    label: "Social Worker Activity Entries Count",
+    color: "orange",
+    icon: "mdi-notebook-check-outline",
+    value: 0,
+  },
+  assessedPatient: {
+    label: "Assessed Patient Count",
+    color: "blue",
+    icon: "mdi-account-multiple",
+    value: 0,
+  },
+});
 
 // async functions
 const getSocialWorkerMonthlyDarItems = async () => {
@@ -129,6 +172,7 @@ const getSocialWorkerMonthlySwaItems = async () => {
 const getSocialWorkers = async () => {
   const response = await getUsersBySystemId();
   if (response) {
+    console.log("response", response);
     inputFields.social_worker.items = response;
   }
 };
