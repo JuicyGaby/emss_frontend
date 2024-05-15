@@ -56,7 +56,9 @@
                   </v-data-table>
                 </v-card-text>
               </v-card>
-              <h2 class="my-5">II. Social Work Case Management Services</h2>
+              <h2 class="my-5">
+                II. Social Work Administration Services and Activities
+              </h2>
               <v-select
                 chips
                 multiple
