@@ -559,6 +559,9 @@ const toggleSocialWorkerDialog = (isSwa) => {
 onMounted(async () => {
   await getDarItems();
   await getSwaItems();
+  if (!props.isDar) {
+    await getDarItemsByMonth();
+  }
 });
 // view social worker
 </script>
