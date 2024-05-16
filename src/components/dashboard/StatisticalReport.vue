@@ -37,9 +37,7 @@
               </v-row>
             </v-container>
           </v-window-item>
-          <v-window-item :value="2">
-            
-          </v-window-item>
+          <v-window-item :value="2"> </v-window-item>
           <v-window-item :value="3"> Three </v-window-item>
           <v-window-item :value="4"> Four </v-window-item>
           <v-window-item :value="5"> Five </v-window-item>
@@ -78,9 +76,9 @@ const dataTables = ref({
     headers: [
       { title: "Referring Party", value: "name" },
       { title: "IP", value: "area_1_count" },
-      { title: "OPD", value: "area_3_count" },
-      { title: "ER", value: "area_4_count" },
-      { title: "Total", value: "total" },
+      { title: "OPD", value: "area_2_count" },
+      { title: "ER", value: "area_3_count" },
+      { title: "Total", value: "total_count" },
     ],
     items: [],
   },
@@ -90,6 +88,7 @@ const fetchMonthlyStatisticalReport = async () => {
   const response = await getMonthlyStatisticalReport(userInputs.value);
   if (response) {
     const { sourceOfReferral } = response;
+    console.log(sourceOfReferral);
     dataTables.value.sourceOfReferral.items = sourceOfReferral;
   }
 };
