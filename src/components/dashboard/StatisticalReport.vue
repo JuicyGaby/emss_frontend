@@ -39,9 +39,31 @@
           </v-window-item>
           <v-window-item :value="2"> </v-window-item>
           <v-window-item :value="3"> Three </v-window-item>
-          <v-window-item :value="4"> Four </v-window-item>
+          <v-window-item :value="4">
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-data-table
+                    :headers="dataTables.darServices.headers"
+                    :items="dataTables.darServices.items"
+                  ></v-data-table>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-window-item>
           <v-window-item :value="5"> Five </v-window-item>
-          <v-window-item :value="6"> Six </v-window-item>
+          <v-window-item :value="6">
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-data-table
+                    :headers="dataTables.socialWorkAdministration.headers"
+                    :items="dataTables.socialWorkAdministration.items"
+                  ></v-data-table>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-window-item>
         </v-window>
       </v-card-text>
     </v-card>
@@ -82,14 +104,30 @@ const dataTables = ref({
     ],
     items: [],
   },
+  darServices: {
+    headers: [
+      { title: "Particular", value: "service_name" },
+      { title: "Total", value: "count" },
+    ],
+    items: [],
+  },
+  socialWorkAdministration: {
+    headers: [
+      { title: "Particular", value: "service_name" },
+      { title: "Total", value: "count" },
+    ],
+    items: [],
+  },
 });
 
 const fetchMonthlyStatisticalReport = async () => {
   const response = await getMonthlyStatisticalReport(userInputs.value);
   if (response) {
-    const { sourceOfReferral } = response;
-    console.log(sourceOfReferral);
+    const { sourceOfReferral, socialWorkAdministration, darServices } =
+      response;
     dataTables.value.sourceOfReferral.items = sourceOfReferral;
+    dataTables.value.socialWorkAdministration.items = socialWorkAdministration;
+    dataTables.value.darServices.items = darServices;
   }
 };
 

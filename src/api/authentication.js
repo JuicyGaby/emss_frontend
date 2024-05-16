@@ -14,7 +14,7 @@ const getUserByToken = async (token) => {
 
 const getUsersBySystemId = async () => {
   const emssSystemId = 20;
-  const API_URL = `http://vsmmcsys2:3010/api/get_system_access?id=${emssSystemId}`;
+  const API_URL = `http://vsmmcsys2:3010/api/get_all_system_access?id=${emssSystemId}`;
   const response = await fetch(API_URL, {
     method: "GET",
   });
