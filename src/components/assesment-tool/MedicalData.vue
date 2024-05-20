@@ -39,7 +39,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { inputRules, validateForm, handleSnackBar } from "@/utils/constants";
+import { validateForm, handleSnackBar } from "@/utils/constants";
 import snackBars from "../dialogs/snackBars.vue";
 import { userAuthentication } from "@/stores/session";
 import {
@@ -53,10 +53,19 @@ const snackBarData = ref({});
 const props = defineProps({
   patientId: Number,
 });
+const inputRules = {
+  textArea: (v) => v === null || v.length <= 500 || "Max 500 characters",
+};
 
 const authentication = userAuthentication();
 
 const medicalData = ref({
+  admitting_diagnosis: "",
+  final_diagnosis: "",
+  duration_of_problems: "",
+  previous_treatment: "",
+  present_treatment_plan: "",
+  health_accessibility_problem: "",
   isExist: false,
   patient_id: props.patientId,
   social_worker: `${authentication.user.fname} ${authentication.user.lname}`,

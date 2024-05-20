@@ -86,6 +86,8 @@
               :headers="dataTable.headers"
               :items="patientsWithNumbers"
               :items-per-page="5"
+              style="border: 1px solid #e0e0e0"
+              
             >
               <template v-slot:[`item.operation`]="{ item }">
                 <div class="d-flex ga-5">
@@ -176,6 +178,7 @@
               :search="swaSearch"
               :headers="dataTable.swa.headers"
               :items-per-page="5"
+              style="border: 1px solid #e0e0e0"
               :items="swaItemsWithNumbers"
             >
               <template v-slot:[`item.operation`]="{ item }">
@@ -558,6 +561,7 @@ onMounted(async () => {
   await getDarItems();
   await getSwaItems();
   if (!props.isDar) {
+    await getSwaItemsByMonth();
     await getDarItemsByMonth();
   }
 });
