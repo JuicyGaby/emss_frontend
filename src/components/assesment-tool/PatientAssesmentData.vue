@@ -4,7 +4,7 @@
       <v-card>
         <v-toolbar color="secondary" class="pr-4">
           <v-toolbar-title>
-            Patient Assesment Data {{ props.patientId }}</v-toolbar-title
+            Patient Assesment Data</v-toolbar-title
           >
           <v-icon @click="closeDialog">mdi-close</v-icon>
         </v-toolbar>

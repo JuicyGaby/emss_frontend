@@ -30,7 +30,7 @@
                       prepend-icon="mdi-folder-plus"
                       @click="dialogs.dar.create = true"
                       class="mb-6"
-                      style="width: 200px"
+                      style="width: 400px"
                       >Create DAR Entry</v-btn
                     >
                   </div>
@@ -57,44 +57,26 @@
                     style="max-width: 400px"
                   ></v-text-field>
                 </div>
-                <div v-if="props.isDar" class="d-flex flex-column align-center">
-                  <div class="d-flex align-center ga-1">
-                    <v-text-field
-                      label="Date"
-                      style="width: 200px"
-                      type="date"
-                      variant="outlined"
-                      density="compact"
-                      v-model="dateInputs.dar"
-                    ></v-text-field>
-                    <v-btn
-                      color="grey"
-                      class="mb-6"
-                      @click="getDarItemByDate()"
-                      style="width: 200px"
-                      prepend-icon="mdi-calendar-range"
-                      >Filter By Day</v-btn
-                    >
-                  </div>
+                <div v-if="props.isDar">
+                  <v-text-field
+                    label="Filter By Date"
+                    style="width: 200px"
+                    type="date"
+                    variant="outlined"
+                    density="compact"
+                    v-model="dateInputs.dar"
+                  ></v-text-field>
                 </div>
                 <div v-else>
                   <div class="d-flex align-center ga-1">
                     <v-select
-                      label="Month"
+                      label="Filter By Month"
                       style="width: 200px"
                       variant="outlined"
                       density="compact"
                       :items="monthsOfYear"
                       v-model="dateInputs.dar_month"
                     ></v-select>
-                    <v-btn
-                      color="grey"
-                      class="mb-6"
-                      style="width: 200px"
-                      prepend-icon="mdi-calendar-range"
-                      @click="getDarItemsByMonth()"
-                      >Filter By Month</v-btn
-                    >
                   </div>
                 </div>
               </div>
@@ -134,7 +116,7 @@
               {{ dateInputs.current_date }} - {{ moment().format("dddd") }}
             </h1>
             <div class="ma-3 d-flex justify-space-between align-center">
-              <div style="width: 400px">
+              <div style="width: 400px" class="d-flex flex-column ga-5">
                 <v-btn
                   v-if="props.isDar"
                   color="secondary"
@@ -162,7 +144,6 @@
                   variant="outlined"
                   density="compact"
                   v-model="swaSearch"
-                  style="max-width: 400px"
                 ></v-text-field>
               </div>
 
@@ -171,37 +152,23 @@
                 class="d-flex align-center ga-2 justify-center"
               >
                 <v-text-field
+                  label="Filter By Date"
                   type="date"
                   variant="outlined"
                   density="compact"
                   v-model="dateInputs.swa"
                 ></v-text-field>
-                <v-btn
-                  color="grey"
-                  class="mb-6"
-                  @click="getDarSwaItemByDate()"
-                  prepend-icon="mdi-calendar-range"
-                  >Filter Date</v-btn
-                >
               </div>
               <div v-else>
                 <div class="d-flex align-center ga-1">
                   <v-select
-                    label="Month"
+                    label="Filter By Month"
                     style="width: 200px"
                     variant="outlined"
                     density="compact"
                     :items="monthsOfYear"
                     v-model="dateInputs.swa_month"
                   ></v-select>
-                  <v-btn
-                    color="grey"
-                    class="mb-6"
-                    style="width: 200px"
-                    prepend-icon="mdi-calendar-range"
-                    @click="getSwaItemsByMonth()"
-                    >Filter By Month</v-btn
-                  >
                 </div>
               </div>
             </div>
@@ -308,7 +275,7 @@
       />
     </v-dialog>
     <!-- view social worker dialog -->
-    <v-dialog persistent v-model="dialogs.socialWorker.view" width="800px">
+    <v-dialog persistent v-model="dialogs.socialWorker.view" width="1300px">
       <ViewSocialWorker
         :isDar="isDar"
         @closeDialog="dialogs.socialWorker.view = false"
@@ -333,7 +300,7 @@ import {
 import { getUsersBySystemId } from "@/api/authentication";
 import moment from "moment";
 import dynamicDialog from "@/components/dialogs/dialogs.vue";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { snackBarData, dialogData, monthsOfYear } from "@/utils/constants";
 import { userAuthentication } from "@/stores/session";
 // components
@@ -407,6 +374,31 @@ const dialogs = ref({
     view: false,
   },
 });
+const watchedDates = computed(() => {
+  return {
+    dar: dateInputs.value.dar,
+    swa: dateInputs.value.swa,
+    dar_month: dateInputs.value.dar_month,
+    swa_month: dateInputs.value.swa_month,
+  };
+});
+watch(
+  () => watchedDates.value,
+  async (newValues, oldValues) => {
+    if (newValues.dar !== oldValues.dar) {
+      await getDarItemByDate();
+    }
+    if (newValues.swa !== oldValues.swa) {
+      await getDarSwaItemByDate();
+    }
+    if (newValues.dar_month !== oldValues.dar_month) {
+      await getDarItemsByMonth();
+    }
+    if (newValues.swa_month !== oldValues.swa_month) {
+      await getSwaItemsByMonth();
+    }
+  }
+);
 
 // functions
 const getDarItems = async () => {
@@ -458,13 +450,11 @@ const getSocialWorkerDarItemsByMonth = async (data, isDar) => {
   // make a two seconds interval to fetch the data
   if (isDar) {
     setTimeout(() => {
-      dialogs.value.socialWorker.view = false;
       patients.value = data;
     }, 500);
     return;
   }
   setTimeout(() => {
-    dialogs.value.socialWorker.view = false;
     swaItems.value = data;
   }, 500);
 };
@@ -567,6 +557,9 @@ const toggleSocialWorkerDialog = (isSwa) => {
 onMounted(async () => {
   await getDarItems();
   await getSwaItems();
+  if (!props.isDar) {
+    await getDarItemsByMonth();
+  }
 });
 // view social worker
 </script>

@@ -1,357 +1,211 @@
-<template lang="">
-  <div>
-    <v-card>
-      <v-card-text>
-        <v-container>
-          <v-form ref="darForm">
-            <v-row class="">
-              <v-col cols="12" class="d-flex flex-wrap ga-2">
-                <!-- time fields -->
-                <v-text-field
-                  v-for="(field, key) in inputFields.part2.timeFields"
-                  :key="key"
-                  :label="field.label"
-                  variant="outlined"
-                  density="compact"
-                  type="time"
-                  style="width: 500px"
-                  v-model="darData[key]"
-                  :rules="[inputRules.required]"
-                ></v-text-field>
-                <v-text-field
-                  label="Admission Date"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  type="datetime-local"
-                  v-model="darData.admission_date"
-                  :rules="[inputRules.required]"
-                ></v-text-field>
-                <v-text-field
-                  v-for="(field, key) in inputFields.part1.textFields"
-                  :key="key"
-                  :label="field.label"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  :type="field.type"
-                  v-model="patientData[key]"
-                  :rules="[inputRules.required]"
-                ></v-text-field>
-                <v-combobox
-                  v-for="(field, key) in inputFields.part1.selectFields"
-                  :key="key"
-                  :label="field.label"
-                  :items="field.items"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  v-model="patientData[key]"
-                  autocomplete
-                  :rules="[inputRules.required]"
-                ></v-combobox>
-                <!-- dar values -->
-                <v-select
-                  v-for="(field, key) in inputFields.part1.darSelectFields"
-                  :key="key"
-                  :label="field.label"
-                  :items="field.items"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  autocomplete
-                  v-model="darData[key]"
-                  :rules="[inputRules.required]"
-                ></v-select>
-                <v-select
-                  v-for="(field, key) in inputFields.part1.titleValueFields"
-                  :key="key"
-                  :label="field.label"
-                  :items="field.items"
-                  item-title="title"
-                  item-value="value"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  autocomplete
-                  v-model="darData[key]"
-                  readonly
-                ></v-select>
-                <v-select
-                  v-for="(field, key) in inputFields.part2.selectFields"
-                  :key="key"
-                  :label="field.label"
-                  :items="field.items"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  v-model="darData[key]"
-                  autocomplete
-                  :rules="[inputRules.required]"
-                ></v-select>
-                <v-text-field
-                  v-for="(field, key) in inputFields.part2.textFields"
-                  :key="key"
-                  :label="field.label"
-                  variant="outlined"
-                  density="compact"
-                  style="width: 500px"
-                  :type="field.type"
-                  v-model="darData[key]"
-                  :rules="[inputRules.required]"
-                ></v-text-field>
-                <v-textarea
-                  label="Diagnosis"
-                  variant="outlined"
-                  style="width: 1000px"
-                  density="compact"
-                  :rules="[inputRules.required]"
-                  v-model="darData.diagnosis"
-                >
-                </v-textarea>
-                <v-textarea
-                  label="Remarks"
-                  variant="outlined"
-                  style="width: 1000px"
-                  density="compact"
-                  v-model="darData.remarks"
-                ></v-textarea>
-              </v-col>
-              <v-col>
+<template lang="" class="">
+  <div class="display rb sign-in-container d-flex align-center justify-end">
+    <div
+      class="login-box d-flex flex-column justify-center align-center elevation-3"
+    >
+      <div v-if="toggleAlert" class="w-100">
+        <v-alert
+          variant="tonal"
+          :type="isError ? 'error' : 'success'"
+          :text="
+            isError
+              ? 'Wrong credentials. Please try again'
+              : 'Welcome back! Your account was accessed successfully.'
+          "
+        ></v-alert>
+      </div>
+      <div class="w-100 d-flex flex-column align-center ga-5">
+        <img src="/src/assets/images/logo-css.png" class="vsmmc-logo my-10" />
+        <div class="input-field w-100">
+          <v-form ref="formLogin" class="d-flex flex-column ga-3">
+            <v-text-field
+              v-for="(item, index) in inputFields"
+              :key="index"
+              :label="item.label"
+              variant="outlined"
+              :rules="inputRules[index]"
+              v-model="userInput[index]"
+              :append-inner-icon="item.icon"
+              :type="item.type"
+              @click:append-inner="showPassword = !showPassword"
+              @keyup.enter="signIn"
+            ></v-text-field>
+            <v-hover>
+              <template v-slot:default="{ isHovering, props }">
                 <v-btn
-                  prepend-icon="mdi-update"
-                  color="secondary"
-                  @click="updateDailyActivityReportItem"
-                  >Update Daily Activity Report</v-btn
+                  class="elevation-3"
+                  append-icon="mdi-login"
+                  @keyup.enter="signIn"
+                  @click="signIn()"
+                  v-bind="props"
+                  size="x-large"
+                  :color="isHovering ? 'primary' : 'secondary'"
+                  color="w-100 mt-2"
+                  >Sign in</v-btn
                 >
-              </v-col>
-              <!-- {{ darData }} -->
-            </v-row>
+              </template>
+            </v-hover>
           </v-form>
-        </v-container>
-      </v-card-text>
-    </v-card>
+        </div>
+      </div>
+    </div>
   </div>
   <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
-import moment from "moment";
 import snackBars from "@/components/dialogs/snackBars.vue";
-import { ref, onMounted, watch } from "vue";
-import { inputRules, validateForm } from "@/utils/constants";
-import {
-  getDailyActivityReportById,
-  updateDailyActivityReport,
-} from "@/api/daily-activity-report";
-import { userAuthentication } from "@/stores/session";
-
-const props = defineProps({
-  dar_id: Number,
-});
-onMounted(async () => {
-  await fetchDarData();
-});
-
+import { handleSnackBar, validateForm } from "@/utils/constants";
+import { ref, defineProps, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { userLogin, getUserAccessRightsById } from "@/api/authentication";
+import { userAuthentication } from "../stores/session";
 const authentication = userAuthentication();
-const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
-const darForm = ref(null);
+const router = useRouter();
 
-const darData = ref({});
-const patientData = ref({});
-const tabValue = ref(0);
-const snackBarData = ref({
-  isVisible: false,
-  type: "",
-  text: "",
+const snackBarData = ref({});
+const userInput = ref({
+  system_id: 20,
 });
-const inputFields = {
-  part1: {
-    textFields: {
-      first_name: {
-        label: "First Name",
-      },
-      middle_name: {
-        label: "Middle Name",
-      },
-      last_name: {
-        label: "Last Name",
-      },
-      age: {
-        label: "Age",
-        type: "number",
-      },
-      occupation: {
-        label: "Occupation",
-      },
-      monthly_income: {
-        label: "Monthly Income",
-        type: "number",
-      },
-      religion: {
-        label: "Religion",
-      },
-    },
-    selectFields: {
-      sex: {
-        label: "Sex",
-        items: ["Male", "Female"],
-      },
-      civil_status: {
-        label: "Civil Status",
-        items: [
-          "Child",
-          "Single",
-          "Married",
-          "Widowed",
-          "Sep - In-Fact",
-          "Sep - Legal",
-          "CLP - Opposite Sex",
-          "CLP - Same Sex",
-        ],
-      },
-      highest_education_level: {
-        label: " Educational Attainment",
-        items: [
-          "Undergraduate",
-          "Elementary",
-          "High School",
-          "Vocational",
-          "College",
-          "Post Graduate",
-          "None",
-        ],
-      },
-    },
-    darSelectFields: {
-      area: {
-        label: "Area",
-        items: ["Basic Ward", "Non-Basic Ward", "OP", "ER/ED"],
-      },
-      case_type: {
-        label: "Case Type",
-        items: ["New Case", "Old Case", "Case Closed"],
-      },
-      indirect_contributor: {
-        label: "Contributor type",
-        items: [
-          "Indirect - POS",
-          "Indirect - Sponsored",
-          "Indirect - 4PS",
-          "Indirect - PWD",
-          "Indirect - SC",
-          "Direct - Lifetime",
-          "Direct - Employed",
-          "Direct - Voluntary",
-          "Direct - OFW",
-        ],
-      },
-    },
-    titleValueFields: {
-      is_phic_member: {
-        label: "PHIC Member",
-        items: [
-          { title: "Yes", value: 1 },
-          { title: "No", value: 0 },
-        ],
-      },
-      classification: {
-        label: "PHIC Classification",
-        items: [
-          { title: "Financially Capable - A", value: "A" },
-          { title: "Financially Capacitated - B", value: "B" },
-          { title: "Financially Incapable - C1", value: "C1" },
-          { title: "Financially Incapacitated - C2", value: "C2" },
-          { title: "Indigent - C3", value: "C3" },
-          { title: "Indigent - D", value: "D" },
-        ],
-      },
-    },
+const inputFields = ref({
+  username: {
+    label: "Usename",
+    type: "text",
   },
-  part2: {
-    textFields: {
-      house_hold_size: {
-        label: "Household Size",
-      },
-      informant: {
-        label: "Informant Name",
-      },
-      relationship_to_patient: {
-        label: "Relationship to Patient",
-      },
-    },
-    selectFields: {
-      sectoral_grouping: {
-        label: "Sectoral Grouping",
-        items: [
-          "SC",
-          "PWD",
-          "Solo Parent",
-          "IP",
-          "BHW",
-          "Brgy. Officials",
-          "Veterans",
-          "Health Worker",
-          "Government Worker",
-          "Custodial",
-          "Artisanal Fisherfolk",
-          "Farmer and Landless Rural Worker",
-          "Urban Poor",
-          "Formal Labor & Migrant Workers",
-          "Workers in Informal Sectors",
-          "Victims of Disaster & Calamity",
-          "Others",
-        ],
-      },
-      source_of_referral: {
-        label: "Source of Referral",
-        items: [
-          "Government Hospital",
-          "Private Hospitals/Clinics",
-          "Politicians",
-          "Media",
-          "Health Care Team",
-          "NGO’s/Private Welfare Agencies",
-          "Government Agencies",
-          "Walk – in",
-          "Others",
-        ],
-      },
-    },
-    timeFields: {
-      interview_start_time: {
-        label: "Interview Start Time",
-        type: "time",
-      },
-      interview_end_time: {
-        label: "Interview End Time",
-        type: "time",
-      },
-    },
+  password: {
+    label: "Password",
+    type: computed(() => (showPassword.value ? "text" : "password")),
+    icon: computed(() =>
+      showPassword.value ? "mdi-eye-off-outline" : "mdi-eye"
+    ),
   },
+});
+const inputRules = {
+  username: [
+    (v) => !!v || "Username is required",
+    (v) =>
+      (v && v.length >= 3 && v.length <= 20) ||
+      "Username must be between 3 and 20 characters",
+  ],
+  password: [(v) => !!v || "Password is required"],
 };
-const updateDailyActivityReportItem = async () => {
-  const isValid = await validateForm(darForm);
-  if (!isValid) return;
-  console.log("darData", darData.value);
-  const response = await updateDailyActivityReport(darData.value);
-  if (response) {
-    console.log("update", response);
-    handleSnackBar("success", "Daily Activity Report Updated");
+const formLogin = ref(null);
+const showPassword = ref(false);
+const toggleAlert = ref(false);
+const isError = ref(false);
+
+const signIn = async () => {
+  const formDataValid = await validateForm(formLogin);
+  if (!formDataValid) return;
+
+  const userResponse = await userLogin(userInput.value);
+  if (userResponse) {
+    await handleUserData(userResponse);
   }
 };
-const fetchDarData = async () => {
-  const response = await getDailyActivityReportById(props.dar_id);
-  darData.value = response;
-  if (!response.interview_start_time) {
-    darData.value.interview_start_time = moment().format("HH:mm");
+
+const handleUserData = async (userData) => {
+  const alertValid = await handleAlert(userData);
+  if (alertValid) {
+    handleAuthentication(userData);
   }
-  patientData.value = darData.value.patients;
-  darData.value.created_by = userFullName;
 };
-const handleSnackBar = (type, text) => {
-  snackBarData.value.isVisible = true;
-  snackBarData.value.type = type;
-  snackBarData.value.text = text;
+
+const handleAlert = async (userData) => {
+  if (userData.error) {
+    showErrorMessage();
+    return false;
+  }
+
+  const canAccess = await checkUserAccess(userData);
+  if (!canAccess) return false;
+
+  showSuccessMessage();
+  return true;
 };
+
+const handleAuthentication = (userData) => {
+  const { user } = userData;
+  authentication.setUserToken(user.login_token);
+  authentication.toggleLogIn(true);
+  authentication.setUser(user);
+  router.push("/");
+};
+
+const checkUserSession = () => {
+  if (authentication.isLoggedIn) {
+    router.push("/");
+  }
+};
+
+const checkUserAccess = async (userData) => {
+  const { user } = userData;
+  if (user.access.length !== 0) {
+    const accessRightId = user.access[0].access_right;
+    const accessRights = await getUserAccessRightsById(accessRightId);
+    authentication.setAccessRights(accessRights);
+    return true;
+  }
+
+  showNoAccessMessage();
+  return false;
+};
+
+const showErrorMessage = () => {
+  toggleAlert.value = true;
+  isError.value = true;
+};
+
+const showSuccessMessage = () => {
+  toggleAlert.value = true;
+  isError.value = false;
+};
+
+const showNoAccessMessage = () => {
+  snackBarData.value = handleSnackBar(
+    "error",
+    "You do not have access to this system. Please contact the administrator."
+  );
+};
+
+onMounted(() => {
+  checkUserSession();
+});
 </script>
-<style lang=""></style>
+
+<style lang="css" scoped>
+.sign-in-container {
+  background-image: url("/src/assets/facade-perspective.jpg");
+  background-size: cover;
+  background-position: center bottom 5%;
+}
+.vsmmc-logo {
+  width: 200px;
+  height: 200px;
+}
+.alert {
+  visibility: hidden;
+}
+.visible {
+  visibility: visible;
+}
+.sign-in-container {
+  height: 100vh;
+  width: 100%;
+  padding: 1.5em;
+}
+.login-box {
+  margin-right: 2em;
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+  background-color: white;
+  padding: 1em;
+  height: 80%;
+  width: 30%;
+  border-radius: 15px;
+  /* border: 1px solid blue; */
+}
+.display {
+  margin-left: 0em;
+  width: 100%;
+  padding: 1em;
+}
+</style>

@@ -18,7 +18,7 @@
           <v-card-text>
             <v-container>
               <v-row>
-                <v-form ref="createDARForm">
+                <v-form ref="createdPatientForm">
                   <v-col cols="12" class="py-0 d-flex flex-wrap ga-1">
                     <v-text-field
                       v-for="(item, index) in inputFields.creation.textFields"
@@ -37,6 +37,7 @@
                       density="compact"
                       style="width: 200px"
                       :items="inputFields.creation.sex.items"
+                      :rules="[inputRules.required]"
                       v-model="patientCreationData.sex"
                     ></v-select>
                     <v-select
@@ -44,6 +45,7 @@
                       variant="outlined"
                       density="compact"
                       style="width: 200px"
+                      :rules="[inputRules.required]"
                       :items="inputFields.creation.civil_status.items"
                       v-model="patientCreationData.civil_status"
                     ></v-select>
@@ -61,17 +63,17 @@
                       v-model="patientCreationData.highest_education_level"
                     ></v-select>
                   </v-col>
+                  <v-card-actions class="justify-end mt-5">
+                    <v-btn
+                      prepend-icon="mdi-book-plus"
+                      color="secondary"
+                      @click="createDARItem(false)"
+                      >Create Patient</v-btn
+                    >
+                  </v-card-actions>
                 </v-form>
               </v-row>
-              <v-card-actions class="justify-end mt-5">
-                <v-btn
-                  prepend-icon="mdi-book-plus"
-                  color="secondary"
-                  @click="createDARItem(false)"
-                  >Create Patient</v-btn
-                >
-              </v-card-actions>
-              {{ patientCreationData }}
+              <!-- {{ patientCreationData }} -->
             </v-container>
           </v-card-text>
         </v-window-item>
@@ -103,8 +105,8 @@
                   >
                 </v-col>
               </v-row>
-              <v-row v-if="patients && patients.length > 0" class="ma-0">
-                <v-form ref="createDARForm">
+              <v-form ref="createDARForm">
+                <v-row v-if="patients && patients.length > 0" class="ma-0">
                   <v-col cols="12" class="ma-0 pa-0 d-flex flex-wrap ga-1">
                     <v-select
                       label="Patient Name"
@@ -113,21 +115,23 @@
                       item-value="id"
                       variant="outlined"
                       density="compact"
-                      style="width: 530px"
+                      style="width: 550px"
                       v-model="darData.patient_id"
                       :rules="[inputRules.required]"
                     ></v-select>
                   </v-col>
-                  <v-card-actions class="justify-end">
-                    <v-btn
-                      color="secondary"
-                      prepend-icon="mdi-book-plus"
-                      @click="createDARItem(true)"
-                      >Create Report</v-btn
-                    >
-                  </v-card-actions>
-                </v-form>
-              </v-row>
+                  <v-col cols="12">
+                    <v-card-actions class="justify-end">
+                      <v-btn
+                        color="secondary"
+                        prepend-icon="mdi-book-plus"
+                        @click="createDARItem(true)"
+                        >Create Report</v-btn
+                      >
+                    </v-card-actions>
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-container>
           </v-card-text>
         </v-window-item>
@@ -163,6 +167,7 @@ import {
   sex,
   civilStatus,
   educationalAttainment,
+  validateForm,
   inputRules,
 } from "@/utils/constants";
 import { ref, onMounted, watch } from "vue";
@@ -191,7 +196,8 @@ const snackBarData = ref({
 
 const authentication = userAuthentication();
 const tabValue = ref(2);
-const createDARForm = ref(null);
+const createDARForm = ref(false);
+const createdPatientForm = ref(false);
 const searchPatientInput = ref({});
 const darData = ref({
   isExisting: true,
@@ -283,7 +289,10 @@ const handleCloseDialog = () => {
 };
 const createDARItem = async (isExisting) => {
   const data = isExisting ? darData.value : patientCreationData.value;
-  const isValid = await validateForm();
+  const isValid = await validateForm(
+    data.isExisting ? createDARForm : createdPatientForm
+  );
+  console.log(isValid);
   if (!isValid) return;
   const response = await createDailyActivityReport(data);
   if (response) {
@@ -292,12 +301,7 @@ const createDARItem = async (isExisting) => {
     emit("addDAR", "dar", response);
   }
 };
-const validateForm = async () => {
-  const form = await createDARForm.value.validate();
-  if (!form.valid) return false;
-  console.log("Form is valid");
-  return true;
-};
+
 const searchPatientData = async () => {
   const response = await searchPatient(searchPatientInput.value);
   if (response.length <= 0) {

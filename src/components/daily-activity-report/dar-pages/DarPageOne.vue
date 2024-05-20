@@ -87,7 +87,6 @@
                     variant="outlined"
                     density="compact"
                     style="width: 550px"
-                    :rules="[inputRules.required]"
                   ></v-autocomplete>
                 </v-template>
                 <v-template v-for="(item, index) in inputFields.textAreas">
@@ -110,7 +109,7 @@
                   >Update Daily Activity Report</v-btn
                 >
               </v-col>
-              {{ darData }}
+              <!-- {{ darData }} -->
             </v-row>
           </v-form>
         </v-container>
@@ -252,7 +251,7 @@ const inputFields = {
       items: caseType,
       object: "darData",
     },
-    indirect_contributor: {
+    contributor_type: {
       label: "Contributor type",
       formType: "select",
       items: contributor_type,

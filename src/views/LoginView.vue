@@ -1,54 +1,68 @@
 <template lang="" class="">
-  <div class="display rb sign-in-container d-flex align-center justify-end">
-    <div
-      class="login-box d-flex flex-column justify-center align-center elevation-3"
-    >
-      <div v-if="toggleAlert" class="w-100">
-        <v-alert
-          variant="tonal"
-          :type="isError ? 'error' : 'success'"
-          :text="
-            isError
-              ? 'Wrong credentials. Please try again'
-              : 'Welcome back! Your account was accessed successfully.'
-          "
-        ></v-alert>
-      </div>
-      <div class="w-100 d-flex flex-column align-center ga-5">
-        <img src="/src/assets/images/logo-css.png" class="vsmmc-logo my-10" />
-        <div class="input-field w-100">
-          <v-form ref="formLogin" class="d-flex flex-column ga-3">
-            <v-text-field
-              v-for="(item, index) in inputFields"
-              :key="index"
-              :label="item.label"
-              variant="outlined"
-              :rules="inputRules[index]"
-              v-model="userInput[index]"
-              :append-inner-icon="item.icon"
-              :type="item.type"
-              @click:append-inner="showPassword = !showPassword"
-              @keyup.enter="signIn"
-            ></v-text-field>
-            <v-hover>
-              <template v-slot:default="{ isHovering, props }">
-                <v-btn
-                  class="elevation-3"
-                  append-icon="mdi-login"
-                  @keyup.enter="signIn"
-                  @click="signIn()"
-                  v-bind="props"
-                  size="x-large"
-                  :color="isHovering ? 'primary' : 'secondary'"
-                  color="w-100 mt-2"
-                  >Sign in</v-btn
-                >
-              </template>
-            </v-hover>
-          </v-form>
-        </div>
-      </div>
-    </div>
+  <div class="sign-in-container">
+    <v-container>
+      <v-row style="height: 95vh" class="">
+        <v-col cols="8" class="d-flex align-center px-10">
+          <h1 class="system-title">
+            Electronic Medical <br />Social Service System
+          </h1>
+        </v-col>
+        <v-col cols="4" class="d-flex justify-center align-center">
+          <v-card width="100%" class="pa-5">
+            <v-card-text>
+              <div v-if="toggleAlert" class="w-100">
+                <v-alert
+                  variant="tonal"
+                  :type="isError ? 'error' : 'success'"
+                  :text="
+                    isError
+                      ? 'Wrong credentials. Please try again'
+                      : 'Welcome back! Your account was accessed successfully.'
+                  "
+                ></v-alert>
+              </div>
+              <div class="d-flex align-center justify-center">
+                <img
+                  src="/src/assets/images/logo-css.png"
+                  class="vsmmc-logo my-10"
+                />
+              </div>
+              <div class="input-field w-100">
+                <v-form ref="formLogin" class="d-flex flex-column ga-3">
+                  <v-text-field
+                    v-for="(item, index) in inputFields"
+                    :key="index"
+                    :label="item.label"
+                    variant="outlined"
+                    :rules="inputRules[index]"
+                    v-model="userInput[index]"
+                    :append-inner-icon="item.icon"
+                    :type="item.type"
+                    @click:append-inner="showPassword = !showPassword"
+                    @keyup.enter="signIn"
+                  ></v-text-field>
+                  <v-hover>
+                    <template v-slot:default="{ isHovering, props }">
+                      <v-btn
+                        class="elevation-3"
+                        append-icon="mdi-login"
+                        @keyup.enter="signIn"
+                        @click="signIn()"
+                        v-bind="props"
+                        size="x-large"
+                        :color="isHovering ? 'primary' : 'secondary'"
+                        color="w-100 mt-2"
+                        >Sign in</v-btn
+                      >
+                    </template>
+                  </v-hover>
+                </v-form>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
   <snackBars :snackBarData="snackBarData" />
 </template>
@@ -173,10 +187,29 @@ onMounted(() => {
 </script>
 
 <style lang="css" scoped>
+.red-border {
+  border: 1px dashed red;
+}
+.system-title {
+  font-size: 4em;
+  font-weight: 600;
+  padding: 0.5em;
+  color: white;
+  /* add text stroke */
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.8px);
+  -webkit-backdrop-filter: blur(3.8px);
+}
 .sign-in-container {
   background-image: url("/src/assets/facade-perspective.jpg");
   background-size: cover;
   background-position: center bottom 5%;
+  width: 100%;
+  height: 100vh;
 }
 .vsmmc-logo {
   width: 200px;
@@ -184,28 +217,5 @@ onMounted(() => {
 }
 .alert {
   visibility: hidden;
-}
-.visible {
-  visibility: visible;
-}
-.sign-in-container {
-  height: 100vh;
-  width: 100%;
-  padding: 1.5em;
-}
-.login-box {
-  margin-right: 2em;
-  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
-  background-color: white;
-  padding: 1em;
-  height: 80%;
-  width: 30%;
-  border-radius: 15px;
-  /* border: 1px solid blue; */
-}
-.display {
-  margin-left: 0em;
-  width: 100%;
-  padding: 1em;
 }
 </style>

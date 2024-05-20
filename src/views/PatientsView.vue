@@ -6,36 +6,33 @@
         <h1 class="">Assessment Tool</h1>
       </v-toolbar>
       <div class="ma-3 d-flex justify-space-between align-center">
-        <div class="">
+        <v-btn
+          color="secondary"
+          prepend-icon="mdi-account-plus"
+          @click="createDialog = !createDialog"
+          >Assess Patient</v-btn
+        >
+        <div class="d-flex ga-2">
+          <v-text-field
+            v-for="(item, key) in inputFields.search"
+            :key="key"
+            :label="item.label"
+            v-model="searchInput[key]"
+            density="compact"
+            style="width: 200px"
+            variant="outlined"
+            @keyup.enter="searchPatientData"
+          ></v-text-field>
           <v-btn
-            color="secondary"
-            prepend-icon="mdi-account-plus"
-            @click="createDialog = !createDialog"
-            >Assess Patient</v-btn
+            prepend-icon="mdi-account-search"
+            color="grey"
+            @click="searchPatientData"
+            :disabled="!searchInput.first_name && !searchInput.last_name"
           >
+            Search Patient
+          </v-btn>
+          <!-- {{ searchInput }} -->
         </div>
-        <v-form ref="searchForm">
-          <div class="d-flex ga-2">
-            <v-text-field
-              v-for="(item, key) in inputFields.search"
-              :key="key"
-              :label="item.label"
-              v-model="searchInput[key]"
-              density="compact"
-              style="width: 200px"
-              variant="outlined"
-              @keyup.enter="searchPatientData"
-            ></v-text-field>
-            <v-btn
-              color="grey"
-              @click="searchPatientData"
-              :disabled="!searchInput.first_name && !searchInput.last_name"
-            >
-              Search
-            </v-btn>
-            <!-- {{ searchInput }} -->
-          </div>
-        </v-form>
       </div>
       <v-divider></v-divider>
       <v-card-text class="d-flex align-end">
@@ -68,7 +65,7 @@
     <v-dialog persistent v-model="createDialog" width="auto">
       <v-card>
         <v-toolbar color="secondary">
-          <v-toolbar-title> Initial Assesment </v-toolbar-title>
+          <v-toolbar-title> Initial Assessment </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon @click="toggleCreateDialog">
             <v-icon>mdi-close</v-icon>
@@ -93,7 +90,8 @@
     >
       <v-card class="">
         <v-card-text class="pa-0">
-          <v-toolbar color="secondary">
+          <v-toolbar color="secondary" class="px-5">
+            <v-icon>mdi-pencil</v-icon>
             <v-toolbar-title> Edit Patient Assesment </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon="mdi-close" @click="editDialog = !editDialog"></v-btn>
@@ -279,9 +277,6 @@ async function fetchPatients() {
   }
 }
 async function searchPatientData() {
-  const isValid = await validateForm(searchForm);
-  if (!isValid) return;
-
   const patients = await searchPatient(searchInput.value);
   if (patients.length <= 0) {
     snackBarData.value = handleSnackBar("error", "No data found");

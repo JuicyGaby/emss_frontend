@@ -32,6 +32,33 @@
                   style="width: 200px"
                 ></v-autocomplete>
               </v-col>
+              <v-col
+                v-if="isSocialWorkerGenerated"
+                cols="12"
+                class="d-flex align-center justify-center"
+              >
+                <v-card
+                  v-for="(item, index) in userStatistics"
+                  class="mx-10"
+                  :key="index"
+                  height="auto"
+                  width="auto"
+                >
+                  <v-toolbar
+                    class="pa-0 mx-0"
+                    density="compact"
+                    :color="item.color"
+                  >
+                    <v-toolbar-title class="mx-0 px-5">
+                      <v-icon>{{ item.icon }}</v-icon>
+                      {{ item.label }}</v-toolbar-title
+                    >
+                  </v-toolbar>
+                  <v-card-text class="d-flex justify-center align-center">
+                    <h1 class="text-h3">{{ item.value }}</h1>
+                  </v-card-text>
+                </v-card>
+              </v-col>
               <v-col cols="12" class="px-0 d-flex justify-end">
                 <v-card-actions>
                   <v-btn
@@ -81,6 +108,7 @@ const form = ref(null);
 const snackBarData = ref({});
 const socialWorkerMonthlyDarItems = ref([]);
 const socialWorkerMonthlySwaItems = ref([]);
+const isSocialWorkerGenerated = ref(false);
 
 const userInputs = ref({
   creator_id: null,
@@ -96,33 +124,59 @@ const inputFields = reactive({
     items: monthsOfYear,
   },
 });
+const userStatistics = ref({
+  dar: {
+    label: "Daily Activity Report Entries Count",
+    color: "green",
+    icon: "mdi-notebook-check",
+    value: 0,
+  },
+  swa: {
+    label: "Social Worker Activity Entries Count",
+    color: "orange",
+    icon: "mdi-notebook-check-outline",
+    value: 0,
+  },
+  assessedPatient: {
+    label: "Assessed Patient Count",
+    color: "blue",
+    icon: "mdi-account-multiple",
+    value: 0,
+  },
+});
 
 // async functions
 const getSocialWorkerMonthlyDarItems = async () => {
   const isValid = await validateForm(form);
   if (!isValid) return;
-  const response = await getSocialWorkerMonthlyDarEntries(userInputs.value);
-  if (response) {
-    socialWorkerMonthlyDarItems.value = response;
+  const { darEntries, report } = await getSocialWorkerMonthlyDarEntries(
+    userInputs.value
+  );
+  if (darEntries) {
+    socialWorkerMonthlyDarItems.value = darEntries;
     snackBarData.value = handleSnackBar(
       "primary",
-      `fetched ${response.length} items`
+      `fetched ${darEntries.length} item/s`
     );
-
+    getSocialWorkerStatistics(report);
+    isSocialWorkerGenerated.value = true;
     emit("generateData", socialWorkerMonthlyDarItems.value, true);
   }
 };
 const getSocialWorkerMonthlySwaItems = async () => {
   const isValid = await validateForm(form);
   if (!isValid) return;
-  const response = await getSocialWorkerMonthlySwaEntries(userInputs.value);
-  if (response) {
-    socialWorkerMonthlySwaItems.value = response;
+  const { swaEntries, report } = await getSocialWorkerMonthlySwaEntries(
+    userInputs.value
+  );
+  if (swaEntries) {
+    socialWorkerMonthlySwaItems.value = swaEntries;
     snackBarData.value = handleSnackBar(
       "primary",
-      `fetched ${response.length} items`
+      `fetched ${swaEntries.length} items`
     );
-
+    getSocialWorkerStatistics(report);
+    isSocialWorkerGenerated.value = true;
     emit("generateData", socialWorkerMonthlySwaItems.value, false);
   }
 };
@@ -132,10 +186,16 @@ const getSocialWorkers = async () => {
     inputFields.social_worker.items = response;
   }
 };
+const getSocialWorkerStatistics = (data) => {
+  const { social_worker } = data;
+  userStatistics.value.dar.value = social_worker.darCount;
+  userStatistics.value.swa.value = social_worker.swaCount;
+  userStatistics.value.assessedPatient.value =
+    social_worker.patientAssessedCount;
+};
 
 onMounted(async () => {
   await getSocialWorkers();
-  console.log("swa?", props.isDar);
 });
 </script>
 <style lang=""></style>
