@@ -38,7 +38,26 @@
             </v-container>
           </v-window-item>
           <v-window-item :value="2"> </v-window-item>
-          <v-window-item :value="3"> Three </v-window-item>
+          <v-window-item :value="3">
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-data-table
+                    :headers="dataTables.origin.regionSeven.headers"
+                    :items="dataTables.origin.regionSeven.items"
+                  ></v-data-table>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-data-table
+                    :headers="dataTables.origin.otherRegion.headers"
+                    :items="dataTables.origin.otherRegion.items"
+                  ></v-data-table>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-window-item>
           <v-window-item :value="4">
             <v-container>
               <v-row>
@@ -51,7 +70,18 @@
               </v-row>
             </v-container>
           </v-window-item>
-          <v-window-item :value="5"> Five </v-window-item>
+          <v-window-item :value="5">
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-data-table
+                    :headers="dataTables.mswdClassification.headers"
+                    :items="dataTables.mswdClassification.items"
+                  ></v-data-table>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-window-item>
           <v-window-item :value="6">
             <v-container>
               <v-row>
@@ -111,6 +141,35 @@ const dataTables = ref({
     ],
     items: [],
   },
+  origin: {
+    regionSeven: {
+      headers: [
+        { title: "Region 7 Province", value: "province" },
+        { title: "IP", value: "area_1_count" },
+        { title: "OPD", value: "area_2_count" },
+        { title: "ER", value: "area_3_count" },
+        { title: "Total", value: "total_count" },
+      ],
+      items: [],
+    },
+    otherRegion: {
+      headers: [
+        { title: "Other Regions", value: "province" },
+        { title: "IP", value: "area_1_count" },
+        { title: "OPD", value: "area_2_count" },
+        { title: "ER", value: "area_3_count" },
+        { title: "Total", value: "total_count" },
+      ],
+      items: [],
+    },
+  },
+  mswdClassification: {
+    headers: [
+      { title: "Particular", value: "service_name" },
+      { title: "Total", value: "count" },
+    ],
+    items: [],
+  },
   socialWorkAdministration: {
     headers: [
       { title: "Particular", value: "service_name" },
@@ -123,11 +182,21 @@ const dataTables = ref({
 const fetchMonthlyStatisticalReport = async () => {
   const response = await getMonthlyStatisticalReport(userInputs.value);
   if (response) {
-    const { sourceOfReferral, socialWorkAdministration, darServices } =
-      response;
+    const {
+      sourceOfReferral,
+      socialWorkAdministration,
+      darServices,
+      mswdDocumentation,
+      regionSevenObject,
+      otherProviceObject,
+    } = response;
+
     dataTables.value.sourceOfReferral.items = sourceOfReferral;
     dataTables.value.socialWorkAdministration.items = socialWorkAdministration;
     dataTables.value.darServices.items = darServices;
+    dataTables.value.origin.regionSeven.items = regionSevenObject;
+    dataTables.value.origin.otherRegion.items = otherProviceObject;
+    dataTables.value.mswdClassification.items = mswdDocumentation;
   }
 };
 
