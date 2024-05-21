@@ -265,6 +265,9 @@
                 variant="outlined"
                 :label="field.label"
                 v-model="problemsInEnvironment[key]"
+                :type="field.type"
+                :rules="field.rules"
+                :counter="field.counter"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -291,7 +294,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import snackBars from "../dialogs/snackBars.vue";
-import { handleSnackBar } from "@/utils/constants";
+import { handleSnackBar, inputRules } from "@/utils/constants";
 import {
   getProblemsInEnvironment,
   createProblemsInEnvironment,
@@ -520,12 +523,21 @@ const inputFields = {
     },
     contact_number: {
       label: "Contact Number 1",
+      type: "number",
+      counter: 11,
+      rules: [inputRules.invalidNegative, inputRules.contactNumber],
     },
     contact_number_2: {
       label: "Contact Number 2",
+      type: "number",
+      counter: 11,
+      rules: [inputRules.invalidNegative, inputRules.contactNumber],
     },
     contact_number_3: {
       label: "Contact Number 3",
+      type: "number",
+      counter: 11,
+      rules: [inputRules.invalidNegative, inputRules.contactNumber],
     },
     interviewed_by: {
       label: "Interviewer",
