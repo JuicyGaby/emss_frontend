@@ -173,7 +173,7 @@ const dataTables = ref({
     },
     otherRegion: {
       headers: [
-        { title: "Other Regions", value: "province" },
+        { title: "Other Province", value: "province" },
         { title: "IP", value: "area_1_count" },
         { title: "OPD", value: "area_2_count" },
         { title: "ER", value: "area_3_count" },
