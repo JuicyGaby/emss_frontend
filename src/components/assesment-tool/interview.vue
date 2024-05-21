@@ -126,6 +126,7 @@ const inputFields = {
     label: "Informant Contact Number",
     type: "number",
     formType: "text",
+    counter: 11,
   },
   informant_address: {
     label: "Informant Address",

@@ -17,6 +17,7 @@
                 style="width: 400px"
                 :rules="value.rules"
                 v-model="interviewInputData[index]"
+                :counter="value.counter"
                 density="comfortable"
               ></v-text-field>
               <v-combobox
@@ -29,6 +30,18 @@
                 v-model="interviewInputData[index]"
                 density="comfortable"
               ></v-combobox>
+              <v-select
+                v-else-if="value.type === 'autocomplete'"
+                :key="'autocomplete-' + index"
+                :label="value.label"
+                :items="value.items"
+                item-title="title"
+                item-value="value"
+                variant="outlined"
+                style="width: 400px"
+                v-model="interviewInputData[index]"
+                density="comfortable"
+              ></v-select>
             </template>
           </v-col>
         </v-form>
@@ -50,8 +63,6 @@
           }}</v-btn
         >
       </v-card-actions>
-      <!-- {{ interviewInputData }} -->
-      <!-- {{ userFullName }} -->
     </v-container>
   </div>
   <snackBars :snackBarData="snackBarData" />
@@ -59,12 +70,21 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import moment from "moment";
+import { area, departments } from "@/utils/constants";
 import snackBars from "../dialogs/snackBars.vue";
 import { inputRules, validateForm, handleSnackBar } from "@/utils/constants";
 import { getInterview, updateInterview, interview } from "@/api/assesment-tool";
 import { userAuthentication } from "@/stores/session";
 
 const authentication = userAuthentication();
+const rules = {
+  // make a rule for a contact number containing 11 digits
+  contactNumber: (v) => {
+    if (v.length !== 11) return "Contact Number must be 11 digits";
+    return true;
+  },
+};
+
 const props = defineProps({
   patientId: Number,
 });
@@ -111,13 +131,15 @@ const inputFields = ref({
     type: "text",
     formType: "text",
   },
-  basic_ward: {
-    label: "Basic Ward",
-    type: "text",
+  area: {
+    label: "Area",
+    type: "select",
+    items: ["IP - Basic Ward", "IP - Non-Basic Ward", "OP", "ER/ED"],
   },
-  nonbasic_ward: {
-    label: "Non-Basic Ward",
-    type: "text",
+  department: {
+    label: "Department",
+    type: "select",
+    items: departments,
   },
   health_record_number: {
     label: "Health Record Number",
@@ -158,7 +180,8 @@ const inputFields = ref({
     label: "Referal Contact Number",
     type: "text",
     formType: "number",
-    rules: [inputRules.invalidNegative],
+    rules: [inputRules.contactNumber, inputRules.invalidNegative],
+    counter: 11,
   },
   informant: {
     label: "Informant",
@@ -183,7 +206,8 @@ const inputFields = ref({
     label: "Informant Contact Number",
     type: "text",
     formType: "number",
-    rules: [inputRules.invalidNegative],
+    rules: [inputRules.invalidNegative, inputRules.contactNumber],
+    counter: 11,
   },
   informant_address: {
     label: "Informant Address",
