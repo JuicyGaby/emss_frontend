@@ -35,6 +35,7 @@
                   density="compact"
                   v-model="patientData[key]"
                   :rules="value.rules"
+                  :counter="value.counter"
                 ></v-text-field>
                 <v-combobox
                   v-for="(value, key) in inputFields.personalData.comboField"
@@ -476,7 +477,9 @@ const inputFields = ref({
       },
       contact_number: {
         label: "Contact Number",
-        type: "text",
+        rules: [inputRules.invalidNegative, inputRules.contactNumber],
+        type: "number",
+        counter: 11,
       },
       occupation: {
         label: "Occupation",

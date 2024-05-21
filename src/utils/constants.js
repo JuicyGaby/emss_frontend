@@ -3,6 +3,7 @@ export const inputRules = {
   required: (v) => !!v || "This field is required",
   invalidNegative: (v) => v >= 0 || "Invalid negative inputs",
   contactNumber: (v) => {
+    if (!v) return true;
     if (v.length !== 11) return "Contact Number must be 11 digits";
     return true;
   },
