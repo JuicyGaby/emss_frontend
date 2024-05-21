@@ -103,8 +103,9 @@ const createMedicalDataItem = async () => {
   if (!isValid) return;
   const response = await createMedicalData(medicalData.value);
   if (response) {
+    medicalData.value = response;
     medicalData.value.isExist = true;
-    handleSnackBar("create");
+    snackBarData.value = handleSnackBar("success", "Medical Data Created");
   }
 };
 const updateMedicalDataItem = async () => {
