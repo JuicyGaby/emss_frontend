@@ -88,6 +88,13 @@
             v-model="totalCost"
           ></v-text-field>
         </v-col>
+        <v-col cols="12">
+          <v-textarea
+            label="Remarks"
+            variant="outlined"
+            v-model="userMonthlyExpenses.text.remarks"
+          ></v-textarea>
+        </v-col>
       </v-row>
       <v-row>
         <v-col cols="12">
@@ -333,6 +340,7 @@ const getMonthlyExpensesItem = async () => {
         light_source_type: response.light_source_type,
         fuel_source_type: response.fuel_source_type,
         water_source_type: response.water_source_type,
+        remarks: response.remarks,
       },
       social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
     };
