@@ -65,7 +65,7 @@ const inputFields = {
   area: {
     label: "Area",
     formType: "select",
-    items: area,
+    items: ["IP - Basic Ward", "IP - Non-Basic Ward", "OP", "ER/ED"],
   },
   departments: {
     label: "Department",
