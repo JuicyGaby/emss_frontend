@@ -67,7 +67,7 @@ const inputFields = {
     formType: "select",
     items: ["IP - Basic Ward", "IP - Non-Basic Ward", "OP", "ER/ED"],
   },
-  departments: {
+  department: {
     label: "Department",
     formType: "select",
     items: departments,
