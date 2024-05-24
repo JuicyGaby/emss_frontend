@@ -264,6 +264,12 @@ const updateMedicalData = async (body) => {
   const data = await response.json();
   return data;
 };
+const getMedicalDataById = async (id) => {
+  const API_URL = `${BASE_URL}/emss/medical-data-by-id/${id}`;
+  const response = await fetch(API_URL);
+  const data = await response.json();
+  return data;
+};
 
 // * health and mental health
 
@@ -459,6 +465,7 @@ export {
   getMedicalData,
   createMedicalData,
   updateMedicalData,
+  getMedicalDataById,
   // health and mental health
   getHealthAndMentalHealth,
   createHealthAndMentalHealth,

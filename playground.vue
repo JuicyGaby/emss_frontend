@@ -1,211 +1,125 @@
-<template lang="" class="">
-  <div class="display rb sign-in-container d-flex align-center justify-end">
-    <div
-      class="login-box d-flex flex-column justify-center align-center elevation-3"
-    >
-      <div v-if="toggleAlert" class="w-100">
-        <v-alert
-          variant="tonal"
-          :type="isError ? 'error' : 'success'"
-          :text="
-            isError
-              ? 'Wrong credentials. Please try again'
-              : 'Welcome back! Your account was accessed successfully.'
-          "
-        ></v-alert>
-      </div>
-      <div class="w-100 d-flex flex-column align-center ga-5">
-        <img src="/src/assets/images/logo-css.png" class="vsmmc-logo my-10" />
-        <div class="input-field w-100">
-          <v-form ref="formLogin" class="d-flex flex-column ga-3">
-            <v-text-field
-              v-for="(item, index) in inputFields"
-              :key="index"
-              :label="item.label"
-              variant="outlined"
-              :rules="inputRules[index]"
-              v-model="userInput[index]"
-              :append-inner-icon="item.icon"
-              :type="item.type"
-              @click:append-inner="showPassword = !showPassword"
-              @keyup.enter="signIn"
-            ></v-text-field>
-            <v-hover>
-              <template v-slot:default="{ isHovering, props }">
-                <v-btn
-                  class="elevation-3"
-                  append-icon="mdi-login"
-                  @keyup.enter="signIn"
-                  @click="signIn()"
-                  v-bind="props"
-                  size="x-large"
-                  :color="isHovering ? 'primary' : 'secondary'"
-                  color="w-100 mt-2"
-                  >Sign in</v-btn
-                >
-              </template>
-            </v-hover>
-          </v-form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <snackBars :snackBarData="snackBarData" />
-</template>
+<template lang="">
+   <div>
+     <v-container style="width: 1500px">
+       <h1>Medical Data</h1>
+       <v-divider class="mb-5"></v-divider>
+       <v-form ref="medicalDataForm">
+         <v-row>
+           <v-col cols="12" class="d-flex flex-wrap ga-2">
+             <v-textarea
+               v-for="(field, key) in inputFields"
+               :key="key"
+               :label="field.label"
+               variant="outlined"
+               v-model="medicalData[key]"
+               counter="500"
+               :rules="[inputRules.textArea]"
+               style="width: 500px"
+               density="comfortable"
+             ></v-textarea>
+           </v-col>
+         </v-row>
+       </v-form>
+       <v-btn
+         :prepend-icon="medicalData.isExist ? 'mdi-update' : 'mdi-content-save'"
+         color="secondary"
+         @click="
+           medicalData.isExist
+             ? updateMedicalDataItem()
+             : createMedicalDataItem()
+         "
+         >{{
+           medicalData.isExist ? "Update Medical Data" : "Create Medical Data"
+         }}</v-btn
+       >
+     </v-container>
+     <!-- {{ medicalData }} -->
+     <snackBars :snackBarData="snackBarData" />
+   </div>
+ </template>
 <script setup>
-import snackBars from "@/components/dialogs/snackBars.vue";
-import { handleSnackBar, validateForm } from "@/utils/constants";
-import { ref, defineProps, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { userLogin, getUserAccessRightsById } from "@/api/authentication";
-import { userAuthentication } from "../stores/session";
-const authentication = userAuthentication();
-const router = useRouter();
+import { ref, onMounted } from "vue";
+import { validateForm, handleSnackBar } from "@/utils/constants";
+import snackBars from "../dialogs/snackBars.vue";
+import { userAuthentication } from "@/stores/session";
+import {
+   getMedicalData,
+   createMedicalData,
+   updateMedicalData,
+} from "@/api/assesment-tool";
 
+const medicalDataForm = ref(null);
 const snackBarData = ref({});
-const userInput = ref({
-  system_id: 20,
-});
-const inputFields = ref({
-  username: {
-    label: "Usename",
-    type: "text",
-  },
-  password: {
-    label: "Password",
-    type: computed(() => (showPassword.value ? "text" : "password")),
-    icon: computed(() =>
-      showPassword.value ? "mdi-eye-off-outline" : "mdi-eye"
-    ),
-  },
+const props = defineProps({
+   patientId: Number,
 });
 const inputRules = {
-  username: [
-    (v) => !!v || "Username is required",
-    (v) =>
-      (v && v.length >= 3 && v.length <= 20) ||
-      "Username must be between 3 and 20 characters",
-  ],
-  password: [(v) => !!v || "Password is required"],
-};
-const formLogin = ref(null);
-const showPassword = ref(false);
-const toggleAlert = ref(false);
-const isError = ref(false);
-
-const signIn = async () => {
-  const formDataValid = await validateForm(formLogin);
-  if (!formDataValid) return;
-
-  const userResponse = await userLogin(userInput.value);
-  if (userResponse) {
-    await handleUserData(userResponse);
-  }
+   textArea: (v) => v === null || v.length <= 500 || "Max 500 characters",
 };
 
-const handleUserData = async (userData) => {
-  const alertValid = await handleAlert(userData);
-  if (alertValid) {
-    handleAuthentication(userData);
-  }
+const authentication = userAuthentication();
+
+const medicalData = ref({
+   admitting_diagnosis: "",
+   final_diagnosis: "",
+   duration_of_problems: "",
+   previous_treatment: "",
+   present_treatment_plan: "",
+   health_accessibility_problem: "",
+   isExist: false,
+   patient_id: props.patientId,
+   social_worker: `${authentication.user.fname} ${authentication.user.lname}`,
+});
+const inputFields = {
+   admitting_diagnosis: {
+      label: "Admitting Diagnosis",
+   },
+   final_diagnosis: {
+      label: "Final Diagnosis",
+   },
+   duration_of_problems: {
+      label: "Duration of Problems",
+   },
+   previous_treatment: {
+      label: "Previous Treatment",
+   },
+   present_treatment_plan: {
+      label: "Present Treatment Plan",
+   },
+   health_accessibility_problem: {
+      label: "Health Accessibility Problem",
+   },
+};
+const fetchMedicalData = async () => {
+   const response = await getMedicalData(props.patientId);
+   if (response) {
+      medicalData.value = response;
+      medicalData.value.isExist = true;
+      medicalData.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
+   }
+};
+const createMedicalDataItem = async () => {
+   const isValid = await validateForm(medicalDataForm);
+   if (!isValid) return;
+   const response = await createMedicalData(medicalData.value);
+   if (response) {
+      medicalData.value = response;
+      medicalData.value.isExist = true;
+      snackBarData.value = handleSnackBar("success", "Medical Data Created");
+   }
+};
+const updateMedicalDataItem = async () => {
+   const isValid = await validateForm(medicalDataForm);
+   if (!isValid) return;
+   const response = await updateMedicalData(medicalData.value);
+   if (response) {
+      // handleSnackBar("update");
+      snackBarData.value = handleSnackBar("success", "Medical Data Updated");
+   }
 };
 
-const handleAlert = async (userData) => {
-  if (userData.error) {
-    showErrorMessage();
-    return false;
-  }
-
-  const canAccess = await checkUserAccess(userData);
-  if (!canAccess) return false;
-
-  showSuccessMessage();
-  return true;
-};
-
-const handleAuthentication = (userData) => {
-  const { user } = userData;
-  authentication.setUserToken(user.login_token);
-  authentication.toggleLogIn(true);
-  authentication.setUser(user);
-  router.push("/");
-};
-
-const checkUserSession = () => {
-  if (authentication.isLoggedIn) {
-    router.push("/");
-  }
-};
-
-const checkUserAccess = async (userData) => {
-  const { user } = userData;
-  if (user.access.length !== 0) {
-    const accessRightId = user.access[0].access_right;
-    const accessRights = await getUserAccessRightsById(accessRightId);
-    authentication.setAccessRights(accessRights);
-    return true;
-  }
-
-  showNoAccessMessage();
-  return false;
-};
-
-const showErrorMessage = () => {
-  toggleAlert.value = true;
-  isError.value = true;
-};
-
-const showSuccessMessage = () => {
-  toggleAlert.value = true;
-  isError.value = false;
-};
-
-const showNoAccessMessage = () => {
-  snackBarData.value = handleSnackBar(
-    "error",
-    "You do not have access to this system. Please contact the administrator."
-  );
-};
-
-onMounted(() => {
-  checkUserSession();
+onMounted(async () => {
+   await fetchMedicalData();
 });
 </script>
-
-<style lang="css" scoped>
-.sign-in-container {
-  background-image: url("/src/assets/facade-perspective.jpg");
-  background-size: cover;
-  background-position: center bottom 5%;
-}
-.vsmmc-logo {
-  width: 200px;
-  height: 200px;
-}
-.alert {
-  visibility: hidden;
-}
-.visible {
-  visibility: visible;
-}
-.sign-in-container {
-  height: 100vh;
-  width: 100%;
-  padding: 1.5em;
-}
-.login-box {
-  margin-right: 2em;
-  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
-  background-color: white;
-  padding: 1em;
-  height: 80%;
-  width: 30%;
-  border-radius: 15px;
-  /* border: 1px solid blue; */
-}
-.display {
-  margin-left: 0em;
-  width: 100%;
-  padding: 1em;
-}
-</style>
+<style lang=""></style>

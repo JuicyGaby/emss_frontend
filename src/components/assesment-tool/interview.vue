@@ -65,9 +65,9 @@ const inputFields = {
   area: {
     label: "Area",
     formType: "select",
-    items: area,
+    items: ["IP - Basic Ward", "IP - Non-Basic Ward", "OP", "ER/ED"],
   },
-  departments: {
+  department: {
     label: "Department",
     formType: "select",
     items: departments,
@@ -126,6 +126,7 @@ const inputFields = {
     label: "Informant Contact Number",
     type: "number",
     formType: "text",
+    counter: 11,
   },
   informant_address: {
     label: "Informant Address",

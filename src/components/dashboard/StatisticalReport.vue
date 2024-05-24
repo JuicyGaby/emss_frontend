@@ -25,6 +25,7 @@
       </v-tabs>
       <v-card-text>
         <v-window v-model="tabData.tabValue">
+          <!-- source of referral -->
           <v-window-item :value="1">
             <v-container>
               <v-row>
@@ -32,12 +33,16 @@
                   <v-data-table
                     :headers="dataTables.sourceOfReferral.headers"
                     :items="dataTables.sourceOfReferral.items"
+                    :hover="true"
+                    style="border: 1px solid #e0e0e0"
                   ></v-data-table>
                 </v-col>
               </v-row>
             </v-container>
           </v-window-item>
+          <!-- caseload according to category and classification -->
           <v-window-item :value="2"> </v-window-item>
+          <!-- number of patients according to place of origin -->
           <v-window-item :value="3">
             <v-container>
               <v-row>
@@ -45,6 +50,8 @@
                   <v-data-table
                     :headers="dataTables.origin.regionSeven.headers"
                     :items="dataTables.origin.regionSeven.items"
+                    :hover="true"
+                    style="border: 1px solid #e0e0e0"
                   ></v-data-table>
                 </v-col>
               </v-row>
@@ -53,11 +60,14 @@
                   <v-data-table
                     :headers="dataTables.origin.otherRegion.headers"
                     :items="dataTables.origin.otherRegion.items"
+                    :hover="true"
+                    style="border: 1px solid #e0e0e0"
                   ></v-data-table>
                 </v-col>
               </v-row>
             </v-container>
           </v-window-item>
+          <!-- services -->
           <v-window-item :value="4">
             <v-container>
               <v-row>
@@ -65,11 +75,14 @@
                   <v-data-table
                     :headers="dataTables.darServices.headers"
                     :items="dataTables.darServices.items"
+                    :hover="true"
+                    style="border: 1px solid #e0e0e0"
                   ></v-data-table>
                 </v-col>
               </v-row>
             </v-container>
           </v-window-item>
+          <!-- msw documentation -->
           <v-window-item :value="5">
             <v-container>
               <v-row>
@@ -77,11 +90,15 @@
                   <v-data-table
                     :headers="dataTables.mswdClassification.headers"
                     :items="dataTables.mswdClassification.items"
+                    density="comfortable"
+                    :hover="true"
+                    style="border: 1px solid #e0e0e0"
                   ></v-data-table>
                 </v-col>
               </v-row>
             </v-container>
           </v-window-item>
+          <!-- social work administration -->
           <v-window-item :value="6">
             <v-container>
               <v-row>
@@ -89,6 +106,8 @@
                   <v-data-table
                     :headers="dataTables.socialWorkAdministration.headers"
                     :items="dataTables.socialWorkAdministration.items"
+                    :hover="true"
+                    style="border: 1px solid #e0e0e0"
                   ></v-data-table>
                 </v-col>
               </v-row>
@@ -154,7 +173,7 @@ const dataTables = ref({
     },
     otherRegion: {
       headers: [
-        { title: "Other Regions", value: "province" },
+        { title: "Other Province", value: "province" },
         { title: "IP", value: "area_1_count" },
         { title: "OPD", value: "area_2_count" },
         { title: "ER", value: "area_3_count" },
@@ -178,7 +197,6 @@ const dataTables = ref({
     items: [],
   },
 });
-
 const fetchMonthlyStatisticalReport = async () => {
   const response = await getMonthlyStatisticalReport(userInputs.value);
   if (response) {
@@ -199,7 +217,6 @@ const fetchMonthlyStatisticalReport = async () => {
     dataTables.value.mswdClassification.items = mswdDocumentation;
   }
 };
-
 onMounted(async () => {
   await fetchMonthlyStatisticalReport();
 });

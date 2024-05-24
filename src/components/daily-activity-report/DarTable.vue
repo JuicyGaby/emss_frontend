@@ -86,6 +86,7 @@
               :headers="dataTable.headers"
               :items="patientsWithNumbers"
               :items-per-page="5"
+              style="border: 1px solid #e0e0e0"
             >
               <template v-slot:[`item.operation`]="{ item }">
                 <div class="d-flex ga-5">
@@ -103,6 +104,7 @@
                     >mdi-note-text</v-icon
                   >
                   <v-icon
+                    v-if="item.creator_id === authentication.user.id"
                     color="error"
                     @click="updateDarStatusItemDialog(item.id)"
                     >mdi-delete</v-icon
@@ -176,6 +178,7 @@
               :search="swaSearch"
               :headers="dataTable.swa.headers"
               :items-per-page="5"
+              style="border: 1px solid #e0e0e0"
               :items="swaItemsWithNumbers"
             >
               <template v-slot:[`item.operation`]="{ item }">
@@ -188,7 +191,11 @@
                   <v-icon color="warning" @click="viewSwaActivityLogs(item.id)"
                     >mdi-note-text</v-icon
                   >
-                  <v-icon color="error">mdi-delete</v-icon>
+                  <v-icon
+                    v-if="item.creator_id === authentication.user.id"
+                    color="error"
+                    >mdi-delete</v-icon
+                  >
                 </div>
               </template>
             </v-data-table>
@@ -329,6 +336,7 @@ const darSearch = ref("");
 const swaSearch = ref("");
 const isDar = ref(true);
 const authentication = userAuthentication();
+const userFullName = `${authentication.user.fname} ${authentication.user.lname}`;
 // objects
 const dateInputs = ref({
   dar: moment().format("YYYY-MM-DD"),
@@ -558,6 +566,7 @@ onMounted(async () => {
   await getDarItems();
   await getSwaItems();
   if (!props.isDar) {
+    await getSwaItemsByMonth();
     await getDarItemsByMonth();
   }
 });

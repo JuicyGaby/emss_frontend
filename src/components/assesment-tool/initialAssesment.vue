@@ -217,8 +217,9 @@ const handleError = () => {
 };
 
 const validateInput = () => {
+  const { health_record_number } = dataReceived.interview;
   const { first_name, last_name } = dataReceived.demographicData;
-  if (!first_name || !last_name) {
+  if (!first_name || !last_name || !health_record_number) {
     handleError();
     return false;
   }

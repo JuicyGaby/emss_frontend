@@ -2,8 +2,17 @@ import { ref } from "vue";
 export const inputRules = {
   required: (v) => !!v || "This field is required",
   invalidNegative: (v) => v >= 0 || "Invalid negative inputs",
+  contactNumber: (v) => {
+    if (!v) return true;
+    if (v.length !== 11) return "Contact Number must be 11 digits";
+    return true;
+  },
   characters: (v) => v === null || v.length <= 50 || "Max 50 characters",
-  textArea: (v) => v === null || v.length <= 500 || "Max 500 characters",
+  textArea: (v) => {
+    if (!v) return true;
+    if (v.length <= 500) return true;
+    return "Max 500 characters";
+  },
   vselect: (v) => v.length > 0 || "This field is required",
 };
 
@@ -43,13 +52,13 @@ export const departments = [
   "Others",
 ];
 export const educationalAttainment = [
-  "Undergraduate",
-  "Elementary",
-  "High School",
+  "Early Childhood Education",
+  "Primary",
+  "Secondary",
+  "Tertiary",
   "Vocational",
-  "College",
   "Post Graduate",
-  "None",
+  "No educational attainment",
   "Not Applicable",
 ];
 export const educationStatus = [
@@ -212,6 +221,5 @@ export const handleSnackBar = (type, text) => {
   };
 };
 
-// export const API_URL = "http://172.16.1.46:4000";
-export const API_URL = "http://localhost:3000";
+// export const BASE_URL = "http://172.16.1.46:4000";
 export const BASE_URL = "http://localhost:3000";

@@ -235,6 +235,8 @@ const inputFields = ref({
 
 const tableHeaders = [
   // { title: "Date Created", value: "created_at" },
+
+  { title: "Date Created : ", value: "created_at" },
   { title: "Full Name", value: "fullname" },
   { title: "Age", value: "age" },
   { title: "Sex", value: "sex" },
