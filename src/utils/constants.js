@@ -8,7 +8,11 @@ export const inputRules = {
     return true;
   },
   characters: (v) => v === null || v.length <= 50 || "Max 50 characters",
-  textArea: (v) => v === null || v.length <= 500 || "Max 500 characters",
+  textArea: (v) => {
+    if (!v) return true;
+    if (v.length <= 500) return true;
+    return "Max 500 characters";
+  },
   vselect: (v) => v.length > 0 || "This field is required",
 };
 
