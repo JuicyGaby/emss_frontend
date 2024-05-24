@@ -52,13 +52,13 @@ export const departments = [
   "Others",
 ];
 export const educationalAttainment = [
-  "Undergraduate",
-  "Elementary",
-  "High School",
+  "Early Childhood Education",
+  "Primary",
+  "Secondary",
+  "Tertiary",
   "Vocational",
-  "College",
   "Post Graduate",
-  "None",
+  "No educational attainment",
   "Not Applicable",
 ];
 export const educationStatus = [
