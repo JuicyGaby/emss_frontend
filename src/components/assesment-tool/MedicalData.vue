@@ -390,6 +390,8 @@ const updateMedicalDataInput = ref({});
 const createMedicalDataItem = async () => {
   const isValid = await validateForm(medicalDataForm);
   if (!isValid) return;
+  medicalData.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
+  medicalData.value.activity = `Created Medical Data Entry : ${medicalData.value.medical_data_type}`;
   const response = await createMedicalData(medicalData.value);
   if (response) {
     pushMedicalDataItem(response);
@@ -424,7 +426,8 @@ const toggleUpdateMedicalDataDialog = async (id) => {
 const updateMedicalDataItem = async () => {
   const isValid = await validateForm(medicalDataForm);
   if (!isValid) return;
-  console.log("valid", updateMedicalDataInput.value);
+  updateMedicalDataInput.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
+  updateMedicalDataInput.value.activity = `Updated Medical Data Entry : ${updateMedicalDataInput.value.medical_data_type}`;
   const response = await updateMedicalData(updateMedicalDataInput.value);
   if (response) {
     snackBarData.value = handleSnackBar("success", "Medical Data Updated");
