@@ -288,10 +288,14 @@
               variant="outlined"
               v-model="updateMedicalDataInput.medical_data_note"
               counter="500"
+              :readonly="updateMedicalDataInput.date_created !== currentDate"
               :rules="[inputRules.required, inputRules.textArea]"
             >
             </v-textarea>
-            <v-card-actions class="justify-end">
+            <v-card-actions
+              v-if="updateMedicalDataInput.date_created === currentDate"
+              class="justify-end"
+            >
               <v-btn color="secondary" @click="updateMedicalDataItem"
                 >Update</v-btn
               >
@@ -305,6 +309,7 @@
 </template>
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import moment from "moment";
 import { validateForm, handleSnackBar, inputRules } from "@/utils/constants";
 import snackBars from "../dialogs/snackBars.vue";
 import { userAuthentication } from "@/stores/session";
@@ -321,7 +326,7 @@ const props = defineProps({
 
 const authentication = userAuthentication();
 const medicalDataForm = ref(null);
-
+const currentDate = moment().format("YYYY-MM-DD");
 const snackBarData = ref({});
 const medicalData = ref({
   patient_id: props.patientId,
@@ -380,10 +385,7 @@ const inputFields = {
   },
 };
 
-const updateMedicalDataInput = ref({
-  id: null,
-  medical_data_note: null,
-});
+const updateMedicalDataInput = ref({});
 
 const createMedicalDataItem = async () => {
   const isValid = await validateForm(medicalDataForm);
@@ -415,8 +417,7 @@ const pushMedicalDataItem = (item) => {
 const toggleUpdateMedicalDataDialog = async (id) => {
   const response = await getMedicalDataById(id);
   if (response) {
-    updateMedicalDataInput.value.id = response.id;
-    updateMedicalDataInput.value.medical_data_note = response.medical_data_note;
+    updateMedicalDataInput.value = response;
     dialogs.value.update = true;
   }
 };
