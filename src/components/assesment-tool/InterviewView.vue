@@ -144,8 +144,8 @@ const inputFields = ref({
   health_record_number: {
     label: "Health Record Number",
     type: "text",
-    formType: "number",
-    rules: [inputRules.invalidNegative],
+    formType: "text",
+    rules: [inputRules.required],
   },
   mswd_number: {
     label: "MSWD Number",
