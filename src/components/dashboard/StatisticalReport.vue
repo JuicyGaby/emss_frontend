@@ -42,7 +42,7 @@
                     <template v-slot:[`item.operation`]="{ item }">
                       <div class="d-flex ga-5">
                         <v-btn
-                          size="small"
+                          size="x-small"
                           prepend-icon="mdi-reload"
                           color="grey"
                           @click="generateSourceOfReferral(item)"
@@ -141,8 +141,30 @@
               <v-row>
                 <v-col>
                   <v-data-table
+                    density="compact"
                     :headers="dataTables.socialWorkAdministration.headers"
                     :items="dataTables.socialWorkAdministration.items"
+                    :hover="true"
+                    :items-per-page-options="[5, 10]"
+                    :items-per-page="16"
+                    style="border: 1px solid #e0e0e0"
+                  >
+                    <template v-slot:[`item.operation`]="{ item }">
+                      <div class="d-flex ga-5">
+                        <v-btn
+                          size="x-small"
+                          prepend-icon="mdi-reload"
+                          color="grey"
+                          >Generate</v-btn
+                        >
+                      </div>
+                    </template>
+                  </v-data-table>
+                </v-col>
+                <v-col>
+                  <v-data-table
+                    density="compact"
+                    :headers="dataTables.dataTableTemplate.headers"
                     :hover="true"
                     style="border: 1px solid #e0e0e0"
                   ></v-data-table>
@@ -246,6 +268,7 @@ const dataTables = ref({
     headers: [
       { title: "Particular", value: "service_name" },
       { title: "Total", value: "count" },
+      { title: "Operation", value: "operation" },
     ],
     items: [],
   },
