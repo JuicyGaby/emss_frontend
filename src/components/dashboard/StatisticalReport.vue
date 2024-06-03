@@ -146,9 +146,11 @@
       </v-card-text>
     </v-card>
   </div>
+  <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
-import { sourceOfReferral } from "@/utils/constants";
+import snackBars from "../dialogs/snackBars.vue";
+import { sourceOfReferral, handleSnackBar } from "@/utils/constants";
 import {
   getMonthlyStatisticalReport,
   generateSourceOfReferralDarItems,
@@ -156,7 +158,7 @@ import {
 import moment from "moment";
 import { ref, onMounted } from "vue";
 const emit = defineEmits(["closeDialog"]);
-
+const snackBarData = ref({});
 const userInputs = ref({
   month: moment().format("MMMM"),
 });
@@ -271,6 +273,10 @@ const generateSourceOfReferral = async (item) => {
   const response = await generateSourceOfReferralDarItems(body);
   if (response) {
     console.log(response);
+    snackBarData.value = handleSnackBar(
+      "primary",
+      `Successfully generated ${response.length} Dar Items`
+    );
     dataTableGeneratedData.value.sourceOfReferral = response;
   }
 };
