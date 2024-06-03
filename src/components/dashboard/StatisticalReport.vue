@@ -31,9 +31,35 @@
               <v-row>
                 <v-col>
                   <v-data-table
+                    density="compact"
                     :headers="dataTables.sourceOfReferral.headers"
                     :items="dataTables.sourceOfReferral.items"
                     :hover="true"
+                    :items-per-page-options="[5, 10]"
+                    :items-per-page="10"
+                    style="border: 1px solid #e0e0e0"
+                  >
+                    <template v-slot:[`item.operation`]="{ item }">
+                      <div class="d-flex ga-5">
+                        <v-btn
+                          size="small"
+                          prepend-icon="mdi-reload"
+                          color="grey"
+                          @click="generateSourceOfReferral(item)"
+                          >Generate</v-btn
+                        >
+                      </div>
+                    </template>
+                  </v-data-table>
+                </v-col>
+                <v-col>
+                  <v-data-table
+                    density="compact"
+                    :headers="dataTables.dataTableTemplate.headers"
+                    :hover="true"
+                    :items-per-page-options="[5, 10]"
+                    :items-per-page="10"
+                    :items="dataTableGeneratedData.sourceOfReferral"
                     style="border: 1px solid #e0e0e0"
                   ></v-data-table>
                 </v-col>
@@ -95,7 +121,8 @@
                     density="comfortable"
                     :hover="true"
                     style="border: 1px solid #e0e0e0"
-                  ></v-data-table>
+                  >
+                  </v-data-table>
                 </v-col>
               </v-row>
             </v-container>
@@ -122,7 +149,10 @@
 </template>
 <script setup>
 import { sourceOfReferral } from "@/utils/constants";
-import { getMonthlyStatisticalReport } from "@/api/statistical-report";
+import {
+  getMonthlyStatisticalReport,
+  generateSourceOfReferralDarItems,
+} from "@/api/statistical-report";
 import moment from "moment";
 import { ref, onMounted } from "vue";
 const emit = defineEmits(["closeDialog"]);
@@ -142,7 +172,7 @@ const tabData = ref({
     { value: 5, label: "V. MSW Documentation" },
     { value: 6, label: "VI. SOCIAL WORK ADMINISTRATION" },
   ],
-  tabValue: 3,
+  tabValue: 1,
 });
 const dataTables = ref({
   sourceOfReferral: {
@@ -152,6 +182,7 @@ const dataTables = ref({
       { title: "OPD", value: "area_2_count" },
       { title: "ER", value: "area_3_count" },
       { title: "Total", value: "total_count" },
+      { title: "Operation", value: "operation" },
     ],
     items: [],
   },
@@ -198,6 +229,17 @@ const dataTables = ref({
     ],
     items: [],
   },
+  dataTableTemplate: {
+    headers: [
+      { title: "Date Created", value: "date_created" },
+      { title: "Social Worker", value: "created_by" },
+      { title: "Operation", value: "area_3_count" },
+    ],
+  },
+});
+
+const dataTableGeneratedData = ref({
+  sourceOfReferral: [],
 });
 const fetchMonthlyStatisticalReport = async () => {
   const response = await getMonthlyStatisticalReport(userInputs.value);
@@ -215,11 +257,24 @@ const fetchMonthlyStatisticalReport = async () => {
     dataTables.value.socialWorkAdministration.items = socialWorkAdministration;
     dataTables.value.darServices.items = darServices;
     dataTables.value.origin.regionSeven.items = regionSevenObject;
-    console.log(otherProviceObject);
+    console.log(sourceOfReferral);
     dataTables.value.origin.otherRegion.items = otherProviceObject;
     dataTables.value.mswdClassification.items = mswdDocumentation;
   }
 };
+
+const generateSourceOfReferral = async (item) => {
+  const body = {
+    month: "may",
+    sor_id: item.name_id,
+  };
+  const response = await generateSourceOfReferralDarItems(body);
+  if (response) {
+    console.log(response);
+    dataTableGeneratedData.value.sourceOfReferral = response;
+  }
+};
+
 onMounted(async () => {
   await fetchMonthlyStatisticalReport();
 });
