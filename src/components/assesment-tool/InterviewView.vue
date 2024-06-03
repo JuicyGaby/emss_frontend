@@ -250,7 +250,6 @@ const getInterviewData = async () => {
     interviewInputData.value.isExist = true;
     interviewInputData.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
   }
-  console.log(interviewInputData.value);
 };
 const createInterviewData = async () => {
   const isValid = await validateForm(interviewForm);

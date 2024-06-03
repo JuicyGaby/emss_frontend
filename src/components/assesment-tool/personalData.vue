@@ -751,11 +751,9 @@ const createFamilyMemberData = async () => {
     updateBars.value.createFamilyMember.isActive = true;
     familyComposition.value.push(response);
     dialogs.value.addFamily = false;
-    console.log(response);
   }
 };
 const createPatientAddressData = async () => {
-  console.log("Creating Patient Address");
   const response = await createPatientAddress(patientAddress.value);
   if (response) {
     updateBars.value.addressData.isActive = true;
@@ -770,7 +768,6 @@ const getPatientData = async () => {
 const getPatientAddressData = async () => {
   const response = await getPatientAddress(props.patientId);
   if (!response) {
-    console.log("no address data");
     return;
   }
   patientData.value.addressExist = true;
@@ -816,8 +813,6 @@ const updatePersonalData = async () => {
   }
 };
 const updatePatientAddressData = async () => {
-  console.log("Update");
-  console.log(patientAddress.value);
   const response = await updatePatientAddress(patientAddress.value);
   if (response) {
     updateBars.value.addressData.isActive = true;
