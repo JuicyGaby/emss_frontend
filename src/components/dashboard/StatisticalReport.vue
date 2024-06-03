@@ -189,7 +189,15 @@
                     :items-per-page-options="[5, 10]"
                     :items="dataTableGeneratedData.socialWorkAdministration"
                     style="border: 1px solid #e0e0e0"
-                  ></v-data-table>
+                  >
+                    <template v-slot:[`item.operation`]="{ item }">
+                      <div>
+                        <v-icon @click="getSwaItem(item)" color="secondary"
+                          >mdi-eye</v-icon
+                        >
+                      </div>
+                    </template>
+                  </v-data-table>
                 </v-col>
               </v-row>
             </v-container>
@@ -206,11 +214,20 @@
   >
     <EditDARDialog :dar_id="dar_id" @closeDialog="handleCloseDialog" />
   </v-dialog>
+  <v-dialog
+    v-model="dialogs.swa.view"
+    fullscreen
+    scrollable
+    transition="dialog-transition"
+  >
+    <EditSWADialog :swa_id="swa_id" @closeDialog="dialogs.swa.view = false" />
+  </v-dialog>
   <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
 import snackBars from "../dialogs/snackBars.vue";
 import EditDARDialog from "../daily-activity-report/EditDARDialog.vue";
+import EditSWADialog from "../daily-activity-report/EditSWADialog.vue";
 import { sourceOfReferral, handleSnackBar } from "@/utils/constants";
 import {
   getMonthlyStatisticalReport,
@@ -365,6 +382,10 @@ const generateSourceOfReferral = async (item) => {
     );
     dataTableGeneratedData.value.sourceOfReferral = response;
   }
+};
+const getSwaItem = async (item) => {
+  swa_id.value = item.id;
+  dialogs.value.swa.view = true;
 };
 const generateSocialWorkAdministration = async (item) => {
   const body = {
