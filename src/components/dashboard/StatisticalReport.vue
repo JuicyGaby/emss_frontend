@@ -174,6 +174,7 @@
                           size="x-small"
                           prepend-icon="mdi-reload"
                           color="grey"
+                          @click="generateSocialWorkAdministration(item)"
                           >Generate</v-btn
                         >
                       </div>
@@ -183,8 +184,10 @@
                 <v-col>
                   <v-data-table
                     density="compact"
-                    :headers="dataTables.dataTableTemplate.headers"
+                    :headers="dataTables.dataTableSwaTemplate.headers"
                     :hover="true"
+                    :items-per-page-options="[5, 10]"
+                    :items="dataTableGeneratedData.socialWorkAdministration"
                     style="border: 1px solid #e0e0e0"
                   ></v-data-table>
                 </v-col>
@@ -212,6 +215,7 @@ import { sourceOfReferral, handleSnackBar } from "@/utils/constants";
 import {
   getMonthlyStatisticalReport,
   generateSourceOfReferralDarItems,
+  generateSocialWorkAdministrationItems,
 } from "@/api/statistical-report";
 import moment from "moment";
 import { ref, onMounted } from "vue";
@@ -300,9 +304,17 @@ const dataTables = ref({
       { title: "Operation", value: "operation" },
     ],
   },
+  dataTableSwaTemplate: {
+    headers: [
+      { title: "Date Created", value: "date_created" },
+      { title: "Social Worker", value: "creator_name" },
+      { title: "Operation", value: "operation" },
+    ],
+  },
 });
 const dataTableGeneratedData = ref({
   sourceOfReferral: [],
+  socialWorkAdministration: [],
 });
 const dialogs = ref({
   dar: {
@@ -352,6 +364,21 @@ const generateSourceOfReferral = async (item) => {
       `Successfully generated ${response.length} Dar Items`
     );
     dataTableGeneratedData.value.sourceOfReferral = response;
+  }
+};
+const generateSocialWorkAdministration = async (item) => {
+  const body = {
+    month: "may",
+    service_id: item.service_id,
+  };
+  const response = await generateSocialWorkAdministrationItems(body);
+  if (response) {
+    console.log(response);
+    snackBarData.value = handleSnackBar(
+      "primary",
+      `Successfully generated ${response.length} Dar Items`
+    );
+    dataTableGeneratedData.value.socialWorkAdministration = response;
   }
 };
 const handleCloseDialog = (type) => {
