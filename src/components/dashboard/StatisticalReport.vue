@@ -109,8 +109,18 @@
               <v-row>
                 <v-col>
                   <v-data-table
+                    density="compact"
+                    :items-per-page-options="[5, 10]"
                     :headers="dataTables.darServices.headers"
                     :items="dataTables.darServices.items"
+                    :hover="true"
+                    style="border: 1px solid #e0e0e0"
+                  ></v-data-table>
+                </v-col>
+                <v-col>
+                  <v-data-table
+                    density="compact"
+                    :headers="dataTables.dataTableTemplate.headers"
                     :hover="true"
                     style="border: 1px solid #e0e0e0"
                   ></v-data-table>
@@ -124,13 +134,22 @@
               <v-row>
                 <v-col>
                   <v-data-table
+                    density="compact"
+                    :items-per-page-options="[5, 10]"
                     :headers="dataTables.mswdClassification.headers"
                     :items="dataTables.mswdClassification.items"
-                    density="comfortable"
                     :hover="true"
                     style="border: 1px solid #e0e0e0"
                   >
                   </v-data-table>
+                </v-col>
+                <v-col>
+                  <v-data-table
+                    density="compact"
+                    :headers="dataTables.dataTableTemplate.headers"
+                    :hover="true"
+                    style="border: 1px solid #e0e0e0"
+                  ></v-data-table>
                 </v-col>
               </v-row>
             </v-container>
@@ -232,6 +251,7 @@ const dataTables = ref({
     headers: [
       { title: "Particular", value: "service_name" },
       { title: "Total", value: "count" },
+      { title: "Operation", value: "operation" },
     ],
     items: [],
   },
@@ -261,6 +281,7 @@ const dataTables = ref({
     headers: [
       { title: "Particular", value: "service_name" },
       { title: "Total", value: "count" },
+      { title: "Operation", value: "operation" },
     ],
     items: [],
   },
