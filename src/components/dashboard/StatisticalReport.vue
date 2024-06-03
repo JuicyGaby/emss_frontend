@@ -115,15 +115,36 @@
                     :items="dataTables.darServices.items"
                     :hover="true"
                     style="border: 1px solid #e0e0e0"
-                  ></v-data-table>
+                  >
+                    <template v-slot:[`item.operation`]="{ item }">
+                      <div class="d-flex ga-5">
+                        <v-btn
+                          size="x-small"
+                          prepend-icon="mdi-reload"
+                          color="grey"
+                          @click="generateServices(item)"
+                          >Generate</v-btn
+                        >
+                      </div>
+                    </template>
+                  </v-data-table>
                 </v-col>
                 <v-col>
                   <v-data-table
                     density="compact"
                     :headers="dataTables.dataTableTemplate.headers"
                     :hover="true"
+                    :items="dataTableGeneratedData.services"
                     style="border: 1px solid #e0e0e0"
-                  ></v-data-table>
+                  >
+                    <template v-slot:[`item.operation`]="{ item }">
+                      <div>
+                        <v-icon @click="getDarItem(item)" color="secondary"
+                          >mdi-eye</v-icon
+                        >
+                      </div>
+                    </template>
+                  </v-data-table>
                 </v-col>
               </v-row>
             </v-container>
@@ -254,6 +275,7 @@ import {
   generateSourceOfReferralDarItems,
   generateSocialWorkAdministrationItems,
   generateMswDocumentationItems,
+  generateDarServicesItems,
 } from "@/api/statistical-report";
 import moment from "moment";
 import { ref, onMounted } from "vue";
@@ -352,6 +374,7 @@ const dataTables = ref({
 });
 const dataTableGeneratedData = ref({
   sourceOfReferral: [],
+  services: [],
   socialWorkAdministration: [],
   mswDocumentation: [],
 });
@@ -422,6 +445,21 @@ const generateSocialWorkAdministration = async (item) => {
       `Successfully generated ${response.length} Dar Items`
     );
     dataTableGeneratedData.value.socialWorkAdministration = response;
+  }
+};
+const generateServices = async (item) => {
+  const body = {
+    month: "may",
+    dar_service_id: item.dar_service_id,
+  };
+  const response = await generateDarServicesItems(body);
+  if (response) {
+    console.log(response);
+    snackBarData.value = handleSnackBar(
+      "primary",
+      `Successfully generated ${response.length} Dar Items`
+    );
+    dataTableGeneratedData.value.services = response;
   }
 };
 const generateMSWDocumentation = async (item) => {
