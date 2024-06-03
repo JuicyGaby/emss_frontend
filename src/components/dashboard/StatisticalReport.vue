@@ -48,6 +48,7 @@
               <v-row>
                 <v-col>
                   <v-data-table
+                    density="compact"
                     :headers="dataTables.origin.regionSeven.headers"
                     :items="dataTables.origin.regionSeven.items"
                     :hover="true"
@@ -58,6 +59,7 @@
               <v-row>
                 <v-col>
                   <v-data-table
+                    density="compact"
                     :headers="dataTables.origin.otherRegion.headers"
                     :items="dataTables.origin.otherRegion.items"
                     :hover="true"
@@ -140,7 +142,7 @@ const tabData = ref({
     { value: 5, label: "V. MSW Documentation" },
     { value: 6, label: "VI. SOCIAL WORK ADMINISTRATION" },
   ],
-  tabValue: 1,
+  tabValue: 3,
 });
 const dataTables = ref({
   sourceOfReferral: {
@@ -213,6 +215,7 @@ const fetchMonthlyStatisticalReport = async () => {
     dataTables.value.socialWorkAdministration.items = socialWorkAdministration;
     dataTables.value.darServices.items = darServices;
     dataTables.value.origin.regionSeven.items = regionSevenObject;
+    console.log(otherProviceObject);
     dataTables.value.origin.otherRegion.items = otherProviceObject;
     dataTables.value.mswdClassification.items = mswdDocumentation;
   }

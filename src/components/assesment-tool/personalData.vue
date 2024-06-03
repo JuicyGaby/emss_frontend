@@ -84,37 +84,64 @@
           <v-row>
             <h3>Permanent</h3>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <v-combobox
-                v-for="(value, key) in inputFields.address.permanent"
-                :key="key"
-                :label="value.label"
-                variant="outlined"
-                :items="value.items"
-                :item-title="value.title"
-                style="width: 350px"
-                :return-object="false"
-                v-model="patientAddress[0][key]"
-                density="compact"
-              ></v-combobox>
+              <template v-for="(value, key) in inputFields.address.permanent">
+                <v-select
+                  v-if="value.formType === 'select'"
+                  :key="'select-' + key"
+                  :label="value.label"
+                  :items="value.items"
+                  variant="outlined"
+                  :item-title="value.title"
+                  style="width: 350px"
+                  v-model="patientAddress[0][key]"
+                  density="compact"
+                ></v-select>
+                <v-combobox
+                  v-else
+                  :key="'text-' + key"
+                  :label="value.label"
+                  variant="outlined"
+                  :items="value.items"
+                  :item-title="value.title"
+                  :item-value="value.value"
+                  style="width: 350px"
+                  :return-object="false"
+                  v-model="patientAddress[0][key]"
+                  density="compact"
+                ></v-combobox>
+              </template>
             </v-col>
           </v-row>
           <v-divider class="my-5"></v-divider>
           <v-row>
             <h3>Temporary</h3>
             <v-col cols="12" class="d-flex flex-wrap ga-2">
-              <v-combobox
-                v-for="(value, key) in inputFields.address.temporary"
-                :key="key"
-                :label="value.label"
-                variant="outlined"
-                :items="value.items"
-                :item-title="value.title"
-                :item-value="value.value"
-                :return-object="false"
-                v-model="patientAddress[1][key]"
-                style="width: 350px"
-                density="compact"
-              ></v-combobox>
+              <template v-for="(value, key) in inputFields.address.temporary">
+                <v-select
+                  v-if="value.formType === 'select'"
+                  :key="'select-' + key"
+                  :label="value.label"
+                  :items="value.items"
+                  variant="outlined"
+                  :item-title="value.title"
+                  style="width: 350px"
+                  v-model="patientAddress[1][key]"
+                  density="compact"
+                ></v-select>
+                <v-combobox
+                  v-else
+                  :key="'text-' + key"
+                  :label="value.label"
+                  variant="outlined"
+                  :items="value.items"
+                  :item-title="value.title"
+                  :item-value="value.value"
+                  style="width: 350px"
+                  :return-object="false"
+                  v-model="patientAddress[1][key]"
+                  density="compact"
+                ></v-combobox>
+              </template>
             </v-col>
           </v-row>
           <v-btn
@@ -612,11 +639,13 @@ const inputFields = ref({
         label: "Region",
         items: regions,
         title: "regDesc",
+        formType: "select",
       },
       province: {
         label: "Province",
         items: provinces,
         title: "provDesc",
+        formType: "select",
       },
       district: {
         label: "District",
@@ -627,11 +656,13 @@ const inputFields = ref({
         label: "Municipality",
         items: municipalities,
         title: "citymunDesc",
+        formType: "select",
       },
       barangay: {
         label: "Barangay",
         items: barangays,
         title: "brgyDesc",
+        formType: "select",
       },
       purok: {
         label: "House No/Subdivision/Village/Sitio ",
@@ -642,11 +673,13 @@ const inputFields = ref({
         label: "Region",
         items: regions,
         title: "regDesc",
+        formType: "select",
       },
       province: {
         label: "Province",
         items: temporaryProvince,
         title: "provDesc",
+        formType: "select",
       },
       district: {
         label: "District",
@@ -657,11 +690,13 @@ const inputFields = ref({
         label: "Municipality",
         items: temporaryMunicipalities,
         title: "citymunDesc",
+        formType: "select",
       },
       barangay: {
         label: "Barangay",
         items: temporaryBarangays,
         title: "brgyDesc",
+        formType: "select",
       },
       purok: {
         label: "House No/Subdivision/Village/Sitio ",
