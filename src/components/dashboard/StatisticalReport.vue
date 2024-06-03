@@ -141,15 +141,35 @@
                     :hover="true"
                     style="border: 1px solid #e0e0e0"
                   >
+                    <template v-slot:[`item.operation`]="{ item }">
+                      <div class="d-flex ga-5">
+                        <v-btn
+                          size="x-small"
+                          prepend-icon="mdi-reload"
+                          color="grey"
+                          @click="generateMSWDocumentation(item)"
+                          >Generate</v-btn
+                        >
+                      </div>
+                    </template>
                   </v-data-table>
                 </v-col>
                 <v-col>
                   <v-data-table
                     density="compact"
                     :headers="dataTables.dataTableTemplate.headers"
+                    :items="dataTableGeneratedData.mswDocumentation"
                     :hover="true"
                     style="border: 1px solid #e0e0e0"
-                  ></v-data-table>
+                  >
+                    <template v-slot:[`item.operation`]="{ item }">
+                      <div>
+                        <v-icon @click="getDarItem(item)" color="secondary"
+                          >mdi-eye</v-icon
+                        >
+                      </div>
+                    </template>
+                  </v-data-table>
                 </v-col>
               </v-row>
             </v-container>
@@ -233,6 +253,7 @@ import {
   getMonthlyStatisticalReport,
   generateSourceOfReferralDarItems,
   generateSocialWorkAdministrationItems,
+  generateMswDocumentationItems,
 } from "@/api/statistical-report";
 import moment from "moment";
 import { ref, onMounted } from "vue";
@@ -332,6 +353,7 @@ const dataTables = ref({
 const dataTableGeneratedData = ref({
   sourceOfReferral: [],
   socialWorkAdministration: [],
+  mswDocumentation: [],
 });
 const dialogs = ref({
   dar: {
@@ -402,6 +424,22 @@ const generateSocialWorkAdministration = async (item) => {
     dataTableGeneratedData.value.socialWorkAdministration = response;
   }
 };
+const generateMSWDocumentation = async (item) => {
+  const body = {
+    month: "may",
+    dar_service_id: item.dar_service_id,
+  };
+  const response = await generateMswDocumentationItems(body);
+  if (response) {
+    console.log(response);
+    snackBarData.value = handleSnackBar(
+      "primary",
+      `Successfully generated ${response.length} Dar Items`
+    );
+    dataTableGeneratedData.value.mswDocumentation = response;
+  }
+};
+
 const handleCloseDialog = (type) => {
   dialogs.value[type].view = false;
   dialogs.value[type].view = false;

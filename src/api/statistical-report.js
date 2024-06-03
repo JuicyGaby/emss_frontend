@@ -98,3 +98,16 @@ export const generateSocialWorkAdministrationItems = async (body) => {
   const data = await response.json();
   return data;
 };
+
+export const generateMswDocumentationItems = async (body) => {
+  const API_URL = `${BASE_URL}/emss/generate-msw-documentation-items`;
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
