@@ -61,7 +61,15 @@
                     :items-per-page="10"
                     :items="dataTableGeneratedData.sourceOfReferral"
                     style="border: 1px solid #e0e0e0"
-                  ></v-data-table>
+                  >
+                    <template v-slot:[`item.operation`]="{ item }">
+                      <div>
+                        <v-icon @click="getDarItem(item)" color="secondary"
+                          >mdi-eye</v-icon
+                        >
+                      </div>
+                    </template>
+                  </v-data-table>
                 </v-col>
               </v-row>
             </v-container>
@@ -146,10 +154,19 @@
       </v-card-text>
     </v-card>
   </div>
+  <v-dialog
+    v-model="dialogs.dar.view"
+    fullscreen
+    scrollable
+    transition="dialog-transition"
+  >
+    <EditDARDialog :dar_id="dar_id" @closeDialog="handleCloseDialog" />
+  </v-dialog>
   <snackBars :snackBarData="snackBarData" />
 </template>
 <script setup>
 import snackBars from "../dialogs/snackBars.vue";
+import EditDARDialog from "../daily-activity-report/EditDARDialog.vue";
 import { sourceOfReferral, handleSnackBar } from "@/utils/constants";
 import {
   getMonthlyStatisticalReport,
@@ -157,6 +174,7 @@ import {
 } from "@/api/statistical-report";
 import moment from "moment";
 import { ref, onMounted } from "vue";
+
 const emit = defineEmits(["closeDialog"]);
 const snackBarData = ref({});
 const userInputs = ref({
@@ -235,14 +253,23 @@ const dataTables = ref({
     headers: [
       { title: "Date Created", value: "date_created" },
       { title: "Social Worker", value: "created_by" },
-      { title: "Operation", value: "area_3_count" },
+      { title: "Operation", value: "operation" },
     ],
   },
 });
-
 const dataTableGeneratedData = ref({
   sourceOfReferral: [],
 });
+const dialogs = ref({
+  dar: {
+    view: false,
+  },
+  swa: {
+    view: false,
+  },
+});
+const dar_id = ref(null);
+const swa_id = ref(null);
 const fetchMonthlyStatisticalReport = async () => {
   const response = await getMonthlyStatisticalReport(userInputs.value);
   if (response) {
@@ -264,7 +291,10 @@ const fetchMonthlyStatisticalReport = async () => {
     dataTables.value.mswdClassification.items = mswdDocumentation;
   }
 };
-
+const getDarItem = async (item) => {
+  dar_id.value = item.id;
+  dialogs.value.dar.view = true;
+};
 const generateSourceOfReferral = async (item) => {
   const body = {
     month: "may",
@@ -279,6 +309,10 @@ const generateSourceOfReferral = async (item) => {
     );
     dataTableGeneratedData.value.sourceOfReferral = response;
   }
+};
+const handleCloseDialog = (type) => {
+  dialogs.value[type].view = false;
+  dialogs.value[type].view = false;
 };
 
 onMounted(async () => {
