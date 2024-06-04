@@ -377,6 +377,9 @@ const dataTableGeneratedData = ref({
   services: [],
   socialWorkAdministration: [],
   mswDocumentation: [],
+  caseLoad: {
+    nonPhic: {},
+  },
 });
 const dialogs = ref({
   dar: {
@@ -398,15 +401,16 @@ const fetchMonthlyStatisticalReport = async () => {
       mswdDocumentation,
       regionSevenObject,
       otherProviceObject,
+      caseLoad,
     } = response;
 
     dataTables.value.sourceOfReferral.items = sourceOfReferral;
     dataTables.value.socialWorkAdministration.items = socialWorkAdministration;
     dataTables.value.darServices.items = darServices;
     dataTables.value.origin.regionSeven.items = regionSevenObject;
-    console.log(sourceOfReferral);
     dataTables.value.origin.otherRegion.items = otherProviceObject;
     dataTables.value.mswdClassification.items = mswdDocumentation;
+    dataTableGeneratedData.value.caseLoad = caseLoad;
   }
 };
 const getDarItem = async (item) => {
@@ -477,6 +481,48 @@ const generateMSWDocumentation = async (item) => {
     dataTableGeneratedData.value.mswDocumentation = response;
   }
 };
+const handleCaseLoadData = () => {
+  const { nonPhic } = dataTableGeneratedData.value.caseLoad;
+  const nonPhicData = ref({
+    ip: [],
+    op: [],
+    er: [],
+    totalCount: 0,
+  });
+  const ipCaseData = filterCaseLoadArea(nonPhic, 1);
+  const opCaseData = filterCaseLoadArea(nonPhic, 3);
+  const erCaseData = filterCaseLoadArea(nonPhic, 4);
+  // log 3 areas
+  nonPhicData.value.ip = transformedData(ipCaseData);
+  nonPhicData.value.op = transformedData(opCaseData);
+  nonPhicData.value.er = transformedData(erCaseData);
+  nonPhicData.value.totalCount = nonPhic.reduce(
+    (sum, item) => sum + item.count,
+    0
+  );
+  dataTableGeneratedData.value.caseLoad.nonPhic = nonPhicData.value;
+  console.log(dataTableGeneratedData.value.caseLoad);
+};
+
+const filterCaseLoadArea = (data, area_id) => {
+  if (area_id === 1) {
+    return data.filter((item) => item.area_id === 1 || item.area_id === 2);
+  }
+  return data.filter((item) => item.area_id === area_id);
+};
+const transformedData = (data) => {
+  const result = {};
+  data.forEach((item) => {
+    if (!result[item.phic_classification]) {
+      result[item.phic_classification] = {
+        count: 0,
+      };
+    }
+    result[item.phic_classification].count += item.count;
+  });
+  console.log(result);
+  return result;
+};
 
 const handleCloseDialog = (type) => {
   dialogs.value[type].view = false;
@@ -485,6 +531,7 @@ const handleCloseDialog = (type) => {
 
 onMounted(async () => {
   await fetchMonthlyStatisticalReport();
+  handleCaseLoadData();
 });
 </script>
 <style lang=""></style>
