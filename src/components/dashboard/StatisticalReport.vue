@@ -511,7 +511,26 @@ const filterCaseLoadArea = (data, area_id) => {
   return data.filter((item) => item.area_id === area_id);
 };
 const transformedData = (data) => {
-  const result = {};
+  const result = {
+    A: {
+      count: 0,
+    },
+    B: {
+      count: 0,
+    },
+    C1: {
+      count: 0,
+    },
+    C2: {
+      count: 0,
+    },
+    C3: {
+      count: 0,
+    },
+    D: {
+      count: 0,
+    },
+  };
   data.forEach((item) => {
     if (!result[item.phic_classification]) {
       result[item.phic_classification] = {
