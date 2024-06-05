@@ -75,7 +75,115 @@
             </v-container>
           </v-window-item>
           <!-- caseload according to category and classification -->
-          <v-window-item :value="2"> </v-window-item>
+          <v-window-item :value="2">
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-table>
+                    <thead>
+                      <tr>
+                        <th colspan="18" class="text-center">
+                          Without Philhealth
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td
+                          v-for="(item, index) in caseLoadTable.header1"
+                          :key="index"
+                          colspan="6"
+                          class="text-center"
+                        >
+                          {{ item }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          v-for="(item, index) in caseLoadTable.header2"
+                          :key="index"
+                          class="text-center"
+                          colspan="1"
+                        >
+                          {{ item }}
+                        </td>
+                        <td
+                          v-for="(item, index) in caseLoadTable.header2"
+                          :key="index"
+                          class="text-center"
+                          colspan="1"
+                        >
+                          {{ item }}
+                        </td>
+                        <td
+                          v-for="(item, index) in caseLoadTable.header2"
+                          :key="index"
+                          class="text-center"
+                          colspan="1"
+                        >
+                          {{ item }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          v-for="(item, index) in dataTableGeneratedData
+                            .caseLoad.nonPhic.ip"
+                          :key="index"
+                          class="text-center"
+                          colspan="1"
+                        >
+                          {{ item.count }}
+                        </td>
+                        <td
+                          v-for="(item, index) in dataTableGeneratedData
+                            .caseLoad.nonPhic.op"
+                          :key="index"
+                          class="text-center"
+                          colspan="1"
+                        >
+                          {{ item.count }}
+                        </td>
+                        <td
+                          v-for="(item, index) in dataTableGeneratedData
+                            .caseLoad.nonPhic.er"
+                          :key="index"
+                          class="text-center"
+                          colspan="1"
+                        >
+                          {{ item.count }}
+                        </td>
+                        <td colspan="6" class="text-center">
+                          {{
+                            dataTableGeneratedData.caseLoad.nonPhic.totalCount
+                          }}
+                        </td>
+                        <td colspan="6" class="text-center">
+                          {{
+                            dataTableGeneratedData.caseLoad.nonPhic.caseCount[1]
+                          }}
+                        </td>
+                        <td colspan="6" class="text-center">
+                          {{
+                            dataTableGeneratedData.caseLoad.nonPhic.caseCount[2]
+                          }}
+                        </td>
+                        <td colspan="6" class="text-center">
+                          {{
+                            dataTableGeneratedData.caseLoad.nonPhic.caseCount[3]
+                          }}
+                        </td>
+                        <td colspan="6" class="text-center">
+                          {{
+                            dataTableGeneratedData.caseLoad.nonPhic.totalCount
+                          }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-window-item>
           <!-- number of patients according to place of origin -->
           <v-window-item :value="3">
             <v-container>
@@ -282,6 +390,7 @@ import { ref, onMounted } from "vue";
 
 const emit = defineEmits(["closeDialog"]);
 const snackBarData = ref({});
+
 const userInputs = ref({
   month: moment().format("MMMM"),
 });
@@ -372,13 +481,23 @@ const dataTables = ref({
     ],
   },
 });
+const caseLoadTable = {
+  header1: ["IP", "OP", "ER", "TOTAL", "NC", "OL", "CC", "TOTAL"],
+  header2: ["A", "B", "C1", "C2", "C3", "D"],
+};
 const dataTableGeneratedData = ref({
   sourceOfReferral: [],
   services: [],
   socialWorkAdministration: [],
   mswDocumentation: [],
   caseLoad: {
-    nonPhic: {},
+    nonPhic: {
+      ip: [],
+      op: [],
+      er: [],
+      caseCount: [],
+      totalCount: 0,
+    },
   },
 });
 const dialogs = ref({
@@ -487,8 +606,11 @@ const handleCaseLoadData = () => {
     ip: [],
     op: [],
     er: [],
+    caseCount: [],
     totalCount: 0,
   });
+  console.log(nonPhic);
+  nonPhicData.value.caseCount = calculateSumByCaseType(nonPhic);
   const ipCaseData = filterCaseLoadArea(nonPhic, 1);
   const opCaseData = filterCaseLoadArea(nonPhic, 3);
   const erCaseData = filterCaseLoadArea(nonPhic, 4);
@@ -500,8 +622,8 @@ const handleCaseLoadData = () => {
     (sum, item) => sum + item.count,
     0
   );
+
   dataTableGeneratedData.value.caseLoad.nonPhic = nonPhicData.value;
-  console.log(dataTableGeneratedData.value.caseLoad);
 };
 
 const filterCaseLoadArea = (data, area_id) => {
@@ -511,36 +633,42 @@ const filterCaseLoadArea = (data, area_id) => {
   return data.filter((item) => item.area_id === area_id);
 };
 const transformedData = (data) => {
-  const result = {
-    A: {
-      count: 0,
-    },
-    B: {
-      count: 0,
-    },
-    C1: {
-      count: 0,
-    },
-    C2: {
-      count: 0,
-    },
-    C3: {
-      count: 0,
-    },
-    D: {
-      count: 0,
-    },
-  };
+  let result = [
+    { type: "A", count: 0 },
+    { type: "B", count: 0 },
+    { type: "C1", count: 0 },
+    { type: "C2", count: 0 },
+    { type: "C3", count: 0 },
+    { type: "D", count: 0 },
+  ];
+
   data.forEach((item) => {
-    if (!result[item.phic_classification]) {
-      result[item.phic_classification] = {
-        count: 0,
-      };
+    let found = result.find((r) => r.type === item.phic_classification);
+    if (!found) {
+      result.push({ type: item.phic_classification, count: 0 });
+      found = result[result.length - 1];
     }
-    result[item.phic_classification].count += item.count;
+    found.count += item.count;
   });
-  console.log(result);
+
   return result;
+};
+
+const calculateSumByCaseType = (data) => {
+  const sumCounts = {};
+
+  // Iterate through the data
+  data.forEach((entry) => {
+    const case_type_id = entry.case_type_id;
+    const count = entry.count;
+    // Sum the counts for each case_type_id
+    if (sumCounts[case_type_id]) {
+      sumCounts[case_type_id] += count;
+    } else {
+      sumCounts[case_type_id] = count;
+    }
+  });
+  return sumCounts;
 };
 
 const handleCloseDialog = (type) => {
