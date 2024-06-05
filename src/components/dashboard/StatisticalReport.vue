@@ -227,7 +227,7 @@
                           {{ item }}
                         </th>
                         <th
-                          v-for="(item, index) in caseLoadTable.header2"
+                          v-for="(item, index) in caseLoadTable.header3"
                           :key="index"
                           class="text-center"
                           colspan="1"
@@ -585,7 +585,20 @@ const dataTables = ref({
 const caseLoadTable = {
   nonPhicHeader1: ["IP", "OP", "ER", "TOTAL", "NC", "OL", "CC", "TOTAL"],
   header2: ["A", "B", "C1", "C2", "C3", "D"],
-  phicHeader1: ["Particular", "IP", "OP", "ER"],
+  header3: [
+    "A",
+    "B",
+    "C1",
+    "C2",
+    "C3",
+    "D",
+    "TOTAL",
+    "NC",
+    "OC",
+    "CC",
+    "TOTAL",
+  ],
+  phicHeader1: ["PHIC Category", "IP", "OP", "ER"],
 };
 
 const dataTableGeneratedData = ref({
@@ -843,16 +856,37 @@ const transformedPhicData = (data) => {
           C2: 0,
           C3: 0,
           D: 0,
+          totalCount: 0,
+          newCaseCount: 0,
+          oldCaseCount: 0,
+          caseClosedCount: 0,
+          caseTotalCount: 0,
         },
       };
     }
     const area = result[item.contributor_type];
+    console.log(area);
     if (item.area_id === 1 || item.area_id === 2) {
-      area.area_1[item.phic_classification] += 1;
+      area.area_1[item.phic_classification] += item.count;
+      area.area_4.totalCount += item.count;
     } else if (item.area_id === 3) {
-      area.area_3[item.phic_classification] += 1;
+      area.area_3[item.phic_classification] += item.count;
+      area.area_4.totalCount += item.count;
     } else if (item.area_id === 4) {
-      area.area_4[item.phic_classification] += 1;
+      area.area_4[item.phic_classification] += item.count;
+      area.area_4.totalCount += item.count;
+    }
+    if (item.case_type_id === 1) {
+      area.area_4.newCaseCount += item.count;
+      area.area_4.caseTotalCount += item.count;
+    }
+    if (item.case_type_id === 2) {
+      area.area_4.oldCaseCount += item.count;
+      area.area_4.caseTotalCount += item.count;
+    }
+    if (item.case_type_id === 3) {
+      area.area_4.caseClosedCount += item.count;
+      area.area_4.caseTotalCount += item.count;
     }
   });
   return result;
