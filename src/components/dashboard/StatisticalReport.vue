@@ -79,7 +79,7 @@
             <v-container>
               <v-row>
                 <v-col>
-                  <v-table>
+                  <v-table density="compact">
                     <thead>
                       <tr>
                         <th colspan="18" class="text-center">
@@ -90,7 +90,7 @@
                     <tbody>
                       <tr>
                         <td
-                          v-for="(item, index) in caseLoadTable.header1"
+                          v-for="(item, index) in caseLoadTable.nonPhicHeader1"
                           :key="index"
                           colspan="6"
                           class="text-center"
@@ -157,26 +157,127 @@
                             dataTableGeneratedData.caseLoad.nonPhic.totalCount
                           }}
                         </td>
-                        <td colspan="6" class="text-center">
-                          {{
-                            dataTableGeneratedData.caseLoad.nonPhic.caseCount[1]
-                          }}
-                        </td>
-                        <td colspan="6" class="text-center">
-                          {{
-                            dataTableGeneratedData.caseLoad.nonPhic.caseCount[2]
-                          }}
-                        </td>
-                        <td colspan="6" class="text-center">
-                          {{
-                            dataTableGeneratedData.caseLoad.nonPhic.caseCount[3]
-                          }}
+                        <td
+                          colspan="6"
+                          class="text-center"
+                          v-for="(item, index) in dataTableGeneratedData
+                            .caseLoad.nonPhic.caseCount"
+                          :key="index"
+                        >
+                          {{ item }}
                         </td>
                         <td colspan="6" class="text-center">
                           {{
                             dataTableGeneratedData.caseLoad.nonPhic.totalCount
                           }}
                         </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-table
+                    density="compact"
+                    v-if="
+                      dataTableGeneratedData.caseLoad.phic
+                        .transformedContributorTypeData
+                    "
+                  >
+                    <thead>
+                      <tr>
+                        <th colspan="24" class="text-center">
+                          With Philhealth
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td
+                          v-for="(item, index) in caseLoadTable.phicHeader1"
+                          :key="index"
+                          colspan="6"
+                          class="text-center"
+                        >
+                          {{ item }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th
+                          v-for="(item, index) in caseLoadTable.header2"
+                          :key="index"
+                          class="text-center"
+                          colspan="1"
+                        ></th>
+                        <th
+                          v-for="(item, index) in caseLoadTable.header2"
+                          :key="index"
+                          class="text-center"
+                          colspan="1"
+                        >
+                          {{ item }}
+                        </th>
+                        <th
+                          v-for="(item, index) in caseLoadTable.header2"
+                          :key="index"
+                          class="text-center"
+                          colspan="1"
+                        >
+                          {{ item }}
+                        </th>
+                        <th
+                          v-for="(item, index) in caseLoadTable.header2"
+                          :key="index"
+                          class="text-center"
+                          colspan="1"
+                        >
+                          {{ item }}
+                        </th>
+                      </tr>
+                      <tr
+                        v-for="(item, index) in dataTableGeneratedData.caseLoad
+                          .phic.transformedContributorTypeData"
+                        :key="index"
+                      >
+                        <td
+                          class="text-center"
+                          colspan="6"
+                          v-for="(data, key) in item"
+                          :key="key"
+                        >
+                          {{ key }}
+                        </td>
+                        <template v-for="(data, key) in item">
+                          <template
+                            v-for="(areaValue, areaKey) in data.area_1"
+                            :key="areaKey"
+                          >
+                            <td colspan="1" class="text-center">
+                              {{ areaValue }}
+                            </td>
+                          </template>
+                        </template>
+                        <template v-for="(data, key) in item">
+                          <template
+                            v-for="(areaValue, areaKey) in data.area_3"
+                            :key="areaKey"
+                          >
+                            <td colspan="1" class="text-center">
+                              {{ areaValue }}
+                            </td>
+                          </template>
+                        </template>
+                        <template v-for="(data, key) in item">
+                          <template
+                            v-for="(areaValue, areaKey) in data.area_4"
+                            :key="areaKey"
+                          >
+                            <td colspan="1" class="text-center">
+                              {{ areaValue }}
+                            </td>
+                          </template>
+                        </template>
                       </tr>
                     </tbody>
                   </v-table>
@@ -377,7 +478,7 @@
 import snackBars from "../dialogs/snackBars.vue";
 import EditDARDialog from "../daily-activity-report/EditDARDialog.vue";
 import EditSWADialog from "../daily-activity-report/EditSWADialog.vue";
-import { sourceOfReferral, handleSnackBar } from "@/utils/constants";
+import { sourceOfReferral, handleSnackBar, area } from "@/utils/constants";
 import {
   getMonthlyStatisticalReport,
   generateSourceOfReferralDarItems,
@@ -406,7 +507,7 @@ const tabData = ref({
     { value: 5, label: "V. MSW Documentation" },
     { value: 6, label: "VI. SOCIAL WORK ADMINISTRATION" },
   ],
-  tabValue: 1,
+  tabValue: 2,
 });
 const dataTables = ref({
   sourceOfReferral: {
@@ -482,9 +583,11 @@ const dataTables = ref({
   },
 });
 const caseLoadTable = {
-  header1: ["IP", "OP", "ER", "TOTAL", "NC", "OL", "CC", "TOTAL"],
+  nonPhicHeader1: ["IP", "OP", "ER", "TOTAL", "NC", "OL", "CC", "TOTAL"],
   header2: ["A", "B", "C1", "C2", "C3", "D"],
+  phicHeader1: ["Particular", "IP", "OP", "ER"],
 };
+
 const dataTableGeneratedData = ref({
   sourceOfReferral: [],
   services: [],
@@ -495,8 +598,15 @@ const dataTableGeneratedData = ref({
       ip: [],
       op: [],
       er: [],
-      caseCount: [],
+      caseCount: {
+        1: 0,
+        2: 0,
+        3: 0,
+      },
       totalCount: 0,
+    },
+    phic: {
+      transformedContributorTypeData: {},
     },
   },
 });
@@ -601,29 +711,81 @@ const generateMSWDocumentation = async (item) => {
   }
 };
 const handleCaseLoadData = () => {
+  handleCaseLoadPhic();
+  handleCaseLoadNonPhic();
+};
+const handleCaseLoadNonPhic = () => {
   const { nonPhic } = dataTableGeneratedData.value.caseLoad;
   const nonPhicData = ref({
     ip: [],
     op: [],
     er: [],
-    caseCount: [],
+    caseCount: {
+      1: 0,
+      2: 0,
+      3: 0,
+    },
     totalCount: 0,
   });
-  console.log(nonPhic);
   nonPhicData.value.caseCount = calculateSumByCaseType(nonPhic);
   const ipCaseData = filterCaseLoadArea(nonPhic, 1);
   const opCaseData = filterCaseLoadArea(nonPhic, 3);
   const erCaseData = filterCaseLoadArea(nonPhic, 4);
   // log 3 areas
-  nonPhicData.value.ip = transformedData(ipCaseData);
-  nonPhicData.value.op = transformedData(opCaseData);
-  nonPhicData.value.er = transformedData(erCaseData);
+  nonPhicData.value.ip = transformedNonPhicData(ipCaseData);
+  nonPhicData.value.op = transformedNonPhicData(opCaseData);
+  nonPhicData.value.er = transformedNonPhicData(erCaseData);
   nonPhicData.value.totalCount = nonPhic.reduce(
     (sum, item) => sum + item.count,
     0
   );
 
   dataTableGeneratedData.value.caseLoad.nonPhic = nonPhicData.value;
+};
+const handleCaseLoadPhic = () => {
+  const { phic } = dataTableGeneratedData.value.caseLoad;
+  const contributor_type = [
+    "Indirect - POS",
+    "Indirect - Sponsored",
+    "Indirect - 4PS",
+    "Indirect - PWD",
+    "Indirect - SC",
+    "Direct - Lifetime",
+    "Direct - Employed",
+    "Direct - Voluntary",
+    "Direct - OFW",
+  ];
+  const transformedContributorTypeData = [];
+  const contributorTypeData = {};
+  const filterByContributorType = (type) =>
+    phic.filter((item) => item.contributor_type === type);
+  contributorTypeData.posData = filterByContributorType(contributor_type[0]);
+  contributorTypeData.sponsoredData = filterByContributorType(
+    contributor_type[1]
+  );
+  contributorTypeData.fourPsData = filterByContributorType(contributor_type[2]);
+  contributorTypeData.pwdData = filterByContributorType(contributor_type[3]);
+  contributorTypeData.scData = filterByContributorType(contributor_type[4]);
+  contributorTypeData.lifetimeData = filterByContributorType(
+    contributor_type[5]
+  );
+  contributorTypeData.employedData = filterByContributorType(
+    contributor_type[6]
+  );
+  contributorTypeData.voluntaryData = filterByContributorType(
+    contributor_type[7]
+  );
+  contributorTypeData.ofwData = filterByContributorType(contributor_type[8]);
+  console.log(contributorTypeData);
+  Object.keys(contributorTypeData).forEach((key) => {
+    const data = contributorTypeData[key];
+    if (data.length > 0) {
+      transformedContributorTypeData.push(transformedPhicData(data));
+    }
+  });
+  dataTableGeneratedData.value.caseLoad.phic.transformedContributorTypeData =
+    transformedContributorTypeData;
+  // log all items in contributorTypeData
 };
 
 const filterCaseLoadArea = (data, area_id) => {
@@ -632,7 +794,7 @@ const filterCaseLoadArea = (data, area_id) => {
   }
   return data.filter((item) => item.area_id === area_id);
 };
-const transformedData = (data) => {
+const transformedNonPhicData = (data) => {
   let result = [
     { type: "A", count: 0 },
     { type: "B", count: 0 },
@@ -651,6 +813,48 @@ const transformedData = (data) => {
     found.count += item.count;
   });
 
+  return result;
+};
+const transformedPhicData = (data) => {
+  const result = {};
+  data.forEach((item) => {
+    if (!result[item.contributor_type]) {
+      result[item.contributor_type] = {
+        area_1: {
+          A: 0,
+          B: 0,
+          C1: 0,
+          C2: 0,
+          C3: 0,
+          D: 0,
+        },
+        area_3: {
+          A: 0,
+          B: 0,
+          C1: 0,
+          C2: 0,
+          C3: 0,
+          D: 0,
+        },
+        area_4: {
+          A: 0,
+          B: 0,
+          C1: 0,
+          C2: 0,
+          C3: 0,
+          D: 0,
+        },
+      };
+    }
+    const area = result[item.contributor_type];
+    if (item.area_id === 1 || item.area_id === 2) {
+      area.area_1[item.phic_classification] += 1;
+    } else if (item.area_id === 3) {
+      area.area_3[item.phic_classification] += 1;
+    } else if (item.area_id === 4) {
+      area.area_4[item.phic_classification] += 1;
+    }
+  });
   return result;
 };
 
