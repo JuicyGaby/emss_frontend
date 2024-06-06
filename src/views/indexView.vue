@@ -18,7 +18,7 @@
             <v-col cols="6">
               <v-btn
                 color="secondary"
-                @click="dialogs.statisticalReportActive = true"
+                @click="dialogs.statisticalReportMonth = true"
                 >Generate Statistical Report</v-btn
               >
             </v-col>
@@ -81,7 +81,39 @@
     persistent
     transition="dialog-transition"
   >
-    <StatisticalReport @closeDialog="toggleDialog"></StatisticalReport>
+    <StatisticalReport
+      :statisticalReportMonth="userInputs.statisticalReportMonth"
+      @closeDialog="toggleDialog"
+    ></StatisticalReport>
+  </v-dialog>
+  <v-dialog v-model="dialogs.statisticalReportMonth" width="500">
+    <v-card>
+      <v-toolbar color="primary">
+        <v-toolbar-title>
+          <v-icon> mdi-calendar-month </v-icon>Generate Monthly Statistical
+          Report</v-toolbar-title
+        >
+        <v-icon class="mr-5" @click="dialogs.statisticalReportMonth = false"
+          >mdi-close</v-icon
+        >
+      </v-toolbar>
+      <v-card-text>
+        <v-select
+          v-model="userInputs.statisticalReportMonth"
+          label="Selected Month"
+          variant="outlined"
+          :items="inputFields.month.items"
+        ></v-select>
+      </v-card-text>
+      <v-card-actions class="pa-0 ma-5 justify-end">
+        <v-btn
+          variant="flat"
+          @click="toggleStatisticalReportDialog"
+          color="secondary"
+          >Select Month</v-btn
+        >
+      </v-card-actions>
+    </v-card>
   </v-dialog>
   <snackBars :snackBarData="snackBarData" />
 </template>
@@ -105,6 +137,7 @@ const monthlyReportData = ref({});
 const userInputs = ref({
   creator_id: authentication.user.id,
   month: currentMonth,
+  statisticalReportMonth: currentMonth,
 });
 
 // triggers when dashboard month changes
@@ -116,6 +149,7 @@ watch(
 );
 const dialogs = ref({
   statisticalReportActive: false,
+  statisticalReportMonth: false,
 });
 const cards = ref({
   monthlyDarCount: {
@@ -203,7 +237,10 @@ const generateCurrentMonthReportData = async () => {
       response.social_worker.patientAssessedCount;
   }
 };
-
+const toggleStatisticalReportDialog = () => {
+  dialogs.value.statisticalReportActive = true;
+  dialogs.value.statisticalReportMonth = false;
+};
 onMounted(async () => {
   await generateCurrentMonthReportData(userInputs.value);
 });

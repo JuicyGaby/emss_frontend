@@ -416,6 +416,7 @@
                     :hover="true"
                     :items-per-page-options="[5, 10]"
                     :items-per-page="16"
+                    :multi-sort="true"
                     style="border: 1px solid #e0e0e0"
                   >
                     <template v-slot:[`item.operation`]="{ item }">
@@ -489,11 +490,17 @@ import {
 import moment from "moment";
 import { ref, onMounted } from "vue";
 
+const props = defineProps({
+  statisticalReportMonth: {
+    type: String,
+  },
+});
+
 const emit = defineEmits(["closeDialog"]);
 const snackBarData = ref({});
 
 const userInputs = ref({
-  month: moment().format("MMMM"),
+  month: props.statisticalReportMonth,
 });
 const tabData = ref({
   tabHeaders: [
@@ -507,7 +514,7 @@ const tabData = ref({
     { value: 5, label: "V. MSW Documentation" },
     { value: 6, label: "VI. SOCIAL WORK ADMINISTRATION" },
   ],
-  tabValue: 2,
+  tabValue: 1,
 });
 const dataTables = ref({
   sourceOfReferral: {
@@ -666,7 +673,6 @@ const generateSourceOfReferral = async (item) => {
   };
   const response = await generateSourceOfReferralDarItems(body);
   if (response) {
-    console.log(response);
     snackBarData.value = handleSnackBar(
       "primary",
       `Successfully generated ${response.length} Dar Items`
@@ -685,7 +691,6 @@ const generateSocialWorkAdministration = async (item) => {
   };
   const response = await generateSocialWorkAdministrationItems(body);
   if (response) {
-    console.log(response);
     snackBarData.value = handleSnackBar(
       "primary",
       `Successfully generated ${response.length} Dar Items`
@@ -700,7 +705,6 @@ const generateServices = async (item) => {
   };
   const response = await generateDarServicesItems(body);
   if (response) {
-    console.log(response);
     snackBarData.value = handleSnackBar(
       "primary",
       `Successfully generated ${response.length} Dar Items`
@@ -715,7 +719,6 @@ const generateMSWDocumentation = async (item) => {
   };
   const response = await generateMswDocumentationItems(body);
   if (response) {
-    console.log(response);
     snackBarData.value = handleSnackBar(
       "primary",
       `Successfully generated ${response.length} Dar Items`
@@ -789,7 +792,6 @@ const handleCaseLoadPhic = () => {
     contributor_type[7]
   );
   contributorTypeData.ofwData = filterByContributorType(contributor_type[8]);
-  console.log(contributorTypeData);
   Object.keys(contributorTypeData).forEach((key) => {
     const data = contributorTypeData[key];
     if (data.length > 0) {
@@ -865,7 +867,6 @@ const transformedPhicData = (data) => {
       };
     }
     const area = result[item.contributor_type];
-    console.log(area);
     if (item.area_id === 1 || item.area_id === 2) {
       area.area_1[item.phic_classification] += item.count;
       area.area_4.totalCount += item.count;
@@ -917,6 +918,7 @@ const handleCloseDialog = (type) => {
 onMounted(async () => {
   await fetchMonthlyStatisticalReport();
   handleCaseLoadData();
+  console.log(userInputs.value);
 });
 </script>
 <style lang=""></style>
