@@ -668,7 +668,7 @@ const getDarItem = async (item) => {
 };
 const generateSourceOfReferral = async (item) => {
   const body = {
-    month: "may",
+    month: userInputs.value.month,
     sor_id: item.name_id,
   };
   const response = await generateSourceOfReferralDarItems(body);
@@ -686,7 +686,7 @@ const getSwaItem = async (item) => {
 };
 const generateSocialWorkAdministration = async (item) => {
   const body = {
-    month: "may",
+    month: userInputs.value.month,
     service_id: item.service_id,
   };
   const response = await generateSocialWorkAdministrationItems(body);
@@ -700,7 +700,7 @@ const generateSocialWorkAdministration = async (item) => {
 };
 const generateServices = async (item) => {
   const body = {
-    month: "may",
+    month: userInputs.value.month,
     dar_service_id: item.dar_service_id,
   };
   const response = await generateDarServicesItems(body);
@@ -714,7 +714,7 @@ const generateServices = async (item) => {
 };
 const generateMSWDocumentation = async (item) => {
   const body = {
-    month: "may",
+    month: userInputs.value.month,
     dar_service_id: item.dar_service_id,
   };
   const response = await generateMswDocumentationItems(body);
@@ -892,7 +892,6 @@ const transformedPhicData = (data) => {
   });
   return result;
 };
-
 const calculateSumByCaseType = (data) => {
   const sumCounts = {};
 
@@ -909,7 +908,6 @@ const calculateSumByCaseType = (data) => {
   });
   return sumCounts;
 };
-
 const handleCloseDialog = (type) => {
   dialogs.value[type].view = false;
   dialogs.value[type].view = false;

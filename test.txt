@@ -1,7 +1,5 @@
 updates :
 
-    assessment-tool:
-        address : cant input null or n/a
 
 to update :
     assessment tool :
