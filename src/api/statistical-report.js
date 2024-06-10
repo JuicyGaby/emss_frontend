@@ -13,7 +13,6 @@ export const generateMonthlyReport = async (body) => {
   const data = await response.json();
   return data;
 };
-
 export const getMonthlyDarEntries = async (body) => {
   const API_URL = `${BASE_URL}/emss/get-monthly-dar-entries`;
   const response = await fetch(API_URL, {
@@ -26,7 +25,6 @@ export const getMonthlyDarEntries = async (body) => {
   const data = await response.json();
   return data;
 };
-
 export const getMonthlySwaEntries = async (body) => {
   const API_URL = `${BASE_URL}/emss/get-monthly-swa-entries`;
   const response = await fetch(API_URL, {
@@ -39,7 +37,6 @@ export const getMonthlySwaEntries = async (body) => {
   const data = await response.json();
   return data;
 };
-
 export const getSocialWorkerMonthlyDarEntries = async (body) => {
   const API_URL = `${BASE_URL}/emss/get-social-worker-monthly-dar-entries`;
   const response = await fetch(API_URL, {
@@ -52,7 +49,6 @@ export const getSocialWorkerMonthlyDarEntries = async (body) => {
   const { darEntries, report } = await response.json();
   return { darEntries, report };
 };
-
 export const getSocialWorkerMonthlySwaEntries = async (body) => {
   const API_URL = `${BASE_URL}/emss/get-social-worker-monthly-swa-entries`;
   const response = await fetch(API_URL, {
@@ -67,6 +63,55 @@ export const getSocialWorkerMonthlySwaEntries = async (body) => {
 };
 export const getMonthlyStatisticalReport = async (body) => {
   const API_URL = `${BASE_URL}/emss/get-monthly-statistical-report`;
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+export const generateSourceOfReferralDarItems = async (body) => {
+  const API_URL = `${BASE_URL}/emss/generate-source-of-referral-dar-items`;
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+
+export const generateSocialWorkAdministrationItems = async (body) => {
+  const API_URL = `${BASE_URL}/emss/generate-social-work-administration-items`;
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+export const generateDarServicesItems = async (body) => {
+  const API_URL = `${BASE_URL}/emss/generate-dar-services-items`;
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+export const generateMswDocumentationItems = async (body) => {
+  const API_URL = `${BASE_URL}/emss/generate-msw-documentation-items`;
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {

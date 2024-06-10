@@ -3,15 +3,14 @@
     <v-layout>
       <v-navigation-drawer width="350">
         <v-list>
-          <v-list-item
-            prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"
-            :title="userFullName"
-            :subtitle="
-              authentication.user.department
-                ? authentication.user.department.dept_code
-                : 'No Department'
-            "
-          ></v-list-item>
+          <v-list-item class="">
+            <v-list-item-title class="d-flex align-center ga-2">
+              <v-avatar variant="elevated" size="large">
+                <v-img :alt="userFullName" :src="userAvatar"></v-img>
+              </v-avatar>
+              {{ userFullName }}
+            </v-list-item-title>
+          </v-list-item>
         </v-list>
         <v-divider></v-divider>
         <v-list density="compact" nav>
@@ -37,7 +36,7 @@
   </v-card>
 </template>
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { userAuthentication } from "../stores/session";
 
@@ -63,7 +62,11 @@ const navItems = {
 const userFullName = computed(() => {
   return `${authentication.user.fname} ${authentication.user.lname}`;
 });
+const userAvatar = `https://api.dicebear.com/8.x/initials/svg?seed=${userFullName.value}`;
 
+onMounted(() => {
+  console.log(userFullName.value);
+});
 const signOut = () => {
   authentication.resetSession();
   router.push("/login");

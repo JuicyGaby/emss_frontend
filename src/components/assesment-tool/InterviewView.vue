@@ -144,8 +144,8 @@ const inputFields = ref({
   health_record_number: {
     label: "Health Record Number",
     type: "text",
-    formType: "number",
-    rules: [inputRules.invalidNegative],
+    formType: "text",
+    rules: [inputRules.required],
   },
   mswd_number: {
     label: "MSWD Number",
@@ -250,7 +250,6 @@ const getInterviewData = async () => {
     interviewInputData.value.isExist = true;
     interviewInputData.value.social_worker = `${authentication.user.fname} ${authentication.user.lname}`;
   }
-  console.log(interviewInputData.value);
 };
 const createInterviewData = async () => {
   const isValid = await validateForm(interviewForm);

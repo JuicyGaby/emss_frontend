@@ -349,7 +349,7 @@ const dateInputs = ref({
 const dataTable = {
   headers: [
     { title: "Number", value: "Number" },
-    { title: "Admission Date-Time", value: "date_created" },
+    { title: "Date Created", value: "date_created" },
     { title: "Patient Name", value: "fullname" },
     { title: "Social Worker", value: "created_by" },
     { title: "Operation", value: "operation" },
@@ -357,7 +357,7 @@ const dataTable = {
   swa: {
     headers: [
       { title: "Number", value: "Number" },
-      { title: "Admission Date-Time", value: "date_created" },
+      { title: "Date Created", value: "date_created" },
       { title: "Social Worker", value: "creator_name" },
       { title: "Operation", value: "operation" },
     ],
