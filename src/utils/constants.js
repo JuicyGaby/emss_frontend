@@ -118,6 +118,7 @@ export const contributor_type = [
   "Direct - Employed",
   "Direct - Voluntary",
   "Direct - OFW",
+  "Non Phic",
 ];
 export const mssClassification = [
   { title: "Financially Capable / Capacitated - A", value: "A" },
@@ -167,6 +168,8 @@ export const sectoralGroupingList = [
   "Formal Labor & Migrant Workers",
   "Workers in Informal Sectors",
   "Victims of Disaster & Calamity",
+  "None",
+  "Not Applicable",
   "Others",
 ];
 export const livingArrangement = [
