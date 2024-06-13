@@ -575,13 +575,15 @@ const inputFields = ref({
       label: "Age",
       type: "text",
       inputType: "number",
-      data: null,
+      data: 0,
+      rules: [inputRules.required],
     },
     birth_date: {
       label: "Birth Date",
       type: "text",
       inputType: "date",
       data: null,
+      rules: [inputRules.required],
     },
     civil_status: {
       label: "Civil Status",
