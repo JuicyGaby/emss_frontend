@@ -242,6 +242,17 @@
                 v-model="inputFields.familyComposition[key].data"
                 style="width: 250px"
               ></v-select>
+              <v-combobox
+                v-else-if="value.type === 'combobox'"
+                :key="'combobox-' + key"
+                :label="value.label"
+                :items="value.items"
+                variant="outlined"
+                style="width: 250px"
+                v-model="inputFields.familyComposition[key].data"
+                :rules="value.rules"
+                density="compact"
+              ></v-combobox>
             </template>
           </div>
         </v-form>
@@ -342,6 +353,7 @@ import {
   educationStatus,
   educationalAttainment,
   civilStatus,
+  contributor_type,
   religion,
   inputRules,
   sex,
@@ -520,12 +532,12 @@ const inputFields = ref({
         label: "PHIC Membership Number",
         type: "text",
       },
-      ph_membership_type: {
-        label: "PHIC Membership Category",
-        type: "text",
-      },
     },
     comboField: {
+      ph_membership_type: {
+        label: "PHIC Membership Category",
+        items: contributor_type,
+      },
       gender: {
         label: "Gender Identity",
         items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
@@ -579,8 +591,8 @@ const inputFields = ref({
       items: civilStatus,
     },
     relationship: {
-      label: "Relationship",
-      type: "select",
+      label: "Relationship to patient",
+      type: "combobox",
       data: null,
       rules: [inputRules.required],
       items: [
@@ -610,13 +622,29 @@ const inputFields = ref({
       data: null,
       rules: [inputRules.required],
       items: [
-        "Early Childhood Education",
-        "Primary",
-        "Secondary",
-        "Tertiary",
-        "Vocational",
-        "Post Graduate",
-        "No Educational Attainment",
+        "With Early Childhood Education",
+        "Completed Early Childhood Education",
+        "With some Primary Education",
+        "Completed Primary Education",
+        "With some Secondary Education",
+        "Completed Secondary Education",
+        "With Some Tertiary Education",
+        "Completed Tertiary Education",
+        "With some Post-graduate Education",
+        "Completed Post-graduate Education",
+        "With some Doctorate degree Education",
+        "Completed Doctorate degree Education",
+        "With Some Vocational Education",
+        "Completed Vocational Education",
+        "on-going Early Childhood Education",
+        "on-going Primary Education",
+        "on-going Secondary Education",
+        "og-going Tertiary Education",
+        "on-going Post-graduate Education",
+        "on-going Doctorate degree Education",
+        "on-going Vocational Education",
+        "No education",
+        "Not Applicable",
       ],
     },
     occupation: {
