@@ -140,6 +140,8 @@ const inputFields = ref({
       "Personnel dependent",
       "4Ps",
       "Government employee",
+      "None",
+      "Not Applicable",
     ],
     data: null,
   },

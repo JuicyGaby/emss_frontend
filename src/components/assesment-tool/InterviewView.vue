@@ -154,7 +154,7 @@ const inputFields = ref({
     rules: [inputRules.invalidNegative],
   },
   referring_party: {
-    label: "Referring Party",
+    label: "Name of Referring Party",
     type: "text",
   },
   source_of_referral: {

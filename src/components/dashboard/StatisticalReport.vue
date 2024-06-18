@@ -770,6 +770,7 @@ const handleCaseLoadPhic = () => {
     "Direct - Employed",
     "Direct - Voluntary",
     "Direct - OFW",
+    "Non Phic",
   ];
   const transformedContributorTypeData = [];
   const contributorTypeData = {};
@@ -791,6 +792,8 @@ const handleCaseLoadPhic = () => {
   contributorTypeData.voluntaryData = filterByContributorType(
     contributor_type[7]
   );
+  contributorTypeData.ofw = filterByContributorType(contributor_type[8]);
+  contributorTypeData.nonPhic = filterByContributorType(contributor_type[9]);
   contributorTypeData.ofwData = filterByContributorType(contributor_type[8]);
   Object.keys(contributorTypeData).forEach((key) => {
     const data = contributorTypeData[key];
@@ -916,7 +919,6 @@ const handleCloseDialog = (type) => {
 onMounted(async () => {
   await fetchMonthlyStatisticalReport();
   handleCaseLoadData();
-  console.log(userInputs.value);
 });
 </script>
 <style lang=""></style>
