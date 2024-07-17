@@ -58,6 +58,11 @@ const navItems = {
     title: "Assessment Tool",
     to: "/patients",
   },
+  playGround: {
+    icon: "mdi-play-circle",
+    title: "Playground",
+    to: "/pg",
+  },
 };
 const userFullName = computed(() => {
   return `${authentication.user.fname} ${authentication.user.lname}`;
