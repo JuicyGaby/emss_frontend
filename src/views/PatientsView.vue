@@ -294,7 +294,8 @@ const viewActivityLogs = (id) => {
   dialogs.value.activityLogs.isVisibile = true;
 };
 const appendCreatedPatient = (patient) => {
-  patientData.value.push(patient);
+  // appending the patient data to the top
+  patientData.value.unshift(patient);
 };
 onMounted(async () => {
   await fetchPatients();
