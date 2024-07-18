@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" width="1000">
+    <v-dialog v-model="dialogs.create" width="1000">
       <v-card>
         <v-toolbar
           title="Initial Assessment"
@@ -171,6 +171,12 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialogs.successAlert" width="500">
+      <Alert
+        :alertDetails="alertDetails"
+        @closeDialog="dialogs.successAlert = false"
+      />
+    </v-dialog>
     <snackBars :snackBarData="snackBarData" />
   </div>
 </template>
@@ -188,6 +194,7 @@ import {
   validateForm,
   handleSnackBar,
 } from "@/utils/constants";
+import Alert from "@/components/dialogs/Alert.vue";
 import snackBars from "@/components/dialogs/snackBars.vue";
 import { ref, watchEffect } from "vue";
 import { createPatient } from "@/api/patients";
@@ -196,10 +203,19 @@ import { userAuthentication } from "@/stores/session";
 const authentication = userAuthentication();
 const snackBarData = ref({});
 const createPatientForm = ref(false);
-const dialog = ref(true);
 const totalPages = ref(2);
 const page = ref(1);
 const stepperItems = ["Interview", "Personal Data", "Review & Create Patient"];
+const alertDetails = ref({
+  title: "Patient created successfully",
+  type: "success",
+  text: "Patient created successfully",
+  buttonText: "View Patient",
+});
+const dialogs = ref({
+  create: false,
+  successAlert: false,
+});
 const userInputs = ref({
   interview: {
     interview_date_time: moment().format("YYYY-MM-DDTHH:mm"),
