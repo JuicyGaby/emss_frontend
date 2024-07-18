@@ -62,24 +62,13 @@
       </v-card-text>
     </v-card>
     <!-- create dialog -->
-    <v-dialog persistent v-model="createDialog" width="auto">
-      <v-card>
-        <v-toolbar color="secondary">
-          <v-toolbar-title> Initial Assessment </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="toggleCreateDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-divider></v-divider>
-        <v-card-text>
-          <initialAssesment
-            @viewPatient="viewPatient"
-            @closeCreateDialog="toggleCreateDialog"
-            @addPatient="appendCreatedPatient"
-          ></initialAssesment>
-        </v-card-text>
-      </v-card>
+    <v-dialog v-model="createDialog" width="1000px" max-height="1000px">
+      <!-- <initialAssesment
+        @viewPatient="viewPatient"
+        @closeCreateDialog="toggleCreateDialog"
+        @addPatient="appendCreatedPatient"
+      ></initialAssesment> -->
+      <PatientAssessment />
     </v-dialog>
     <!-- edit dialog -->
     <v-dialog
@@ -201,6 +190,7 @@ import AssesmentSocialFunctioning from "@/components/assesment-tool/AssesmentSoc
 import ProblemsInEnvironment from "@/components/assesment-tool/ProblemsInEnvironment.vue";
 import PatientAssesmentData from "@/components/assesment-tool/PatientAssesmentData.vue";
 import AssesmentActivityLogs from "@/components/assesment-tool/AssesmentActivityLogs.vue";
+import PatientAssessment from "@/components/assesment-tool/PatientAssessment.vue";
 
 let patientData = ref([]);
 const isLoading = ref(false);
