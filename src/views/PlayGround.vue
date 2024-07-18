@@ -193,6 +193,7 @@ import { ref, watchEffect } from "vue";
 import { createPatient } from "@/api/patients";
 import { userAuthentication } from "@/stores/session";
 
+const authentication = userAuthentication();
 const snackBarData = ref({});
 const createPatientForm = ref(false);
 const dialog = ref(true);
@@ -203,40 +204,41 @@ const userInputs = ref({
   interview: {
     interview_date_time: moment().format("YYYY-MM-DDTHH:mm"),
     admission_date_time: moment().format("YYYY-MM-DDTHH:mm"),
-    area: null,
-    department: null,
-    health_record_number: null,
-    mswd_number: null,
-    source_of_referral: null,
-    referring_party: null,
-    address: null,
-    contact_number: null,
-    informant: null,
-    relationship_to_patient: null,
-    informant_contact_number: null,
-    informant_address: null,
+    area: "",
+    department: "",
+    health_record_number: "",
+    mswd_number: "",
+    source_of_referral: "",
+    referring_party: "",
+    address: "",
+    contact_number: "",
+    informant: "",
+    relationship_to_patient: "",
+    informant_contact_number: "",
+    informant_address: "",
   },
   demographicData: {
-    last_name: null,
-    first_name: null,
-    middle_name: null,
-    preferred_name: null,
-    birth_date: null,
-    age: null,
-    contact_number: null,
-    place_of_birth: null,
-    religion: null,
-    nationality: null,
-    sex: null,
-    gender: null,
-    civil_status: null,
-    education: null,
-    educationStatus: null,
-    occupation: null,
-    monthly_income: null,
-    ph_membership_number: null,
-    ph_membership_type: null,
+    last_name: "",
+    first_name: "",
+    middle_name: "",
+    preferred_name: "",
+    birth_date: "",
+    age: "",
+    contact_number: "",
+    place_of_birth: "",
+    religion: "",
+    nationality: "",
+    sex: "",
+    gender: "",
+    civil_status: "",
+    education: "",
+    educationStatus: "",
+    occupation: "",
+    monthly_income: "",
+    ph_membership_number: "",
+    ph_membership_type: "",
   },
+  created_by: 0,
 });
 const inputFields = ref({
   interview: {
@@ -448,9 +450,12 @@ const createPatientAssessmentData = async () => {
     );
     return;
   }
-  console.log("Valid");
+  userInputs.value.created_by = authentication.user.id;
+  const response = await createPatient(userInputs.value);
+  if (response) {
+    console.log("patient created");
+  }
 };
-
 watchEffect(() => {
   // watches the birthdate to generate patient's age
   if (userInputs.value.demographicData.birth_date) {
