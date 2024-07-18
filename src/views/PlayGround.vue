@@ -11,7 +11,7 @@
         </v-toolbar>
         <v-card-text>
           <v-stepper elevation="0" :items="stepperItems">
-            <!-- Interview -->
+            <!-- Interview Data-->
             <template v-slot:[`item.1`]>
               <div class="pa-5 d-flex ga-2 flex-wrap">
                 <template v-for="(field, index) in inputFields.interview">
@@ -100,6 +100,66 @@
               </div>
               <v-pagination :length="totalPages" v-model="page"> </v-pagination>
               <!-- {{ userInputs.personalData }} -->
+            </template>
+            <!-- Review Data -->
+            <template v-slot:[`item.3`]>
+              <!-- interview data -->
+              <div class="">
+                <h3>Interview Data</h3>
+                <v-table density="compact">
+                  <thead>
+                    <tr>
+                      <th style="width: 500px">Particular</th>
+                      <th style="width: 500px">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(field, index) in inputFields.interview"
+                      :key="index"
+                    >
+                      <td>{{ field.label }}</td>
+                      <td>{{ userInputs.interview[index] }}</td>
+                    </tr>
+                  </tbody>
+                </v-table>
+              </div>
+              <!-- personal data -->
+              <div class="">
+                <h3>Personal Data</h3>
+                <v-table density="compact">
+                  <thead>
+                    <tr>
+                      <th style="width: 500px">Particular</th>
+                      <th style="width: 500px">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(field, index) in inputFields.personalData.page1"
+                      :key="index"
+                    >
+                      <td>{{ field.label }}</td>
+                      <td>{{ userInputs.personalData[index] }}</td>
+                    </tr>
+                    <tr
+                      v-for="(field, index) in inputFields.personalData.page2"
+                      :key="index"
+                    >
+                      <td>{{ field.label }}</td>
+                      <td>{{ userInputs.personalData[index] }}</td>
+                    </tr>
+                  </tbody>
+                </v-table>
+              </div>
+              <v-card-actions class="justify-end pa-0">
+                <v-btn
+                  prepend-icon="mdi-account-plus"
+                  variant="flat"
+                  color="secondary"
+                  >Create Patient</v-btn
+                >
+              </v-card-actions>
             </template>
           </v-stepper>
         </v-card-text>
