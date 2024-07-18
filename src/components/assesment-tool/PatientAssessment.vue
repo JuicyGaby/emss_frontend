@@ -1,173 +1,176 @@
 <template>
   <div>
-    <v-card>
-      <v-toolbar
-        title="Initial Assessment"
-        density="comfortable"
-        color="secondary"
-      >
-        <v-icon class="mr-4">mdi-close</v-icon>
-      </v-toolbar>
-      <v-card-text>
-        <v-form ref="createPatientForm">
-          <v-stepper elevation="0" :items="stepperItems">
-            <!-- Interview Data-->
-            <template v-slot:[`item.1`]>
-              <div class="pa-5 d-flex ga-2 flex-wrap">
-                <template v-for="(field, index) in inputFields.interview">
-                  <v-text-field
-                    v-if="field.formType === 'text'"
-                    :key="'text-' + index"
-                    :label="field.label"
-                    :hide-spin-buttons="true"
-                    variant="outlined"
-                    :hint="field.hint"
-                    :type="field.type"
-                    style="width: 400px"
-                    :rules="field.rules"
-                    density="compact"
-                    :persistent-hint="true"
-                    v-model="userInputs.interview[index]"
-                  ></v-text-field>
-                </template>
-                <!-- {{ userInputs.interview }} -->
-              </div>
-            </template>
-            <!-- Personal Data -->
-            <template v-slot:[`item.2`]>
-              <div class="pa-5" v-show="page == 1">
-                <div class="d-flex ga-2 flex-wrap">
-                  <template
-                    v-for="(field, index) in inputFields.personalData.page1"
-                  >
+    <v-dialog v-model="dialogs.create" persistent width="1000">
+      <v-card>
+        <v-toolbar
+          title="Initial Assessment"
+          density="comfortable"
+          color="secondary"
+        >
+          <v-icon @click="closeDialog" class="mr-4">mdi-close</v-icon>
+        </v-toolbar>
+        <v-card-text>
+          <v-form ref="createPatientForm">
+            <v-stepper elevation="0" :items="stepperItems">
+              <!-- Interview Data-->
+              <template v-slot:[`item.1`]>
+                <div class="pa-5 d-flex ga-2 flex-wrap">
+                  <template v-for="(field, index) in inputFields.interview">
                     <v-text-field
                       v-if="field.formType === 'text'"
                       :key="'text-' + index"
                       :label="field.label"
                       :hide-spin-buttons="true"
                       variant="outlined"
+                      :hint="field.hint"
                       :type="field.type"
                       style="width: 400px"
                       :rules="field.rules"
                       density="compact"
-                      :hint="field.hint"
                       :persistent-hint="true"
-                      :readonly="field.isReadOnly"
-                      v-model="userInputs.demographicData[index]"
+                      v-model="userInputs.interview[index]"
                     ></v-text-field>
                   </template>
+                  <!-- {{ userInputs.interview }} -->
                 </div>
-              </div>
-              <div class="pa-5" v-show="page == 2">
-                <div class="d-flex ga-2 flex-wrap">
-                  <template
-                    v-for="(value, index) in inputFields.personalData.page2"
-                  >
-                    <v-text-field
-                      v-if="value.formType === 'text'"
-                      :key="'text-' + index"
-                      :label="value.label"
-                      :hide-spin-buttons="true"
-                      variant="outlined"
-                      :type="value.type"
-                      style="width: 400px"
-                      :rules="value.rules"
-                      density="compact"
-                      :hint="value.hint"
-                      :persistent-hint="true"
-                      v-model="userInputs.demographicData[index]"
-                    ></v-text-field>
-                    <v-select
-                      v-else-if="value.formType === 'select'"
-                      :key="'select-' + index"
-                      :label="value.label"
-                      variant="outlined"
-                      style="width: 400px"
-                      density="compact"
-                      :items="value.items"
-                      v-model="userInputs.demographicData[index]"
-                    ></v-select>
-                    <v-combobox
-                      v-else-if="value.formType === 'combo'"
-                      :key="'combo-' + index"
-                      :label="value.label"
-                      variant="outlined"
-                      style="width: 400px"
-                      density="compact"
-                      :items="value.items"
-                      v-model="userInputs.demographicData[index]"
-                    ></v-combobox>
-                  </template>
-                </div>
-              </div>
-              <v-pagination :length="totalPages" v-model="page"> </v-pagination>
-              <!-- {{ userInputs.demographicData }} -->
-            </template>
-            <!-- Review Data -->
-            <template v-slot:[`item.3`]>
-              <!-- interview data -->
-              <div class="">
-                <h3>Interview Data</h3>
-                <v-table density="compact">
-                  <thead>
-                    <tr>
-                      <th style="width: 500px">Particular</th>
-                      <th style="width: 500px">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(field, index) in inputFields.interview"
-                      :key="index"
-                    >
-                      <td>{{ field.label }}</td>
-                      <td>{{ userInputs.interview[index] }}</td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </div>
-              <!-- personal data -->
-              <div class="">
-                <h3>Personal Data</h3>
-                <v-table density="compact">
-                  <thead>
-                    <tr>
-                      <th style="width: 500px">Particular</th>
-                      <th style="width: 500px">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
+              </template>
+              <!-- Personal Data -->
+              <template v-slot:[`item.2`]>
+                <div class="pa-5" v-show="page == 1">
+                  <div class="d-flex ga-2 flex-wrap">
+                    <template
                       v-for="(field, index) in inputFields.personalData.page1"
-                      :key="index"
                     >
-                      <td>{{ field.label }}</td>
-                      <td>{{ userInputs.demographicData[index] }}</td>
-                    </tr>
-                    <tr
-                      v-for="(field, index) in inputFields.personalData.page2"
-                      :key="index"
+                      <v-text-field
+                        v-if="field.formType === 'text'"
+                        :key="'text-' + index"
+                        :label="field.label"
+                        :hide-spin-buttons="true"
+                        variant="outlined"
+                        :type="field.type"
+                        style="width: 400px"
+                        :rules="field.rules"
+                        density="compact"
+                        :hint="field.hint"
+                        :persistent-hint="true"
+                        :readonly="field.isReadOnly"
+                        v-model="userInputs.demographicData[index]"
+                      ></v-text-field>
+                    </template>
+                  </div>
+                </div>
+                <div class="pa-5" v-show="page == 2">
+                  <div class="d-flex ga-2 flex-wrap">
+                    <template
+                      v-for="(value, index) in inputFields.personalData.page2"
                     >
-                      <td>{{ field.label }}</td>
-                      <td>{{ userInputs.demographicData[index] }}</td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </div>
-              <v-card-actions class="justify-end pa-0">
-                <v-btn
-                  prepend-icon="mdi-account-plus"
-                  variant="flat"
-                  color="secondary"
-                  @click="createPatientAssessmentData"
-                  >Create Patient</v-btn
-                >
-              </v-card-actions>
-            </template>
-          </v-stepper>
-        </v-form>
-      </v-card-text>
-    </v-card>
+                      <v-text-field
+                        v-if="value.formType === 'text'"
+                        :key="'text-' + index"
+                        :label="value.label"
+                        :hide-spin-buttons="true"
+                        variant="outlined"
+                        :type="value.type"
+                        style="width: 400px"
+                        :rules="value.rules"
+                        density="compact"
+                        :hint="value.hint"
+                        :persistent-hint="true"
+                        v-model="userInputs.demographicData[index]"
+                      ></v-text-field>
+                      <v-select
+                        v-else-if="value.formType === 'select'"
+                        :key="'select-' + index"
+                        :label="value.label"
+                        variant="outlined"
+                        style="width: 400px"
+                        density="compact"
+                        :items="value.items"
+                        v-model="userInputs.demographicData[index]"
+                      ></v-select>
+                      <v-combobox
+                        v-else-if="value.formType === 'combo'"
+                        :key="'combo-' + index"
+                        :label="value.label"
+                        variant="outlined"
+                        style="width: 400px"
+                        density="compact"
+                        :items="value.items"
+                        v-model="userInputs.demographicData[index]"
+                      ></v-combobox>
+                    </template>
+                  </div>
+                </div>
+                <v-pagination :length="totalPages" v-model="page">
+                </v-pagination>
+                <!-- {{ userInputs.demographicData }} -->
+              </template>
+              <!-- Review Data -->
+              <template v-slot:[`item.3`]>
+                <!-- interview data -->
+                <div class="">
+                  <h3>Interview Data</h3>
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th style="width: 500px">Particular</th>
+                        <th style="width: 500px">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, index) in inputFields.interview"
+                        :key="index"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>{{ userInputs.interview[index] }}</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </div>
+                <!-- personal data -->
+                <div class="">
+                  <h3>Personal Data</h3>
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th style="width: 500px">Particular</th>
+                        <th style="width: 500px">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(field, index) in inputFields.personalData.page1"
+                        :key="index"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>{{ userInputs.demographicData[index] }}</td>
+                      </tr>
+                      <tr
+                        v-for="(field, index) in inputFields.personalData.page2"
+                        :key="index"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>{{ userInputs.demographicData[index] }}</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </div>
+                <v-card-actions class="justify-end pa-0">
+                  <v-btn
+                    prepend-icon="mdi-account-plus"
+                    variant="flat"
+                    color="secondary"
+                    @click="createPatientAssessmentData"
+                    >Create Patient</v-btn
+                  >
+                </v-card-actions>
+              </template>
+            </v-stepper>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="dialogs.successAlert" width="500">
       <Alert
         :alertDetails="alertDetails"
@@ -197,6 +200,7 @@ import { ref, watchEffect } from "vue";
 import { createPatient } from "@/api/patients";
 import { userAuthentication } from "@/stores/session";
 
+const emit = defineEmits(["closeDialog", "viewPatient", "addPatient"]);
 const authentication = userAuthentication();
 const snackBarData = ref({});
 const createPatientForm = ref(false);
@@ -210,7 +214,7 @@ const alertDetails = ref({
   buttonText: "View Patient",
 });
 const dialogs = ref({
-  create: false,
+  create: true,
   successAlert: false,
 });
 const userInputs = ref({
@@ -454,6 +458,15 @@ const inputFields = ref({
   },
 });
 
+const closeDialog = () => {
+  dialogs.value.create = false;
+  // set timeout for half second
+  setTimeout(() => {
+    emit("closeDialog");
+  }, 1000);
+};
+
+// async funtions
 const createPatientAssessmentData = async () => {
   const isValid = await validateForm(createPatientForm);
   if (!isValid) {
@@ -466,9 +479,10 @@ const createPatientAssessmentData = async () => {
   userInputs.value.created_by = authentication.user.id;
   const response = await createPatient(userInputs.value);
   if (response) {
-    console.log("patient created");
+    dialogs.value.successAlert = true;
   }
 };
+
 watchEffect(() => {
   // watches the birthdate to generate patient's age
   if (userInputs.value.demographicData.birth_date) {

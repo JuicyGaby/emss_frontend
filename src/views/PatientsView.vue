@@ -9,7 +9,7 @@
         <v-btn
           color="secondary"
           prepend-icon="mdi-account-plus"
-          @click="createDialog = !createDialog"
+          @click="createDialog = true"
           >Assess Patient</v-btn
         >
         <div class="d-flex ga-2">
@@ -62,14 +62,9 @@
       </v-card-text>
     </v-card>
     <!-- create dialog -->
-    <v-dialog v-model="createDialog" width="1000px" max-height="1000px">
-      <!-- <initialAssesment
-        @viewPatient="viewPatient"
-        @closeCreateDialog="toggleCreateDialog"
-        @addPatient="appendCreatedPatient"
-      ></initialAssesment> -->
-      <PatientAssessment />
-    </v-dialog>
+    <div v-if="createDialog">
+      <PatientAssessment @closeDialog="createDialog = false" />
+    </div>
     <!-- edit dialog -->
     <v-dialog
       v-model="editDialog"

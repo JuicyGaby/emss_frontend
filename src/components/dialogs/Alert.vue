@@ -30,7 +30,7 @@ const props = defineProps({
   itemId: Number,
   alertDetails: Object,
 });
-const emit = defineEmits(["closeDialog", "deleteFile"]);
+const emit = defineEmits(["closeDialog", "action"]);
 </script>
 
 <style lang="css" scoped></style>

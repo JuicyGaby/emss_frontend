@@ -213,7 +213,7 @@ const alertDetails = ref({
   buttonText: "View Patient",
 });
 const dialogs = ref({
-  create: false,
+  create: true,
   successAlert: false,
 });
 const userInputs = ref({
