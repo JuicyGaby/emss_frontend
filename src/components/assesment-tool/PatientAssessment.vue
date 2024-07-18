@@ -174,7 +174,8 @@
     <v-dialog v-model="dialogs.successAlert" width="500">
       <Alert
         :alertDetails="alertDetails"
-        @closeDialog="dialogs.successAlert = false"
+        @closeDialog="closeDialog"
+        @action="viewPatient"
       />
     </v-dialog>
     <snackBars :snackBarData="snackBarData" />
@@ -204,6 +205,7 @@ const emit = defineEmits(["closeDialog", "viewPatient", "addPatient"]);
 const authentication = userAuthentication();
 const snackBarData = ref({});
 const createPatientForm = ref(false);
+const patientId = ref(0);
 const totalPages = ref(2);
 const page = ref(1);
 const stepperItems = ["Interview", "Personal Data", "Review & Create Patient"];
@@ -460,12 +462,12 @@ const inputFields = ref({
 
 const closeDialog = () => {
   dialogs.value.create = false;
+  dialogs.value.successAlert = false;
   // set timeout for half second
   setTimeout(() => {
     emit("closeDialog");
   }, 1000);
 };
-
 // async funtions
 const createPatientAssessmentData = async () => {
   const isValid = await validateForm(createPatientForm);
@@ -479,8 +481,16 @@ const createPatientAssessmentData = async () => {
   userInputs.value.created_by = authentication.user.id;
   const response = await createPatient(userInputs.value);
   if (response) {
+    patientId.value = response.id;
+    emit("addPatient", response);
+    console.log(response);
     dialogs.value.successAlert = true;
   }
+};
+
+const viewPatient = () => {
+  closeDialog();
+  emit("viewPatient", patientId.value);
 };
 
 watchEffect(() => {

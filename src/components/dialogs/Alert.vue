@@ -15,9 +15,12 @@
           <v-btn @click="emit('closeDialog')" variant="outlined" color=""
             >cancel</v-btn
           >
-          <v-btn variant="flat" :color="props.alertDetails.type">{{
-            props.alertDetails.buttonText
-          }}</v-btn>
+          <v-btn
+            @click="emit('action')"
+            variant="flat"
+            :color="props.alertDetails.type"
+            >{{ props.alertDetails.buttonText }}</v-btn
+          >
         </v-card-actions>
       </v-alert>
     </v-sheet>

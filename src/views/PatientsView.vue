@@ -63,7 +63,11 @@
     </v-card>
     <!-- create dialog -->
     <div v-if="createDialog">
-      <PatientAssessment @closeDialog="createDialog = false" />
+      <PatientAssessment
+        @addPatient="appendCreatedPatient"
+        @closeDialog="createDialog = false"
+        @viewPatient="viewPatient"
+      />
     </div>
     <!-- edit dialog -->
     <v-dialog
@@ -290,8 +294,7 @@ const viewActivityLogs = (id) => {
   dialogs.value.activityLogs.isVisibile = true;
 };
 const appendCreatedPatient = (patient) => {
-  patientData.value.push(patient.value);
-  console.log("successfuly added", patientData.value);
+  patientData.value.push(patient);
 };
 onMounted(async () => {
   await fetchPatients();
