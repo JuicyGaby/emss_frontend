@@ -56,7 +56,7 @@
                   </template>
                 </div>
               </div>
-              <div class="" v-show="page == 2">
+              <div class="pa-5" v-show="page == 2">
                 <div class="d-flex ga-2 flex-wrap">
                   <template
                     v-for="(value, index) in inputFields.personalData.page2"
@@ -83,6 +83,7 @@
                       style="width: 400px"
                       density="compact"
                       :items="value.items"
+                      v-model="userInputs.personalData[index]"
                     ></v-select>
                     <v-combobox
                       v-else-if="value.formType === 'combo'"
@@ -92,14 +93,15 @@
                       style="width: 400px"
                       density="compact"
                       :items="value.items"
+                      v-model="userInputs.personalData[index]"
                     ></v-combobox>
                   </template>
                 </div>
               </div>
               <v-pagination :length="totalPages" v-model="page"> </v-pagination>
+              <!-- {{ userInputs.personalData }} -->
             </template>
           </v-stepper>
-          <!-- {{ userInputs.personalData }} -->
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -115,6 +117,7 @@ import {
   educationStatus,
   religion,
   civilStatus,
+  inputRules,
 } from "@/utils/constants";
 import { ref, watchEffect } from "vue";
 const dialog = ref(true);
@@ -186,6 +189,7 @@ const inputFields = ref({
       label: "Health Record Number",
       type: "number",
       formType: "text",
+      rules: [inputRules.required],
     },
     mswd_number: {
       label: "MSWD Number",
@@ -211,6 +215,7 @@ const inputFields = ref({
       label: "Contact Number",
       type: "number",
       formType: "text",
+      rules: [inputRules.contactNumber],
     },
     informant: {
       label: "Informant",
@@ -251,12 +256,14 @@ const inputFields = ref({
         formType: "text",
         type: "text",
         hint: " * Field Required",
+        rules: [inputRules.required],
       },
       first_name: {
         label: "First Name",
         formType: "text",
         type: "text",
         hint: " * Field Required",
+        rules: [inputRules.required],
       },
       middle_name: {
         label: "Middle Name",
@@ -284,6 +291,7 @@ const inputFields = ref({
         label: "Contact Number",
         formType: "text",
         type: "number",
+        rules: [inputRules.contactNumber],
       },
       place_of_birth: {
         label: "Place of Birth",
