@@ -1,7 +1,15 @@
 <template lang="">
   <div class="d-flex justify-center align-center">
-    <v-container style="width: 1000px">
-      <h1>Initial Interview</h1>
+    <v-container class="" style="width: 1000px">
+      <v-toolbar
+        border
+        :elevation="1"
+        title="Interview Form : "
+        class="rounded-sm"
+        density="compact"
+        color="secondary"
+      >
+      </v-toolbar>
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-form ref="interviewForm">
@@ -18,6 +26,7 @@
                 :rules="value.rules"
                 v-model="interviewInputData[index]"
                 :counter="value.counter"
+                :readonly="value.readOnly"
                 density="comfortable"
               ></v-text-field>
               <v-combobox
@@ -46,7 +55,7 @@
           </v-col>
         </v-form>
       </v-row>
-      <v-card-actions class="pa-0">
+      <v-card-actions class="mb-10 justify-end pa-0">
         <v-btn
           :prepend-icon="
             interviewInputData.isExist ? 'mdi-update' : 'mdi-content-save'
@@ -77,18 +86,9 @@ import { getInterview, updateInterview, interview } from "@/api/assesment-tool";
 import { userAuthentication } from "@/stores/session";
 
 const authentication = userAuthentication();
-const rules = {
-  // make a rule for a contact number containing 11 digits
-  contactNumber: (v) => {
-    if (v.length !== 11) return "Contact Number must be 11 digits";
-    return true;
-  },
-};
-
 const props = defineProps({
   patientId: Number,
 });
-
 const interviewForm = ref(null);
 const snackBarData = ref({});
 
@@ -130,6 +130,7 @@ const inputFields = ref({
     label: "Interview Time Duration",
     type: "text",
     formType: "text",
+    readOnly: true,
   },
   area: {
     label: "Area",

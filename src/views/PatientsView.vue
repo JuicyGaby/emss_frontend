@@ -173,12 +173,10 @@
 import { ref, onMounted, computed } from "vue";
 import { handleSnackBar, inputRules, validateForm } from "@/utils/constants";
 import { getPatients, searchPatient } from "@/api/patients";
-import snackBars from "@/components/dialogs/snackBars.vue";
 import { useRouter } from "vue-router";
-import initialAssesment from "@/components/assesment-tool/initialAssesment.vue";
+import snackBars from "@/components/dialogs/snackBars.vue";
 import interviewView from "@/components/assesment-tool/InterviewView.vue";
 import MswdClassification from "@/components/assesment-tool/mswdClassification.vue";
-// import MswdClassification from "@/components/assesment-tool/MswdClassification.vue";
 import personalData from "@/components/assesment-tool/personalData.vue";
 import MonthlyExpenses from "@/components/assesment-tool/MonthlyExpenses.vue";
 import MedicalData from "@/components/assesment-tool/MedicalData.vue";
