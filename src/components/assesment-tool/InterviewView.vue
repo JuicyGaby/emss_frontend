@@ -1,15 +1,7 @@
 <template lang="">
   <div class="d-flex justify-center align-center">
     <v-container class="" style="width: 1000px">
-      <v-toolbar
-        border
-        :elevation="1"
-        title="Interview Form : "
-        class="rounded-sm"
-        density="compact"
-        color="secondary"
-      >
-      </v-toolbar>
+      <v-alert title="Interview Form : " type="info" variant="tonal"></v-alert>
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-form ref="interviewForm">
