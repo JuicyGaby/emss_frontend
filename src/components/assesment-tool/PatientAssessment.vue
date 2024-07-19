@@ -222,16 +222,12 @@ const userInputs = ref({
   interview: {
     interview_date_time: moment().format("YYYY-MM-DDTHH:mm"),
     admission_date_time: moment().format("YYYY-MM-DDTHH:mm"),
-    area: "",
-    department: "",
     health_record_number: "",
     mswd_number: "",
-    source_of_referral: "",
     referring_party: "",
     address: "",
     contact_number: "",
     informant: "",
-    relationship_to_patient: "",
     informant_contact_number: "",
     informant_address: "",
   },
@@ -270,16 +266,6 @@ const inputFields = ref({
       type: "datetime-local",
       formType: "text",
     },
-    area: {
-      label: "Area",
-      formType: "select",
-      items: ["IP - Basic Ward", "IP - Non-Basic Ward", "OP", "ER/ED"],
-    },
-    department: {
-      label: "Department",
-      formType: "select",
-      items: departments,
-    },
     health_record_number: {
       label: "Health Record Number",
       type: "number",
@@ -291,11 +277,6 @@ const inputFields = ref({
       label: "MSWD Number",
       type: "number",
       formType: "text",
-    },
-    source_of_referral: {
-      label: "Source of Referral",
-      formType: "select",
-      items: sourceOfReferral,
     },
     referring_party: {
       label: "Name Of Referring Party",
@@ -318,21 +299,6 @@ const inputFields = ref({
       label: "Informant",
       type: "text",
       formType: "text",
-    },
-    relationship_to_patient: {
-      label: "Relationship to Patient",
-      formType: "select",
-      items: [
-        "Friends",
-        "Workmates",
-        "Neighbors",
-        "Relatives",
-        "Spouse",
-        "Children",
-        "Parents",
-        "Siblings",
-        "Others",
-      ],
     },
     informant_contact_number: {
       label: "Informant Contact Number",
@@ -395,28 +361,6 @@ const inputFields = ref({
         label: "Place of Birth",
         formType: "text",
         type: "text",
-      },
-      religion: {
-        label: "Religion",
-        formType: "select",
-        type: "text",
-        items: religion,
-      },
-      nationality: {
-        label: "Nationality",
-        formType: "select",
-        type: "text",
-        items: ["Filipino", "Others"],
-      },
-      sex: {
-        label: "Sex",
-        items: ["Male", "Female"],
-        formType: "select",
-      },
-      gender: {
-        label: "Gender Identity",
-        items: ["Masculine", "Feminine", "LGBTQIA+", "Other"],
-        formType: "select",
       },
     },
     page2: {
