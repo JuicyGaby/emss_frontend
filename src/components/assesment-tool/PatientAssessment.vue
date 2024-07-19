@@ -103,7 +103,6 @@
                 </div>
                 <v-pagination :length="totalPages" v-model="page">
                 </v-pagination>
-                <!-- {{ userInputs.demographicData }} -->
               </template>
               <!-- Review Data -->
               <template v-slot:[`item.3`]>
