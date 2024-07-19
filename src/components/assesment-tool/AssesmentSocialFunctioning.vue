@@ -1,7 +1,11 @@
 <template lang="">
   <div>
     <v-container style="width: 1500px">
-      <h1>Assesment of Social Functioning</h1>
+      <v-alert
+        title="Assessment Social Functioning Form : "
+        type="info"
+        variant="tonal"
+      ></v-alert>
       <v-divider class="mb-5"></v-divider>
       <v-table density="compact" class="pa-5" fixed-header hover="true">
         <thead>

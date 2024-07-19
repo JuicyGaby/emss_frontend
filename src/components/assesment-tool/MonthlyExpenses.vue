@@ -1,7 +1,11 @@
 <template lang="">
   <div>
     <v-container style="width: 1000px">
-      <h1>Monthly Expenses:</h1>
+      <v-alert
+        title="Monthly Expenses Form : "
+        type="info"
+        variant="tonal"
+      ></v-alert>
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-col cols="12" class="d-flex ga-2 flex-wrap">

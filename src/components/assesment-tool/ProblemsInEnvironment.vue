@@ -18,7 +18,11 @@
     <v-window v-model="tab">
       <v-window-item :value="1">
         <v-container style="width: 1000px">
-          <h1>Problems in the Environment</h1>
+          <v-alert
+            title="Problems in Environment Form : "
+            type="info"
+            variant="tonal"
+          ></v-alert>
           <v-divider class="mb-5"></v-divider>
           <v-table>
             <thead>
@@ -222,8 +226,12 @@
       </v-window-item>
       <v-window-item :value="2">
         <v-container style="width: 1500px">
-          <h1>Problems in the Environment</h1>
-          <v-divider class="bm-5"></v-divider>
+          <v-alert
+            title="Problems in Environment Form : "
+            type="info"
+            variant="tonal"
+          ></v-alert>
+          <v-divider class="mb-5"></v-divider>
           <v-row>
             <v-col
               cols="12"

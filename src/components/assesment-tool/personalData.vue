@@ -20,7 +20,11 @@
       <v-window-item :value="0">
         <v-container style="width: 1000px">
           <v-form ref="personalForm">
-            <h2>Personal Data:</h2>
+            <v-alert
+              title="Personal Data Form : "
+              type="info"
+              variant="tonal"
+            ></v-alert>
             <v-divider class="mb-5"></v-divider>
             <!-- persnal data -->
             <v-row>
@@ -79,7 +83,11 @@
       <!-- address -->
       <v-window-item :value="1">
         <v-container style="width: 1000px">
-          <h2>Address:</h2>
+          <v-alert
+            title="Address Form : "
+            type="info"
+            variant="tonal"
+          ></v-alert>
           <v-divider class="mb-5"></v-divider>
           <v-row>
             <h3>Permanent</h3>
@@ -159,7 +167,11 @@
       <!-- family composition -->
       <v-window-item :value="2">
         <v-container style="width: 90%">
-          <h2>Family Composition:</h2>
+          <v-alert
+            title="Family Composition Form : "
+            type="info"
+            variant="tonal"
+          ></v-alert>
           <v-divider class="mb-5"></v-divider>
           <div class="d-flex justify-end">
             <v-btn

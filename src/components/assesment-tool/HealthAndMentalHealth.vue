@@ -1,7 +1,11 @@
 <template lang="">
   <div>
     <v-container style="width: 1300px">
-      <h1>Health and Mental Health</h1>
+      <v-alert
+        title="Health and Mental Health Form : "
+        type="info"
+        variant="tonal"
+      ></v-alert>
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-col>
