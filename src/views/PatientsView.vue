@@ -35,6 +35,22 @@
         </div>
       </div>
       <v-divider></v-divider>
+      <v-toolbar density="" color="secondary">
+        <v-toolbar-title class="">
+          <v-icon>mdi-account-group</v-icon>
+          Patient List
+        </v-toolbar-title>
+        <div class="mt-5 mr-4">
+          <v-text-field
+            prepend-inner-icon="mdi-magnify"
+            variant="outlined"
+            label="Search Patient"
+            density="compact"
+            style="width: 300px"
+            v-model="searchPatientToday"
+          ></v-text-field>
+        </div>
+      </v-toolbar>
       <v-card-text class="d-flex align-end">
         <v-data-table
           width="100%"
@@ -42,6 +58,7 @@
           :headers="tableHeaders"
           :items="patientData"
           items-per-page="10"
+          :search="searchPatientToday"
           density="comfortable"
           :items-per-page-options="[5, 10]"
         >
@@ -65,7 +82,7 @@
     <div v-if="createDialog">
       <PatientAssessment
         @addPatient="appendCreatedPatient"
-        @closeDialog="createDialog = false"
+        @closeDialog="toggleCreateDialog"
         @viewPatient="viewPatient"
       />
     </div>
@@ -196,6 +213,7 @@ const editDialog = ref(false);
 const isReadOnly = ref(false);
 const tab = ref(0);
 const patientId = ref(0);
+const searchPatientToday = ref("");
 const searchInput = ref({
   first_name: "",
   last_name: "",
@@ -277,10 +295,6 @@ async function searchPatientData() {
   );
   patientData.value = patients;
 }
-
-const toggleCreateDialog = () => {
-  createDialog.value = !createDialog.value;
-};
 const viewPatient = (patientId) => {
   toggleEditBtn(patientId);
 };
@@ -292,6 +306,9 @@ const viewActivityLogs = (id) => {
 const appendCreatedPatient = (patient) => {
   // appending the patient data to the top
   patientData.value.unshift(patient);
+};
+const toggleCreateDialog = () => {
+  createDialog.value = false;
 };
 onMounted(async () => {
   await fetchPatients();
