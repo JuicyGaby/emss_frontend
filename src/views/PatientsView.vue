@@ -9,7 +9,7 @@
         <v-btn
           color="secondary"
           prepend-icon="mdi-account-plus"
-          @click="createDialog = !createDialog"
+          @click="createDialog = true"
           >Assess Patient</v-btn
         >
         <div class="d-flex ga-2">
@@ -35,6 +35,22 @@
         </div>
       </div>
       <v-divider></v-divider>
+      <v-toolbar density="" color="secondary">
+        <v-toolbar-title class="">
+          <v-icon>mdi-account-group</v-icon>
+          Patient List
+        </v-toolbar-title>
+        <div class="mt-5 mr-4">
+          <v-text-field
+            prepend-inner-icon="mdi-magnify"
+            variant="outlined"
+            label="Search Patient"
+            density="compact"
+            style="width: 300px"
+            v-model="searchPatientToday"
+          ></v-text-field>
+        </div>
+      </v-toolbar>
       <v-card-text class="d-flex align-end">
         <v-data-table
           width="100%"
@@ -42,6 +58,7 @@
           :headers="tableHeaders"
           :items="patientData"
           items-per-page="10"
+          :search="searchPatientToday"
           density="comfortable"
           :items-per-page-options="[5, 10]"
         >
@@ -62,25 +79,13 @@
       </v-card-text>
     </v-card>
     <!-- create dialog -->
-    <v-dialog persistent v-model="createDialog" width="auto">
-      <v-card>
-        <v-toolbar color="secondary">
-          <v-toolbar-title> Initial Assessment </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="toggleCreateDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-divider></v-divider>
-        <v-card-text>
-          <initialAssesment
-            @viewPatient="viewPatient"
-            @closeCreateDialog="toggleCreateDialog"
-            @addPatient="appendCreatedPatient"
-          ></initialAssesment>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <div v-if="createDialog">
+      <PatientAssessment
+        @addPatient="appendCreatedPatient"
+        @closeDialog="toggleCreateDialog"
+        @viewPatient="viewPatient"
+      />
+    </div>
     <!-- edit dialog -->
     <v-dialog
       v-model="editDialog"
@@ -185,9 +190,8 @@
 import { ref, onMounted, computed } from "vue";
 import { handleSnackBar, inputRules, validateForm } from "@/utils/constants";
 import { getPatients, searchPatient } from "@/api/patients";
-import snackBars from "@/components/dialogs/snackBars.vue";
 import { useRouter } from "vue-router";
-import initialAssesment from "@/components/assesment-tool/initialAssesment.vue";
+import snackBars from "@/components/dialogs/snackBars.vue";
 import interviewView from "@/components/assesment-tool/InterviewView.vue";
 import MswdClassification from "@/components/assesment-tool/mswdClassification.vue";
 import personalData from "@/components/assesment-tool/personalData.vue";
@@ -200,6 +204,7 @@ import AssesmentSocialFunctioning from "@/components/assesment-tool/AssesmentSoc
 import ProblemsInEnvironment from "@/components/assesment-tool/ProblemsInEnvironment.vue";
 import PatientAssesmentData from "@/components/assesment-tool/PatientAssesmentData.vue";
 import AssesmentActivityLogs from "@/components/assesment-tool/AssesmentActivityLogs.vue";
+import PatientAssessment from "@/components/assesment-tool/PatientAssessment.vue";
 
 let patientData = ref([]);
 const isLoading = ref(false);
@@ -208,6 +213,7 @@ const editDialog = ref(false);
 const isReadOnly = ref(false);
 const tab = ref(0);
 const patientId = ref(0);
+const searchPatientToday = ref("");
 const searchInput = ref({
   first_name: "",
   last_name: "",
@@ -234,8 +240,6 @@ const inputFields = ref({
 });
 
 const tableHeaders = [
-  // { title: "Date Created", value: "created_at" },
-
   { title: "Date Created : ", value: "created_at" },
   { title: "Full Name", value: "fullname" },
   { title: "Age", value: "age" },
@@ -291,10 +295,6 @@ async function searchPatientData() {
   );
   patientData.value = patients;
 }
-
-const toggleCreateDialog = () => {
-  createDialog.value = !createDialog.value;
-};
 const viewPatient = (patientId) => {
   toggleEditBtn(patientId);
 };
@@ -304,8 +304,11 @@ const viewActivityLogs = (id) => {
   dialogs.value.activityLogs.isVisibile = true;
 };
 const appendCreatedPatient = (patient) => {
-  patientData.value.push(patient.value);
-  console.log("successfuly added", patientData.value);
+  // appending the patient data to the top
+  patientData.value.unshift(patient);
+};
+const toggleCreateDialog = () => {
+  createDialog.value = false;
 };
 onMounted(async () => {
   await fetchPatients();

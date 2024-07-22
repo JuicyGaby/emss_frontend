@@ -1,7 +1,11 @@
 <template lang="">
   <div>
     <v-container style="width: 1000px">
-      <h1>MSWD Classification:</h1>
+      <v-alert
+        title="MSWD Classification Form : "
+        type="info"
+        variant="tonal"
+      ></v-alert>
       <v-divider class="mb-5"></v-divider>
       <v-row>
         <v-col cols="12">

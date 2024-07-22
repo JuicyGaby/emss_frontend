@@ -52,6 +52,14 @@ const router = createRouter({
         title: "Daily Activity Report",
       },
     },
+    {
+      path: "/pg",
+      name: "playground",
+      component: () => import("../views/PlayGround.vue"),
+      meta: {
+        title: "Playground",
+      },
+    },
   ],
 });
 

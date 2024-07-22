@@ -1,7 +1,11 @@
 <template lang="">
   <div>
     <v-container style="width: 1500px">
-      <h1>Medical Data</h1>
+      <v-alert
+        title="Medical Data Form : "
+        type="info"
+        variant="tonal"
+      ></v-alert>
       <v-divider class="mb-5"></v-divider>
       <v-card elevation="0" class="">
         <v-tabs v-model="tabData.tabValue" align-tabs="center">

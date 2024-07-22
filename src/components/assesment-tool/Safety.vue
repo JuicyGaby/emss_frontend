@@ -1,7 +1,7 @@
 <template lang="">
   <div>
     <v-container style="width: 1000px">
-      <h1>Safety</h1>
+      <v-alert title="Safety Form : " type="info" variant="tonal"></v-alert>
       <v-divider class="mb-5"></v-divider>
       <v-table>
         <thead>
